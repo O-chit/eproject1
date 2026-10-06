@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>CraftRoots — Di Sản &amp; Làng Nghề Thủ Công Truyền Thống</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Montserrat:wght@300;400;500;600&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "border-neutral": "#E6E2DA",
+          "inverse-surface": "#31302f",
+          "on-secondary-fixed": "#1c1b18",
+          "primary-fixed": "#ffdbc7",
+          "tertiary-fixed-dim": "#6ed5e3",
+          "tertiary": "#006670",
+          "on-secondary-container": "#666460",
+          "secondary-fixed-dim": "#cac6c1",
+          "tertiary-container": "#00818d",
+          "text-primary": "#1C1B1A",
+          "surface-crisp": "#FFFFFF",
+          "on-primary-fixed": "#311300",
+          "surface-container-high": "#ece7e5",
+          "text-secondary": "#5A5854",
+          "error": "#ba1a1a",
+          "surface": "#fdf8f6",
+          "on-surface": "#1c1b1a",
+          "on-error": "#ffffff",
+          "accent-terracotta": "#B86B35",
+          "outline": "#867368",
+          "on-tertiary": "#ffffff",
+          "surface-dim": "#ddd9d7",
+          "primary": "#8e4a16",
+          "inverse-primary": "#ffb689",
+          "inverse-on-surface": "#f4f0ee",
+          "surface-container-lowest": "#ffffff",
+          "surface-container-highest": "#e6e2df",
+          "on-tertiary-fixed": "#001f23",
+          "canvas-linen": "#F9F8F6",
+          "on-tertiary-container": "#f6feff",
+          "primary-fixed-dim": "#ffb689",
+          "on-primary-container": "#fffbff",
+          "on-background": "#1c1b1a",
+          "on-secondary-fixed-variant": "#484743",
+          "surface-bright": "#fdf8f6",
+          "secondary": "#605e5a",
+          "background": "#fdf8f6",
+          "on-primary-fixed-variant": "#733500",
+          "on-error-container": "#93000a",
+          "surface-variant": "#e6e2df",
+          "error-container": "#ffdad6",
+          "tertiary-fixed": "#90f1ff",
+          "surface-container-low": "#f7f3f0",
+          "on-secondary": "#ffffff",
+          "secondary-container": "#e6e2dc",
+          "surface-container": "#f2edeb",
+          "on-tertiary-fixed-variant": "#004f57",
+          "outline-variant": "#d9c2b5",
+          "on-primary": "#ffffff",
+          "surface-subtle": "#F4F2EE",
+          "on-surface-variant": "#54433a",
+          "secondary-fixed": "#e6e2dc",
+          "primary-container": "#ac612c",
+          "surface-tint": "#914c18"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin": "3rem",
+          "gutter-mobile": "1rem",
+          "gutter": "1.5rem",
+          "space-xl": "2.5rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "space-xs": "0.25rem",
+          "margin-mobile": "1.25rem",
+          "space-lg": "1.5rem"
+        },
+        "fontFamily": {
+          "spec-code": [
+            "Inter"
+          ],
+          "label-signature": [
+            "Playfair Display"
+          ],
+          "body-spec": [
+            "Inter"
+          ],
+          "display-hero": [
+            "Montserrat"
+          ],
+          "title-card": [
+            "Playfair Display"
+          ],
+          "display-hero-mobile": [
+            "Montserrat"
+          ],
+          "headline-title": [
+            "Playfair Display"
+          ],
+          "headline-statement": [
+            "Montserrat"
+          ],
+          "body-default": [
+            "Inter"
+          ],
+          "label-action": [
+            "Montserrat"
+          ]
+        },
+        "fontSize": {
+          "spec-code": [
+            "12px",
+            {
+              "lineHeight": "18px",
+              "letterSpacing": "0.06em",
+              "fontWeight": "500"
+            }
+          ],
+          "label-signature": [
+            "16px",
+            {
+              "lineHeight": "22px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "400"
+            }
+          ],
+          "body-spec": [
+            "13px",
+            {
+              "lineHeight": "22px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "400"
+            }
+          ],
+          "display-hero": [
+            "48px",
+            {
+              "lineHeight": "56px",
+              "letterSpacing": "0.3em",
+              "fontWeight": "300"
+            }
+          ],
+          "title-card": [
+            "18px",
+            {
+              "lineHeight": "26px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "display-hero-mobile": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "0.2em",
+              "fontWeight": "300"
+            }
+          ],
+          "headline-title": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-statement": [
+            "22px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "0.25em",
+              "fontWeight": "300"
+            }
+          ],
+          "body-default": [
+            "15px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "0",
+              "fontWeight": "400"
+            }
+          ],
+          "label-action": [
+            "11px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.15em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-canvas-linen font-body-default text-text-primary antialiased min-h-screen flex flex-col"><header class="fixed top-0 left-0 right-0 z-50 bg-canvas-linen/95 backdrop-blur-md border-b border-border-neutral"><div class="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="CraftRoots Monogram Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VoDtIm-Xfs8tPGncPMax0Yt2Sn4q6kknTWZ8FRoaJOygYh61kEd4etoC7K-GUmBTtShdTRoENTaQEjLAzLl7Y5w1yIy_8qKTxQ-XGWh_Q4jBNKVsdGepT7_w3WzgvV0BogO9CcsATqd2_qsGo8MQtNnqzne78_97K9JzIrsok3EIvy2yIFyyg7uQLkG5IzMs_N_uJ9dSy9NZCq0nlHPEqUBpQ8JNQ8gVDVVy6qSgM"/><a class="flex flex-col ml-space-xs" data-path="craftroots-home" href="#"><span class="font-label-action text-label-action uppercase tracking-[0.25em] text-text-primary font-semibold">CraftRoots</span><span class="font-spec-code text-[9px] uppercase tracking-[0.18em] text-text-secondary leading-none">Di Sản Sống</span></a></div><nav class="hidden lg:flex items-center text-on-surface-variant font-label-action text-label-action tracking-[0.15em]" data-active-classes="border-b-2 border-accent-terracotta text-text-primary font-semibold pb-1"><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-ceramics" href="#">Gốm Sứ</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-textiles" href="#">Dệt May</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a aria-current="page" class="transition-colors uppercase border-b-2 border-accent-terracotta text-text-primary font-semibold pb-1" data-path="craftroots-bamboo-rattan" href="#">Mây Tre</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-lacquer" href="#">Sơn Mài</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-regions" href="#">Vùng Miền</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-atlas" href="#">Bản Đồ</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-about" href="#">Giới Thiệu</a></nav><div class="flex items-center"><div class="flex items-center text-on-surface-variant font-label-action text-label-action tracking-[0.15em]"><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-search" href="#">Tìm Kiếm</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase flex items-center gap-1.5" data-path="craftroots-saved" href="#">Đã Lưu (4)</a></div><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-canvas-linen flex-1"><div class="flex flex-col w-full">
+<!-- BREADCRUMB & METADATA BAR -->
+<div class="w-full bg-surface-container-low px-margin py-space-sm">
+<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between text-body-spec font-body-spec text-text-secondary">
+<div class="flex items-center space-x-2">
+<a class="hover:text-accent-terracotta transition-colors uppercase font-label-action text-label-action" href="#">Kho Lưu Trữ Di Sản</a>
+<span class="opacity-40">/</span>
+<a class="hover:text-accent-terracotta transition-colors uppercase font-label-action text-label-action" href="#">Gốm Sứ Thổ Trạch</a>
+<span class="opacity-40">/</span>
+<span class="text-text-primary font-medium uppercase font-label-action text-label-action">Nghệ Nhân Nguyễn Văn Bình</span>
+</div>
+<div class="hidden md:flex items-center font-spec-code text-spec-code text-text-secondary gap-3">
+<span>MÃ ĐỊNH DANH: VN-BT-ART-0082</span>
+<span class="opacity-30">|</span>
+<span class="text-primary font-semibold">DI SẢN ĐANG HOẠT ĐỘNG</span>
+</div>
+</div>
+</div>
+<!-- SECTION 1: MASTER ARTISAN HERO PROFILE -->
+<section class="w-full px-margin py-space-xl bg-canvas-linen">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
+<!-- Portrait Column -->
+<div class="lg:col-span-5 relative group overflow-hidden bg-surface-container shadow-md">
+<div class="w-full h-full min-h-[520px] lg:min-h-[640px] relative">
+<img class="w-full h-full object-cover grayscale contrast-125 transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Intense dramatic black and white editorial portrait of elderly Vietnamese master ceramic artisan Nguyen Van Binh, 72 years old, with deep contemplative eyes, weather-beaten face, hands delicately coated in raw white river clay, wearing traditional linen work tunic, sitting inside an atmospheric rustic wood kiln ceramic studio in Bat Trang village, surrounded by ancient crackle-glazed ceramic vessels, dramatic natural side lighting casting textured shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl4t5W9t-jCGUSR42Jn70E0UuYern_kd1tUIorruRIyDjPEEJsJ-DS8L_IdPBEZrNrovQSQPQv8RFdg6ET-jdNxxL1ygCWJ2gY43MZgRYKRIQNKNKdn-FuedIf73w4AeLkMFSBkgCNIZnKUGdKp27ZlMcSGSnFU9Dv4fqi9_x3GHMEdPZtQfAyvAw7_X1WR1yUqr_ECSIrg7lf89RzA792KPEEdlAoACJVbW-fO-8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-text-primary/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6 flex items-end justify-between text-surface-crisp">
+<div>
+<p class="font-spec-code text-[11px] tracking-[0.2em] uppercase text-surface-variant/90">Chân Dung Điền Dã</p>
+<p class="font-headline-title text-title-card text-surface-crisp">Bên Cửa Lò Bầu Bát Tràng</p>
+</div>
+<div class="font-spec-code text-[10px] tracking-widest text-primary-fixed uppercase px-2.5 py-1 bg-surface-crisp/10 backdrop-blur-md">
+              Kỷ Lục 2024
+            </div>
+</div>
+</div>
+</div>
+<!-- Narrative Column -->
+<div class="lg:col-span-7 flex flex-col justify-between p-space-lg lg:p-space-xl bg-surface-crisp shadow-sm">
+<div class="space-y-space-md">
+<!-- Overline Label -->
+<div class="flex items-center gap-3">
+<span class="w-8 h-[2px] bg-accent-terracotta inline-block"></span>
+<span class="font-label-action text-label-action tracking-[0.25em] text-accent-terracotta uppercase font-semibold">
+              HỒ SƠ NGHỆ NHÂN ƯU TÚ | QUỐC PHỤC DI SẢN
+            </span>
+</div>
+<!-- Artisan Name -->
+<div>
+<h1 class="font-display-hero text-display-hero uppercase tracking-[0.18em] text-text-primary leading-tight">
+              NGUYỄN VĂN BÌNH
+            </h1>
+<div class="mt-space-xs flex flex-wrap items-center font-spec-code text-spec-code text-text-secondary gap-y-1">
+<span class="text-text-primary font-semibold">72 Tuổi</span>
+<span class="mx-3 opacity-30">|</span>
+<span>50 Năm Gìn Giữ Men Tro &amp; Lò Bầu Bát Tràng</span>
+<span class="mx-3 opacity-30">|</span>
+<span class="text-accent-terracotta font-medium">Đời thứ 5 dòng họ gốm Nguyễn</span>
+</div>
+</div>
+<!-- Divider -->
+<div class="w-full h-[1px] bg-surface-container"></div>
+<!-- Curatorial Narrative Statement -->
+<p class="font-body-default text-body-default text-text-primary leading-relaxed text-justify">
+            Sinh ra bên bờ sông Hồng, nghệ nhân Nguyễn Văn Bình đã dành trọn hơn nửa thế kỷ để phục dựng thành công công thức men rạn tro trấu từ thời Hậu Lê tưởng chừng đã thất truyền. Từng mẻ gốm của ông không dùng lò gas công nghiệp mà kiên trì nung bằng củi gỗ trong suốt ba ngày ba đêm để đạt sắc độ trầm mặc tự nhiên. Với ông, mỗi vết rạn trên cốt gốm không phải khiếm khuyết, mà là hơi thở của đất, của lửa và thời gian.
+          </p>
+<!-- Core Tenet Pullquote -->
+<div class="bg-surface-subtle p-space-md my-space-md">
+<p class="font-label-signature text-label-signature italic text-text-secondary leading-snug">
+              “Lửa lò bầu như tâm can người thợ. Nóng vội một khắc là hỏng một mùa gốm, giữ được nhịp thở đều thì đất vô tri mới kết tinh thành hồn cốt nước non.”
+            </p>
+<div class="mt-2 text-right font-spec-code text-[11px] uppercase tracking-wider text-text-secondary">
+              — Bút ký lò nung tháng 11/1987
+            </div>
+</div>
+</div>
+<!-- Metrics Strip & Action -->
+<div class="pt-space-md">
+<div class="grid grid-cols-3 gap-space-sm bg-surface-container-low p-space-md mb-space-md">
+<div class="flex flex-col">
+<span class="font-headline-title text-headline-title text-primary tracking-tight font-bold">50+</span>
+<span class="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mt-1">Năm Kinh Nghiệm</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-title text-headline-title text-accent-terracotta tracking-tight font-bold">120+</span>
+<span class="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mt-1">Tác Phẩm Phục Dựng</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-title text-headline-title text-tertiary tracking-tight font-bold">03</span>
+<span class="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mt-1">Triển Lãm Quốc Tế</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-md">
+<a class="inline-flex items-center justify-center bg-text-primary text-surface-crisp font-label-action text-label-action uppercase tracking-[0.2em] px-8 py-3.5 hover:bg-accent-terracotta transition-colors shadow-sm" href="#dat-lich">
+              Đăng Ký Đàm Đạo Trà &amp; Xem Mẻ Lò
+            </a>
+<button class="inline-flex items-center gap-2 text-text-primary hover:text-accent-terracotta font-label-action text-label-action uppercase tracking-[0.15em] py-3.5 transition-colors" onclick="document.getElementById('dialog-artisan-bio').showModal()">
+<span class="material-symbols-outlined text-[18px]">history_edu</span>
+<span>Niên Biểu Cuộc Đời</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: MASTERWORKS COLLECTION -->
+<section class="w-full px-margin py-space-xl bg-surface-container-low">
+<div class="max-w-7xl mx-auto space-y-space-lg">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm pb-space-sm">
+<div>
+<div class="flex items-center gap-2 mb-space-xs">
+<span class="font-spec-code text-spec-code uppercase tracking-[0.2em] text-accent-terracotta font-semibold">Tác Phẩm Tiêu Biểu</span>
+<span class="opacity-40">/</span>
+<span class="font-spec-code text-spec-code uppercase tracking-wider text-text-secondary">Kỹ Thuật Men Tro Lò Củi</span>
+</div>
+<h2 class="font-headline-title text-headline-title text-text-primary tracking-wide uppercase">
+            BỘ SƯU TẬP TÁC PHẨM ĐỘC BẢN
+          </h2>
+</div>
+<p class="font-body-spec text-body-spec text-text-secondary max-w-md text-left md:text-right">
+          Mỗi hiện vật đại diện cho một dấu mốc phục chế công thức bùn sông Hồng kết hợp tro rơm nếp, nung nhiệt 1280°C liên tục 72 giờ.
+        </p>
+</div>
+<!-- 3-Column Sharp Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Masterwork Card 1 -->
+<article class="group bg-surface-crisp shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
+<div class="relative w-full aspect-[4/5] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Exquisite studio shot of an authentic Vietnamese crackle glaze lime pot handcrafted by artisan Nguyen Van Binh, ornate cloud swirl relief carving, warm ivory ash glaze with subtle network of dark sepia craquelure lines, sitting on weathered ancient teak pedestal against warm neutral textured linen background, museum artifact spotlight lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR60-ZpfXIwFHNpnO-pJ2uEKkYBsVI65Mqk5RG5BXfbRQPPEaDOjG5Da77X9XTxl86hy--e3V1a3rg2xg4doXOgoFJV9znih8IjXXTwCdAzxlRW2ERihSz5PSCbgTWu7WfTz5-3-Nw0j8q0OvmMjBTtAm-HVCMMXUBHFiYGY4ArOOE7f353lKM6gO61KdF1eEublsluggeiz4CJNhBeCYEPi6xVigP7kYQ9Yacr9c"/>
+<div class="absolute top-4 left-4 bg-text-primary text-surface-crisp font-spec-code text-[11px] uppercase tracking-widest px-2.5 py-1">
+              NĂM CHẾ TÁC: 2021
+            </div>
+<div class="absolute bottom-4 right-4 bg-surface-crisp/90 backdrop-blur-sm text-text-primary font-spec-code text-[10px] uppercase px-2 py-0.5">
+              Ref: NVB-2021-01
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between space-y-space-md">
+<div>
+<div class="font-spec-code text-spec-code uppercase tracking-wider text-accent-terracotta mb-1">
+                Gốm Cổ Phục Chế • Men Rạn Hậu Lê
+              </div>
+<h3 class="font-title-card text-title-card text-text-primary group-hover:text-accent-terracotta transition-colors leading-snug">
+                Bình Vôi Men Rạn Họa Tiết Mây Cuộn
+              </h3>
+<p class="font-body-spec text-body-spec text-text-secondary mt-space-xs leading-relaxed">
+                Được đắp nổi thủ công chi tiết nghê vờn ngọc và mây cuộn cổ truyền. Men tro rơm nung bằng gỗ nghiến cho mạng rạn rễ tre sắc sảo màu cánh gián.
+              </p>
+</div>
+<div class="pt-space-sm space-y-2">
+<div class="flex justify-between items-center text-body-spec font-spec-code text-[12px] text-text-secondary">
+<span>Thông số chiều cao:</span>
+<span class="text-text-primary font-semibold">42 cm</span>
+</div>
+<div class="flex justify-between items-center text-body-spec font-spec-code text-[12px] text-text-secondary">
+<span>Chế tác:</span>
+<span class="text-text-primary">Đơn bản xuất xưởng</span>
+</div>
+<div class="pt-space-xs flex items-center justify-between">
+<span class="font-spec-code text-[11px] text-tertiary tracking-wider uppercase font-semibold">Hiện trạng: Sưu tập cá nhân</span>
+<button class="font-label-action text-label-action uppercase tracking-widest text-text-primary hover:text-accent-terracotta transition-colors flex items-center gap-1">
+                  HỒ SƠ <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Masterwork Card 2 -->
+<article class="group bg-surface-crisp shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
+<div class="relative w-full aspect-[4/5] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Editorial close-up of a five-element tea set hand-thrown on manual pottery wheel by Vietnamese master potter, wood fired kiln flamed transmutation glaze showing earthy tones of copper rust, deep indigo and iron ochre, tactile stone texture with steam gently rising from a small unglazed teacup, set on a dark slate surface with raw tea leaves scattered." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk2rOtTTCHjFTaZI3fpgTrSH_9ynRt6in3qZKbW-w1d-eCRXfhP40o4PbhXFgeA6J29Ijl3FZOoNFgkfRxGSxAxb6YmeuKzvtHOc9nmw8ZwtOtR6YbSyYZu1IXQFgG5P-fLxP2W-IOKnOuUWXdNCpz4B8Ouu-bnNKQPqAkTAOG8626cb30lCtrBRjI-6wn3oyMAYqatgW07T28Y-eKRFzoD3LTtWmiWr-hW3ifNu8"/>
+<div class="absolute top-4 left-4 bg-text-primary text-surface-crisp font-spec-code text-[11px] uppercase tracking-widest px-2.5 py-1">
+              NĂM CHẾ TÁC: 2023
+            </div>
+<div class="absolute bottom-4 right-4 bg-surface-crisp/90 backdrop-blur-sm text-text-primary font-spec-code text-[10px] uppercase px-2 py-0.5">
+              Ref: NVB-2023-04
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between space-y-space-md">
+<div>
+<div class="font-spec-code text-spec-code uppercase tracking-wider text-accent-terracotta mb-1">
+                Trà Đạo Di Sản • Men Hỏa Biến
+              </div>
+<h3 class="font-title-card text-title-card text-text-primary group-hover:text-accent-terracotta transition-colors leading-snug">
+                Bộ Ấm Chén Cổ Ngũ Hành Tương Sinh
+              </h3>
+<p class="font-body-spec text-body-spec text-text-secondary mt-space-xs leading-relaxed">
+                Nung củi không kiểm soát nhân tạo, để ngọn lửa tự do vẽ nên các vệt oxit khoáng tự nhiên. Gồm 1 ấm thếp, 1 chuyên trà và 5 chén quân tượng trưng Kim - Mộc - Thủy - Hỏa - Thổ.
+              </p>
+</div>
+<div class="pt-space-sm space-y-2">
+<div class="flex justify-between items-center text-body-spec font-spec-code text-[12px] text-text-secondary">
+<span>Dung tích ẩm:</span>
+<span class="text-text-primary font-semibold">280 ml</span>
+</div>
+<div class="flex justify-between items-center text-body-spec font-spec-code text-[12px] text-text-secondary">
+<span>Chất liệu đất:</span>
+<span class="text-text-primary">Đất sét Trúc Thôn lọc 5 cấp</span>
+</div>
+<div class="pt-space-xs flex items-center justify-between">
+<span class="font-spec-code text-[11px] text-accent-terracotta tracking-wider uppercase font-semibold">Lưu trữ: Bảo tàng CraftRoots</span>
+<button class="font-label-action text-label-action uppercase tracking-widest text-text-primary hover:text-accent-terracotta transition-colors flex items-center gap-1">
+                  HỒ SƠ <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Masterwork Card 3 -->
+<article class="group bg-surface-crisp shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
+<div class="relative w-full aspect-[4/5] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Refined museum perspective of an incense burner censer made of ancient cobalt blue glazed ceramics with delicately hammered real silver rim mountings, traditional Vietnamese lotus motifs and subtle calligraphy inscriptions, wisps of fragrant agarwood incense curling gracefully upwards in quiet atmospheric golden afternoon studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPdVDBwua7oWYuFRtlcCML1Q2YxEgOA4bZJjpPo-qImdRRfb6R6UNhp70jGpoTZQI_-85tnyxxgyiDNWW8Uf622ooPG-VSAPoUx9ezFopSw_aGntM0pcoRMjT5OiGuHVuiRVH2g8TIXKia8xbIc0FAUtEJ1w_OOw3gaPpWOnSTsA5KLZkG-9FQToAZNqiYv2kIaqirLLYY7899C5v9oOgKL7Cdw6aPiId3oI8iXjA"/>
+<div class="absolute top-4 left-4 bg-text-primary text-surface-crisp font-spec-code text-[11px] uppercase tracking-widest px-2.5 py-1">
+              NĂM CHẾ TÁC: 2025
+            </div>
+<div class="absolute bottom-4 right-4 bg-surface-crisp/90 backdrop-blur-sm text-text-primary font-spec-code text-[10px] uppercase px-2 py-0.5">
+              Ref: NVB-2025-09
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between space-y-space-md">
+<div>
+<div class="font-spec-code text-spec-code uppercase tracking-wider text-accent-terracotta mb-1">
+                Kỷ Niệm 50 Năm Nghề • Độc Bản
+              </div>
+<h3 class="font-title-card text-title-card text-text-primary group-hover:text-accent-terracotta transition-colors leading-snug">
+                Lư Xông Trầm Men Lam Cổ Dát Bạc
+              </h3>
+<p class="font-body-spec text-body-spec text-text-secondary mt-space-xs leading-relaxed">
+                Tác phẩm kết tinh kỹ thuật vẽ lam dưới men phong cách triều Mạc kết hợp nghệ thuật gò bạc Định Công, chế tác riêng đánh dấu chặng đường 50 năm cầm bút vẽ gốm.
+              </p>
+</div>
+<div class="pt-space-sm space-y-2">
+<div class="flex justify-between items-center text-body-spec font-spec-code text-[12px] text-text-secondary">
+<span>Kích thước:</span>
+<span class="text-text-primary font-semibold">24 × 28 cm</span>
+</div>
+<div class="flex justify-between items-center text-body-spec font-spec-code text-[12px] text-text-secondary">
+<span>Nghệ thuật liên kết:</span>
+<span class="text-text-primary">Gốm Bát Tràng &amp; Bạc Định Công</span>
+</div>
+<div class="pt-space-xs flex items-center justify-between">
+<span class="font-spec-code text-[11px] text-text-secondary tracking-wider uppercase font-semibold">Phục chế độc bản duy nhất</span>
+<button class="font-label-action text-label-action uppercase tracking-widest text-text-primary hover:text-accent-terracotta transition-colors flex items-center gap-1">
+                  HỒ SƠ <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<!-- SECTION 3: STUDIO VISIT & APPOINTMENT RESERVATION -->
+<section class="w-full px-margin py-space-xl bg-canvas-linen" id="dat-lich">
+<div class="max-w-7xl mx-auto">
+<div class="bg-surface-crisp shadow-md grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
+<!-- Studio Info Left Panel -->
+<div class="lg:col-span-7 p-space-lg lg:p-space-xl flex flex-col justify-between space-y-space-md">
+<div class="space-y-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-terracotta text-[20px]">explore</span>
+<span class="font-label-action text-label-action uppercase tracking-[0.25em] text-accent-terracotta font-semibold">
+                KHÔNG GIAN LÒ GỐM THỰC ĐỊA
+              </span>
+</div>
+<h2 class="font-headline-title text-headline-title uppercase tracking-wide text-text-primary">
+              ĐẾN THĂM XƯỞNG GỐM &amp; GẶP GỠ NGHỆ NHÂN
+            </h2>
+<p class="font-body-default text-body-default text-text-secondary leading-relaxed">
+              Xưởng gốm của Nghệ nhân Nguyễn Văn Bình là một trong số rất ít xưởng gia tộc tại Bát Tràng còn lưu giữ hệ thống lò bầu cổ 5 bầu nung củi. Quý khách ghé thăm được thưởng trà thái nguyên nấu nước mưa giếng cổ, nghe chuyện làng nghề và trực tiếp quan sát giai đoạn kéo gốm tay truyền thống.
+            </p>
+</div>
+<!-- Structured Information Blocks -->
+<div class="space-y-space-sm bg-surface-container-low p-space-md">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">location_on</span>
+<div>
+<p class="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary">Địa Chỉ Xưởng Thực Địa</p>
+<p class="font-body-default text-body-default text-text-primary font-medium">
+                  Xưởng Gốm Bình Gốm, Xóm 1 Làng Cổ Bát Tràng, Gia Lâm, Hà Nội
+                </p>
+<p class="font-spec-code text-[11px] text-text-secondary mt-0.5">
+                  Tọa độ: 20°58'42.1"N 105°54'51.2"E • Bến gốm Cổ Giang
+                </p>
+</div>
+</div>
+<div class="w-full h-[1px] bg-surface-container"></div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-accent-terracotta text-[20px] mt-0.5">schedule</span>
+<div>
+<p class="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary">Thời Gian Tiếp Khách &amp; Đàm Đạo</p>
+<p class="font-body-default text-body-default text-text-primary font-medium">
+                  Thứ Ba — Chủ Nhật | 08:30 — 17:00
+                </p>
+<p class="font-spec-code text-[11px] text-accent-terracotta mt-0.5">
+                  (Vui lòng đặt hẹn trước tối thiểu 24h để đảm bảo nghệ nhân có mặt tại xưởng)
+                </p>
+</div>
+</div>
+<div class="w-full h-[1px] bg-surface-container"></div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary text-[20px] mt-0.5">verified_user</span>
+<div>
+<p class="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary">Nghi Thức Đón Tiếp</p>
+<p class="font-body-spec text-body-spec text-text-secondary">
+                  Tối đa 6 khách mỗi lượt trà để đảm bảo không gian yên tĩnh và trải nghiệm trò chuyện sâu sắc cùng Nghệ nhân.
+                </p>
+</div>
+</div>
+</div>
+<!-- Studio Location Static Preview Map Container -->
+<div class="w-full h-44 bg-surface-container overflow-hidden relative shadow-inner" data-location="Bat Trang Pottery Village, Hanoi, Vietnam" style="">
+<div class="absolute inset-0 flex items-center justify-center bg-text-primary/30 backdrop-blur-[1px]">
+<div class="bg-surface-crisp px-4 py-2 text-center shadow-md">
+<span class="font-spec-code text-spec-code tracking-widest text-text-primary uppercase block">Tọa Độ Di Sản Bát Tràng</span>
+<span class="font-body-spec text-[11px] text-accent-terracotta font-medium">Nhấp để mở vị trí Google Maps</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Reservation Form Right Panel -->
+<div class="lg:col-span-5 bg-surface-subtle p-space-lg lg:p-space-xl flex flex-col justify-between">
+<form class="space-y-space-md" id="appointment-form" onsubmit="event.preventDefault(); alert('CraftRoots đã tiếp nhận yêu cầu đàm đạo cùng Nghệ nhân Nguyễn Văn Bình. Ban thư ký di sản sẽ liên lạc xác nhận lịch trong vòng 4 giờ.');">
+<div>
+<span class="font-label-action text-label-action uppercase tracking-[0.2em] text-text-primary font-semibold block mb-1">
+                PHIẾU ĐẶT HẸN ĐÀM ĐẠO TRÀ
+              </span>
+<p class="font-body-spec text-body-spec text-text-secondary">
+                Điền thông tin để chúng tôi chuẩn bị trà ấm và điều phối thời gian nung lò của cụ Bình.
+              </p>
+</div>
+<div class="space-y-space-sm">
+<div>
+<label class="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Họ và tên khách quý *</label>
+<input class="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm" placeholder="Nguyễn Hoàng Nam" required="" type="text"/>
+</div>
+<div>
+<label class="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Số điện thoại liên lạc *</label>
+<input class="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm" placeholder="0912 345 678" required="" type="tel"/>
+</div>
+<div class="grid grid-cols-2 gap-space-sm">
+<div>
+<label class="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Ngày mong muốn *</label>
+<input class="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm" required="" type="date"/>
+</div>
+<div>
+<label class="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Khung giờ tiếp *</label>
+<select class="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm">
+<option>Sáng: 09:30 - 11:30</option>
+<option>Chiều: 14:00 - 16:00</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Mục đích chuyến thăm</label>
+<select class="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm">
+<option>Đàm đạo trà &amp; Tìm hiểu kỹ thuật men rạn cổ</option>
+<option>Quan sát chu kỳ dỡ lò nung củi</option>
+<option>Đặt chế tác tác phẩm gia bảo độc bản</option>
+<option>Nghiên cứu học thuật dân tộc học / mỹ thuật</option>
+</select>
+</div>
+<div>
+<label class="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Ghi chú cho xưởng</label>
+<textarea class="w-full rounded-[16px] bg-surface-crisp p-space-sm font-body-spec text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm resize-none" placeholder="Số lượng người đi cùng, mối quan tâm đặc biệt về gốm..." rows="2"></textarea>
+</div>
+</div>
+<button class="w-full bg-text-primary hover:bg-accent-terracotta text-surface-crisp font-label-action text-label-action uppercase tracking-[0.2em] py-4 transition-colors text-center shadow-md" type="submit">
+              ĐẶT LỊCH ĐÀM ĐẠO TRÀ &amp; XEM MẺ LÒ →
+            </button>
+</form>
+<div class="mt-space-md pt-space-sm flex items-center justify-between font-spec-code text-[11px] text-text-secondary">
+<span>Chứng thực: Hiệp hội Làng nghề VN</span>
+<span>Miễn phí vé vào cửa di sản</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- MODAL: ARTISAN CHRONOLOGY (NIÊN BIỂU) -->
+<dialog class="backdrop:bg-text-primary/60 bg-transparent p-4 max-w-2xl w-full" id="dialog-artisan-bio">
+<div class="bg-surface-crisp p-space-lg shadow-2xl relative max-h-[870px] overflow-y-auto">
+<div class="flex justify-between items-start pb-space-sm">
+<div>
+<span class="font-spec-code text-[11px] uppercase tracking-widest text-accent-terracotta">HỒ SƠ TƯ LIỆU HÓA</span>
+<h3 class="font-headline-title text-headline-title text-text-primary uppercase">Niên Biểu Nghệ Nhân Nguyễn Văn Bình</h3>
+</div>
+<button class="p-1 text-text-secondary hover:text-text-primary" onclick="document.getElementById('dialog-artisan-bio').close()">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+</div>
+<div class="py-space-md space-y-space-md relative before:absolute before:inset-0 before:left-3 before:w-[2px] before:bg-surface-container">
+<!-- Event 1 -->
+<div class="relative pl-8">
+<span class="absolute left-2 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full bg-accent-terracotta"></span>
+<span class="font-spec-code text-[12px] text-accent-terracotta font-semibold">1952</span>
+<h4 class="font-title-card text-title-card text-text-primary font-medium">Chào đời tại Bát Tràng</h4>
+<p class="font-body-spec text-body-spec text-text-secondary mt-1">
+            Sinh ra trong gia đình gốm danh gia họ Nguyễn, đời thứ năm tiếp nối nghề nhào nặn đất sét bên dòng Hồng Hà.
+          </p>
+</div>
+<!-- Event 2 -->
+<div class="relative pl-8">
+<span class="absolute left-2 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full bg-text-primary"></span>
+<span class="font-spec-code text-[12px] text-text-primary font-semibold">1974</span>
+<h4 class="font-title-card text-title-card text-text-primary font-medium">Trở thành Trưởng kíp lò Hợp tác xã Hợp Thành</h4>
+<p class="font-body-spec text-body-spec text-text-secondary mt-1">
+            Chỉ huy các mẻ lò nung gốm sứ mậu dịch xuất khẩu Đông Âu, nghiên cứu cơ chế nhiệt độ lò củi và độ co ngót của đất phù sa.
+          </p>
+</div>
+<!-- Event 3 -->
+<div class="relative pl-8">
+<span class="absolute left-2 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full bg-tertiary"></span>
+<span class="font-spec-code text-[12px] text-tertiary font-semibold">1992</span>
+<h4 class="font-title-card text-title-card text-text-primary font-medium">Tái sinh dòng men rạn tro trấu Hậu Lê</h4>
+<p class="font-body-spec text-body-spec text-text-secondary mt-1">
+            Sau 12 năm thực nghiệm điền dã, phục hồi thành công sắc rạn ngà truyền thống bằng tro vỏ trấu nếp cái hoa vàng nung lửa hoàn nguyên.
+          </p>
+</div>
+<!-- Event 4 -->
+<div class="relative pl-8">
+<span class="absolute left-2 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full bg-primary"></span>
+<span class="font-spec-code text-[12px] text-primary font-semibold">2010</span>
+<h4 class="font-title-card text-title-card text-text-primary font-medium">Đón nhận danh hiệu Nghệ Nhân Ưu Tú</h4>
+<p class="font-body-spec text-body-spec text-text-secondary mt-1">
+            Chủ tịch nước trao tặng danh hiệu cao quý vì cống hiến bền bỉ gìn giữ di sản văn hóa phi vật thể của đất nước.
+          </p>
+</div>
+<!-- Event 5 -->
+<div class="relative pl-8">
+<span class="absolute left-2 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full bg-accent-terracotta"></span>
+<span class="font-spec-code text-[12px] text-accent-terracotta font-semibold">Hiện Tại</span>
+<h4 class="font-title-card text-title-card text-text-primary font-medium">Cố vấn trưởng Viện Lưu Trữ CraftRoots</h4>
+<p class="font-body-spec text-body-spec text-text-secondary mt-1">
+            Trực tiếp đào tạo thế hệ thợ trẻ và giám tuyển bộ sưu tập gốm cổ truyền lưu giữ tại Bát Tràng.
+          </p>
+</div>
+</div>
+<div class="pt-space-sm flex justify-end">
+<button class="bg-surface-subtle text-text-primary font-label-action text-label-action uppercase tracking-widest px-6 py-2.5 hover:bg-surface-container" onclick="document.getElementById('dialog-artisan-bio').close()">
+          Đóng Hồ Sơ
+        </button>
+</div>
+</div>
+</dialog>
+</div></main><footer class="w-full bg-canvas-linen border-t border-border-neutral pt-space-xl pb-space-lg"><div class="max-w-7xl mx-auto px-margin"><div class="grid grid-cols-1 md:grid-cols-12 gap-gutter pb-space-xl border-b border-border-neutral"><div class="md:col-span-4 flex flex-col pr-space-md"><div class="flex items-center gap-space-sm mb-space-sm"><span class="font-headline-title text-headline-title text-text-primary tracking-tight">CraftRoots</span><span class="text-[10px] font-spec-code tracking-[0.2em] uppercase text-accent-terracotta border border-accent-terracotta px-2 py-0.5 rounded-[50px]">Lưu Trữ Sống</span></div><p class="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">Bảo tồn cốt cách làng nghề và tôn vinh bàn tay tài hoa của nghệ nhân Việt Nam qua từng đường nét, chất liệu mộc bản và tâm thức văn hóa ngàn năm.</p><div class="text-body-spec font-body-spec text-text-primary space-y-1"><div class="font-semibold text-text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-accent-terracotta">location_on</span>Xưởng gốm &amp; Lưu trữ Di sản:</div><div class="text-text-secondary pl-5 text-[12px]">Thôn 1 Bát Tràng, Gia Lâm, Hà Nội</div></div></div><div class="md:col-span-5 flex flex-col justify-start md:px-space-md border-t md:border-t-0 md:border-l md:border-r border-border-neutral pt-space-md md:pt-0"><span class="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary font-semibold mb-space-xs">Bản Tin Di Sản &amp; Phục Dựng</span><p class="font-body-spec text-body-spec text-text-secondary mb-space-md">Nhận tư liệu điền dã, hồ sơ kỹ thuật cổ truyền và thông báo tuyển tập tác phẩm thủ công giới hạn hàng tháng.</p><form class="flex items-center w-full max-w-md h-[46px] rounded-[50px] border border-border-neutral bg-surface-crisp px-space-sm transition-colors focus-within:border-accent-terracotta"><input class="flex-1 bg-transparent px-space-sm text-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none" placeholder="Nhập email lưu trữ di sản..." type="email"/><button class="font-label-action text-label-action uppercase tracking-[0.15em] bg-text-primary hover:bg-accent-terracotta text-surface-crisp px-4 py-2 rounded-[50px] transition-colors shrink-0" type="submit">Đăng Ký</button></form></div><div class="md:col-span-3 flex flex-col justify-between md:pl-space-md pt-space-md md:pt-0"><div class="flex flex-col"><span class="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary font-semibold mb-space-sm">Nguyên Tắc &amp; Kết Nối</span><nav class="flex flex-wrap items-center font-body-spec text-body-spec text-text-secondary leading-loose"><a class="hover:text-accent-terracotta transition-colors" data-path="craftroots-charter" href="#">Quy chế</a><span class="mx-2 text-border-neutral opacity-60 font-light select-none">|</span><a class="hover:text-accent-terracotta transition-colors" data-path="craftroots-artisans" href="#">Nghệ nhân đối tác</a><span class="mx-2 text-border-neutral opacity-60 font-light select-none">|</span><a class="hover:text-accent-terracotta transition-colors" data-path="craftroots-conservation" href="#">Bảo tồn</a><span class="mx-2 text-border-neutral opacity-60 font-light select-none">|</span><a class="hover:text-accent-terracotta transition-colors" data-path="craftroots-contact" href="#">Liên hệ</a></nav></div><div class="pt-space-md"><span class="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-secondary block">Tài liệu hóa theo chuẩn văn hóa dân tộc học</span></div></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between text-body-spec text-text-secondary text-[12px]"><div>© 2024 CraftRoots. Giữ toàn quyền lưu trữ và phát hành di sản phi vật thể.</div><div class="flex items-center gap-space-md mt-space-xs sm:mt-0 font-spec-code text-spec-code text-[11px] text-text-secondary"><span>Kinh độ: 105.9142° E</span><span class="text-border-neutral opacity-60">|</span><span>Vĩ độ: 20.9782° N</span><span class="text-border-neutral opacity-60">|</span><span>Bản vị: Thổ Trạch Việt</span></div></div></div></footer></body></html>

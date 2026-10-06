@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>CraftRoots — Di Sản &amp; Làng Nghề Thủ Công Truyền Thống</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Montserrat:wght@300;400;500;600&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "border-neutral": "#E6E2DA",
+          "inverse-surface": "#31302f",
+          "on-secondary-fixed": "#1c1b18",
+          "primary-fixed": "#ffdbc7",
+          "tertiary-fixed-dim": "#6ed5e3",
+          "tertiary": "#006670",
+          "on-secondary-container": "#666460",
+          "secondary-fixed-dim": "#cac6c1",
+          "tertiary-container": "#00818d",
+          "text-primary": "#1C1B1A",
+          "surface-crisp": "#FFFFFF",
+          "on-primary-fixed": "#311300",
+          "surface-container-high": "#ece7e5",
+          "text-secondary": "#5A5854",
+          "error": "#ba1a1a",
+          "surface": "#fdf8f6",
+          "on-surface": "#1c1b1a",
+          "on-error": "#ffffff",
+          "accent-terracotta": "#B86B35",
+          "outline": "#867368",
+          "on-tertiary": "#ffffff",
+          "surface-dim": "#ddd9d7",
+          "primary": "#8e4a16",
+          "inverse-primary": "#ffb689",
+          "inverse-on-surface": "#f4f0ee",
+          "surface-container-lowest": "#ffffff",
+          "surface-container-highest": "#e6e2df",
+          "on-tertiary-fixed": "#001f23",
+          "canvas-linen": "#F9F8F6",
+          "on-tertiary-container": "#f6feff",
+          "primary-fixed-dim": "#ffb689",
+          "on-primary-container": "#fffbff",
+          "on-background": "#1c1b1a",
+          "on-secondary-fixed-variant": "#484743",
+          "surface-bright": "#fdf8f6",
+          "secondary": "#605e5a",
+          "background": "#fdf8f6",
+          "on-primary-fixed-variant": "#733500",
+          "on-error-container": "#93000a",
+          "surface-variant": "#e6e2df",
+          "error-container": "#ffdad6",
+          "tertiary-fixed": "#90f1ff",
+          "surface-container-low": "#f7f3f0",
+          "on-secondary": "#ffffff",
+          "secondary-container": "#e6e2dc",
+          "surface-container": "#f2edeb",
+          "on-tertiary-fixed-variant": "#004f57",
+          "outline-variant": "#d9c2b5",
+          "on-primary": "#ffffff",
+          "surface-subtle": "#F4F2EE",
+          "on-surface-variant": "#54433a",
+          "secondary-fixed": "#e6e2dc",
+          "primary-container": "#ac612c",
+          "surface-tint": "#914c18"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin": "3rem",
+          "gutter-mobile": "1rem",
+          "gutter": "1.5rem",
+          "space-xl": "2.5rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "space-xs": "0.25rem",
+          "margin-mobile": "1.25rem",
+          "space-lg": "1.5rem"
+        },
+        "fontFamily": {
+          "spec-code": [
+            "Inter"
+          ],
+          "label-signature": [
+            "Playfair Display"
+          ],
+          "body-spec": [
+            "Inter"
+          ],
+          "display-hero": [
+            "Montserrat"
+          ],
+          "title-card": [
+            "Playfair Display"
+          ],
+          "display-hero-mobile": [
+            "Montserrat"
+          ],
+          "headline-title": [
+            "Playfair Display"
+          ],
+          "headline-statement": [
+            "Montserrat"
+          ],
+          "body-default": [
+            "Inter"
+          ],
+          "label-action": [
+            "Montserrat"
+          ]
+        },
+        "fontSize": {
+          "spec-code": [
+            "12px",
+            {
+              "lineHeight": "18px",
+              "letterSpacing": "0.06em",
+              "fontWeight": "500"
+            }
+          ],
+          "label-signature": [
+            "16px",
+            {
+              "lineHeight": "22px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "400"
+            }
+          ],
+          "body-spec": [
+            "13px",
+            {
+              "lineHeight": "22px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "400"
+            }
+          ],
+          "display-hero": [
+            "48px",
+            {
+              "lineHeight": "56px",
+              "letterSpacing": "0.3em",
+              "fontWeight": "300"
+            }
+          ],
+          "title-card": [
+            "18px",
+            {
+              "lineHeight": "26px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "display-hero-mobile": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "0.2em",
+              "fontWeight": "300"
+            }
+          ],
+          "headline-title": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-statement": [
+            "22px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "0.25em",
+              "fontWeight": "300"
+            }
+          ],
+          "body-default": [
+            "15px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "0",
+              "fontWeight": "400"
+            }
+          ],
+          "label-action": [
+            "11px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.15em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-canvas-linen font-body-default text-text-primary antialiased min-h-screen flex flex-col"><header class="fixed top-0 left-0 right-0 z-50 bg-canvas-linen/95 backdrop-blur-md border-b border-border-neutral"><div class="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="CraftRoots Monogram Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VoDtIm-Xfs8tPGncPMax0Yt2Sn4q6kknTWZ8FRoaJOygYh61kEd4etoC7K-GUmBTtShdTRoENTaQEjLAzLl7Y5w1yIy_8qKTxQ-XGWh_Q4jBNKVsdGepT7_w3WzgvV0BogO9CcsATqd2_qsGo8MQtNnqzne78_97K9JzIrsok3EIvy2yIFyyg7uQLkG5IzMs_N_uJ9dSy9NZCq0nlHPEqUBpQ8JNQ8gVDVVy6qSgM"/><a class="flex flex-col ml-space-xs" data-path="craftroots-home" href="#"><span class="font-label-action text-label-action uppercase tracking-[0.25em] text-text-primary font-semibold">CraftRoots</span><span class="font-spec-code text-[9px] uppercase tracking-[0.18em] text-text-secondary leading-none">Di Sản Sống</span></a></div><nav class="hidden lg:flex items-center text-on-surface-variant font-label-action text-label-action tracking-[0.15em]" data-active-classes="border-b-2 border-accent-terracotta text-text-primary font-semibold pb-1"><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-ceramics" href="#">Gốm Sứ</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-textiles" href="#">Dệt May</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-bamboo-rattan" href="#">Mây Tre</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-lacquer" href="#">Sơn Mài</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-regions" href="#">Vùng Miền</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-atlas" href="#">Bản Đồ</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-about" href="#">Giới Thiệu</a></nav><div class="flex items-center"><div class="flex items-center text-on-surface-variant font-label-action text-label-action tracking-[0.15em]"><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase" data-path="craftroots-search" href="#">Tìm Kiếm</a><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><a class="text-on-surface-variant hover:text-accent-terracotta transition-colors uppercase flex items-center gap-1.5" data-path="craftroots-saved" href="#">Đã Lưu (4)</a></div><span class="mx-4 text-border-neutral opacity-60 font-light select-none">|</span><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-canvas-linen flex-1"><div class="flex flex-col w-full">
+<!-- Hero Section -->
+<section class="relative w-full min-h-[640px] lg:min-h-[720px] flex items-center justify-end overflow-hidden -mt-20 pt-20">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A master Vietnamese ceramic artisan in an earthy, sunlit studio in Bat Trang village, shaping unglazed clay on a rustic kick-wheel. Golden dust motes float through northern afternoon light, illuminating handwoven bamboo drying racks, aged terracotta urns, raw river silt textures, and natural linen workwear. Editorial architectural lighting, authentic documentary aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCdKDmU3omFnH1-UgCNIGr9SniP8pazrUjo8i70l1xby0267_kF-wWIYx7SF1aDkAQvZDE1sqF2FcYkVr-HFqPyaOgIiGKKfnPwgH4YfBQ1HfvKSnkpIKecG_0XUd6-EPVGqR-bMn9Kclpi2WxHf9VC1lifYUEu-TYH9srXI47L3uxKDI0J9lQnBhD6wklng-H7V-3u3VsXCmCC9D1Avwacl9S1BrzXp7fbTLDSDpE')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-text-primary/70 via-text-primary/40 to-text-primary/20 lg:to-transparent"></div>
+<div class="relative z-10 w-full max-w-7xl mx-auto px-margin py-space-xl flex justify-end">
+<div class="w-full max-w-xl bg-canvas-linen/95 backdrop-blur-sm p-8 sm:p-12 border border-border-neutral rounded-none shadow-xl">
+<div class="flex items-center gap-2 mb-4">
+<span class="w-2 h-2 bg-accent-terracotta inline-block"></span>
+<span class="font-display-hero text-[11px] sm:text-[13px] tracking-[0.35em] text-accent-terracotta uppercase font-light">
+            LƯU TRỮ VÀ BẢO TỒN THỦ CÔNG VIỆT NAM
+          </span>
+</div>
+<h1 class="font-headline-title text-[28px] sm:text-[38px] leading-[1.25] tracking-[0.1em] sm:tracking-[0.15em] text-text-primary uppercase font-light mb-6">
+          DI SẢN SỐNG TRONG TỪNG ĐƯỜNG NÉT
+        </h1>
+<p class="font-body-default text-body-default text-text-secondary leading-relaxed mb-8">
+          Không gian số vinh danh tinh hoa làng nghề truyền thống từ Bắc chí Nam. Từng thớ đất, sợi tơ, nan tre đều chứa đựng ký ức bàn tay người Việt qua hàng thế kỷ.
+        </p>
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-6 border-t border-border-neutral">
+<a class="group inline-flex items-center gap-3 font-label-action text-label-action uppercase tracking-[0.25em] text-text-primary border-b border-text-primary pb-1 hover:text-accent-terracotta hover:border-accent-terracotta transition-colors" href="#">
+<span>KHÁM PHÁ DANH MỤC DI SẢN</span>
+<span class="transition-transform group-hover:translate-x-1">→</span>
+</a>
+<span class="font-spec-code text-[11px] uppercase tracking-[0.15em] text-text-secondary">
+            BẢN GHI: 2.840 TÁC PHẨM
+          </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section Divider with Pipe Alignment -->
+<div class="w-full bg-surface-subtle border-y border-border-neutral">
+<div class="max-w-7xl mx-auto px-margin py-4 flex flex-wrap items-center justify-between gap-4 font-spec-code text-spec-code text-text-secondary">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[16px] text-accent-terracotta">history_edu</span>
+<span class="uppercase tracking-[0.12em] text-text-primary">TẬP HỒ SƠ 01 // KHẢO TẢ LÀNG NGHỀ</span>
+</div>
+<div class="hidden sm:flex items-center gap-4 text-[11px] tracking-[0.08em]">
+<span>KINH ĐỘ: 105°55' E</span>
+<span class="text-border-neutral opacity-60">|</span>
+<span>VĨ ĐỘ: 21°02' N</span>
+<span class="text-border-neutral opacity-60">|</span>
+<span class="text-accent-terracotta font-medium">XÁC THỰC HIỆN TRƯỜNG: 2024</span>
+</div>
+</div>
+</div>
+<!-- 3-Column Craft Highlights Grid -->
+<section class="w-full py-space-xl bg-canvas-linen">
+<div class="max-w-7xl mx-auto px-margin">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-6 border-b border-border-neutral gap-4">
+<div>
+<span class="font-display-hero text-[11px] tracking-[0.3em] uppercase text-accent-terracotta font-medium block mb-2">
+            TUYỂN CHỌN ĐỊNH KỲ
+          </span>
+<h2 class="font-display-hero text-[18px] sm:text-[22px] tracking-[0.25em] text-text-primary uppercase font-light">
+            TÁC PHẨM ĐẶC SẮC <span class="mx-3 text-border-neutral opacity-60 font-light select-none">|</span> NGUYÊN BẢN TỪ LÀNG NGHỀ
+          </h2>
+</div>
+<div class="font-spec-code text-spec-code text-text-secondary flex items-center gap-2">
+<span>HIỂN THỊ: 03 TRÊN 120 VẬT PHẨM LƯU CHIỂU</span>
+</div>
+</div>
+<!-- 3 Sharp Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1: Bat Trang Ceramic -->
+<article class="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col">
+<div class="relative w-full aspect-[4/5] overflow-hidden bg-surface-subtle">
+<img class="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500" data-alt="Close-up macro of an artisanal Vietnamese cracked-glaze teapot from Bat Trang pottery village, delicate web-like crazing across ivory porcelain surface, brass arched handle, rustic earthen wood-fired aesthetic, natural atmospheric diffused daylight, museum catalog detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaUrvFnVxj2lsHDRkr-yaTRJCRIumrtcbAoBO8T7gJK22rF-l8LFMNoASMdtx_N8hQkmINE6HE7xtmJmzGpxqvbiG5mzG2TvxNKGDuu4MZjKV7e4q6ixIFOJ1PSNsl56IqQagawz_SCLeDfMjYY1bGxxdBh3e-6wBJ15RkSXBTpEZHEoWqpB_uzbwmdJy82jUtSMpkv6zROQGRW5W2GKqEOL2DxfhNLSsVd1T7ujM"/>
+<div class="absolute top-4 left-4 bg-surface-crisp/95 backdrop-blur-xs px-3 py-1 border border-border-neutral">
+<span class="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-primary">MÃ: BT-MR01</span>
+</div>
+<div class="absolute bottom-4 right-4 bg-text-primary text-surface-crisp px-2.5 py-0.5">
+<span class="font-spec-code text-[10px] uppercase tracking-[0.15em]">NUNG CỦI 1300°C</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-text-secondary font-spec-code text-[11px] uppercase tracking-wider mb-2">
+<span>Làng Gốm Bát Tràng</span>
+<span>Hà Nội</span>
+</div>
+<h3 class="font-title-card text-title-card text-text-primary font-medium mb-3">
+                Ấm Trà Men Rạn Cổ Điển
+              </h3>
+<p class="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4">
+                Chế tác từ đất sét phù sa sông Hồng nung men tro cổ truyền. Mỗi đường rạn nứt tự nhiên theo biến thiên nhiệt độ lò bầu, không trùng lặp.
+              </p>
+</div>
+<div class="pt-4 border-t border-border-neutral space-y-2">
+<div class="flex items-center justify-between font-spec-code text-[11px]">
+<span class="text-text-secondary">Chất liệu:</span>
+<span class="text-text-primary font-medium">Cao lanh men tro gỗ</span>
+</div>
+<div class="flex items-center justify-between font-spec-code text-[11px]">
+<span class="text-text-secondary">Kích thước:</span>
+<span class="text-text-primary font-medium">180ml <span class="text-border-neutral">|</span> Ø 9.5cm</span>
+</div>
+<div class="pt-3 flex items-center justify-between">
+<span class="font-headline-title text-[16px] text-text-primary font-semibold">1.850.000 ₫</span>
+<a class="font-label-action text-[10px] uppercase tracking-[0.18em] text-accent-terracotta hover:underline inline-flex items-center gap-1" href="#">
+                  XEM CHI TIẾT →
+                </a>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2: Cham Brocade Weaving -->
+<article class="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col">
+<div class="relative w-full aspect-[4/5] overflow-hidden bg-surface-subtle">
+<img class="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500" data-alt="Traditional Cham handwoven brocade scarf laid flat on raw linen, complex geometric diamond patterns in natural indigo and madder root red, fine organic cotton fringe, authentic village craft aesthetic from My Nghiep Ninh Thuan, rich tactile fiber detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBay0c69D5JK7FMaxyn9PSRxcsgUqgVBC4moSSxlmkFLgKHiKIqdRgYLDbsNkoDNTWbn3aE3tjfmDVjmU7b0uCCCWly4AJRKvMbcSnFUrimhvpDJ528ysIaEbq7Vk675AvADO51B7vRlzladV4zbFP22E6K0TREwBbPB2PY6e9MzBG80dTaXhPHGxL-GcbgknPoVSiq1dmnBko_BQVJIGRkPk_Vx46iUTqabaRYxTU"/>
+<div class="absolute top-4 left-4 bg-surface-crisp/95 backdrop-blur-xs px-3 py-1 border border-border-neutral">
+<span class="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-primary">MÃ: MN-TC04</span>
+</div>
+<div class="absolute bottom-4 right-4 bg-text-primary text-surface-crisp px-2.5 py-0.5">
+<span class="font-spec-code text-[10px] uppercase tracking-[0.15em]">DỆT KHUNG GỖ CỔ</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-text-secondary font-spec-code text-[11px] uppercase tracking-wider mb-2">
+<span>Làng Dệt Mỹ Nghiệp</span>
+<span>Ninh Thuận</span>
+</div>
+<h3 class="font-title-card text-title-card text-text-primary font-medium mb-3">
+                Khăn Choàng Thổ Cẩm Hoa Văn Thần Sư
+              </h3>
+<p class="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4">
+                Sợi bông trồng tự nhiên ven đồi cát, nhuộm bằng vỏ cây rừng và lá chàm ngâm ủ 20 ngày. Họa tiết cổ xưa mang tính bảo hộ tâm linh.
+              </p>
+</div>
+<div class="pt-4 border-t border-border-neutral space-y-2">
+<div class="flex items-center justify-between font-spec-code text-[11px]">
+<span class="text-text-secondary">Chất liệu:</span>
+<span class="text-text-primary font-medium">Bông thô nhuộm thực vật</span>
+</div>
+<div class="flex items-center justify-between font-spec-code text-[11px]">
+<span class="text-text-secondary">Kích thước:</span>
+<span class="text-text-primary font-medium">65 × 200 cm</span>
+</div>
+<div class="pt-3 flex items-center justify-between">
+<span class="font-headline-title text-[16px] text-text-primary font-semibold">1.420.000 ₫</span>
+<a class="font-label-action text-[10px] uppercase tracking-[0.18em] text-accent-terracotta hover:underline inline-flex items-center gap-1" href="#">
+                  XEM CHI TIẾT →
+                </a>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3: Phu Vinh Bamboo Rattan -->
+<article class="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col">
+<div class="relative w-full aspect-[4/5] overflow-hidden bg-surface-subtle">
+<img class="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500" data-alt="Intricately woven Vietnamese bamboo and rattan tea tray from Phu Vinh village, extremely tight circular geometric weave, smooth honey-colored aged patina, minimalist architectural craft styling, top-down angled shot on raw stoneware surface, clean studio daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqtjQ5mo5cRimsDw-0a1cXtEfhsOYh5Em5ML9l64b0Hc7BtO4oQu0rQCKeojkVUo26ovuW7WQJi9O9HWREIBgFJQ54jYdAVaqFw_qoJKFU5nDAJnK3m_SuzktfK4177Hs6U0AZ6NjMS-0nZHrlaberLVVzTzO0pAj5wvYnyap_2yX0pGsWUYWItuudPhk86mrePax74Ug2wRYKiBJ1_4Y22e-lHlXxzgQsUnUvcqw"/>
+<div class="absolute top-4 left-4 bg-surface-crisp/95 backdrop-blur-xs px-3 py-1 border border-border-neutral">
+<span class="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-primary">MÃ: PV-MT09</span>
+</div>
+<div class="absolute bottom-4 right-4 bg-text-primary text-surface-crisp px-2.5 py-0.5">
+<span class="font-spec-code text-[10px] uppercase tracking-[0.15em]">CHUỐT NAN TƠ</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-text-secondary font-spec-code text-[11px] uppercase tracking-wider mb-2">
+<span>Làng Mây Tre Phú Vinh</span>
+<span>Chương Mỹ</span>
+</div>
+<h3 class="font-title-card text-title-card text-text-primary font-medium mb-3">
+                Khay Trà Mây Nếp Vót Chuốt
+              </h3>
+<p class="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4">
+                Sử dụng mây nếp rừng già phơi khô 6 tháng, nan được vót mỏng như sợi cước bằng dao rèn thủ công. Đan kín không một vết nối thừa.
+              </p>
+</div>
+<div class="pt-4 border-t border-border-neutral space-y-2">
+<div class="flex items-center justify-between font-spec-code text-[11px]">
+<span class="text-text-secondary">Chất liệu:</span>
+<span class="text-text-primary font-medium">Mây nếp rừng &amp; nan tre già</span>
+</div>
+<div class="flex items-center justify-between font-spec-code text-[11px]">
+<span class="text-text-secondary">Kích thước:</span>
+<span class="text-text-primary font-medium">36 × 26 × 3.5 cm</span>
+</div>
+<div class="pt-3 flex items-center justify-between">
+<span class="font-headline-title text-[16px] text-text-primary font-semibold">980.000 ₫</span>
+<a class="font-label-action text-[10px] uppercase tracking-[0.18em] text-accent-terracotta hover:underline inline-flex items-center gap-1" href="#">
+                  XEM CHI TIẾT →
+                </a>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Bottom action button -->
+<div class="mt-12 text-center">
+<a class="inline-block px-10 py-3.5 bg-text-primary text-surface-crisp font-label-action text-label-action uppercase tracking-[0.2em] rounded-none hover:bg-accent-terracotta transition-colors shadow-sm" href="#">
+          XEM TOÀN BỘ KHO LƯU TRỮ DI SẢN
+        </a>
+</div>
+</div>
+</section>
+<!-- 3-Column Trust Strip (Bản Sắc & Cam Kết) -->
+<section class="w-full bg-surface-subtle border-y border-border-neutral py-14">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border-neutral">
+<!-- Col 1 -->
+<div class="py-6 md:py-0 md:px-8 first:pl-0 flex flex-col justify-start">
+<div class="flex items-center gap-3 mb-3">
+<span class="font-spec-code text-spec-code text-accent-terracotta font-semibold">01 / NGUỒN GỐC</span>
+<span class="w-8 h-px bg-border-neutral"></span>
+</div>
+<h4 class="font-label-action text-[13px] uppercase tracking-[0.18em] text-text-primary font-semibold mb-2">
+            NGUỒN GỐC TẬN LÀNG NGHỀ
+          </h4>
+<p class="font-body-spec text-body-spec text-text-secondary leading-relaxed">
+            Kết nối trực tiếp không qua trung gian với các nghệ nhân ưu tú, tổ nghề và xưởng chế tác cổ truyền tại địa phương.
+          </p>
+</div>
+<!-- Col 2 -->
+<div class="py-6 md:py-0 md:px-8 flex flex-col justify-start">
+<div class="flex items-center gap-3 mb-3">
+<span class="font-spec-code text-spec-code text-accent-terracotta font-semibold">02 / TÁC CHẾ</span>
+<span class="w-8 h-px bg-border-neutral"></span>
+</div>
+<h4 class="font-label-action text-[13px] uppercase tracking-[0.18em] text-text-primary font-semibold mb-2">
+            CHẾ TÁC THỦ CÔNG 100%
+          </h4>
+<p class="font-body-spec text-body-spec text-text-secondary leading-relaxed">
+            Thuần đôi bàn tay khéo léo và bí quyết gia truyền ngàn đời. Kiên định khước từ các quy trình sản xuất dập khuôn công nghiệp.
+          </p>
+</div>
+<!-- Col 3 -->
+<div class="py-6 md:py-0 md:px-8 last:pr-0 flex flex-col justify-start">
+<div class="flex items-center gap-3 mb-3">
+<span class="font-spec-code text-spec-code text-accent-terracotta font-semibold">03 / TRUYỀN THỪA</span>
+<span class="w-8 h-px bg-border-neutral"></span>
+</div>
+<h4 class="font-label-action text-[13px] uppercase tracking-[0.18em] text-text-primary font-semibold mb-2">
+            BẢO TỒN VÀ TRUY XUẤT
+          </h4>
+<p class="font-body-spec text-body-spec text-text-secondary leading-relaxed">
+            Mỗi tác phẩm đi kèm chứng thư lưu trữ số, lưu giữ hồ sơ di sản, công thức men quý và phương thức dệt cho thế hệ mai sau.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- 50/50 Dual Editorial Split (Góc Nhìn Chế Tác) -->
+<section class="w-full bg-canvas-linen py-space-xl">
+<div class="max-w-7xl mx-auto px-margin">
+<!-- Section Tag -->
+<div class="flex items-center justify-between mb-8 pb-4 border-b border-border-neutral">
+<div class="flex items-center gap-2">
+<span class="font-display-hero text-[11px] tracking-[0.3em] uppercase text-text-primary font-light">
+            GÓC NHÌN ĐIỀN DÃ &amp; PHỤC DỰNG
+          </span>
+<span class="text-border-neutral opacity-60">|</span>
+<span class="font-spec-code text-[11px] uppercase tracking-[0.12em] text-accent-terracotta">HỒ SƠ THỰC ĐỊA #42</span>
+</div>
+<span class="font-spec-code text-spec-code text-text-secondary hidden sm:inline-block">20°58'48"N - 105°54'50"E</span>
+</div>
+<!-- Split Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+<!-- Left Panel: Macro Ceramic Crazing -->
+<div class="bg-surface-crisp border border-border-neutral p-6 sm:p-10 flex flex-col justify-between">
+<div>
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-subtle border border-border-neutral mb-6">
+<img class="w-full h-full object-cover" data-alt="Extreme macro shot of antique celadon crackle glaze pottery, fine fissure network in ceramic surface, subtle iron oxide rim, natural light grazing the uneven glaze texture, muted earthy ivory and soft moss hues, serene contemplative museum mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFC4Tg8NvBiTcsIssdqzY7hYtEO9NC_6TnsfZiJ4heO_hm4zJ4ks7zYx1avpYgp1A1T_d0-qp23LS9tNRYRXuoEnHq6QSE9vJzo2gjoOvehuAoeNPKCWrr0AgG2FR6rmMmWVLLL2JsEHrSquDplNaqYv1wyp-AwvQ8jRlVvVW_7igR3cLB_HYIOCjoy875H9cUIuxUUjtIUVRSMAEvmsBdrm4wP7Pb7AxrD-mXwVg"/>
+<div class="absolute bottom-3 left-3 bg-canvas-linen/90 px-2.5 py-1 text-[10px] font-spec-code tracking-[0.12em] uppercase text-text-primary border border-border-neutral">
+                PHÓNG ĐẠI: ×12 // KỸ THUẬT MEN RẠN
+              </div>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<span class="font-spec-code text-[11px] uppercase tracking-[0.15em] text-accent-terracotta">GỐM SỨ BÁT TRÀNG</span>
+<span class="text-border-neutral opacity-60">|</span>
+<span class="font-spec-code text-[11px] text-text-secondary">NIÊN ĐẠI KỸ THUẬT THẾ KỶ XVI</span>
+</div>
+<h3 class="font-headline-title text-headline-title text-text-primary font-medium mb-4">
+              Biến Biến Của Lửa &amp; Vết Nứt Của Đất
+            </h3>
+<p class="font-body-default text-body-default text-text-secondary leading-relaxed mb-6">
+              Men rạn hình thành do sự chênh lệch hệ số giãn nở giữa cốt gốm và lớp men phủ khi hạ nhiệt độ lò bầu đột ngột. Người thợ gốm lão thành điều khiển ngọn lửa bằng mắt thường và kinh nghiệm tích lũy qua bốn thế hệ nung củi gỗ nghiến.
+            </p>
+</div>
+<div class="pt-6 border-t border-border-neutral grid grid-cols-2 gap-4 font-spec-code text-[11px]">
+<div>
+<span class="text-text-secondary block">Nhiệt độ nung:</span>
+<span class="text-text-primary font-semibold">1.280°C - 1.300°C</span>
+</div>
+<div>
+<span class="text-text-secondary block">Nguyên liệu tạo rạn:</span>
+<span class="text-text-primary font-semibold">Đá vôi nghiền &amp; tro trấu</span>
+</div>
+</div>
+</div>
+<!-- Right Panel: Artisan Hands at Loom -->
+<div class="bg-surface-crisp border border-border-neutral p-6 sm:p-10 flex flex-col justify-between">
+<div>
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-subtle border border-border-neutral mb-6">
+<img class="w-full h-full object-cover" data-alt="Weathered, wrinkled hands of an elderly artisan weaver maneuvering an ancient dark hardwood loom, threading vibrant indigo cotton yarns with absolute precision, shaft of warm morning light slicing through the wooden workshop, poignant heritage portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf6RA2pFPyDJFRrTLXYYj_dcvpnGFB9d276fdvUy7b5m6sAFL-Jy0HOXz_Jy6zgxf8595QvlECHxVVWrcLpliDTVEpYJVJ7CiYg_-cCRj3m9n3QHqEJia5Wkh0zNohHdoWnngG6ms-Ac3UV4IdAUra24MY4HTSzXs8t2xG2OwSRNnNz5aXBkXDAr7g2SUsFsVd47aka7LVKNiwJyVIkwJo_jic3hqZf9PWOzFmk9s"/>
+<div class="absolute bottom-3 left-3 bg-canvas-linen/90 px-2.5 py-1 text-[10px] font-spec-code tracking-[0.12em] uppercase text-text-primary border border-border-neutral">
+                NGHỆ NHÂN: THỊ HỒNG // 68 TUỔI NGHỀ
+              </div>
+</div>
+<div class="flex items-center gap-2 mb-3">
+<span class="font-spec-code text-[11px] uppercase tracking-[0.15em] text-accent-terracotta">LÀNG DỆT CHĂM</span>
+<span class="text-border-neutral opacity-60">|</span>
+<span class="font-spec-code text-[11px] text-text-secondary">DI SẢN PHI VẬT THỂ QUỐC GIA</span>
+</div>
+<h3 class="font-headline-title text-headline-title text-text-primary font-medium mb-4">
+              Nhịp Thoi Gỗ Cổ &amp; Tâm Thức Hoa Văn
+            </h3>
+<blockquote class="font-label-signature text-label-signature italic text-text-primary mb-6 pl-4 border-l-2 border-accent-terracotta leading-relaxed">
+              "Khung cửi không biết nói dối. Tay giật thoi lệch một li, hoa văn thần sư sẽ gãy khúc. Ta ngồi đây không phải để dệt vải bán, mà để giữ lại tiếng lách cách của tổ tiên."
+            </blockquote>
+</div>
+<div class="pt-6 border-t border-border-neutral flex items-center justify-between">
+<div class="font-spec-code text-[11px] text-text-secondary">
+              GHI CHÉP TẠI BẢN VỊ: XÃ PHƯỚC DÂN, NINH THUẬN
+            </div>
+<a class="font-label-action text-[11px] uppercase tracking-[0.15em] text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold" href="#">
+              ĐỌC KÝ SỰ ĐIỀN DÃ →
+            </a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Regional Index Teaser -->
+<section class="w-full bg-surface-subtle border-t border-border-neutral py-14">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="flex flex-col sm:flex-row items-baseline justify-between mb-8 pb-4 border-b border-border-neutral">
+<h3 class="font-display-hero text-[15px] sm:text-[18px] tracking-[0.25em] text-text-primary uppercase font-light">
+          BẢN ĐỒ LÀNG NGHỀ THEO VÙNG ĐỊA LÝ
+        </h3>
+<span class="font-spec-code text-spec-code text-text-secondary mt-2 sm:mt-0">HỆ THỐNG 54 VÙNG VĂN HÓA TRUYỀN THỐNG</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<a class="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group" href="#">
+<span class="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">VÙNG BẮC BỘ</span>
+<span class="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">Đồng Bằng Sông Hồng</span>
+<span class="font-spec-code text-[11px] text-text-secondary mt-2 block">18 Làng Nghề • Gốm &amp; Khảm Trai</span>
+</a>
+<a class="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group" href="#">
+<span class="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">VÙNG BẮC TRUNG BỘ</span>
+<span class="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">Xứ Thanh - Nghệ - Tĩnh</span>
+<span class="font-spec-code text-[11px] text-text-secondary mt-2 block">12 Làng Nghề • Dệt Chiếu &amp; Mộc</span>
+</a>
+<a class="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group" href="#">
+<span class="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">VÙNG DUYÊN HẢI NAM TRUNG BỘ</span>
+<span class="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">Đất Thổ Cẩm &amp; Trầm Hương</span>
+<span class="font-spec-code text-[11px] text-text-secondary mt-2 block">14 Làng Nghề • Dệt Chăm &amp; Gốm Bàu Trúc</span>
+</a>
+<a class="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group" href="#">
+<span class="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">VÙNG NAM BỘ</span>
+<span class="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">Vùng Đất Cửu Long</span>
+<span class="font-spec-code text-[11px] text-text-secondary mt-2 block">10 Làng Nghề • Đan Đát &amp; Đóng Xuồng</span>
+</a>
+</div>
+</div>
+</section>
+</div></main><footer class="w-full bg-canvas-linen border-t border-border-neutral pt-space-xl pb-space-lg"><div class="max-w-7xl mx-auto px-margin"><div class="grid grid-cols-1 md:grid-cols-12 gap-gutter pb-space-xl border-b border-border-neutral"><div class="md:col-span-4 flex flex-col pr-space-md"><div class="flex items-center gap-space-sm mb-space-sm"><span class="font-headline-title text-headline-title text-text-primary tracking-tight">CraftRoots</span><span class="text-[10px] font-spec-code tracking-[0.2em] uppercase text-accent-terracotta border border-accent-terracotta px-2 py-0.5 rounded-[50px]">Lưu Trữ Sống</span></div><p class="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">Bảo tồn cốt cách làng nghề và tôn vinh bàn tay tài hoa của nghệ nhân Việt Nam qua từng đường nét, chất liệu mộc bản và tâm thức văn hóa ngàn năm.</p><div class="text-body-spec font-body-spec text-text-primary space-y-1"><div class="font-semibold text-text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-accent-terracotta">location_on</span>Xưởng gốm &amp; Lưu trữ Di sản:</div><div class="text-text-secondary pl-5 text-[12px]">Thôn 1 Bát Tràng, Gia Lâm, Hà Nội</div></div></div><div class="md:col-span-5 flex flex-col justify-start md:px-space-md border-t md:border-t-0 md:border-l md:border-r border-border-neutral pt-space-md md:pt-0"><span class="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary font-semibold mb-space-xs">Bản Tin Di Sản &amp; Phục Dựng</span><p class="font-body-spec text-body-spec text-text-secondary mb-space-md">Nhận tư liệu điền dã, hồ sơ kỹ thuật cổ truyền và thông báo tuyển tập tác phẩm thủ công giới hạn hàng tháng.</p><form class="flex items-center w-full max-w-md h-[46px] rounded-[50px] border border-border-neutral bg-surface-crisp px-space-sm transition-colors focus-within:border-accent-terracotta"><input class="flex-1 bg-transparent px-space-sm text-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none" placeholder="Nhập email lưu trữ di sản..." type="email"/><button class="font-label-action text-label-action uppercase tracking-[0.15em] bg-text-primary hover:bg-accent-terracotta text-surface-crisp px-4 py-2 rounded-[50px] transition-colors shrink-0" type="submit">Đăng Ký</button></form></div><div class="md:col-span-3 flex flex-col justify-between md:pl-space-md pt-space-md md:pt-0"><div class="flex flex-col"><span class="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary font-semibold mb-space-sm">Nguyên Tắc &amp; Kết Nối</span><nav class="flex flex-wrap items-center font-body-spec text-body-spec text-text-secondary leading-loose"><a class="hover:text-accent-terracotta transition-colors" data-path="craftroots-charter" href="#">Quy chế</a><span class="mx-2 text-border-neutral opacity-60 font-light select-none">|</span><a class="hover:text-accent-terracotta transition-colors" data-path="craftroots-artisans" href="#">Nghệ nhân đối tác</a><span class="mx-2 text-border-neutral opacity-60 font-light select-none">|</span><a class="hover:text-accent-terracotta transition-colors" data-path="craftroots-conservation" href="#">Bảo tồn</a><span class="mx-2 text-border-neutral opacity-60 font-light select-none">|</span><a class="hover:text-accent-terracotta transition-colors" data-path="craftroots-contact" href="#">Liên hệ</a></nav></div><div class="pt-space-md"><span class="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-secondary block">Tài liệu hóa theo chuẩn văn hóa dân tộc học</span></div></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between text-body-spec text-text-secondary text-[12px]"><div>© 2024 CraftRoots. Giữ toàn quyền lưu trữ và phát hành di sản phi vật thể.</div><div class="flex items-center gap-space-md mt-space-xs sm:mt-0 font-spec-code text-spec-code text-[11px] text-text-secondary"><span>Kinh độ: 105.9142° E</span><span class="text-border-neutral opacity-60">|</span><span>Vĩ độ: 20.9782° N</span><span class="text-border-neutral opacity-60">|</span><span>Bản vị: Thổ Trạch Việt</span></div></div></div></footer></body></html>
