@@ -3,6 +3,14 @@
 CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thông tin về các nghề thủ công truyền thống vào một trải nghiệm web duy nhất, có tổ chức và trực quan. Người dùng có thể khám phá sản phẩm theo vùng miền, chất liệu, kỹ thuật; tìm hiểu hồ sơ nghệ nhân; xem bộ sưu tập ảnh tương tác và lưu các sản phẩm yêu thích.
 
 > Dự án thuộc chương trình **eProject – Aptech**, xây dựng dưới dạng ứng dụng một trang (SPA) responsive, có hỗ trợ xác thực người dùng an toàn.
+>
+> 📚 **Bộ tài liệu đặc tả kỹ thuật chi tiết:**
+> - [feature-spec.md](file:///e:/eproject1/docs/feature-spec.md): Mô tả nghiệp vụ, user flow, business rules.
+> - [architecture.md](file:///e:/eproject1/docs/architecture.md): Các module và cách chúng giao tiếp.
+> - [database-schema.md](file:///e:/eproject1/docs/database-schema.md): 17 bảng, quan hệ N-N và migration.
+> - [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml): OpenAPI 3.0.3 đặc tả đầy đủ request/response.
+> - [task-breakdown.md](file:///e:/eproject1/docs/task-breakdown.md): WBS theo Sprint, phân công, phụ thuộc và acceptance criteria.
+> - [test-plan.md](file:///e:/eproject1/docs/test-plan.md): Kế hoạch và 10 luồng kiểm thử chi tiết.
 
 ---
 

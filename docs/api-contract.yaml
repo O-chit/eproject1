@@ -1,0 +1,1199 @@
+openapi: 3.0.3
+info:
+  title: CraftRoots REST API Specification
+  description: >-
+    Đặc tả giao diện lập trình ứng dụng RESTful API cho cổng thông tin khám phá
+    nghề thủ công truyền thống CraftRoots (Dự án eProject - Aptech).
+  version: 1.0.0
+  contact:
+    name: CraftRoots Engineering Team
+    email: support@craftroots.vn
+servers:
+  - url: http://localhost:5000/api
+    description: Máy chủ phát triển cục bộ (Local Development)
+  - url: https://api.craftroots.vn/api
+    description: Máy chủ sản xuất (Production Server)
+
+tags:
+  - name: Auth
+    description: Xác thực người dùng, đăng ký, đăng nhập và bảo mật JWT
+  - name: Crafts
+    description: Tra cứu, tìm kiếm và xem chi tiết sản phẩm thủ công truyền thống
+  - name: Artisans
+    description: Hồ sơ nghệ nhân và các tác phẩm tham gia chế tác
+  - name: Regions
+    description: Khám phá bản đồ văn hóa và sản phẩm theo vùng miền
+  - name: Metadata
+    description: Dữ liệu danh mục, chất liệu, kỹ thuật phục vụ bộ lọc đa chiều
+  - name: Collections
+    description: Bộ sưu tập chuyên đề nổi bật
+  - name: Seasonal Collections
+    description: Bộ sưu tập theo mùa (Xuân, Hạ, Thu, Đông) và tác phẩm tiêu điểm
+  - name: Gallery
+    description: Thư viện ảnh tương tác Lightbox
+  - name: Favourites
+    description: Quản lý danh sách sản phẩm yêu thích và cơ chế đồng bộ lưỡng thể
+  - name: Contact
+    description: Tiếp nhận ý kiến đóng góp và liên hệ của người dùng
+
+paths:
+  # ==========================================
+  # AUTHENTICATION ENDPOINTS
+  # ==========================================
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Đăng ký tài khoản người dùng mới
+      description: Tạo tài khoản mới, mật khẩu được băm tự động bằng bcrypt trước khi lưu vào CSDL.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Đăng ký thành công, trả về token truy cập
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '409':
+          description: Email đã tồn tại trong hệ thống
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Đăng nhập vào hệ thống
+      description: Xác thực email và mật khẩu, trả về JWT Token và hồ sơ người dùng.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Sai email hoặc mật khẩu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /auth/me:
+    get:
+      tags:
+        - Auth
+      summary: Lấy thông tin tài khoản người dùng hiện tại
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lấy thông tin thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/401Error'
+
+  /auth/change-password:
+    put:
+      tags:
+        - Auth
+      summary: Đổi mật khẩu tài khoản
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: Đổi mật khẩu thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+
+  # ==========================================
+  # CRAFTS ENDPOINTS
+  # ==========================================
+  /crafts:
+    get:
+      tags:
+        - Crafts
+      summary: Danh sách sản phẩm kèm tìm kiếm và bộ lọc đa diện
+      description: Hỗ trợ tìm kiếm từ khóa, phân loại theo vùng, danh mục, chất liệu, kỹ thuật, phân trang và sắp xếp.
+      parameters:
+        - name: q
+          in: query
+          description: Từ khóa tìm kiếm Full-Text Search (tên, bối cảnh văn hóa)
+          schema:
+            type: string
+            example: gốm Bát Tràng
+        - name: region
+          in: query
+          description: Lọc theo ID hoặc code vùng miền
+          schema:
+            type: string
+            example: bac-bo
+        - name: category
+          in: query
+          description: Lọc theo ID hoặc slug danh mục nghề
+          schema:
+            type: string
+            example: gom-su
+        - name: material
+          in: query
+          description: Lọc theo ID chất liệu
+          schema:
+            type: integer
+            example: 1
+        - name: technique
+          in: query
+          description: Lọc theo ID kỹ thuật chế tác
+          schema:
+            type: integer
+            example: 2
+        - name: sort
+          in: query
+          description: Tiêu chí sắp xếp
+          schema:
+            type: string
+            enum: [latest, views, name_asc, name_desc]
+            default: latest
+        - name: page
+          in: query
+          description: Trang hiện tại
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Số bản ghi trên mỗi trang
+          schema:
+            type: integer
+            default: 12
+      responses:
+        '200':
+          description: Trả về danh sách sản phẩm và siêu dữ liệu phân trang
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CraftSummary'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /crafts/{id}:
+    get:
+      tags:
+        - Crafts
+      summary: Xem chi tiết sản phẩm thủ công
+      description: Trả về đầy đủ ảnh gallery, kỹ thuật, chất liệu và nghệ nhân N-N liên kết.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID hoặc slug của sản phẩm
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: Chi tiết sản phẩm hoàn chỉnh
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/CraftDetail'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+  /crafts/{id}/related:
+    get:
+      tags:
+        - Crafts
+      summary: Lấy danh sách sản phẩm liên quan
+      description: Gợi ý các tác phẩm có cùng danh mục, cùng chất liệu hoặc cùng vùng miền.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Danh sách sản phẩm liên quan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CraftSummary'
+
+  # ==========================================
+  # ARTISANS ENDPOINTS
+  # ==========================================
+  /artisans:
+    get:
+      tags:
+        - Artisans
+      summary: Lấy danh sách nghệ nhân
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtisanProfile'
+
+  /artisans/{id}:
+    get:
+      tags:
+        - Artisans
+      summary: Xem hồ sơ chi tiết nghệ nhân
+      description: Kèm danh sách các tác phẩm mà nghệ nhân đã tham gia chế tác (quan hệ N-N).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/ArtisanDetail'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+  # ==========================================
+  # REGIONS ENDPOINTS
+  # ==========================================
+  /regions:
+    get:
+      tags:
+        - Regions
+      summary: Lấy danh sách các vùng miền và bản đồ văn hóa
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RegionItem'
+
+  /regions/{id}/crafts:
+    get:
+      tags:
+        - Regions
+      summary: Lấy danh sách sản phẩm theo vùng miền
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CraftSummary'
+
+  # ==========================================
+  # METADATA ENDPOINTS
+  # ==========================================
+  /categories:
+    get:
+      tags:
+        - Metadata
+      summary: Lấy danh sách danh mục phân loại nghề
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CategoryItem'
+
+  /materials:
+    get:
+      tags:
+        - Metadata
+      summary: Lấy danh sách chất liệu chế tác
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LookupItem'
+
+  /techniques:
+    get:
+      tags:
+        - Metadata
+      summary: Lấy danh sách kỹ thuật chế tác thủ công
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LookupItem'
+
+  # ==========================================
+  # COLLECTIONS & SEASONAL COLLECTIONS
+  # ==========================================
+  /collections:
+    get:
+      tags:
+        - Collections
+      summary: Danh sách bộ sưu tập chuyên đề thông thường
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CollectionItem'
+
+  /seasonal-collections:
+    get:
+      tags:
+        - Seasonal Collections
+      summary: Danh sách bộ sưu tập theo mùa (Xuân, Hạ, Thu, Đông)
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SeasonalCollectionSummary'
+
+  /seasonal-collections/{id}:
+    get:
+      tags:
+        - Seasonal Collections
+      summary: Chi tiết bộ sưu tập mùa kèm danh sách tác phẩm & Hero Craft
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/SeasonalCollectionDetail'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+  # ==========================================
+  # GALLERY ENDPOINTS
+  # ==========================================
+  /gallery:
+    get:
+      tags:
+        - Gallery
+      summary: Thư viện ảnh tương tác Lightbox
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GalleryImage'
+
+  # ==========================================
+  # FAVOURITES (HYBRID SYNC)
+  # ==========================================
+  /favourites:
+    get:
+      tags:
+        - Favourites
+      summary: Lấy danh sách sản phẩm yêu thích của người dùng hiện tại
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CraftSummary'
+        '401':
+          $ref: '#/components/responses/401Error'
+
+  /favourites/{craftId}:
+    post:
+      tags:
+        - Favourites
+      summary: Thêm một sản phẩm vào danh sách yêu thích
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: craftId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '201':
+          description: Thêm thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/401Error'
+    delete:
+      tags:
+        - Favourites
+      summary: Xóa sản phẩm khỏi danh sách yêu thích
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: craftId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: Xóa thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/401Error'
+
+  /favourites/sync:
+    post:
+      tags:
+        - Favourites
+      summary: Đồng bộ mảng sản phẩm yêu thích từ LocalStorage sau khi đăng nhập
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavouritesSyncRequest'
+      responses:
+        '200':
+          description: Đồng bộ hoàn tất
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Đồng bộ thành công 3 sản phẩm vào tài khoản
+                  syncedCount:
+                    type: integer
+                    example: 3
+                  totalFavourites:
+                    type: array
+                    items:
+                      type: integer
+                      example: 5
+        '401':
+          $ref: '#/components/responses/401Error'
+
+  # ==========================================
+  # CONTACT ENDPOINTS
+  # ==========================================
+  /contact:
+    post:
+      tags:
+        - Contact
+      summary: Gửi tin nhắn liên hệ từ khách truy cập
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactRequest'
+      responses:
+        '201':
+          description: Gửi tin nhắn thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/400Error'
+
+# ==========================================
+# COMPONENTS (SCHEMAS & RESPONSES)
+# ==========================================
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Mã thông báo xác thực JWT được cấp sau khi đăng nhập thành công.
+
+  responses:
+    400Error:
+      description: Dữ liệu gửi lên không hợp lệ
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+    401Error:
+      description: Chưa xác thực hoặc Token đã hết hạn
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+    404Error:
+      description: Không tìm thấy tài nguyên yêu cầu
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Thao tác thực hiện thành công
+
+    ApiErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: BAD_REQUEST
+        message:
+          type: string
+          example: Lỗi kiểm tra dữ liệu đầu vào
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: email
+              issue:
+                type: string
+                example: Email không hợp lệ
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 12
+        totalItems:
+          type: integer
+          example: 48
+        totalPages:
+          type: integer
+          example: 4
+
+    RegisterRequest:
+      type: object
+      required:
+        - fullName
+        - email
+        - password
+      properties:
+        fullName:
+          type: string
+          example: Nguyễn Văn An
+        email:
+          type: string
+          format: email
+          example: an.nguyen@example.com
+        password:
+          type: string
+          minLength: 8
+          example: CraftRoots@2026
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: an.nguyen@example.com
+        password:
+          type: string
+          example: CraftRoots@2026
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        user:
+          $ref: '#/components/schemas/UserProfile'
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        fullName:
+          type: string
+          example: Nguyễn Văn An
+        email:
+          type: string
+          example: an.nguyen@example.com
+        role:
+          type: string
+          enum: [user, admin, editor]
+          example: user
+        avatarUrl:
+          type: string
+          nullable: true
+          example: https://craftroots.vn/avatars/user1.jpg
+
+    ChangePasswordRequest:
+      type: object
+      required:
+        - currentPassword
+        - newPassword
+      properties:
+        currentPassword:
+          type: string
+          example: CraftRoots@2026
+        newPassword:
+          type: string
+          minLength: 8
+          example: CraftRoots@New2027
+
+    CraftSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Bình gốm men lam Bát Tràng
+        slug:
+          type: string
+          example: binh-gom-men-lam-bat-trang
+        region:
+          type: string
+          example: Bắc Bộ
+        category:
+          type: string
+          example: Gốm sứ truyền thống
+        thumbnailUrl:
+          type: string
+          example: https://images.craftroots.vn/battrang_thumb.jpg
+        shortDescription:
+          type: string
+          example: Tác phẩm gốm men lam họa tiết lưỡng long chầu nguyệt tinh xảo.
+        materials:
+          type: array
+          items:
+            type: string
+            example: Đất sét trắng Bát Tràng
+        isFeatured:
+          type: boolean
+          example: true
+
+    CraftDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Bình gốm men lam Bát Tràng
+        slug:
+          type: string
+          example: binh-gom-men-lam-bat-trang
+        region:
+          $ref: '#/components/schemas/RegionItem'
+        category:
+          $ref: '#/components/schemas/CategoryItem'
+        thumbnailUrl:
+          type: string
+          example: https://images.craftroots.vn/battrang_thumb.jpg
+        shortDescription:
+          type: string
+          example: Tác phẩm gốm men lam truyền thống.
+        culturalContext:
+          type: string
+          example: Gốm men lam có bề dày hơn 500 năm, biểu trưng cho sự tôn nghiêm.
+        tools:
+          type: string
+          example: Bàn xoay gỗ thủ công, bút lông vẽ men, lò bầu đốt củi.
+        process:
+          type: string
+          example: Nhào đất -> Chuốt gốm -> Phơi sấy -> Vẽ men lam -> Nung ở 1300 độ C.
+        traditionalUse:
+          type: string
+          example: Dùng trong các nghi lễ trang trọng hoặc bày biện phong thủy.
+        isFeatured:
+          type: boolean
+          example: true
+        viewCount:
+          type: integer
+          example: 1540
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/CraftImage'
+        materials:
+          type: array
+          items:
+            $ref: '#/components/schemas/LookupItem'
+        techniques:
+          type: array
+          items:
+            $ref: '#/components/schemas/LookupItem'
+        artisans:
+          type: array
+          items:
+            $ref: '#/components/schemas/CraftArtisanAssociation'
+
+    CraftArtisanAssociation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Nguyễn Văn Hùng
+        title:
+          type: string
+          example: Nghệ nhân Ưu tú
+        roleTitle:
+          type: string
+          example: Chủ trì tạo hình & Chuốt gốm
+        isLead:
+          type: boolean
+          example: true
+        avatarUrl:
+          type: string
+          example: https://images.craftroots.vn/artisan_hung.jpg
+
+    CraftImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        url:
+          type: string
+          example: https://images.craftroots.vn/battrang_detail_1.jpg
+        altText:
+          type: string
+          example: Chi tiết nét vẽ men lam trên bình gốm Bát Tràng
+        caption:
+          type: string
+          example: Họa tiết lưỡng long được vẽ tay hoàn toàn
+
+    ArtisanProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Trần Thị Mai
+        title:
+          type: string
+          example: Nghệ nhân Dân gian
+        specialty:
+          type: string
+          example: Dệt thổ cẩm tự nhiên
+        yearsOfExperience:
+          type: integer
+          example: 35
+        regionName:
+          type: string
+          example: Tây Nguyên
+        avatarUrl:
+          type: string
+          example: https://images.craftroots.vn/artisan_mai.jpg
+
+    ArtisanDetail:
+      allOf:
+        - $ref: '#/components/schemas/ArtisanProfile'
+        - type: object
+          properties:
+            biography:
+              type: string
+              example: Hơn 35 năm gắn bó gìn giữ nghề dệt thổ cẩm bằng sợi vỏ cây...
+            contactInfo:
+              type: string
+              example: Làng văn hóa du lịch thổ cẩm buôn Akô Dhông
+            crafts:
+              type: array
+              items:
+                $ref: '#/components/schemas/CraftSummary'
+
+    RegionItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Bắc Bộ
+        code:
+          type: string
+          example: bac-bo
+        description:
+          type: string
+          example: Cái nôi của làng nghề gốm sứ và đồng thau truyền thống.
+        imageUrl:
+          type: string
+          example: https://images.craftroots.vn/region_bacbo.jpg
+
+    CategoryItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Gốm sứ truyền thống
+        slug:
+          type: string
+          example: gom-su
+        iconUrl:
+          type: string
+          example: https://images.craftroots.vn/icons/pottery.svg
+
+    LookupItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Đất sét trắng
+
+    CollectionItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Di sản Dệt may Việt Nam
+        slug:
+          type: string
+          example: di-san-det-may-viet-nam
+        description:
+          type: string
+          example: Tuyển tập các kỹ thuật dệt lụa và thổ cẩm trứ danh.
+        bannerUrl:
+          type: string
+          example: https://images.craftroots.vn/banner_textile.jpg
+
+    SeasonalCollectionSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Giai Điệu Mùa Hè: Sợi Cói & Gốm Mát
+        slug:
+          type: string
+          example: giai-dieu-mua-he-2026
+        seasonCode:
+          type: string
+          enum: [spring, summer, autumn, winter]
+          example: summer
+        year:
+          type: integer
+          example: 2026
+        colorTone:
+          type: string
+          example: '#0ea5e9'
+        bannerUrl:
+          type: string
+          example: https://images.craftroots.vn/summer_banner.jpg
+
+    SeasonalCollectionDetail:
+      allOf:
+        - $ref: '#/components/schemas/SeasonalCollectionSummary'
+        - type: object
+          properties:
+            themeConcept:
+              type: string
+              example: Không gian văn hóa mùa hè thanh bình với những vật dụng thủ công làm mát tâm hồn.
+            startDate:
+              type: string
+              format: date
+              example: 2026-05-01
+            endDate:
+              type: string
+              format: date
+              example: 2026-08-31
+            heroCraft:
+              $ref: '#/components/schemas/CraftSummary'
+            curatedCrafts:
+              type: array
+              items:
+                type: object
+                properties:
+                  craft:
+                    $ref: '#/components/schemas/CraftSummary'
+                  curatorNote:
+                    type: string
+                    example: Tác phẩm gợi nhắc tiếng gió hiên nhà mùa hạ.
+                  highlightBadge:
+                    type: string
+                    example: Bộ sưu tập Mùa hè 2026
+                  isHero:
+                    type: boolean
+                    example: false
+
+    GalleryImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        craftId:
+          type: integer
+          example: 1
+        craftName:
+          type: string
+          example: Bình gốm men lam Bát Tràng
+        url:
+          type: string
+          example: https://images.craftroots.vn/gallery/bat_trang_1.jpg
+        altText:
+          type: string
+          example: Bàn tay nghệ nhân đang chuốt cốt gốm trên bàn xoay
+        caption:
+          type: string
+          example: Nghệ thuật nhào nặn đất sét thủ công truyền thống
+
+    FavouritesSyncRequest:
+      type: object
+      required:
+        - craftIds
+      properties:
+        craftIds:
+          type: array
+          items:
+            type: integer
+          example: [1, 4, 7]
+
+    ContactRequest:
+      type: object
+      required:
+        - fullName
+        - email
+        - message
+      properties:
+        fullName:
+          type: string
+          example: Lê Hoàng Nam
+        email:
+          type: string
+          format: email
+          example: nam.le@example.com
+        phone:
+          type: string
+          example: '0912345678'
+        subject:
+          type: string
+          example: Tìm hiểu về làng gốm Bát Tràng
+        message:
+          type: string
+          minLength: 10
+          example: Tôi muốn liên hệ để tham quan và đặt làm sản phẩm riêng.
