@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 // Ưu tiên nạp từ server/.env, nếu không có thì tìm ở root workspace
 const serverEnvPath = path.resolve(__dirname, '../../.env');
-const rootEnvPath = path.resolve(__dirname, '../../../../.env');
+const rootEnvPath = path.resolve(__dirname, '../../../.env');
 
 const result = dotenv.config({ path: serverEnvPath });
 if (result.error) {

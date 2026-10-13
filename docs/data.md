@@ -714,7 +714,7 @@ GROUP BY sc.id, sc.title, sc.theme_concept, sc.banner_url, sc.color_tone;
 
 ## 6. Mã nguồn DDL PostgreSQL hoàn chỉnh (`schema.sql`)
 
-Dưới đây là mã nguồn DDL SQL hoàn chỉnh, sẵn sàng nạp trực tiếp vào PostgreSQL (`psql -U postgres -d craftroots -f server/db/schema.sql`):
+Dưới đây là mã nguồn DDL SQL hoàn chỉnh, sẵn sàng nạp trực tiếp vào PostgreSQL (`npm run db:init` hoặc `psql -U postgres -d craftroots -f db/schema.sql`):
 
 ```sql
 -- =============================================================================

@@ -418,12 +418,13 @@ CREATE INDEX idx_crafts_fts ON crafts USING gin (
 
 ## 6. Quy trình Quản lý Migration & Phiên bản CSDL (Migration Strategy)
 
-### 6.1. Tập lệnh Migration Khởi tạo (`001_initial_schema.sql`)
-Tập lệnh khởi tạo toàn bộ 13 bảng cốt lõi (Người dùng, Vùng miền, Danh mục, Chất liệu, Kỹ thuật, Nghệ nhân, Sản phẩm, Thư viện ảnh, Yêu thích và Tin nhắn liên hệ).
-- Vị trí tệp: `server/db/migrations/001_initial_schema.sql`.
+### 6.1. Tập lệnh Migration Khởi tạo (`schema.sql`)
+Tập lệnh khởi tạo toàn bộ các bảng cốt lõi (Người dùng, Vùng miền, Danh mục, Chất liệu, Kỹ thuật, Nghệ nhân, Sản phẩm, Thư viện ảnh, Yêu thích, Bộ sưu tập và Tin nhắn liên hệ).
+- Vị trí tệp: `db/schema.sql`.
 - Lệnh chạy:
   ```bash
-  psql -U postgres -d craftroots -f server/db/schema.sql
+  npm run db:init
+  # hoặc: psql -U postgres -d craftroots -f db/schema.sql
   ```
 
 ### 6.2. Tập lệnh Migration Mở rộng (`002_seasonal_collections.sql`)
@@ -475,7 +476,7 @@ COMMIT;
 ```
 
 ### 6.4. Nạp dữ liệu mẫu (Seeding Strategy)
-- Dữ liệu hạt giống được lưu tại `server/db/seed.sql` với:
+- Dữ liệu hạt giống được lưu tại `db/seed.sql` với:
   - 3 tài khoản mẫu (1 admin, 1 editor, 1 user chuẩn mật khẩu bcrypt `Craft@1234`).
   - 3 vùng miền lớn (Bắc Bộ, Trung Bộ, Nam Bộ).
   - 6 danh mục nghề (Gốm sứ, Dệt may thổ cẩm, Chạm khắc gỗ, Mây tre đan, Sơn mài, Kim hoàn đồng).

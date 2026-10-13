@@ -231,4 +231,4 @@ Dự án **CraftRoots** chính thức đạt tiêu chuẩn bàn giao và đóng 
 2. **Không còn lỗi nghiêm trọng:** Số lượng lỗi Critical và High tồn đọng phải bằng **0**.
 3. **Độ bao phủ tính năng:** Toàn bộ 15 phân hệ chức năng trong [feature-spec.md](file:///e:/eproject1/docs/feature-spec.md) và các endpoint trong [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml) được kiểm thử xác nhận.
 4. **Bảo mật & Hiệu năng:** Vượt qua bài kiểm tra SQL Injection, Brute-Force Rate Limiting và đạt điểm Lighthouse > 85.
-5. **Dữ liệu kiểm thử:** Toàn bộ dữ liệu mẫu trong `server/db/seed.sql` được nạp đầy đủ, minh chứng thực tế hoạt động của mối quan hệ Nhiều - Nhiều (N-N) và Bộ sưu tập mùa hè 2026.
+5. **Dữ liệu kiểm thử:** Toàn bộ dữ liệu mẫu trong `db/seed.sql` được nạp đầy đủ, minh chứng thực tế hoạt động của mối quan hệ Nhiều - Nhiều (N-N) và Bộ sưu tập mùa hè 2026.

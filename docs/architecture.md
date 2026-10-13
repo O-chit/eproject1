@@ -301,43 +301,36 @@ graph LR
 ### 8.1. Cấu trúc tổ chức mã nguồn chuẩn
 ```
 eproject1/
-├── client/                      # Dự án React 18 SPA (Vite)
-│   ├── index.html
-│   ├── package.json
-│   ├── vite.config.js
-│   └── src/
-│       ├── api/                 # Axios client & api methods
-│       ├── assets/              # Icons, hình ảnh tĩnh
-│       ├── components/          # UI Components dùng chung
-│       ├── context/             # AuthContext, FavouritesContext
-│       ├── hooks/               # Custom React Hooks
-│       ├── pages/               # Các trang màn hình chính
-│       └── App.jsx
-│
-├── server/                      # Dự án Node.js & Express REST API
-│   ├── package.json
+├── client/                      # Thư mục Frontend (giao diện người dùng)
+├── server/                      # Thư mục Backend (Node.js & Express REST API)
+│   ├── src/
+│   │   ├── config/              # db.js, env.js
+│   │   ├── controllers/         # Xử lý nghiệp vụ API
+│   │   ├── middleware/          # authenticate.js, errorHandler.js...
+│   │   ├── routes/              # Routing modules
+│   │   ├── utils/               # token.js, password.js
+│   │   ├── app.js               # Cấu hình Express app
+│   │   └── server.js            # Khởi động máy chủ
 │   ├── .env.example
-│   ├── db/
-│   │   ├── schema.sql           # Khởi tạo CSDL PostgreSQL (17 bảng)
-│   │   └── seed.sql             # Nạp dữ liệu mẫu
-│   └── src/
-│       ├── config/              # db.js, env.js
-│       ├── controllers/         # Xử lý nghiệp vụ API
-│       ├── middleware/          # authenticate.js, errorHandler.js...
-│       ├── routes/              # Routing modules
-│       ├── utils/               # token.js, password.js
-│       ├── app.js               # Cấu hình Express app
-│       └── server.js            # Khởi động máy chủ
+│   └── package.json
 │
-└── docs/                        # Toàn bộ tài liệu kỹ thuật dự án
-    ├── README.md
-    ├── data.md
-    ├── feature-spec.md          # Đặc tả nghiệp vụ
-    ├── architecture.md          # Kiến trúc hệ thống
-    ├── database-schema.md       # Thiết kế CSDL & Migration
-    ├── api-contract.yaml        # Đặc tả OpenAPI 3.0
-    ├── task-breakdown.md        # Phân rã công việc WBS
-    └── test-plan.md             # Kế hoạch & Kịch bản kiểm thử
+├── db/                          # CSDL & Dữ liệu chung toàn dự án (PostgreSQL)
+│   ├── schema.sql               # Khởi tạo CSDL PostgreSQL (17 bảng)
+│   └── seed.sql                 # Nạp dữ liệu mẫu
+│
+├── node_modules/                # Môi trường thư viện phụ thuộc dùng chung toàn dự án
+├── docs/                        # Toàn bộ tài liệu kỹ thuật dự án
+│   ├── README.md
+│   ├── data.md
+│   ├── feature-spec.md          # Đặc tả nghiệp vụ
+│   ├── architecture.md          # Kiến trúc hệ thống
+│   ├── database-schema.md       # Thiết kế CSDL & Migration
+│   ├── api-contract.yaml        # Đặc tả OpenAPI 3.0
+│   ├── task-breakdown.md        # Phân rã công việc WBS
+│   └── test-plan.md             # Kế hoạch & Kịch bản kiểm thử
+├── package.json                 # Quản lý scripts khởi chạy & dependencies chung
+├── .env                         # Biến môi trường hệ thống chung
+└── README.md                    # Hướng dẫn tổng quan toàn dự án
 ```
 
 ### 8.2. Biến môi trường hệ thống (`.env`)

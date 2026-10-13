@@ -100,38 +100,28 @@ CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thôn
 
 ```
 craftroots/
-├── client/                      # React SPA
-│   ├── public/
-│   └── src/
-│       ├── api/                 # axios instance, các hàm gọi API
-│       ├── assets/
-│       ├── components/          # Navbar, Footer, CraftCard, FilterBar, Lightbox, Breadcrumbs...
-│       ├── context/             # AuthContext, FavouritesContext
-│       ├── hooks/               # useDebounce, useLocalStorage...
-│       ├── pages/               # Home, Directory, CraftDetail, Artisans, Gallery,
-│       │                        # Regions, Collections, Favourites, About, Contact,
-│       │                        # Login, Register, Profile
-│       ├── routes/              # PrivateRoute, cấu hình router
-│       ├── App.jsx
-│       └── main.jsx
-│
-├── server/                      # Express API
+├── client/                      # Frontend (chứa toàn bộ giao diện người dùng React SPA)
+├── server/                      # Backend (chứa toàn bộ logic backend, REST API, Express)
 │   ├── src/
-│   │   ├── config/              # db.js (pg Pool), env.js
+│   │   ├── config/              # db.js (pg Pool kết nối CSDL), env.js
 │   │   ├── controllers/         # auth, crafts, artisans, regions, collections, favourites, contact
 │   │   ├── middleware/          # authenticate.js, validate.js, errorHandler.js
-│   │   ├── routes/
+│   │   ├── routes/              # Routing endpoint RESTful
 │   │   ├── utils/               # token.js (JWT), password.js (bcrypt)
 │   │   ├── app.js
 │   │   └── server.js
-│   ├── db/
-│   │   ├── schema.sql           # tạo bảng
-│   │   └── seed.sql             # dữ liệu mẫu
 │   ├── .env.example
 │   └── package.json
 │
-├── docs/                        # Báo cáo, flowchart, DFD, test data
-└── README.md
+├── db/                          # Dữ liệu chung của toàn bộ dự án (PostgreSQL scripts)
+│   ├── schema.sql               # Tạo cấu trúc 17 bảng, chỉ mục và quan hệ N-N
+│   └── seed.sql                 # Dữ liệu mẫu (hạt giống) cho toàn hệ thống
+│
+├── node_modules/                # Môi trường dependencies chung cho toàn dự án
+├── docs/                        # Báo cáo, đặc tả kỹ thuật, kiến trúc, API contract, WBS
+├── package.json                 # Quản lý scripts và môi trường dùng chung tại root
+├── .env                         # Biến môi trường hệ thống
+└── README.md                    # Tài liệu tổng quan dự án
 ```
 
 ---
@@ -160,7 +150,7 @@ craftroots/
 | `favourites` | Sản phẩm yêu thích của từng người dùng |
 | `contact_messages` | Tin nhắn từ form liên hệ |
 
-### Schema rút gọn (`server/db/schema.sql`)
+### Schema rút gọn (`db/schema.sql`)
 
 ```sql
 CREATE TABLE users (
@@ -432,34 +422,42 @@ CREATE DATABASE craftroots;
 ```
 Nạp schema và dữ liệu mẫu:
 ```bash
-psql -U postgres -d craftroots -f server/db/schema.sql
-psql -U postgres -d craftroots -f server/db/seed.sql
+# Cách 1: Sử dụng npm scripts từ thư mục gốc
+npm run db:init          # nạp db/schema.sql vào PostgreSQL
+npm run db:seed          # nạp db/seed.sql dữ liệu mẫu
+npm run db:test          # kiểm tra kết nối và tính toàn vẹn 17 bảng
+
+# Cách 2: Chạy trực tiếp qua psql
+psql -U postgres -d craftroots -f db/schema.sql
+psql -U postgres -d craftroots -f db/seed.sql
 ```
 
 ### Bước 3 – Cài đặt và chạy Backend
 ```bash
+# Môi trường node_modules đã được tách ra thư mục gốc dùng chung cho toàn dự án
+# Bạn có thể chạy trực tiếp từ thư mục gốc:
+npm run server:dev       # chạy API tại http://localhost:5000
+
+# Hoặc di chuyển vào thư mục server/:
 cd server
-npm install
-cp .env.example .env     # sau đó chỉnh sửa giá trị trong .env
-npm run dev              # chạy tại http://localhost:5000
+npm run dev              # chạy API tại http://localhost:5000
 ```
 
-### Bước 4 – Cài đặt và chạy Frontend
+### Bước 4 – Chạy Frontend (khi phát triển)
 ```bash
 cd client
-npm install
-cp .env.example .env     # đặt VITE_API_URL hoặc REACT_APP_API_URL
-npm run dev              # chạy tại http://localhost:5173 (Vite) hoặc :3000 (CRA)
+# Khi tiến hành xây dựng giao diện frontend, khởi chạy theo lệnh dự án
 ```
 
-### Các script thường dùng
+### Các script thường dùng (tại thư mục gốc)
 
-| Thư mục | Lệnh | Mô tả |
-|---------|------|-------|
-| `server` | `npm run dev` | Chạy API với nodemon |
-| `server` | `npm start` | Chạy API ở chế độ production |
-| `client` | `npm run dev` / `npm start` | Chạy React ở chế độ phát triển |
-| `client` | `npm run build` | Build bản production |
+| Lệnh | Mô tả |
+|------|-------|
+| `npm run server:dev` | Chạy Backend API với nodemon |
+| `npm run server:start` | Chạy Backend API ở chế độ production |
+| `npm run db:init` | Khởi tạo 17 bảng từ `db/schema.sql` |
+| `npm run db:seed` | Nạp dữ liệu mẫu từ `db/seed.sql` |
+| `npm run db:test` | Kiểm tra kết nối và tính toàn vẹn CSDL |
 
 ### Triển khai (tùy chọn)
 - Build frontend (`npm run build`) và host trên dịch vụ static (Netlify, Vercel...) hoặc cho Express phục vụ thư mục build.
