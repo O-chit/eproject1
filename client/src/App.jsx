@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { FavouritesProvider } from './context/FavouritesContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import DirectoryPage from './pages/DirectoryPage';
@@ -16,23 +17,25 @@ import NotFoundPage from './pages/NotFoundPage';
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="crafts" element={<DirectoryPage />} />
-            <Route path="crafts/:id" element={<CraftDetailPage />} />
-            <Route path="artisans" element={<ArtisansPage />} />
-            <Route path="artisans/:id" element={<ArtisansPage />} />
-            <Route path="regions" element={<RegionsPage />} />
-            <Route path="seasonal" element={<SeasonalPage />} />
-            <Route path="favourites" element={<FavouritesPage />} />
-            <Route path="contact" element={<ContactPage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <FavouritesProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="crafts" element={<DirectoryPage />} />
+              <Route path="crafts/:id" element={<CraftDetailPage />} />
+              <Route path="artisans" element={<ArtisansPage />} />
+              <Route path="artisans/:id" element={<ArtisansPage />} />
+              <Route path="regions" element={<RegionsPage />} />
+              <Route path="seasonal" element={<SeasonalPage />} />
+              <Route path="favourites" element={<FavouritesPage />} />
+              <Route path="contact" element={<ContactPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </FavouritesProvider>
     </AuthProvider>
   );
 }

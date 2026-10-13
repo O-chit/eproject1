@@ -2,78 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import CraftCardSkeleton from '../components/common/CraftCardSkeleton';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
-const HIGHLIGHT_CRAFTS = [
-  {
-    id: 1,
-    code: 'BT-MR01',
-    badge: 'NUNG CỦI 1300°C',
-    village: 'Làng Gốm Bát Tràng',
-    province: 'Hà Nội',
-    name: 'Ấm Trà Men Rạn Cổ Điển',
-    description: 'Chế tác từ đất sét phù sa sông Hồng nung men tro cổ truyền. Mỗi đường rạn nứt tự nhiên theo biến thiên nhiệt độ lò bầu, không trùng lặp.',
-    material: 'Cao lanh men tro gỗ',
-    dimension: '180ml | Ø 9.5cm',
-    price: '1.850.000 ₫',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaUrvFnVxj2lsHDRkr-yaTRJCRIumrtcbAoBO8T7gJK22rF-l8LFMNoASMdtx_N8hQkmINE6HE7xtmJmzGpxqvbiG5mzG2TvxNKGDuu4MZjKV7e4q6ixIFOJ1PSNsl56IqQagawz_SCLeDfMjYY1bGxxdBh3e-6wBJ15RkSXBTpEZHEoWqpB_uzbwmdJy82jUtSMpkv6zROQGRW5W2GKqEOL2DxfhNLSsVd1T7ujM',
-    alt: 'Close-up macro of an artisanal Vietnamese cracked-glaze teapot from Bat Trang pottery village, delicate web-like crazing across ivory porcelain surface, brass arched handle, rustic earthen wood-fired aesthetic, natural atmospheric diffused daylight, museum catalog detail.',
-  },
-  {
-    id: 2,
-    code: 'MN-TC04',
-    badge: 'DỆT KHUNG GỖ CỔ',
-    village: 'Làng Dệt Mỹ Nghiệp',
-    province: 'Ninh Thuận',
-    name: 'Khăn Choàng Thổ Cẩm Hoa Văn Thần Sư',
-    description: 'Sợi bông trồng tự nhiên ven đồi cát, nhuộm bằng vỏ cây rừng và lá chàm ngâm ủ 20 ngày. Họa tiết cổ xưa mang tính bảo hộ tâm linh.',
-    material: 'Bông thô nhuộm thực vật',
-    dimension: '65 × 200 cm',
-    price: '1.420.000 ₫',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBay0c69D5JK7FMaxyn9PSRxcsgUqgVBC4moSSxlmkFLgKHiKIqdRgYLDbsNkoDNTWbn3aE3tjfmDVjmU7b0uCCCWly4AJRKvMbcSnFUrimhvpDJ528ysIaEbq7Vk675AvADO51B7vRlzladV4zbFP22E6K0TREwBbPB2PY6e9MzBG80dTaXhPHGxL-GcbgknPoVSiq1dmnBko_BQVJIGRkPk_Vx46iUTqabaRYxTU',
-    alt: 'Traditional Cham handwoven brocade scarf laid flat on raw linen, complex geometric diamond patterns in natural indigo and madder root red, fine organic cotton fringe, authentic village craft aesthetic from My Nghiep Ninh Thuan, rich tactile fiber detail.',
-  },
-  {
-    id: 3,
-    code: 'PV-MT09',
-    badge: 'CHUỐT NAN TƠ',
-    village: 'Làng Mây Tre Phú Vinh',
-    province: 'Chương Mỹ',
-    name: 'Khay Trà Mây Nếp Vót Chuốt',
-    description: 'Sử dụng mây nếp rừng già phơi khô 6 tháng, nan được vót mỏng như sợi cước bằng dao rèn thủ công. Đan kín không một vết nối thừa.',
-    material: 'Mây nếp rừng & nan tre già',
-    dimension: '36 × 26 × 3.5 cm',
-    price: '980.000 ₫',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqtjQ5mo5cRimsDw-0a1cXtEfhsOYh5Em5ML9l64b0Hc7BtO4oQu0rQCKeojkVUo26ovuW7WQJi9O9HWREIBgFJQ54jYdAVaqFw_qoJKFU5nDAJnK3m_SuzktfK4177Hs6U0AZ6NjMS-0nZHrlaberLVVzTzO0pAj5wvYnyap_2yX0pGsWUYWItuudPhk86mrePax74Ug2wRYKiBJ1_4Y22e-lHlXxzgQsUnUvcqw',
-    alt: 'Intricately woven Vietnamese bamboo and rattan tea tray from Phu Vinh village, extremely tight circular geometric weave, smooth honey-colored aged patina, minimalist architectural craft styling, top-down angled shot on raw stoneware surface, clean studio daylight.',
-  },
-];
+import { getFeaturedCrafts } from '../api/crafts';
 
 export default function HomePage() {
-  const [crafts, setCrafts] = useState(HIGHLIGHT_CRAFTS);
-  const [loading, setLoading] = useState(false);
+  const [crafts, setCrafts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchFeatured = () => {
+    setLoading(true);
+    setError(null);
+    getFeaturedCrafts(3)
+      .then((res) => {
+        const items = res?.data || [];
+        setCrafts(Array.isArray(items) ? items : []);
+      })
+      .catch((err) => {
+        console.error('Lỗi khi tải dữ liệu từ máy chủ:', err);
+        setError('Không thể kết nối đến máy chủ API để lấy dữ liệu từ database.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function fetchData() {
-      try {
-        const res = await fetch(`${API_URL}/crafts?is_featured=true&limit=3`);
-        if (!res.ok) throw new Error('API fetch error');
-        const data = await res.json();
-        const items = data.data || data;
-        if (isMounted && Array.isArray(items) && items.length > 0) {
-          setCrafts(items);
-        }
-      } catch {
-        // Fallback sang HIGHLIGHT_CRAFTS giữ đúng 100% demo
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-
-    fetchData();
-    return () => { isMounted = false; };
+    fetchFeatured();
   }, []);
 
   return (
@@ -162,79 +116,102 @@ export default function HomePage() {
           </div>
 
           {/* Lưới 3 thẻ sắc nét */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            {loading ? (
-              <CraftCardSkeleton count={3} />
-            ) : (
-              crafts.slice(0, 3).map((item) => (
-                <article
-                  key={item.id}
-                  className="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col"
-                >
-                  <div className="relative w-full aspect-[4/5] overflow-hidden bg-surface-subtle">
-                    <img
-                      src={item.image || item.thumbnail_url}
-                      alt={item.name}
-                      data-alt={item.alt}
-                      className="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-4 left-4 bg-surface-crisp/95 backdrop-blur-xs px-3 py-1 border border-border-neutral">
-                      <span className="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-primary">
-                        MÃ: {item.code || `CR-0${item.id}`}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-4 right-4 bg-text-primary text-surface-crisp px-2.5 py-0.5">
-                      <span className="font-spec-code text-[10px] uppercase tracking-[0.15em]">
-                        {item.badge || 'THỦ CÔNG TRUYỀN ĐỜI'}
-                      </span>
-                    </div>
-                  </div>
+          {error ? (
+            <div className="p-8 border border-border-neutral bg-surface-crisp text-center space-y-4">
+              <span className="material-symbols-outlined text-[36px] text-accent-terracotta">cloud_off</span>
+              <p className="font-body-spec text-text-secondary">{error}</p>
+              <button
+                type="button"
+                onClick={fetchFeatured}
+                className="px-6 py-2 bg-text-primary text-surface-crisp font-spec-code text-[11px] uppercase tracking-wider hover:bg-accent-terracotta transition-colors cursor-pointer"
+              >
+                Thử lại kết nối
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+              {loading ? (
+                <CraftCardSkeleton count={3} />
+              ) : crafts.length === 0 ? (
+                <div className="col-span-3 p-12 text-center border border-border-neutral bg-surface-crisp">
+                  <p className="font-spec-code text-text-secondary uppercase tracking-widest text-[12px]">
+                    Hiện chưa có tác phẩm tiêu biểu nào trong cơ sở dữ liệu.
+                  </p>
+                </div>
+              ) : (
+                crafts.slice(0, 3).map((item) => {
+                  const displayImage = item.thumbnailUrl || item.thumbnail_url || item.image || '';
+                  const displayRegion = typeof item.region === 'object' ? item.region?.name : (item.region || 'Việt Nam');
+                  const displayCategory = typeof item.category === 'object' ? item.category?.name : (item.category || 'Thủ công di sản');
+                  const displayDesc = item.shortDescription || item.short_description || item.description || '';
+                  const displayMaterial = Array.isArray(item.materials)
+                    ? item.materials.map((m) => (typeof m === 'object' ? m.name : m)).join(', ')
+                    : item.material || 'Nguyên liệu tự nhiên';
 
-                  <div className="p-6 flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between text-text-secondary font-spec-code text-[11px] uppercase tracking-wider mb-2">
-                        <span>{item.village || item.region?.name || item.region}</span>
-                        <span>{item.province || 'Việt Nam'}</span>
+                  return (
+                    <article
+                      key={item.id}
+                      className="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col"
+                    >
+                      <div className="relative w-full aspect-[4/5] overflow-hidden bg-surface-subtle">
+                        <img
+                          src={displayImage}
+                          alt={item.name}
+                          className="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-4 left-4 bg-surface-crisp/95 backdrop-blur-xs px-3 py-1 border border-border-neutral">
+                          <span className="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-primary">
+                            MÃ: {item.slug || `CR-0${item.id}`}
+                          </span>
+                        </div>
+                        <div className="absolute bottom-4 right-4 bg-text-primary text-surface-crisp px-2.5 py-0.5">
+                          <span className="font-spec-code text-[10px] uppercase tracking-[0.15em]">
+                            {item.isFeatured || item.is_featured ? 'TIÊU BIỂU DI SẢN' : 'THỦ CÔNG NGUYÊN BẢN'}
+                          </span>
+                        </div>
                       </div>
-                      <h3 className="font-title-card text-title-card text-text-primary font-medium mb-3">
-                        {item.name}
-                      </h3>
-                      <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4">
-                        {item.description || item.short_description}
-                      </p>
-                    </div>
 
-                    <div className="pt-4 border-t border-border-neutral space-y-2">
-                      <div className="flex items-center justify-between font-spec-code text-[11px]">
-                        <span className="text-text-secondary">Chất liệu:</span>
-                        <span className="text-text-primary font-medium">
-                          {item.material || 'Nguyên liệu tự nhiên'}
-                        </span>
+                      <div className="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between text-text-secondary font-spec-code text-[11px] uppercase tracking-wider mb-2">
+                            <span>{displayRegion}</span>
+                            <span className="text-accent-terracotta truncate max-w-[120px]">{displayCategory}</span>
+                          </div>
+                          <h3 className="font-title-card text-title-card text-text-primary font-medium mb-3">
+                            {item.name}
+                          </h3>
+                          <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4 line-clamp-3">
+                            {displayDesc}
+                          </p>
+                        </div>
+
+                        <div className="pt-4 border-t border-border-neutral space-y-2">
+                          <div className="flex items-center justify-between font-spec-code text-[11px]">
+                            <span className="text-text-secondary">Chất liệu:</span>
+                            <span className="text-text-primary font-medium truncate max-w-[180px]">
+                              {displayMaterial}
+                            </span>
+                          </div>
+                          <div className="pt-3 flex items-center justify-between">
+                            <span className="font-spec-code text-[11px] text-text-secondary tracking-widest uppercase">
+                              LƯU CHIỂU QUỐC GIA
+                            </span>
+                            <Link
+                              to={`/crafts/${item.id}`}
+                              className="font-label-action text-[10px] uppercase tracking-[0.18em] text-accent-terracotta hover:underline inline-flex items-center gap-1 cursor-pointer font-semibold"
+                            >
+                              XEM CHI TIẾT →
+                            </Link>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between font-spec-code text-[11px]">
-                        <span className="text-text-secondary">Kích thước:</span>
-                        <span className="text-text-primary font-medium">
-                          {item.dimension || 'Quy chuẩn truyền thống'}
-                        </span>
-                      </div>
-                      <div className="pt-3 flex items-center justify-between">
-                        <span className="font-headline-title text-[16px] text-text-primary font-semibold">
-                          {item.price || '1.850.000 ₫'}
-                        </span>
-                        <Link
-                          to={`/crafts/${item.id}`}
-                          className="font-label-action text-[10px] uppercase tracking-[0.18em] text-accent-terracotta hover:underline inline-flex items-center gap-1 cursor-pointer"
-                        >
-                          XEM CHI TIẾT →
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              ))
-            )}
-          </div>
+                    </article>
+                  );
+                })
+              )}
+            </div>
+          )}
 
           {/* Nút hành động đáy kho lưu trữ */}
           <div className="mt-12 text-center">
