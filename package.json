@@ -4,11 +4,16 @@
   "description": "CraftRoots - Traditional Heritage Crafts Discovery Portal (eProject Aptech)",
   "private": true,
   "scripts": {
+    "dev": "concurrently --kill-others -n \"BACKEND,FRONTEND\" -c \"gray,cyan.bold\" \"npm run server:dev\" \"npm run client:dev\"",
+    "client:dev": "npm --prefix client run dev",
+    "client:build": "npm --prefix client run build",
+    "client:preview": "npm --prefix client run preview",
     "server:dev": "nodemon server/src/server.js",
     "server:start": "node server/src/server.js",
     "db:test": "node server/src/test-db.js",
     "db:init": "psql -U postgres -d craftroots -f db/schema.sql",
-    "db:seed": "psql -U postgres -d craftroots -f db/seed.sql"
+    "db:seed": "psql -U postgres -d craftroots -f db/seed.sql",
+    "install:all": "npm install && npm --prefix client install"
   },
   "keywords": [
     "craftroots",
@@ -28,6 +33,7 @@
     "pg": "^8.23.1"
   },
   "devDependencies": {
+    "concurrently": "^10.0.6",
     "nodemon": "^3.1.9"
   }
 }
