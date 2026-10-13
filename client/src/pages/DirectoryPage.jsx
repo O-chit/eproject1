@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const CATALOG_ITEMS = [
@@ -6,7 +6,7 @@ const CATALOG_ITEMS = [
     id: 1,
     name: 'Bình Vôi Men Lam Cổ',
     category: 'gom-su',
-    categoryLabel: 'Gốm Bát Tràng',
+    categoryLabel: 'GỐM BÁT TRÀNG',
     origin: 'Hà Nội — 400 năm truyền thống',
     description: 'Đất sét cao lanh, men rạn tam thái nung củi truyền thống 1.300°C. Chạm khắc hình tượng hoa sen nổi và quai cuốn đắp nổi thủ công.',
     refCode: 'CR-BT-7721',
@@ -18,11 +18,11 @@ const CATALOG_ITEMS = [
     id: 2,
     name: 'Khăn Lụa Tơ Tằm Tự Nhiên Vân Mây',
     category: 'det-may',
-    categoryLabel: 'Lụa Vạn Phúc',
-    origin: 'Hà Đông — Dệt gấm hoa cúc',
-    description: 'Tơ nõn tằm dâu nguyên chất kéo sợi thủ công trên khung cửi cổ. Họa tiết mây cuộn dệt chìm tạo ánh biến sắc theo góc chiếu ánh sáng.',
-    refCode: 'CR-VP-1029',
-    edition: 'Mẻ dệt mùa thu #18',
+    categoryLabel: 'LỤA VẠN PHÚC',
+    origin: 'Hà Đông — Đệ nhất lụa Việt',
+    description: '100% tơ tằm nguyên chất dệt khung cửi cổ truyền. Họa tiết Vân Mây chìm dệt thoi con lụa tự nhiên, nhuộm thảo mộc lá dâu tằm.',
+    refCode: 'CR-VP-1044',
+    edition: 'Tơ xe thủ công',
     price: '1.650.000 đ',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4K0Ol_73pxBmMM06fPDnGy41xLK2PbS3YgyPz35OkZ89IlWSnrnTeNLP454FyU9Mofzp1eDB9cSEAIG6aRZQiNlDT6pM-Vb0przrjZjiKc1utp1Cn5ONbNZ6j1B4M9E5sgLqRScZWRTvOeYOtWhLmkBSlNsSmesxZG__GjNUp5AbcSbH16gvVC0IzlTzoX-ob_No1jkXX0KpC1EX6KbfmzwEyF3OzciW7_wu2UyA',
   },
@@ -30,19 +30,19 @@ const CATALOG_ITEMS = [
     id: 3,
     name: 'Bộ Lẵng Hoa Mây Nếp Bện Đôi',
     category: 'may-tre',
-    categoryLabel: 'Mây Tre Phú Vinh',
-    origin: 'Chương Mỹ — Nan mịn 0.8mm',
-    description: 'Kỹ nghệ vót nan sậy dẻo bện hình hoa cúc 12 cánh. Xông khói rơm tạo lớp phủ kháng mối mọt tự nhiên không hóa chất.',
+    categoryLabel: 'MÂY TRE PHÚ VINH',
+    origin: 'Chương Mỹ — Tuyệt kỹ mây tre đan',
+    description: 'Mây rừng Tây Bắc vót sợi tăm mảnh 0.8mm ngâm sáp ong rừng. Kỹ pháp bện xương cá hai lớp chống ẩm mốc tự nhiên qua nhiều thập kỷ.',
     refCode: 'CR-PV-4402',
-    edition: 'Tác chế giới hạn #05',
+    edition: 'Xử lý sáp ong',
     price: '890.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqtjQ5mo5cRimsDw-0a1cXtEfhsOYh5Em5ML9l64b0Hc7BtO4oQu0rQCKeojkVUo26ovuW7WQJi9O9HWREIBgFJQ54jYdAVaqFw_qoJKFU5nDAJnK3m_SuzktfK4177Hs6U0AZ6NjMS-0nZHrlaberLVVzTzO0pAj5wvYnyap_2yX0pGsWUYWItuudPhk86mrePax74Ug2wRYKiBJ1_4Y22e-lHlXxzgQsUnUvcqw',
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAsV1MZDEYI8Nqf-4wUPU2aRGOHgJyRlpKy__7C3hDznp7PwSvv3dh1OIfgtI4lusKj_3ZzdMCN-POKuMLeY8F2GRP-70PD9sunYB0INYwp1cCROecqA20b7_nZAyH6fNHwH0CKDDsgbL2Y-Cb236NRLwWcnZ5PB5TlXjRBTf4TDPRHqcuAsIrVUb0FG0M-IwEhMX-nmotxP-ugnLtNavxvDUx5bme36Bo1EY-7KAs',
   },
   {
     id: 4,
     name: 'Khay Trà Sơn Mài Vỏ Trứng & Bạc Phủ',
     category: 'son-mai',
-    categoryLabel: 'Sơn Mài Hạ Thái',
+    categoryLabel: 'SƠN MÀI HẠ THÁI',
     origin: 'Thường Tín — 18 lớp mài nước',
     description: 'Cốt gỗ muồng già sấy khô 1 năm, cẩn vỏ trứng gà ta tạo rạn đồng điệu và dát bạc quỳ tán mịn. Bề mặt nhẵn bóng như gương nước.',
     refCode: 'CR-HT-8830',
@@ -54,7 +54,7 @@ const CATALOG_ITEMS = [
     id: 5,
     name: 'Hộp Đựng Trang Sức Bạc Chạm Kênh Bong',
     category: 'cham-bac',
-    categoryLabel: 'Chạm Bạc Đồng Xâm',
+    categoryLabel: 'CHẠM BẠC ĐỒNG XÂM',
     origin: 'Thái Bình — Bạc ta 99.9%',
     description: 'Chạm trổ hình tượng Tứ Linh bằng ve búa đục nhỏ li ti. Đỉnh nắp chạm rồng cuộn kênh bong nổi khối 3D sống động.',
     refCode: 'CR-DX-3312',
@@ -66,7 +66,7 @@ const CATALOG_ITEMS = [
     id: 6,
     name: 'Tấm Vải Thổ Cẩm Hoa Văn Chăm Cổ Điển',
     category: 'tho-cam',
-    categoryLabel: 'Thổ Cẩm Chăm',
+    categoryLabel: 'THỔ CẨM CHĂM',
     origin: 'Mỹ Nghiệp — Nhuộm chàm tự nhiên',
     description: 'Sợi bông thô trồng rẫy, dệt trên khung cửi nằm cổ xưa. Hoa văn hình kỷ hà và thần sư tượng trưng cho sự sinh sôi và che chở gia đạo.',
     refCode: 'CR-MN-9920',
@@ -91,11 +91,45 @@ export default function DirectoryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [savedIds, setSavedIds] = useState(new Set([1, 3]));
 
-  const toggleSave = (id) => {
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('craftroots_favourites');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setSavedIds(new Set(parsed.map((item) => item.id || item)));
+        }
+      }
+    } catch {
+      // Giữ mặc định
+    }
+  }, []);
+
+  const toggleSave = (item) => {
     setSavedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      if (next.has(item.id)) {
+        next.delete(item.id);
+      } else {
+        next.add(item.id);
+      }
+
+      try {
+        const stored = localStorage.getItem('craftroots_favourites');
+        let list = stored ? JSON.parse(stored) : [];
+        if (next.has(item.id)) {
+          if (!list.find((i) => (i.id || i) === item.id)) {
+            list.push(item);
+          }
+        } else {
+          list = list.filter((i) => (i.id || i) !== item.id);
+        }
+        localStorage.setItem('craftroots_favourites', JSON.stringify(list));
+        window.dispatchEvent(new Event('storage'));
+      } catch {
+        // Fallback
+      }
+
       return next;
     });
   };
@@ -111,35 +145,38 @@ export default function DirectoryPage() {
   });
 
   return (
-    <div className="w-full bg-[#F9F8F6]">
-      {/* Header Banner */}
-      <section className="w-full bg-[#F9F8F6] pt-12 pb-8 border-b border-[#E6E2DA]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="font-['Inter'] text-[11px] uppercase tracking-[0.2em] text-[#B86B35] font-semibold">
-              HỒ SƠ TƯ LIỆU HÓA
+    <div className="w-full bg-canvas-linen">
+      {/* Top Archival Header */}
+      <section className="w-full border-b border-border-neutral bg-canvas-linen py-space-xl">
+        <div className="max-w-7xl mx-auto px-margin">
+          {/* Metadata tracker */}
+          <div className="flex items-center gap-space-sm mb-space-sm">
+            <span className="font-spec-code text-spec-code uppercase tracking-[0.2em] text-accent-terracotta">
+              Hồ sơ tư liệu hóa
             </span>
-            <span className="text-[#E6E2DA] opacity-60">|</span>
-            <span className="font-['Inter'] text-[11px] text-[#5A5854] tracking-wider">
-              MÃ DANH MỤC: CAT-VN-2026
+            <span className="text-border-neutral opacity-60">|</span>
+            <span className="font-spec-code text-spec-code text-text-secondary tracking-[0.08em]">
+              Mã danh mục: CAT-VN-2024
             </span>
-            <span className="text-[#E6E2DA] opacity-60">|</span>
-            <span className="font-['Inter'] text-[11px] text-[#5A5854]">
-              CẬP NHẬT: QUÝ I/2026
+            <span className="text-border-neutral opacity-60">|</span>
+            <span className="font-spec-code text-spec-code text-text-secondary">
+              Cập nhật: Quý IV/2024
             </span>
           </div>
 
-          <h1 className="font-['Montserrat'] text-[28px] sm:text-[40px] uppercase tracking-[0.25em] text-[#1C1B1A] font-light leading-tight mb-3">
+          {/* Main Headline */}
+          <h1 className="font-display-hero text-display-hero text-text-primary uppercase tracking-[0.3em] font-light leading-tight mb-space-sm">
             DANH MỤC DI SẢN THỦ CÔNG
           </h1>
-          <p className="font-['Inter'] text-[14px] sm:text-[15px] text-[#5A5854] max-w-3xl leading-relaxed">
+          <p className="font-body-default text-body-default text-text-secondary max-w-3xl leading-relaxed">
             Kho lưu trữ hơn 240 tác phẩm thủ công nguyên bản từ các làng nghề truyền thống Việt Nam. Mỗi hiện vật được định danh độc bản cùng chứng thư nguồn gốc địa dư và kỹ pháp chế tác nguyên bản.
           </p>
 
-          {/* Search bar & Metadata */}
-          <div className="mt-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          {/* Search & Quantitative Filters Bar */}
+          <div className="mt-space-lg flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+            {/* Pill Search */}
             <div className="relative flex-1 max-w-xl">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#5A5854] text-[20px]">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[20px]">
                 search
               </span>
               <input
@@ -147,38 +184,44 @@ export default function DirectoryPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Tìm kiếm theo tên tác phẩm, làng nghề hoặc chất liệu..."
-                className="w-full h-12 pl-12 pr-6 rounded-full bg-[#FFFFFF] border border-[#E6E2DA] text-[13px] text-[#1C1B1A] placeholder:text-[#5A5854]/60 focus:outline-none focus:border-[#B86B35] transition-colors shadow-sm"
+                className="w-full h-12 pl-12 pr-6 rounded-[50px] bg-surface-crisp border border-border-neutral text-body-spec font-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-accent-terracotta transition-colors shadow-sm"
               />
             </div>
 
-            <div className="flex items-center gap-4 self-end md:self-center font-['Inter'] text-[11px] text-[#5A5854]">
-              <span className="text-[#1C1B1A] font-semibold">
+            {/* Density Counter & Quick View Mode */}
+            <div className="flex items-center gap-space-md self-end md:self-center font-spec-code text-spec-code text-text-secondary">
+              <span className="text-text-primary font-semibold">
                 {filteredItems.length} HIỆN VẬT KHẢ DỤNG
               </span>
-              <span className="text-[#E6E2DA] opacity-60">|</span>
-              <span className="flex items-center gap-1 cursor-pointer hover:text-[#B86B35] transition-colors">
+              <span className="text-border-neutral opacity-60">|</span>
+              <span className="flex items-center gap-1.5 cursor-pointer hover:text-accent-terracotta transition-colors">
                 <span className="material-symbols-outlined text-[16px]">tune</span>
                 LỌC KỸ PHÁP
+              </span>
+              <span className="text-border-neutral opacity-60">|</span>
+              <span className="flex items-center gap-1.5 cursor-pointer hover:text-accent-terracotta transition-colors">
+                <span className="material-symbols-outlined text-[16px]">swap_vert</span>
+                SẮP XẾP: THỨ HẠNG LỊCH SỬ
               </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Pipe-delimited Tab Navigation */}
-      <section className="w-full bg-[#FFFFFF] border-b border-[#E6E2DA] sticky top-20 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 overflow-x-auto">
-          <div className="flex items-center py-4 font-['Montserrat'] text-[11px] tracking-[0.15em] uppercase whitespace-nowrap">
+      {/* Pipe-delimited Categorical Tab Navigation */}
+      <section className="w-full bg-surface-crisp border-b border-border-neutral sticky top-20 z-30 shadow-xs">
+        <div className="max-w-7xl mx-auto px-margin overflow-x-auto no-scrollbar">
+          <div className="flex items-center py-4 font-label-action text-label-action tracking-[0.15em] uppercase whitespace-nowrap">
             {TABS.map((tab, idx) => (
               <React.Fragment key={tab.id}>
-                {idx > 0 && <span className="mx-4 text-[#E6E2DA] opacity-60 select-none">|</span>}
+                {idx > 0 && <span className="mx-4 text-border-neutral opacity-60 select-none">|</span>}
                 <button
                   type="button"
                   onClick={() => setSelectedTab(tab.id)}
-                  className={`py-1 transition-colors ${
+                  className={`py-1 transition-colors cursor-pointer ${
                     selectedTab === tab.id
-                      ? 'text-[#1C1B1A] font-semibold border-b-2 border-[#B86B35]'
-                      : 'text-[#5A5854] hover:text-[#B86B35]'
+                      ? 'text-text-primary font-semibold relative border-b-2 border-accent-terracotta'
+                      : 'text-text-secondary hover:text-accent-terracotta'
                   }`}
                 >
                   {tab.label}
@@ -189,83 +232,85 @@ export default function DirectoryPage() {
         </div>
       </section>
 
-      {/* Grid sản phẩm */}
-      <section className="w-full py-14 bg-[#F9F8F6]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+      {/* 3-Column Sharp Grid: Artisanal Catalog */}
+      <section className="w-full bg-canvas-linen py-space-xl">
+        <div className="max-w-7xl mx-auto px-margin">
           {filteredItems.length === 0 ? (
-            <div className="p-16 border border-[#E6E2DA] bg-[#FFFFFF] text-center">
-              <span className="material-symbols-outlined text-5xl text-[#B86B35] mb-3">inventory_2</span>
-              <h3 className="font-['Playfair_Display'] text-xl font-medium text-[#1C1B1A] mb-2">
+            <div className="p-16 border border-border-neutral bg-surface-crisp text-center">
+              <span className="material-symbols-outlined text-5xl text-accent-terracotta mb-3">inventory_2</span>
+              <h3 className="font-headline-title text-xl font-medium text-text-primary mb-2">
                 Không tìm thấy tác phẩm phù hợp
               </h3>
-              <p className="font-['Inter'] text-[14px] text-[#5A5854] mb-6">
-                Vui lòng thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc.
+              <p className="font-body-default text-text-secondary mb-6">
+                Vui lòng thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc chuyên đề.
               </p>
               <button
                 type="button"
                 onClick={() => { setSearchQuery(''); setSelectedTab('all'); }}
-                className="px-6 py-2.5 bg-[#B86B35] text-white font-['Montserrat'] text-[11px] uppercase tracking-wider font-semibold"
+                className="px-6 py-2.5 bg-text-primary text-surface-crisp font-label-action text-label-action uppercase tracking-wider font-semibold hover:bg-accent-terracotta transition-colors cursor-pointer"
               >
-                Xóa Bộ Lọc
+                XÓA BỘ LỌC
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
               {filteredItems.map((item) => (
                 <article
                   key={item.id}
-                  className="group relative bg-[#FFFFFF] border border-[#E6E2DA] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col justify-between"
+                  className="group relative bg-surface-crisp border border-border-neutral transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col justify-between"
                 >
-                  <div className="relative w-full aspect-square overflow-hidden bg-[#F4F2EE]">
+                  <div className="relative w-full aspect-square overflow-hidden bg-surface-subtle">
                     <img
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
                     />
-                    <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-[#F9F8F6]/90 backdrop-blur-sm border border-[#E6E2DA] px-2.5 py-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#B86B35]"></span>
-                      <span className="font-['Inter'] text-[10px] tracking-wider uppercase text-[#1C1B1A]">
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-canvas-linen/90 backdrop-blur-sm border border-border-neutral px-2.5 py-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta"></span>
+                      <span className="font-spec-code text-[10px] tracking-[0.12em] uppercase text-text-primary">
                         {item.edition}
                       </span>
                     </div>
                     <button
                       type="button"
-                      onClick={() => toggleSave(item.id)}
+                      onClick={() => toggleSave(item)}
                       aria-label="Lưu tác phẩm"
-                      className="absolute top-3 right-3 w-8 h-8 bg-[#FFFFFF]/90 backdrop-blur-sm border border-[#E6E2DA] flex items-center justify-center text-[#5A5854] hover:text-[#B86B35] transition-colors"
+                      className="absolute top-3 right-3 w-8 h-8 rounded-none bg-surface-crisp/90 backdrop-blur-sm border border-border-neutral flex items-center justify-center text-text-secondary hover:text-accent-terracotta hover:bg-surface-crisp transition-colors cursor-pointer"
                     >
-                      <span className={`material-symbols-outlined text-[18px] ${savedIds.has(item.id) ? 'text-[#B86B35] filled' : ''}`}>
+                      <span className={`material-symbols-outlined text-[18px] ${savedIds.has(item.id) ? 'text-accent-terracotta filled' : ''}`}>
                         bookmark
                       </span>
                     </button>
                   </div>
 
-                  <div className="p-6 flex flex-col flex-1 justify-between">
+                  <div className="p-space-lg flex flex-col flex-1 justify-between">
                     <div>
-                      <span className="font-['Inter'] text-[11px] uppercase tracking-wider text-[#B86B35] block mb-1">
-                        {item.origin}
-                      </span>
-                      <h3 className="font-['Playfair_Display'] text-[19px] font-medium text-[#1C1B1A] mb-2 group-hover:text-[#B86B35] transition-colors">
+                      <div className="flex items-center gap-2 mb-space-xs">
+                        <span className="font-spec-code text-[11px] uppercase tracking-[0.14em] text-accent-terracotta">
+                          {item.origin}
+                        </span>
+                      </div>
+                      <h3 className="font-headline-title text-headline-title text-text-primary tracking-tight mb-space-xs group-hover:text-accent-terracotta transition-colors">
                         <Link to={`/crafts/${item.id}`}>{item.name}</Link>
                       </h3>
-                      <p className="font-['Inter'] text-[13px] text-[#5A5854] leading-relaxed mb-4">
+                      <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">
                         {item.description}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-[#E6E2DA] flex items-center justify-between font-['Inter']">
+                    <div className="pt-space-md border-t border-border-neutral flex items-center justify-between font-spec-code text-spec-code">
                       <div className="flex flex-col">
-                        <span className="text-[11px] text-[#5A5854] tracking-wider uppercase">
+                        <span className="text-[11px] text-text-secondary tracking-[0.08em] uppercase">
                           Ref: {item.refCode}
                         </span>
-                        <span className="text-[15px] font-semibold text-[#1C1B1A] mt-0.5">
+                        <span className="text-[14px] font-semibold text-text-primary mt-0.5">
                           {item.price}
                         </span>
                       </div>
                       <Link
                         to={`/crafts/${item.id}`}
-                        className="font-['Montserrat'] text-[11px] tracking-[0.15em] uppercase text-[#1C1B1A] border-b border-[#1C1B1A] pb-0.5 hover:text-[#B86B35] hover:border-[#B86B35] transition-colors font-medium"
+                        className="font-label-action text-label-action tracking-[0.15em] uppercase text-text-primary border-b border-text-primary pb-0.5 hover:text-accent-terracotta hover:border-accent-terracotta transition-colors"
                       >
                         Chi tiết →
                       </Link>

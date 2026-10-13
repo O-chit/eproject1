@@ -111,19 +111,19 @@ export default function FavouritesPage() {
     <div className="flex flex-col w-full bg-canvas-linen">
       {/* Top Breadcrumb & Archive Meta Row */}
       <section className="w-full bg-canvas-linen pt-8 pb-4">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#E6E2DA]">
-            {/* Structural Breadcrumb */}
-            <nav aria-label="Đường dẫn lưu trữ" className="flex items-center text-[#5A5854] font-['Montserrat'] text-[11px] uppercase tracking-[0.2em]">
-              <Link to="/" className="hover:text-[#B86B35] transition-colors">TRANG CHỦ</Link>
-              <span className="mx-3 text-[#E6E2DA] opacity-60 select-none font-light">|</span>
-              <span>HỒ SƠ CÁ NHÂN</span>
-              <span className="mx-3 text-[#E6E2DA] opacity-60 select-none font-light">|</span>
-              <span className="text-[#1C1B1A] font-semibold">TÁC PHẨM ĐÃ LƯU</span>
+        <div className="max-w-7xl mx-auto px-margin">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-border-neutral">
+            {/* Structural Breadcrumb with delimiter styling */}
+            <nav aria-label="Đường dẫn lưu trữ" className="flex items-center text-text-secondary font-label-action text-label-action uppercase tracking-[0.2em]">
+              <Link to="/" className="hover:text-accent-terracotta transition-colors">TRANG CHỦ</Link>
+              <span className="mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
+              <span className="text-text-secondary">HỒ SƠ CÁ NHÂN</span>
+              <span className="mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
+              <span className="text-text-primary font-semibold">TÁC PHẨM ĐÃ LƯU</span>
             </nav>
             {/* Live Archive Coordinate Stamp */}
-            <div className="flex items-center gap-2 font-['Inter'] text-[12px] text-[#5A5854] uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B86B35] inline-block animate-pulse"></span>
+            <div className="flex items-center gap-2 font-spec-code text-spec-code text-text-secondary uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta inline-block animate-pulse"></span>
               <span>BẢN GHI ĐỒNG BỘ NỘI BỘ: {items.length.toString().padStart(2, '0')} DI SẢN</span>
             </div>
           </div>
@@ -132,51 +132,51 @@ export default function FavouritesPage() {
 
       {/* Title & Action Bar Section */}
       <section className="w-full bg-canvas-linen pb-8">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
+        <div className="max-w-7xl mx-auto px-margin">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-4">
             <div className="flex flex-col space-y-3 max-w-2xl">
               <div className="flex items-center gap-3">
-                <span className="px-3 py-1 bg-[#FFFFFF] border border-[#E6E2DA] font-['Inter'] text-[11px] uppercase tracking-[0.15em] text-[#B86B35] shadow-sm font-semibold">
+                <span className="px-3 py-1 bg-surface-crisp border border-border-neutral font-spec-code text-spec-code uppercase tracking-[0.15em] text-accent-terracotta shadow-sm">
                   {items.length} TÁC PHẨM ĐÃ LƯU
                 </span>
-                <span className="font-['Inter'] text-[11px] uppercase tracking-[0.1em] text-[#5A5854]">
+                <span className="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-secondary">
                   MÃ ĐỊNH DANH TỦ ĐỒNG BỘ: CR-ARCHIVE-VN
                 </span>
               </div>
-              <h1 className="font-['Montserrat'] text-[32px] md:text-[42px] leading-[1.15] uppercase tracking-[6px] font-extralight text-[#1C1B1A]">
+              <h1 className="font-headline-statement text-[34px] md:text-[42px] leading-[1.15] uppercase tracking-[6px] font-extralight text-text-primary">
                 LƯU TRỮ CÁ NHÂN
               </h1>
-              <p className="font-['Inter'] text-[13px] text-[#5A5854] leading-relaxed">
+              <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed">
                 Danh sách được lưu trữ an toàn trực tiếp trên trình duyệt của bạn nhằm bảo vệ quyền riêng tư. Dữ liệu này chỉ khả dụng trên thiết bị hiện thời mà không chia sẻ với bên thứ ba.
               </p>
             </div>
 
             {/* Global Archive Utilities Bar */}
-            <div className="flex flex-wrap items-center gap-y-2 text-[12px] font-['Montserrat'] uppercase tracking-[2px] text-[#1C1B1A] pb-2">
+            <div className="flex flex-wrap items-center gap-y-2 text-[13px] font-label-action uppercase tracking-[2px] text-text-primary pb-2">
               <button
                 type="button"
                 onClick={handleShare}
-                className="hover:text-[#B86B35] transition-colors flex items-center gap-1.5 py-1 cursor-pointer font-medium"
+                className="hover:text-accent-terracotta transition-colors flex items-center gap-1.5 py-1 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[16px] text-[#B86B35]">share</span>
+                <span className="material-symbols-outlined text-[16px] text-accent-terracotta">share</span>
                 <span>CHIA SẺ BỘ SƯU TẬP</span>
               </button>
-              <span className="mx-4 text-[#E6E2DA] opacity-60 font-light select-none">|</span>
+              <span className="mx-4 text-border-neutral opacity-60 font-light select-none">|</span>
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="hover:text-[#B86B35] transition-colors flex items-center gap-1.5 py-1 cursor-pointer font-medium"
+                className="hover:text-accent-terracotta transition-colors flex items-center gap-1.5 py-1 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[16px] text-[#B86B35]">print</span>
+                <span className="material-symbols-outlined text-[16px] text-accent-terracotta">print</span>
                 <span>IN BẢN KIỂM KÊ DI SẢN</span>
               </button>
               {items.length > 0 && (
                 <>
-                  <span className="mx-4 text-[#E6E2DA] opacity-60 font-light select-none">|</span>
+                  <span className="mx-4 text-border-neutral opacity-60 font-light select-none">|</span>
                   <button
                     type="button"
                     onClick={handleClearAll}
-                    className="text-[#5A5854] hover:text-[#BA1A1A] transition-colors flex items-center gap-1.5 py-1 cursor-pointer font-medium"
+                    className="text-text-secondary hover:text-error transition-colors flex items-center gap-1.5 py-1 cursor-pointer"
                   >
                     <span className="material-symbols-outlined text-[16px]">delete_sweep</span>
                     <span>XÓA TẤT CẢ</span>
@@ -190,18 +190,18 @@ export default function FavouritesPage() {
 
       {/* Main Grid of Bookmarked Artifacts */}
       <section className="w-full bg-canvas-linen pb-16">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
+        <div className="max-w-7xl mx-auto px-margin">
           {/* Notification banner if modified */}
           {notification && (
-            <div className="mb-6 p-4 bg-[#FFFFFF] border border-[#E6E2DA] shadow-sm text-[#1C1B1A] flex items-center justify-between">
-              <div className="flex items-center gap-2 font-['Inter'] text-[13px]">
-                <span className="material-symbols-outlined text-[#B86B35] text-[18px]">verified</span>
+            <div className="mb-6 p-4 bg-surface-crisp border border-border-neutral shadow-sm text-text-primary flex items-center justify-between">
+              <div className="flex items-center gap-2 font-body-spec text-body-spec">
+                <span className="material-symbols-outlined text-accent-terracotta text-[18px]">verified</span>
                 <span>{notification}</span>
               </div>
               <button
                 type="button"
                 onClick={() => setNotification('')}
-                className="font-['Inter'] text-[11px] uppercase tracking-wider text-[#5A5854] hover:text-[#1C1B1A]"
+                className="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary hover:text-text-primary cursor-pointer"
               >
                 Đóng
               </button>
@@ -209,39 +209,39 @@ export default function FavouritesPage() {
           )}
 
           {items.length === 0 ? (
-            <div className="bg-[#FFFFFF] border border-dashed border-[#E6E2DA] p-12 text-center my-8">
-              <span className="material-symbols-outlined text-5xl text-[#B86B35] mb-3">bookmark_border</span>
-              <h3 className="font-['Playfair_Display'] text-xl text-[#1C1B1A] font-semibold mb-2">
+            <div className="bg-surface-crisp border border-dashed border-border-neutral p-12 text-center my-8 shadow-sm">
+              <span className="material-symbols-outlined text-5xl text-accent-terracotta mb-3">bookmark_border</span>
+              <h3 className="font-headline-title text-xl text-text-primary font-semibold mb-2">
                 Chưa Có Tác Phẩm Nào Được Lưu Trữ
               </h3>
-              <p className="font-['Inter'] text-[14px] text-[#5A5854] max-w-md mx-auto mb-6">
+              <p className="font-body-spec text-[14px] text-text-secondary max-w-md mx-auto mb-6">
                 Bạn chưa thêm tác phẩm nào vào tủ lưu trữ cá nhân. Hãy duyệt qua danh mục di sản hoặc bấm khôi phục mẫu.
               </p>
               <div className="flex justify-center gap-4">
                 <Link
                   to="/crafts"
-                  className="bg-[#1C1B1A] hover:bg-[#B86B35] text-[#FFFFFF] px-6 py-3 font-['Montserrat'] text-[11px] uppercase tracking-[0.18em] font-semibold transition-colors"
+                  className="bg-text-primary hover:bg-accent-terracotta text-surface-crisp px-6 py-3 font-label-action text-label-action uppercase tracking-[0.18em] transition-colors"
                 >
                   Khám Phá Di Sản
                 </Link>
                 <button
                   type="button"
                   onClick={handleResetDefaults}
-                  className="border border-[#E6E2DA] hover:border-[#B86B35] text-[#1C1B1A] hover:text-[#B86B35] px-6 py-3 font-['Montserrat'] text-[11px] uppercase tracking-[0.18em] transition-colors"
+                  className="border border-border-neutral hover:border-accent-terracotta text-text-primary hover:text-accent-terracotta px-6 py-3 font-label-action text-label-action uppercase tracking-[0.18em] transition-colors cursor-pointer"
                 >
                   Nạp Dữ Liệu Mẫu
                 </button>
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
               {items.map((item) => (
                 <article
                   key={item.id}
-                  className="flex flex-col bg-[#FFFFFF] border border-[#E6E2DA] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  className="craft-card flex flex-col bg-surface-crisp shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg border border-border-neutral/60"
                 >
                   {/* 1:1 Aspect Image with Sharp Remove Button */}
-                  <div className="relative w-full aspect-square bg-[#F4F2EE] overflow-hidden">
+                  <div className="relative w-full aspect-square bg-surface-subtle overflow-hidden">
                     <img
                       src={item.image}
                       alt={item.title}
@@ -251,60 +251,60 @@ export default function FavouritesPage() {
                       <button
                         type="button"
                         onClick={() => handleRemove(item.id, item.title)}
-                        className="px-3 py-1.5 bg-[#FFFFFF]/95 text-[#1C1B1A] hover:text-[#B86B35] hover:bg-[#FFFFFF] font-['Montserrat'] text-[10px] tracking-[0.18em] uppercase shadow-sm transition-colors flex items-center gap-1 cursor-pointer font-semibold"
+                        className="btn-remove-item px-3 py-1.5 bg-surface-crisp/95 text-text-primary hover:text-accent-terracotta hover:bg-surface-crisp font-label-action text-[10px] tracking-[0.18em] uppercase shadow-sm transition-colors flex items-center gap-1 cursor-pointer"
                       >
                         <span>✕</span>
                         <span>GỠ LƯU</span>
                       </button>
                     </div>
                     <div className="absolute bottom-3 left-3">
-                      <span className="px-2.5 py-1 bg-[#1C1B1A]/85 text-[#FFFFFF] font-['Inter'] text-[11px] tracking-wider uppercase backdrop-blur-sm">
+                      <span className="px-2.5 py-1 bg-text-primary/85 text-surface-crisp font-spec-code text-[11px] tracking-wider uppercase backdrop-blur-sm">
                         {item.tag}
                       </span>
                     </div>
                   </div>
 
                   {/* Content Metadata Block */}
-                  <div className="p-6 flex flex-col flex-1 justify-between bg-[#FFFFFF]">
+                  <div className="p-space-lg flex flex-col flex-1 justify-between bg-surface-crisp">
                     <div className="space-y-3">
-                      <div className="flex items-center text-[#5A5854] font-['Inter'] text-[12px] uppercase tracking-wider">
+                      <div className="flex items-center text-text-secondary font-spec-code text-spec-code uppercase tracking-wider">
                         <span>{item.village}</span>
-                        <span className="mx-2 text-[#E6E2DA] opacity-60 select-none">|</span>
-                        <span className="text-[#B86B35]">{item.category}</span>
+                        <span className="mx-2 text-border-neutral opacity-60 font-light select-none">|</span>
+                        <span className="text-accent-terracotta">{item.category}</span>
                       </div>
-                      <h2 className="font-['Playfair_Display'] text-[18px] text-[#1C1B1A] leading-snug font-medium">
+                      <h2 className="font-title-card text-title-card text-text-primary leading-snug">
                         {item.title}
                       </h2>
                       {/* Specs Detail Grid */}
-                      <div className="bg-[#F4F2EE] p-3 space-y-1.5 font-['Inter'] text-[12px] text-[#5A5854]">
+                      <div className="bg-surface-subtle p-3 space-y-1.5 font-spec-code text-[12px] text-text-secondary">
                         <div className="flex justify-between items-center">
                           <span className="uppercase tracking-wider">Mã Hồ Sơ:</span>
-                          <span className="text-[#1C1B1A] font-medium">{item.recordCode}</span>
+                          <span className="text-text-primary font-medium">{item.recordCode}</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="uppercase tracking-wider">Nghệ nhân:</span>
-                          <span className="text-[#1C1B1A]">{item.artisan}</span>
+                          <span className="text-text-primary">{item.artisan}</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="uppercase tracking-wider">Kỹ thuật:</span>
-                          <span className="text-[#1C1B1A]">{item.technique}</span>
+                          <span className="text-text-primary">{item.technique}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Price & Action Trigger */}
-                    <div className="mt-6 pt-4 flex items-center justify-between bg-[#F9F8F6]/60 -mx-6 -mb-6 px-6 py-4 border-t border-[#E6E2DA]">
+                    <div className="mt-6 pt-4 flex items-center justify-between bg-canvas-linen/40 -mx-space-lg -mb-space-lg px-space-lg py-4 border-t border-border-neutral/60">
                       <div>
-                        <span className="block font-['Inter'] text-[10px] uppercase tracking-wider text-[#5A5854]">
+                        <span className="block font-spec-code text-[10px] uppercase tracking-wider text-text-secondary">
                           Ước lượng thẩm định
                         </span>
-                        <span className="font-['Playfair_Display'] text-[18px] text-[#1C1B1A] font-semibold tracking-tight">
+                        <span className="font-headline-title text-[18px] text-text-primary font-semibold tracking-tight">
                           {item.price}
                         </span>
                       </div>
                       <Link
                         to={`/crafts/${item.craftId}`}
-                        className="font-['Montserrat'] text-[11px] uppercase tracking-[0.18em] text-[#1C1B1A] hover:text-[#B86B35] flex items-center gap-1 font-semibold transition-colors"
+                        className="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary hover:text-accent-terracotta flex items-center gap-1 font-semibold transition-colors"
                       >
                         <span>XEM CHI TIẾT</span>
                         <span className="text-[14px]">→</span>

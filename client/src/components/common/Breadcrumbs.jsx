@@ -3,12 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 
 const routeNameMap = {
   '': 'Trang Chủ',
-  'crafts': 'Danh Mục Di Sản',
-  'artisans': 'Nghệ Nhân',
-  'regions': 'Vùng Miền & Làng Nghề',
-  'seasonal': 'Mùa Triển Lãm',
-  'favourites': 'Lưu Trữ Cá Nhân',
-  'contact': 'Gặp Gỡ & Kết Nối',
+  'crafts': 'Kho Lưu Trữ Di Sản',
+  'artisans': 'Hồ Sơ Nghệ Nhân',
+  'regions': 'Bản Đồ Văn Hóa Làng Nghề',
+  'seasonal': 'Bộ Sưu Tập Theo Mùa',
+  'favourites': 'Tác Phẩm Đã Lưu',
+  'contact': 'Liên Hệ & Đặt Lịch Xưởng',
   'login': 'Tài Khoản',
 };
 
@@ -31,7 +31,7 @@ export default function Breadcrumbs({ customCrumbs }) {
       const isLast = index === pathnames.length - 1;
       const label = routeNameMap[segment] || segment.replace(/-/g, ' ');
       crumbs.push({
-        label: isLast ? label : label,
+        label,
         path: currentPath,
         isLast,
       });
@@ -39,24 +39,24 @@ export default function Breadcrumbs({ customCrumbs }) {
   }
 
   return (
-    <nav aria-label="Breadcrumb" className="w-full py-3.5 border-b border-[#E6E2DA]/60 bg-[#FFFFFF]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ol className="flex items-center flex-wrap gap-2 text-[11px] font-['Montserrat'] tracking-[0.1em] uppercase text-[#5A5854]">
+    <section aria-label="Breadcrumb" className="w-full bg-canvas-linen py-space-sm border-b border-border-neutral">
+      <div className="max-w-7xl mx-auto px-margin">
+        <ol className="flex items-center flex-wrap gap-2 font-spec-code text-spec-code tracking-[0.16em] uppercase text-text-secondary">
           {crumbs.map((crumb, idx) => {
             const isLast = idx === crumbs.length - 1;
             return (
               <li key={crumb.path || idx} className="flex items-center gap-2">
                 {idx > 0 && (
-                  <span className="text-[#867368] opacity-50 select-none text-[12px]">/</span>
+                  <span className="text-border-neutral opacity-60 select-none">/</span>
                 )}
                 {isLast ? (
-                  <span className="text-[#B86B35] font-semibold truncate max-w-[200px] sm:max-w-xs" aria-current="page">
+                  <span className="text-accent-terracotta font-medium truncate max-w-[240px] sm:max-w-md" aria-current="page">
                     {crumb.label}
                   </span>
                 ) : (
                   <Link
                     to={crumb.path}
-                    className="hover:text-[#B86B35] transition-colors"
+                    className="hover:text-accent-terracotta transition-colors"
                   >
                     {crumb.label}
                   </Link>
@@ -66,6 +66,6 @@ export default function Breadcrumbs({ customCrumbs }) {
           })}
         </ol>
       </div>
-    </nav>
+    </section>
   );
 }

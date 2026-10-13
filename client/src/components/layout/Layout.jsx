@@ -27,11 +27,11 @@ export default function Layout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F9F8F6] text-[#1C1B1A]">
+    <div className="min-h-screen flex flex-col bg-canvas-linen text-text-primary font-body-default antialiased">
       <Navbar />
       <Breadcrumbs />
 
-      <main className="flex-1 w-full">
+      <main className="w-full flex-1">
         <Outlet />
       </main>
 
@@ -42,7 +42,7 @@ export default function Layout() {
         <button
           type="button"
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 w-11 h-11 border border-[#E6E2DA] hover:border-[#B86B35] bg-[#FFFFFF] shadow-md hover:shadow-lg flex items-center justify-center text-[#1C1B1A] hover:text-[#B86B35] transition-all transform hover:-translate-y-1 focus:outline-none"
+          className="fixed bottom-6 right-6 z-30 w-11 h-11 border border-border-neutral hover:border-accent-terracotta bg-surface-crisp shadow-md hover:shadow-lg flex items-center justify-center text-text-primary hover:text-accent-terracotta transition-all transform hover:-translate-y-1 focus:outline-none cursor-pointer"
           aria-label="Cuộn lên đầu trang"
           title="Lên đầu trang"
         >

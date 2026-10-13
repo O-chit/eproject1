@@ -184,39 +184,39 @@ export default function RegionsPage() {
   return (
     <div className="flex flex-col w-full bg-canvas-linen">
       {/* SECTION HEADER: Cultural Coordinates & Title */}
-      <section className="w-full bg-canvas-linen pt-10 pb-8 border-b border-[#E6E2DA]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
+      <section className="w-full bg-canvas-linen pt-10 pb-8 border-b border-border-neutral">
+        <div className="max-w-7xl mx-auto px-margin">
           {/* Category Tag & Archival Metadata */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
             <div className="flex items-center gap-3">
-              <span className="inline-block w-2 h-2 bg-[#B86B35]"></span>
-              <span className="font-['Inter'] text-[12px] uppercase tracking-[0.2em] text-[#B86B35] font-semibold">
+              <span className="inline-block w-2 h-2 bg-accent-terracotta"></span>
+              <span className="font-spec-code text-spec-code uppercase tracking-[0.2em] text-accent-terracotta font-semibold">
                 HỆ THỐNG ĐỊA LÝ DI SẢN THỦ CÔNG VIỆT NAM
               </span>
             </div>
-            <div className="flex items-center text-[#5A5854] font-['Inter'] text-[12px]">
+            <div className="flex items-center text-text-secondary font-spec-code text-spec-code">
               <span>HỆ TOẠ ĐỘ VN-2000</span>
               <span className="mx-3 opacity-30 select-none">|</span>
               <span>BẢN GHI: {currentRegion.code}</span>
               <span className="mx-3 opacity-30 select-none">|</span>
-              <span className="text-[#B86B35] font-semibold">TRUY CẬP TRỰC TUYẾN</span>
+              <span className="text-accent-terracotta font-semibold">TRUY CẬP TRỰC TUYẾN</span>
             </div>
           </div>
 
           {/* Main Headline */}
-          <h1 className="font-['Montserrat'] text-[#1C1B1A] text-[28px] md:text-[40px] lg:text-[46px] font-[200] leading-tight uppercase tracking-[6px] mb-8">
-            BẢN ĐỒ VĂN HÓA & LÀNG NGHỀ TRUYỀN THỐNG
+          <h1 className="font-display-hero text-text-primary text-[28px] md:text-[40px] lg:text-[46px] font-[200] leading-tight uppercase tracking-[6px] mb-8">
+            BẢN ĐỒ VĂN HÓA &amp; LÀNG NGHỀ TRUYỀN THỐNG
           </h1>
 
           {/* Pipe-delimited Region Switcher / Filter */}
           <div className="w-full overflow-x-auto pb-2 scrollbar-none">
-            <nav className="flex items-center whitespace-nowrap font-['Montserrat'] text-[11px] tracking-[0.18em] uppercase text-[#5A5854]">
+            <nav className="flex items-center whitespace-nowrap font-label-action text-label-action tracking-[0.18em] uppercase text-text-secondary">
               {REGION_KEYS.map((item, idx) => {
                 const isActive = activeRegionKey === item.key;
                 return (
                   <React.Fragment key={item.key}>
                     {idx > 0 && (
-                      <span className="mx-4 text-[#E6E2DA] opacity-50 select-none font-light">
+                      <span className="mx-4 text-border-neutral opacity-50 select-none font-light">
                         |
                       </span>
                     )}
@@ -225,8 +225,8 @@ export default function RegionsPage() {
                       onClick={() => setActiveRegionKey(item.key === 'all' ? 'dong-bang-bac-bo' : item.key)}
                       className={`py-1 transition-colors cursor-pointer ${
                         isActive
-                          ? 'text-[#B86B35] font-semibold border-b-2 border-[#B86B35]'
-                          : 'hover:text-[#B86B35]'
+                          ? 'text-accent-terracotta font-semibold border-b-2 border-accent-terracotta'
+                          : 'hover:text-accent-terracotta'
                       }`}
                     >
                       {item.label} {isActive && '(ĐANG CHỌN)'}
@@ -240,35 +240,35 @@ export default function RegionsPage() {
       </section>
 
       {/* MAIN EXPLORER: Split Composition */}
-      <section className="w-full bg-[#F4F2EE] py-8 lg:py-12 border-b border-[#E6E2DA]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
+      <section className="w-full bg-surface-subtle py-8 lg:py-12 border-b border-border-neutral">
+        <div className="max-w-7xl mx-auto px-margin">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* LEFT: High-Precision Vector Map Canvas */}
-            <div className="lg:col-span-7 bg-[#FFFFFF] border border-[#E6E2DA] p-6 md:p-8 relative flex flex-col justify-between overflow-hidden shadow-sm">
+            <div className="lg:col-span-7 bg-surface-crisp border border-border-neutral p-6 md:p-8 relative flex flex-col justify-between overflow-hidden shadow-sm">
               {/* Map Canvas Controls & Top Bar */}
-              <div className="flex items-center justify-between pb-4 border-b border-[#E6E2DA] z-10">
+              <div className="flex items-center justify-between pb-4 border-b border-border-neutral z-10">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-[20px] text-[#B86B35]">explore</span>
-                  <span className="font-['Inter'] text-[12px] tracking-[0.1em] text-[#1C1B1A] font-medium uppercase">
+                  <span className="material-symbols-outlined text-[20px] text-accent-terracotta">explore</span>
+                  <span className="font-spec-code text-spec-code tracking-[0.1em] text-text-primary font-medium uppercase">
                     Bản đồ địa chí không gian di sản
                   </span>
                 </div>
-                <div className="flex items-center gap-4 font-['Inter'] text-[11px] text-[#5A5854] tracking-wider">
+                <div className="flex items-center gap-4 font-spec-code text-[11px] text-text-secondary tracking-wider">
                   <span className="hidden sm:inline">TỶ LỆ 1:1.500.000</span>
                   <span className="hidden sm:inline opacity-30 select-none">|</span>
-                  <span className="flex items-center gap-1.5 text-[#B86B35] font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#B86B35] animate-ping"></span>
+                  <span className="flex items-center gap-1.5 text-accent-terracotta font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta animate-ping"></span>
                     TRỰC VỊ
                   </span>
                 </div>
               </div>
 
               {/* Stylized High-Precision Vector Map of Vietnam */}
-              <div className="relative w-full aspect-[4/5] sm:aspect-[1/1] md:aspect-[4/4.5] flex items-center justify-center my-4 overflow-hidden bg-[#F9F8F6]/40">
+              <div className="relative w-full aspect-[4/5] sm:aspect-[1/1] md:aspect-[4/4.5] flex items-center justify-center my-4 overflow-hidden bg-canvas-linen/40">
                 {/* Lat/Long Cartographic Grid Lines */}
                 <svg
-                  className="absolute inset-0 w-full h-full pointer-events-none opacity-40 stroke-[#E6E2DA]"
+                  className="absolute inset-0 w-full h-full pointer-events-none opacity-40 stroke-border-neutral"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <defs>
@@ -280,16 +280,16 @@ export default function RegionsPage() {
                 </svg>
 
                 {/* Coordinate Text Labels around perimeter */}
-                <div className="absolute top-2 left-3 font-['Inter'] text-[10px] text-[#5A5854]/70 tracking-widest pointer-events-none">
+                <div className="absolute top-2 left-3 font-spec-code text-[10px] text-text-secondary/70 tracking-widest pointer-events-none">
                   23°23' N / 102°09' E
                 </div>
-                <div className="absolute top-2 right-3 font-['Inter'] text-[10px] text-[#5A5854]/70 tracking-widest pointer-events-none">
+                <div className="absolute top-2 right-3 font-spec-code text-[10px] text-text-secondary/70 tracking-widest pointer-events-none">
                   21°30' N / 108°03' E
                 </div>
-                <div className="absolute bottom-2 left-3 font-['Inter'] text-[10px] text-[#5A5854]/70 tracking-widest pointer-events-none">
+                <div className="absolute bottom-2 left-3 font-spec-code text-[10px] text-text-secondary/70 tracking-widest pointer-events-none">
                   08°30' N / 104°45' E
                 </div>
-                <div className="absolute bottom-2 right-3 font-['Inter'] text-[10px] text-[#5A5854]/70 tracking-widest pointer-events-none">
+                <div className="absolute bottom-2 right-3 font-spec-code text-[10px] text-text-secondary/70 tracking-widest pointer-events-none">
                   HẢI PHẬN QUỐC GIA
                 </div>
 
@@ -424,68 +424,68 @@ export default function RegionsPage() {
                 </svg>
 
                 {/* Coordinate Callout Tag Floating Inside Left */}
-                <div className="absolute bottom-4 left-4 bg-[#FFFFFF]/95 backdrop-blur-sm border border-[#E6E2DA] p-3 max-w-[210px] hidden sm:block">
-                  <div className="font-['Inter'] text-[10px] text-[#B86B35] uppercase tracking-[0.15em] font-semibold mb-1">
+                <div className="absolute bottom-4 left-4 bg-surface-crisp/95 backdrop-blur-sm border border-border-neutral p-3 max-w-[210px] hidden sm:block">
+                  <div className="font-spec-code text-[10px] text-accent-terracotta uppercase tracking-[0.15em] font-semibold mb-1">
                     TÂM ĐIỂM QUAN SÁT
                   </div>
-                  <div className="font-['Inter'] text-[12px] text-[#1C1B1A] font-medium leading-tight">
+                  <div className="font-body-spec text-[12px] text-text-primary font-medium leading-tight">
                     {currentRegion.focusArea}
                   </div>
-                  <div className="text-[11px] font-['Inter'] text-[#5A5854] mt-1">
+                  <div className="text-[11px] font-spec-code text-text-secondary mt-1">
                     {currentRegion.coordinates}
                   </div>
                 </div>
               </div>
 
               {/* Bottom Legend & Map Metadata */}
-              <div className="pt-4 border-t border-[#E6E2DA] flex flex-wrap items-center justify-between gap-3 text-[#5A5854] text-[12px]">
+              <div className="pt-4 border-t border-border-neutral flex flex-wrap items-center justify-between gap-3 text-text-secondary text-[12px]">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <span className="w-3.5 h-3.5 bg-[#B86B35] inline-block"></span>
-                    <span className="font-['Inter'] uppercase">Vùng Đang Chọn</span>
+                    <span className="w-3.5 h-3.5 bg-accent-terracotta inline-block"></span>
+                    <span className="font-spec-code uppercase">Vùng Đang Chọn</span>
                   </div>
-                  <span className="text-[#E6E2DA] select-none">|</span>
+                  <span className="text-border-neutral select-none">|</span>
                   <div className="flex items-center gap-2">
                     <span className="w-3.5 h-3.5 bg-[#D5D0C9] inline-block"></span>
-                    <span className="font-['Inter'] uppercase">Vùng Lưu Trữ Khác</span>
+                    <span className="font-spec-code uppercase">Vùng Lưu Trữ Khác</span>
                   </div>
                 </div>
-                <div className="font-['Inter'] text-[11px] tracking-wide text-[#5A5854]">
+                <div className="font-spec-code text-[11px] tracking-wide text-text-secondary">
                   CLICK VÀO TỪNG VÙNG ĐỂ TẢI DỮ LIỆU
                 </div>
               </div>
             </div>
 
             {/* RIGHT SIDE: Sharp Rectangular Archival Preview Card */}
-            <div className="lg:col-span-5 bg-[#FFFFFF] border border-[#E6E2DA] p-6 sm:p-8 shadow-sm flex flex-col justify-between">
+            <div className="lg:col-span-5 bg-surface-crisp border border-border-neutral p-6 sm:p-8 shadow-sm flex flex-col justify-between">
               <div>
                 {/* Region Index & Status Marker */}
-                <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#E6E2DA]">
-                  <span className="font-['Inter'] text-[12px] text-[#B86B35] tracking-[0.2em] uppercase font-semibold">
+                <div className="flex items-center justify-between pb-3 mb-4 border-b border-border-neutral">
+                  <span className="font-spec-code text-[12px] text-accent-terracotta tracking-[0.2em] uppercase font-semibold">
                     MỤC LỤC ĐỊA BÀN {currentRegion.index}
                   </span>
-                  <span className="font-['Inter'] text-[11px] uppercase tracking-wider text-[#5A5854] border border-[#E6E2DA] px-2 py-0.5 bg-[#F9F8F6]">
+                  <span className="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary border border-border-neutral px-2 py-0.5 bg-canvas-linen">
                     {currentRegion.verified}
                   </span>
                 </div>
 
                 {/* Region Title */}
-                <h2 className="font-['Playfair_Display'] text-xl sm:text-2xl text-[#1C1B1A] tracking-[2px] uppercase mb-3 font-semibold">
+                <h2 className="font-headline-title text-xl sm:text-2xl text-text-primary tracking-[2px] uppercase mb-3 font-semibold">
                   {currentRegion.name} — {currentRegion.villagesCount} LÀNG NGHỀ
                 </h2>
 
                 {/* Region Description */}
-                <p className="font-['Inter'] text-[14px] text-[#5A5854] leading-relaxed mb-6">
+                <p className="font-body-default text-body-default text-text-secondary leading-relaxed mb-6">
                   {currentRegion.description}
                 </p>
 
                 {/* Divider Line */}
                 <div className="flex items-center gap-3 my-5">
-                  <span className="h-[1px] flex-1 bg-[#E6E2DA]"></span>
-                  <span className="font-['Inter'] text-[10px] tracking-[0.2em] uppercase text-[#5A5854]/70">
+                  <span className="h-[1px] flex-1 bg-border-neutral"></span>
+                  <span className="font-spec-code text-[10px] tracking-[0.2em] uppercase text-text-secondary/70">
                     CÁC ĐIỂM NGHỀ TIÊU BIỂU
                   </span>
-                  <span className="h-[1px] flex-1 bg-[#E6E2DA]"></span>
+                  <span className="h-[1px] flex-1 bg-border-neutral"></span>
                 </div>
 
                 {/* Featured Craft Village Thumbnails */}
@@ -493,9 +493,9 @@ export default function RegionsPage() {
                   {currentRegion.villages.map((village, idx) => (
                     <div
                       key={idx}
-                      className="group flex items-start gap-4 p-3 border border-[#E6E2DA] bg-[#F9F8F6]/40 hover:bg-[#F9F8F6] transition-all duration-200"
+                      className="group flex items-start gap-4 p-3 border border-border-neutral bg-canvas-linen/40 hover:bg-canvas-linen transition-all duration-200"
                     >
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 shrink-0 border border-[#E6E2DA] overflow-hidden bg-[#F4F2EE]">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 shrink-0 border border-border-neutral overflow-hidden bg-surface-subtle">
                         <img
                           src={village.image}
                           alt={village.name}
@@ -505,18 +505,18 @@ export default function RegionsPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-baseline justify-between mb-1">
                           <Link to={`/crafts/${village.craftId}`}>
-                            <h3 className="font-['Playfair_Display'] text-[16px] text-[#1C1B1A] group-hover:text-[#B86B35] transition-colors truncate font-medium">
+                            <h3 className="font-title-card text-[16px] text-text-primary group-hover:text-accent-terracotta transition-colors truncate font-medium">
                               {village.name}
                             </h3>
                           </Link>
-                          <span className="font-['Inter'] text-[10px] text-[#B86B35] uppercase tracking-wider shrink-0 ml-2">
+                          <span className="font-spec-code text-[10px] text-accent-terracotta uppercase tracking-wider shrink-0 ml-2">
                             {village.era}
                           </span>
                         </div>
-                        <div className="font-['Inter'] text-[12px] text-[#5A5854] tracking-wide mb-1">
+                        <div className="font-body-spec text-[12px] text-text-secondary tracking-wide mb-1">
                           {village.location}
                         </div>
-                        <p className="font-['Inter'] text-[12px] text-[#5A5854] line-clamp-2">
+                        <p className="font-body-spec text-[12px] text-text-secondary line-clamp-2">
                           {village.description}
                         </p>
                       </div>
@@ -525,29 +525,29 @@ export default function RegionsPage() {
                 </div>
 
                 {/* Concrete Region Statistics Bar */}
-                <div className="bg-[#F4F2EE] border border-[#E6E2DA] p-4 mb-6">
-                  <div className="grid grid-cols-3 gap-2 text-center divide-x divide-[#E6E2DA]">
+                <div className="bg-surface-subtle border border-border-neutral p-4 mb-6">
+                  <div className="grid grid-cols-3 gap-2 text-center divide-x divide-border-neutral">
                     <div className="px-1">
-                      <div className="font-['Montserrat'] text-[20px] text-[#1C1B1A] font-semibold leading-tight">
+                      <div className="font-headline-title text-[20px] text-text-primary font-semibold leading-tight">
                         {currentRegion.villagesCount}
                       </div>
-                      <div className="font-['Inter'] text-[10px] tracking-wider uppercase text-[#5A5854] mt-1">
+                      <div className="font-spec-code text-[10px] tracking-wider uppercase text-text-secondary mt-1">
                         Làng nghề hoạt động
                       </div>
                     </div>
                     <div className="px-1">
-                      <div className="font-['Montserrat'] text-[20px] text-[#B86B35] font-semibold leading-tight">
+                      <div className="font-headline-title text-[20px] text-accent-terracotta font-semibold leading-tight">
                         {currentRegion.artisansCount}
                       </div>
-                      <div className="font-['Inter'] text-[10px] tracking-wider uppercase text-[#5A5854] mt-1">
+                      <div className="font-spec-code text-[10px] tracking-wider uppercase text-text-secondary mt-1">
                         Nghệ nhân ưu tú
                       </div>
                     </div>
                     <div className="px-1">
-                      <div className="font-['Montserrat'] text-[20px] text-[#1C1B1A] font-semibold leading-tight">
+                      <div className="font-headline-title text-[20px] text-text-primary font-semibold leading-tight">
                         {currentRegion.heritageCount}
                       </div>
-                      <div className="font-['Inter'] text-[10px] tracking-wider uppercase text-[#5A5854] mt-1">
+                      <div className="font-spec-code text-[10px] tracking-wider uppercase text-text-secondary mt-1">
                         Di sản quốc gia
                       </div>
                     </div>
@@ -559,16 +559,16 @@ export default function RegionsPage() {
               <div className="pt-2">
                 <Link
                   to="/crafts"
-                  className="flex items-center justify-between w-full bg-[#1C1B1A] hover:bg-[#B86B35] text-[#FFFFFF] px-6 py-4 font-['Montserrat'] text-[11px] uppercase tracking-[2px] transition-colors duration-200 group font-semibold"
+                  className="flex items-center justify-between w-full bg-text-primary hover:bg-accent-terracotta text-surface-crisp px-6 py-4 font-label-action text-label-action uppercase tracking-[2px] transition-colors duration-200 group font-semibold"
                 >
                   <span>KHÁM PHÁ DANH MỤC DI SẢN VÙNG</span>
                   <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1.5 transition-transform duration-200">
                     arrow_forward
                   </span>
                 </Link>
-                <div className="flex items-center justify-between mt-3 px-1 text-[#5A5854] font-['Inter'] text-[11px]">
+                <div className="flex items-center justify-between mt-3 px-1 text-text-secondary font-spec-code text-[11px]">
                   <span>CẬP NHẬT: THÁNG 10/2024</span>
-                  <span className="flex items-center gap-1 text-[#B86B35]">
+                  <span className="flex items-center gap-1 text-accent-terracotta">
                     <span className="material-symbols-outlined text-[14px]">download</span>
                     HỒ SƠ ĐỊA CHÍ TRỰC TUYẾN
                   </span>
@@ -581,46 +581,46 @@ export default function RegionsPage() {
       </section>
 
       {/* QUICK ACCESS SECONDARY STRIP: Field Methodology & Heritage Criteria */}
-      <section className="w-full bg-canvas-linen py-10 border-b border-[#E6E2DA]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
+      <section className="w-full bg-canvas-linen py-10 border-b border-border-neutral">
+        <div className="max-w-7xl mx-auto px-margin">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            <div className="flex items-start gap-4 p-4 border border-[#E6E2DA] bg-[#FFFFFF]">
-              <div className="w-10 h-10 shrink-0 bg-[#F4F2EE] flex items-center justify-center border border-[#E6E2DA] text-[#B86B35]">
+            <div className="flex items-start gap-4 p-4 border border-border-neutral bg-surface-crisp">
+              <div className="w-10 h-10 shrink-0 bg-surface-subtle flex items-center justify-center border border-border-neutral text-accent-terracotta">
                 <span className="material-symbols-outlined text-[20px]">verified</span>
               </div>
               <div>
-                <div className="font-['Inter'] text-[12px] uppercase tracking-[0.1em] text-[#1C1B1A] font-semibold mb-1">
+                <div className="font-label-action text-[12px] uppercase tracking-[0.1em] text-text-primary font-semibold mb-1">
                   TIÊU CHÍ ĐIỀN DÃ BẢN ĐỊA
                 </div>
-                <p className="font-['Inter'] text-[13px] text-[#5A5854]">
+                <p className="font-body-spec text-[13px] text-text-secondary">
                   Mỗi làng nghề được ghi nhận phải đạt tối thiểu 3 thế hệ trao truyền liên tục cùng nguyên vật liệu truy xuất nguồn gốc địa phương.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-4 border border-[#E6E2DA] bg-[#FFFFFF]">
-              <div className="w-10 h-10 shrink-0 bg-[#F4F2EE] flex items-center justify-center border border-[#E6E2DA] text-[#B86B35]">
+            <div className="flex items-start gap-4 p-4 border border-border-neutral bg-surface-crisp">
+              <div className="w-10 h-10 shrink-0 bg-surface-subtle flex items-center justify-center border border-border-neutral text-accent-terracotta">
                 <span className="material-symbols-outlined text-[20px]">layers</span>
               </div>
               <div>
-                <div className="font-['Inter'] text-[12px] uppercase tracking-[0.1em] text-[#1C1B1A] font-semibold mb-1">
-                  PHÂN LỚP NGHỆ NHÂN & XƯỞNG
+                <div className="font-label-action text-[12px] uppercase tracking-[0.1em] text-text-primary font-semibold mb-1">
+                  PHÂN LỚP NGHỆ NHÂN &amp; XƯỞNG
                 </div>
-                <p className="font-['Inter'] text-[13px] text-[#5A5854]">
+                <p className="font-body-spec text-[13px] text-text-secondary">
                   Tích hợp danh bạ 450+ xưởng gia đình, tạo điều kiện kết nối kiến trúc sư, nhà nghiên cứu và người yêu mến văn hóa thực thụ.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-4 border border-[#E6E2DA] bg-[#FFFFFF]">
-              <div className="w-10 h-10 shrink-0 bg-[#F4F2EE] flex items-center justify-center border border-[#E6E2DA] text-[#B86B35]">
+            <div className="flex items-start gap-4 p-4 border border-border-neutral bg-surface-crisp">
+              <div className="w-10 h-10 shrink-0 bg-surface-subtle flex items-center justify-center border border-border-neutral text-accent-terracotta">
                 <span className="material-symbols-outlined text-[20px]">share_location</span>
               </div>
               <div>
-                <div className="font-['Inter'] text-[12px] uppercase tracking-[0.1em] text-[#1C1B1A] font-semibold mb-1">
+                <div className="font-label-action text-[12px] uppercase tracking-[0.1em] text-text-primary font-semibold mb-1">
                   ĐỊNH HƯỚNG TRẢI NGHIỆM VĂN HÓA
                 </div>
-                <p className="font-['Inter'] text-[13px] text-[#5A5854]">
+                <p className="font-body-spec text-[13px] text-text-secondary">
                   Cung cấp lộ trình hành hương nghề tôn trọng sinh hoạt cộng đồng, hạn chế thương mại hóa du lịch xô bồ.
                 </p>
               </div>
