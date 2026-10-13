@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../services/api';
 
 const DEFAULT_FAVOURITES = [
   {
@@ -67,7 +68,43 @@ export default function FavouritesPage() {
     }
   });
 
+  const [isFromDb, setIsFromDb] = useState(false);
   const [notification, setNotification] = useState('');
+
+  // Tải danh sách yêu thích từ Database nếu đã đăng nhập
+  useEffect(() => {
+    let isMounted = true;
+    const token = localStorage.getItem('craftroots_token');
+
+    if (token) {
+      api.getFavourites()
+        .then((dbFavs) => {
+          if (!isMounted) return;
+          if (Array.isArray(dbFavs) && dbFavs.length > 0) {
+            const mapped = dbFavs.map((c) => ({
+              id: `DB-FAV-${c.id}`,
+              craftId: c.id,
+              tag: c.category || 'DI SẢN TRUYỀN THỐNG',
+              village: c.region || 'Làng Nghề',
+              category: c.category || 'Thủ Công',
+              title: c.name,
+              recordCode: `CR-ARCHIVE-${c.id}`,
+              artisan: 'Nghệ Nhân Làng Nghề',
+              technique: 'Chế tác thủ công bản địa',
+              price: 'Bảo tồn văn hóa',
+              image: c.image || c.thumbnail_url || 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=400&q=80',
+            }));
+            setItems(mapped);
+            setIsFromDb(true);
+          }
+        })
+        .catch((err) => {
+          console.warn('Lỗi khi nạp danh sách yêu thích từ CSDL:', err);
+        });
+    }
+
+    return () => { isMounted = false; };
+  }, []);
 
   useEffect(() => {
     try {
@@ -77,14 +114,20 @@ export default function FavouritesPage() {
     }
   }, [items]);
 
-  const handleRemove = (id, title) => {
+  const handleRemove = async (id, title, craftId) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
+    if (craftId) {
+      api.removeFavourite(craftId).catch(() => {});
+    }
     setNotification(`Đã gỡ "${title}" khỏi danh sách lưu trữ.`);
     setTimeout(() => setNotification(''), 4000);
   };
 
   const handleClearAll = () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa toàn bộ tác phẩm đã lưu trong bộ sưu tập?')) {
+      items.forEach((item) => {
+        if (item.craftId) api.removeFavourite(item.craftId).catch(() => {});
+      });
       setItems([]);
       setNotification('Đã xóa toàn bộ tác phẩm khỏi mục lưu trữ.');
       setTimeout(() => setNotification(''), 4000);
@@ -103,6 +146,7 @@ export default function FavouritesPage() {
 
   const handleResetDefaults = () => {
     setItems(DEFAULT_FAVOURITES);
+    setIsFromDb(false);
     setNotification('Đã khôi phục bộ sưu tập di sản mẫu.');
     setTimeout(() => setNotification(''), 4000);
   };
@@ -124,7 +168,7 @@ export default function FavouritesPage() {
             {/* Live Archive Coordinate Stamp */}
             <div className="flex items-center gap-2 font-spec-code text-spec-code text-text-secondary uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta inline-block animate-pulse"></span>
-              <span>BẢN GHI ĐỒNG BỘ NỘI BỘ: {items.length.toString().padStart(2, '0')} DI SẢN</span>
+              <span>{isFromDb ? 'BẢN GHI ĐỒNG BỘ CSDL' : 'LƯU TRỮ TRÌNH DUYỆT'}: {items.length.toString().padStart(2, '0')} DI SẢN</span>
             </div>
           </div>
         </div>
@@ -250,7 +294,7 @@ export default function FavouritesPage() {
                     <div className="absolute top-3 right-3 z-10">
                       <button
                         type="button"
-                        onClick={() => handleRemove(item.id, item.title)}
+                        onClick={() => handleRemove(item.id, item.title, item.craftId)}
                         className="btn-remove-item px-3 py-1.5 bg-surface-crisp/95 text-text-primary hover:text-accent-terracotta hover:bg-surface-crisp font-label-action text-[10px] tracking-[0.18em] uppercase shadow-sm transition-colors flex items-center gap-1 cursor-pointer"
                       >
                         <span>✕</span>

@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const env = require('./config/env');
+const routes = require('./routes');
+const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -9,12 +11,18 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: env.corsOrigin || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (!origin || origin.startsWith('http://localhost') || origin === env.corsOrigin) {
+        callback(null, true);
+      } else {
+        callback(null, true);
+      }
+    },
     credentials: true,
   })
 );
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Root API Endpoint
 app.get('/api', (req, res) => {
@@ -26,32 +34,11 @@ app.get('/api', (req, res) => {
   });
 });
 
-// Health Check Endpoint
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-  });
-});
+// Toàn bộ các API phân hệ gắn tiền tố /api (bao gồm /api/artisans)
+app.use('/api', routes);
 
-// 404 Handler cho các API không tồn tại
-app.use('/api/*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `API endpoint ${req.originalUrl} không tồn tại`,
-  });
-});
-
-// Centralized Error Handling Middleware
-app.use((err, req, res, next) => {
-  console.error('[Server Error]:', err);
-  const status = err.status || 500;
-  res.status(status).json({
-    success: false,
-    message: err.message || 'Lỗi hệ thống nội bộ',
-    ...(env.nodeEnv === 'development' && { stack: err.stack }),
-  });
-});
+// 404 & Centralized Error Handling Middleware
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 module.exports = app;

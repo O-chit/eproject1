@@ -1,80 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import api from '../services/api';
 
-const GALLERY_PHOTOS = [
+const DEFAULT_GALLERY_PHOTOS = [
   {
-    url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD9O3gQL4UyGAzvsdnfdDAr9jVo5wf-PqrIP4Q71xSWUXrJ8vXfYysi3-KYwEI84hdGzKF-JZV34gNXpDGwk7ramD254sTh_js-_cawkd5VhnJr4ST1pFFPc_aIVr1gwwfRHXR99a1OhThrioFR9M40z5MI592OB6QA4mOqF3uIbm4Pyj1FvBuUDMucEsKzJTAkS7yrEdDody-XdfO3P2fak7Te0XsgDKMAzdHc-Uk',
-    alt: 'Editorial close-up still life photograph of a handcrafted traditional Vietnamese Bat Trang crackle glaze ceramic tea set, featuring a bell-shaped teapot with fine crackle lines, six companion cups, and a ceramic platter resting on an aged weathered dark teak table, soft diffused natural window lighting with faint curling steam, warm terracotta accents and muted earthy tones, museum archival aesthetic.',
-    title: 'Góc chụp toàn cảnh bộ ấm chén men rạn dáng quả chuông cổ điển',
-  },
-  {
-    url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAek_gUQ2Mc6KWSkJsR7CziwjdJG4s5I-bseH2KGPdkh974MWmg5LqbRpp-9ABPNB7MDBR6BsP2GoWS-pB1KIjZEZ1Fhaindt3gwvmzuq6XSYcAkMW1xrPkuVsQU1vYxu6YHmU33_J8dZ8cgHgI2W49DLSactYvnB7F6IagGpX4rb9LlZdGU5G7qWfRwxyWhE_ITEqNowZTyHv4bafivHivSF6M25p2yPwqQCMMMz0',
-    alt: 'Macro macro lens shot focusing sharply on the bell-shaped ceramic teapot lid showing delicate spiderweb crackle ash glaze patterns, matte tactile earthenware texture, warm studio light from side angle.',
-    title: 'Góc cận cảnh nắp ấm dáng quả chuông với núm cầm tiện tay nguyên khối',
-  },
-  {
-    url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBKtHhTTz7DXi-iJEkU_gB4eS0-wetuJ0SRFRhUSjHt2M1dPYycC5U3V90kG7RBcx7DSOLLDzN2I1ry5FtoM_2Cw_PGnfZN1UzJ_TVAiMKH4xzgCbqXIlHwIP9aj37vbzyOKepDCHpUDGTposEVctXj8Xb5sBfhQxjKrmpKBi8uIIGGnQwv6FJt-PKdWQkXss9MCektu6xIrLyeEO1n6rboeBomyQ4G1klVBTd6O3o',
-    alt: 'High magnification detail of traditional Vietnamese crackle glaze showing fine natural crazing filled with natural tea tannin patina, subtle mineral specks, smooth tactile glassy surface.',
-    title: 'Mạng lưới men rạn tro trấu cổ kính hình thành tự nhiên trong lò củi 1300 độ C',
-  },
-  {
-    url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQpMi-84Wlk9WfkFX9WJEidp714r333AzvS98OP3pTpGOYDPBcy4cnPq0-7R9h9HCdM6YUQkhorAbYmHwlexpoksY0Ok87joXkFXnVN9GktBeUrvV8cGjlCMdrcjSocxblPyYJgx_wgO-4hcoq9iAha9R-KsRls4DXBd9Q-Btc-H2quAk-4ErTONPmBGP0wmWzPd95MHUylftdBPCQEGg0AVss2L57gtUYw2Li5O4',
-    alt: 'Bottom view of the handcrafted ceramic teapot showing raw unglazed high-fired terracotta foot rim and deep pressed Chinese-Vietnamese seal mark stamp of master artisan Nguyen Van Binh.',
-    title: 'Triện gốm khắc chìm tay xác thực danh tính nghệ nhân Nguyễn Văn Bình dưới đáy ấm',
-  },
-];
-
-const RELATED_WORKS = [
-  {
-    id: 101,
-    code: 'CR-BT-HL04',
-    title: 'Bình Hút Lộc Men Rạn Cổ',
-    category: 'Gốm Men Rạn',
-    period: 'Thế Kỷ XVIII',
-    description: 'Dáng bình miệng loe cổ thắt, lưu giữ vượng khí theo quan niệm phong thủy kinh thành Thăng Long xưa.',
-    price: '3.650.000 ₫',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCzXcydUozdi1PLpqPxD4ZBpXNYg-ZxxkKbOfwc96bEYO0OHDra0CEo0AqdNsTVi-L2TSuENgoW-2OIb95Zoqb-dJtoJJIypv_oB1K6a910Xxy35ra_tRY4ml_OzbYG0V9KByiTgM5N7pW1yE3YUMx823oN5g0lYbzBDb8haDWdDqo-leCsOxG_8Bej51CkA8hy9PvNlSDGN5QAx9acTJB_aLxH3VRiOqrCK5_uhwc',
-  },
-  {
-    id: 102,
-    code: 'CR-BT-DD02',
-    title: 'Đĩa Cảnh Men Lam Đắp Nổi',
-    category: 'Gốm Sa Thạch',
-    period: 'Thời Lê Trung Hưng',
-    description: 'Họa tiết tùng hạc diên niên vẽ tay bằng oxit coban tự nhiên, men trắng ngà nung nhiệt cao.',
-    price: '2.800.000 ₫',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCqduILIjCsF1Kr_gNwT3HzCol9ezbm28IM-WATA6u3a0Kr8CYRzu98P3zWTne8NLrEGuVggHoQ89zJCBrkJbC8wQoA7JqQqJ2oSQM5h6CVd1OHhsmIKgJsgtVtnyopCOs05V63JZo8I6k5-nAo8X_b4jyLWbBoMi6bJctZ6aMadrS7-0MkDyYuXEvLZFi2TgKBBbD7_yBTT0-K43uVnlY0MZrXFsEgsPrvfb4lcX8',
-  },
-  {
-    id: 103,
-    code: 'CR-BT-LH09',
-    title: 'Lư Hương Gốm Chạm Rồng Nổi',
-    category: 'Gốm Thờ Cổ',
-    period: 'Thế Kỷ XVII',
-    description: 'Vật phẩm thờ tự trang nghiêm với đôi rồng chầu mặt nguyệt đắp nổi tinh xảo hoàn toàn bằng tay.',
-    price: '5.200.000 ₫',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaUrvFnVxj2lsHDRkr-yaTRJCRIumrtcbAoBO8T7gJK22rF-l8LFMNoASMdtx_N8hQkmINE6HE7xtmJmzGpxqvbiG5mzG2TvxNKGDuu4MZjKV7e4q6ixIFOJ1PSNsl56IqQagawz_SCLeDfMjYY1bGxxdBh3e-6wBJ15RkSXBTpEZHEoWqpB_uzbwmdJy82jUtSMpkv6zROQGRW5W2GKqEOL2DxfhNLSsVd1T7ujM',
+    url: 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80',
+    alt: 'Bình Gốm Men Lam Cổ',
+    title: 'Góc chụp toàn cảnh tác phẩm',
   },
 ];
 
 export default function CraftDetailPage() {
   const { id } = useParams();
+  const craftId = id || 1;
+  const [craft, setCraft] = useState(null);
+  const [relatedList, setRelatedList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCraftDetail() {
+      try {
+        setLoading(true);
+        const detail = await api.getCraftById(craftId);
+        if (isMounted && detail) {
+          setCraft(detail);
+        }
+        const related = await api.getRelatedCrafts(craftId).catch(() => []);
+        if (isMounted && Array.isArray(related)) {
+          setRelatedList(related);
+        }
+      } catch (err) {
+        console.warn('Lỗi nạp chi tiết tác phẩm từ DB:', err.message);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    loadCraftDetail();
+    setActivePhotoIndex(0);
+    return () => { isMounted = false; };
+  }, [craftId]);
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem('craftroots_favourites');
       if (stored) {
         const list = JSON.parse(stored);
-        if (list.some((item) => (item.id || item) == id || (item.id || item) === 1)) {
+        if (list.some((item) => (item.id || item) == craftId)) {
           setIsSaved(true);
         }
       }
     } catch {
       //
     }
-  }, [id]);
+  }, [craftId]);
 
   const toggleSave = () => {
     setIsSaved((prev) => {
@@ -83,18 +65,18 @@ export default function CraftDetailPage() {
         const stored = localStorage.getItem('craftroots_favourites');
         let list = stored ? JSON.parse(stored) : [];
         const itemObj = {
-          id: id || 1,
-          name: 'Bộ Trà Men Rạn Nung Củi Bát Tràng',
-          code: 'CR-BT-2025-08MR',
-          price: '4.850.000 ₫',
-          image: GALLERY_PHOTOS[0].url,
+          id: craft?.id || craftId,
+          name: craft?.name || 'Tác phẩm thủ công',
+          code: craft?.slug || `CR-0${craftId}`,
+          price: craft?.price || 'Liên hệ',
+          image: craft?.thumbnailUrl || DEFAULT_GALLERY_PHOTOS[0].url,
         };
         if (next) {
-          if (!list.some((i) => (i.id || i) == (id || 1))) {
+          if (!list.some((i) => (i.id || i) == craftId)) {
             list.push(itemObj);
           }
         } else {
-          list = list.filter((i) => (i.id || i) != (id || 1));
+          list = list.filter((i) => (i.id || i) != craftId);
         }
         localStorage.setItem('craftroots_favourites', JSON.stringify(list));
         window.dispatchEvent(new Event('storage'));
@@ -105,6 +87,29 @@ export default function CraftDetailPage() {
     });
   };
 
+  const photos = (craft?.images && craft.images.length > 0)
+    ? craft.images.map((img) => ({
+        url: img.url,
+        title: img.caption || craft?.name,
+        alt: img.altText || craft?.name,
+      }))
+    : [
+        {
+          url: craft?.thumbnailUrl || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80',
+          title: craft?.name || 'Tác phẩm thủ công',
+          alt: craft?.name || 'Ảnh chi tiết',
+        },
+      ];
+
+  const currentPhoto = photos[activePhotoIndex] || photos[0];
+  const leadArtisan = craft?.artisans?.[0] || {
+    name: 'Nghệ Nhân Làng Nghề',
+    title: 'Nghệ nhân Ưu tú',
+    roleTitle: 'Chủ trì chế tác di sản',
+  };
+  const materialsText = craft?.materials?.map((m) => m.name).join(', ') || 'Nguyên liệu tự nhiên thuần Việt';
+  const techniquesText = craft?.techniques?.map((t) => t.name).join(', ') || 'Kỹ pháp thủ công truyền thừa';
+
   return (
     <div className="flex flex-col w-full bg-canvas-linen">
       {/* Top Breadcrumbs */}
@@ -113,11 +118,11 @@ export default function CraftDetailPage() {
           <div className="flex flex-wrap items-center font-spec-code text-spec-code tracking-[0.16em] uppercase text-text-secondary">
             <Link to="/" className="hover:text-accent-terracotta transition-colors">Trang Chủ</Link>
             <span className="mx-3 opacity-35 select-none text-text-secondary">|</span>
-            <Link to="/crafts?category=gom-su" className="hover:text-accent-terracotta transition-colors">Gốm Sứ</Link>
+            <Link to="/crafts" className="hover:text-accent-terracotta transition-colors">{craft?.category?.name || 'Di Sản Thủ Công'}</Link>
             <span className="mx-3 opacity-35 select-none text-text-secondary">|</span>
-            <Link to="/regions" className="hover:text-accent-terracotta transition-colors">Làng Gốm Bát Tràng</Link>
+            <Link to="/regions" className="hover:text-accent-terracotta transition-colors">{craft?.region?.name || 'Làng Nghề Truyền Thống'}</Link>
             <span className="mx-3 opacity-35 select-none text-text-secondary">|</span>
-            <span className="text-text-primary font-semibold">Bộ Trà Men Rạn Cổ (Mã: BT-MR08)</span>
+            <span className="text-text-primary font-semibold">{craft?.name || `Tác phẩm #CR-${craftId}`}</span>
           </div>
         </div>
       </section>
@@ -133,23 +138,23 @@ export default function CraftDetailPage() {
               <div className="relative w-full aspect-[4/3] bg-surface-subtle overflow-hidden group shadow-sm border border-border-neutral">
                 <img
                   id="craft-main-display"
-                  src={GALLERY_PHOTOS[activePhotoIndex].url}
-                  alt={GALLERY_PHOTOS[activePhotoIndex].title}
-                  data-alt={GALLERY_PHOTOS[activePhotoIndex].alt}
+                  src={currentPhoto.url}
+                  alt={currentPhoto.title}
+                  data-alt={currentPhoto.alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div className="absolute top-4 left-4 bg-text-primary/90 text-surface-crisp px-3 py-1 font-spec-code text-[11px] uppercase tracking-[0.15em] backdrop-blur-sm">
-                  Mộc Bản Thủ Công • Nung Lò Củi
+                  {craft?.category?.name || 'Mộc Bản Thủ Công'}
                 </div>
                 <div className="absolute bottom-4 right-4 bg-surface-crisp/95 text-text-primary px-3 py-1.5 font-spec-code text-spec-code shadow-sm flex items-center gap-2 border border-border-neutral">
                   <span className="inline-block w-2 h-2 rounded-full bg-accent-terracotta animate-pulse"></span>
-                  Độ hoàn thiện: 100% Nguyên bản
+                  Lượt tra cứu: {craft?.viewCount || 1} lần
                 </div>
               </div>
 
               {/* Thumbnail Gallery Selector */}
               <div className="grid grid-cols-4 gap-space-sm pt-space-xs">
-                {GALLERY_PHOTOS.map((photo, idx) => (
+                {photos.map((photo, idx) => (
                   <button
                     key={idx}
                     type="button"
@@ -174,11 +179,11 @@ export default function CraftDetailPage() {
                 <div className="flex items-center space-x-2">
                   <span className="material-symbols-outlined text-accent-terracotta text-[18px]">verified</span>
                   <span className="font-spec-code text-spec-code uppercase tracking-[0.08em] text-text-primary font-medium">
-                    Chứng thư cổ vật phục dựng
+                    Chứng thư di sản CraftRoots
                   </span>
                 </div>
                 <div className="font-spec-code text-[11px] text-text-secondary tracking-widest uppercase">
-                  Niên hiệu: Quý Mão • Giám tuyển CraftRoots
+                  Mã CSDL: {craft?.slug || `craft-${craftId}`}
                 </div>
               </div>
             </div>
@@ -189,31 +194,31 @@ export default function CraftDetailPage() {
               <div className="flex items-center gap-2 mb-space-xs">
                 <span className="w-6 h-[1px] bg-accent-terracotta"></span>
                 <span className="font-spec-code text-spec-code text-accent-terracotta uppercase tracking-[0.2em] font-semibold">
-                  Di Sản Gốm Cổ Việt Nam — Thế Kỷ XVI
+                  {craft?.region?.name || 'Di Sản Làng Nghề Việt Nam'}
                 </span>
               </div>
 
               {/* Primary Title */}
-              <h1 className="font-display-hero text-[30px] leading-[38px] tracking-[0.12em] font-light text-text-primary uppercase mb-space-xs">
-                Bộ Trà Men Rạn Nung Củi Bát Tràng
+              <h1 className="font-display-hero text-[28px] sm:text-[32px] leading-[38px] tracking-[0.1em] font-light text-text-primary uppercase mb-space-xs">
+                {craft?.name || 'Tác Phẩm Thủ Công Truyền Thống'}
               </h1>
               <p className="font-title-card text-title-card italic text-text-secondary mb-space-md">
-                Dáng quả chuông cổ điển — Tinh hoa phục chế từ thư tịch cổ triều Lê
+                {craft?.shortDescription || 'Tuyệt tác tạo hình thuần thủ công từ đôi bàn tay các bậc thầy nghệ nhân Việt Nam.'}
               </p>
 
               {/* Artisan Endorsement Ribbon */}
               <div className="p-space-md bg-surface-subtle border border-border-neutral mb-space-lg flex items-center justify-between shadow-sm">
                 <div className="flex flex-col">
-                  <span className="font-spec-code text-[11px] text-text-secondary uppercase tracking-[0.14em]">Chế tác bởi bàn tay</span>
-                  <Link to="/artisans" className="font-label-signature text-[22px] leading-tight text-text-primary font-normal hover:text-accent-terracotta transition-colors">
-                    Nguyễn Văn Bình
+                  <span className="font-spec-code text-[11px] text-text-secondary uppercase tracking-[0.14em]">Chế tác bởi nghệ nhân</span>
+                  <Link to={`/artisans/${leadArtisan.id || 1}`} className="font-label-signature text-[22px] leading-tight text-text-primary font-normal hover:text-accent-terracotta transition-colors">
+                    {leadArtisan.name}
                   </Link>
                 </div>
                 <div className="text-right">
                   <span className="inline-block px-2.5 py-1 bg-surface-crisp text-accent-terracotta font-spec-code text-[10px] tracking-[0.15em] uppercase font-semibold border border-border-neutral">
-                    Nghệ Nhân Ưu Tú
+                    {leadArtisan.title || 'Nghệ Nhân Ưu Tú'}
                   </span>
-                  <p className="font-spec-code text-[11px] text-text-secondary mt-1">50 năm tuổi nghề gia truyền</p>
+                  <p className="font-spec-code text-[11px] text-text-secondary mt-1">{leadArtisan.roleTitle || 'Chủ trì chế tác'}</p>
                 </div>
               </div>
 
@@ -227,32 +232,32 @@ export default function CraftDetailPage() {
                 <div className="grid grid-cols-1 divide-y divide-border-neutral text-body-spec">
                   <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
                     <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Mã định danh</span>
-                    <span className="font-spec-code text-spec-code text-text-primary font-semibold text-right tracking-[0.08em]">CR-BT-2025-08MR</span>
+                    <span className="font-spec-code text-spec-code text-text-primary font-semibold text-right tracking-[0.08em]">{craft?.slug || `CR-0${craftId}`}</span>
                   </div>
                   <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
                     <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Làng nghề xuất xứ</span>
-                    <span className="font-body-spec text-body-spec text-text-primary text-right font-medium">Bát Tràng, Gia Lâm, Hà Nội</span>
+                    <span className="font-body-spec text-body-spec text-text-primary text-right font-medium">{craft?.region?.name || 'Việt Nam'}</span>
                   </div>
                   <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
-                    <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Chất liệu cốt</span>
-                    <span className="font-body-spec text-body-spec text-text-primary text-right">Đất sét cao lanh sông Hồng lọc kỹ 3 lần</span>
-                  </div>
-                  <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
-                    <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Loại men đặc thù</span>
-                    <span className="font-body-spec text-body-spec text-text-primary text-right font-medium">Men rạn tro trấu cổ truyền (Crackle ash glaze)</span>
+                    <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Chất liệu chế tác</span>
+                    <span className="font-body-spec text-body-spec text-text-primary text-right">{materialsText}</span>
                   </div>
                   <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
                     <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Kỹ thuật tạo tác</span>
-                    <span className="font-body-spec text-body-spec text-text-primary text-right">Chuốt tay bàn xoay, nung củi liên tục 72h (1300°C)</span>
+                    <span className="font-body-spec text-body-spec text-text-primary text-right font-medium">{techniquesText}</span>
                   </div>
-                  <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
-                    <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Quy chuẩn kích thước</span>
-                    <span className="font-body-spec text-body-spec text-text-primary text-right">Ấm 350ml | 06 chén 50ml | Khay gốm Ø 28cm</span>
-                  </div>
-                  <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
-                    <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Đề xuất công năng</span>
-                    <span className="font-body-spec text-body-spec text-accent-terracotta text-right font-medium">Thưởng trà Shan Tuyết cổ thụ, Trà ướp sen Tây Hồ</span>
-                  </div>
+                  {craft?.tools && (
+                    <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
+                      <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Nông cụ & Dụng cụ</span>
+                      <span className="font-body-spec text-body-spec text-text-primary text-right">{craft.tools}</span>
+                    </div>
+                  )}
+                  {craft?.traditionalUse && (
+                    <div className="py-2.5 flex items-baseline justify-between gap-space-sm">
+                      <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.06em] shrink-0">Đề xuất công năng</span>
+                      <span className="font-body-spec text-body-spec text-accent-terracotta text-right font-medium">{craft.traditionalUse}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -263,8 +268,8 @@ export default function CraftDetailPage() {
                     Định mức chuyển nhượng di sản
                   </span>
                   <div className="flex items-baseline gap-space-sm">
-                    <span className="font-headline-title text-[32px] text-text-primary font-bold tracking-tight">4.850.000 ₫</span>
-                    <span className="font-spec-code text-spec-code text-accent-terracotta tracking-[0.05em] uppercase font-medium">Chế tác độc bản theo mẻ lò</span>
+                    <span className="font-headline-title text-[32px] text-text-primary font-bold tracking-tight">Giá giám tuyển</span>
+                    <span className="font-spec-code text-spec-code text-accent-terracotta tracking-[0.05em] uppercase font-medium">Chế tác thủ công theo mẻ</span>
                   </div>
                   <p className="font-body-spec text-[12px] text-text-secondary mt-1">
                     * Mỗi mẻ chỉ nung thành công 12 bộ đạt chuẩn tỷ lệ vết rạn tự nhiên cấp độ A+.
@@ -355,57 +360,63 @@ export default function CraftDetailPage() {
                   Tuyển Tập Tác Phẩm
                 </span>
               </div>
-              <h3 className="font-headline-title text-[26px] text-text-primary tracking-tight font-medium uppercase">
-                Tác Phẩm Cùng Nghệ Nhân Nguyễn Văn Bình <span className="opacity-35 select-none font-light">|</span> Bát Tràng
+              <h3 className="font-headline-title text-[24px] sm:text-[26px] text-text-primary tracking-tight font-medium uppercase">
+                Tác Phẩm Cùng Nghệ Nhân {leadArtisan.name} <span className="opacity-35 select-none font-light">|</span> {craft?.region?.name || 'Di sản làng nghề'}
               </h3>
             </div>
             <div className="mt-space-sm md:mt-0 font-spec-code text-spec-code uppercase tracking-[0.15em] text-text-secondary">
-              Hồ sơ lưu trữ: 03 tác phẩm nguyên bản
+              Hồ sơ lưu trữ: {relatedList.length} tác phẩm liên quan
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            {RELATED_WORKS.map((work) => (
-              <article key={work.id} className="bg-surface-crisp border border-border-neutral transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-md flex flex-col group">
-                <div className="relative w-full aspect-[4/5] bg-surface-subtle overflow-hidden">
-                  <img
-                    src={work.image}
-                    alt={work.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <span className="absolute top-3 left-3 bg-text-primary text-surface-crisp px-2.5 py-0.5 font-spec-code text-[10px] uppercase tracking-[0.15em]">
-                    Mã: {work.code}
-                  </span>
-                </div>
-                <div className="p-space-lg flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.1em] mb-1">
-                      <span>{work.category}</span>
-                      <span className="mx-2 opacity-35">|</span>
-                      <span>{work.period}</span>
-                    </div>
-                    <h4 className="font-title-card text-title-card text-text-primary font-semibold mb-2 group-hover:text-accent-terracotta transition-colors">
-                      {work.title}
-                    </h4>
-                    <p className="font-body-spec text-body-spec text-text-secondary line-clamp-2 leading-relaxed">
-                      {work.description}
-                    </p>
-                  </div>
-                  <div className="pt-space-md mt-space-sm border-t border-border-neutral flex items-center justify-between">
-                    <span className="font-headline-title text-[18px] text-text-primary font-semibold">
-                      {work.price}
+          {relatedList.length === 0 ? (
+            <p className="text-center font-spec-code text-text-secondary py-8">
+              Đang tổng hợp các tác phẩm liên quan từ cùng nghệ nhân...
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+              {relatedList.map((work) => (
+                <article key={work.id} className="bg-surface-crisp border border-border-neutral transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-md flex flex-col group">
+                  <div className="relative w-full aspect-[4/5] bg-surface-subtle overflow-hidden">
+                    <img
+                      src={work.thumbnailUrl || work.image || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80'}
+                      alt={work.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute top-3 left-3 bg-text-primary text-surface-crisp px-2.5 py-0.5 font-spec-code text-[10px] uppercase tracking-[0.15em]">
+                      Mã: {work.slug || `CR-0${work.id}`}
                     </span>
-                    <Link
-                      to={`/crafts/${work.id}`}
-                      className="font-label-action text-label-action uppercase tracking-[0.15em] text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold"
-                    >
-                      XEM CHI TIẾT →
-                    </Link>
                   </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className="p-space-lg flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.1em] mb-1">
+                        <span>{work.category || 'Thủ công'}</span>
+                        <span className="mx-2 opacity-35">|</span>
+                        <span>{work.region || 'Việt Nam'}</span>
+                      </div>
+                      <h4 className="font-title-card text-title-card text-text-primary font-semibold mb-2 group-hover:text-accent-terracotta transition-colors">
+                        {work.name}
+                      </h4>
+                      <p className="font-body-spec text-body-spec text-text-secondary line-clamp-2 leading-relaxed">
+                        {work.shortDescription || work.description || 'Tác phẩm chế tác thủ công tinh xảo.'}
+                      </p>
+                    </div>
+                    <div className="pt-space-md mt-space-sm border-t border-border-neutral flex items-center justify-between">
+                      <span className="font-headline-title text-[18px] text-text-primary font-semibold">
+                        {work.price || 'Giá liên hệ'}
+                      </span>
+                      <Link
+                        to={`/crafts/${work.id}`}
+                        className="font-label-action text-label-action uppercase tracking-[0.15em] text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold"
+                      >
+                        XEM CHI TIẾT →
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

@@ -75,6 +75,13 @@ const getCrafts = async (req, res, next) => {
       );
     }
 
+    // 6. Lọc sản phẩm nổi bật (is_featured)
+    if (req.query.is_featured !== undefined) {
+      const isFeatured = req.query.is_featured === 'true' || req.query.is_featured === true;
+      values.push(isFeatured);
+      conditions.push(`c.is_featured = $${values.length}`);
+    }
+
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
     // Sắp xếp

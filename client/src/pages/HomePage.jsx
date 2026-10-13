@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import CraftCardSkeleton from '../components/common/CraftCardSkeleton';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import api from '../services/api';
 
 const HIGHLIGHT_CRAFTS = [
   {
@@ -58,15 +57,14 @@ export default function HomePage() {
 
     async function fetchData() {
       try {
-        const res = await fetch(`${API_URL}/crafts?is_featured=true&limit=3`);
-        if (!res.ok) throw new Error('API fetch error');
-        const data = await res.json();
-        const items = data.data || data;
+        setLoading(true);
+        const data = await api.getCrafts({ is_featured: true, limit: 3 });
+        const items = Array.isArray(data) ? data : data.data;
         if (isMounted && Array.isArray(items) && items.length > 0) {
           setCrafts(items);
         }
-      } catch {
-        // Fallback sang HIGHLIGHT_CRAFTS giữ đúng 100% demo
+      } catch (err) {
+        console.warn('Không thể nạp dữ liệu từ API DB, sử dụng dữ liệu dự phòng:', err.message);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -173,20 +171,20 @@ export default function HomePage() {
                 >
                   <div className="relative w-full aspect-[4/5] overflow-hidden bg-surface-subtle">
                     <img
-                      src={item.image || item.thumbnail_url}
+                      src={item.image || item.thumbnailUrl || item.thumbnail_url}
                       alt={item.name}
-                      data-alt={item.alt}
+                      data-alt={item.alt || item.name}
                       className="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
                     <div className="absolute top-4 left-4 bg-surface-crisp/95 backdrop-blur-xs px-3 py-1 border border-border-neutral">
                       <span className="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-primary">
-                        MÃ: {item.code || `CR-0${item.id}`}
+                        MÃ: {item.code || item.slug || `CR-0${item.id}`}
                       </span>
                     </div>
                     <div className="absolute bottom-4 right-4 bg-text-primary text-surface-crisp px-2.5 py-0.5">
                       <span className="font-spec-code text-[10px] uppercase tracking-[0.15em]">
-                        {item.badge || 'THỦ CÔNG TRUYỀN ĐỜI'}
+                        {item.badge || (item.isFeatured ? 'ĐẶC SẮC TUYỂN CHỌN' : 'THỦ CÔNG TRUYỀN ĐỜI')}
                       </span>
                     </div>
                   </div>
@@ -194,14 +192,14 @@ export default function HomePage() {
                   <div className="p-6 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between text-text-secondary font-spec-code text-[11px] uppercase tracking-wider mb-2">
-                        <span>{item.village || item.region?.name || item.region}</span>
-                        <span>{item.province || 'Việt Nam'}</span>
+                        <span>{item.village || item.region?.name || item.region || 'Làng Nghề Truyền Thống'}</span>
+                        <span>{item.province || (typeof item.region === 'string' ? item.region : 'Việt Nam')}</span>
                       </div>
                       <h3 className="font-title-card text-title-card text-text-primary font-medium mb-3">
                         {item.name}
                       </h3>
                       <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4">
-                        {item.description || item.short_description}
+                        {item.description || item.shortDescription || item.short_description}
                       </p>
                     </div>
 
@@ -209,7 +207,7 @@ export default function HomePage() {
                       <div className="flex items-center justify-between font-spec-code text-[11px]">
                         <span className="text-text-secondary">Chất liệu:</span>
                         <span className="text-text-primary font-medium">
-                          {item.material || 'Nguyên liệu tự nhiên'}
+                          {Array.isArray(item.materials) ? item.materials.join(', ') : (item.material || 'Nguyên liệu tự nhiên')}
                         </span>
                       </div>
                       <div className="flex items-center justify-between font-spec-code text-[11px]">

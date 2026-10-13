@@ -37,6 +37,10 @@ const getArtisanById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
+    if (!/^\d+$/.test(id)) {
+      return error(res, 400, 'BAD_REQUEST', 'Mã nghệ nhân không hợp lệ (phải là số nguyên dương)');
+    }
+
     const artisanSql = `
       SELECT
         a.id,

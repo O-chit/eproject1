@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../services/api';
 
 const SEASONAL_ITEMS = [
   {
@@ -44,6 +45,9 @@ const SEASONAL_ITEMS = [
 ];
 
 export default function SeasonalPage() {
+  const [collection, setCollection] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const [savedItems, setSavedItems] = useState(() => {
     try {
       const saved = localStorage.getItem('craftroots_favourites');
@@ -55,15 +59,52 @@ export default function SeasonalPage() {
 
   const [toastMessage, setToastMessage] = useState('');
 
-  const toggleSave = (item) => {
+  // Nạp dữ liệu bộ sưu tập mùa từ CSDL PostgreSQL
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+
+    api.getSeasonalCollections()
+      .then(async (collections) => {
+        if (!isMounted) return;
+        if (Array.isArray(collections) && collections.length > 0) {
+          const activeCol = collections[0];
+          try {
+            const fullDetails = await api.getSeasonalCollectionById(activeCol.id);
+            if (isMounted && fullDetails) {
+              setCollection(fullDetails);
+            }
+          } catch (fetchErr) {
+            console.warn('Lỗi khi lấy chi tiết BST mùa:', fetchErr);
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Lỗi khi nạp danh sách BST mùa từ DB:', err);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
+
+  const toggleSave = async (item) => {
     const isSaved = savedItems.some((s) => s.id === item.id);
     let updated;
     if (isSaved) {
       updated = savedItems.filter((s) => s.id !== item.id);
       setToastMessage(`Đã bỏ lưu "${item.title}"`);
+      // Thử đồng bộ với server nếu đã đăng nhập
+      if (item.craftId) {
+        api.removeFavourite(item.craftId).catch(() => {});
+      }
     } else {
       updated = [...savedItems, item];
       setToastMessage(`Đã thêm "${item.title}" vào mục lưu trữ`);
+      if (item.craftId) {
+        api.addFavourite(item.craftId).catch(() => {});
+      }
     }
     setSavedItems(updated);
     try {
@@ -73,6 +114,29 @@ export default function SeasonalPage() {
     }
     setTimeout(() => setToastMessage(''), 3000);
   };
+
+  const displayedItems = collection?.curatedCrafts?.length > 0
+    ? collection.curatedCrafts.map((item) => ({
+        id: `CR-COL-${item.craft.id}`,
+        craftId: item.craft.id,
+        tag: item.highlightBadge || item.craft.category || 'BỘ SƯU TẬP MÙA',
+        ref: `REF: CR-S0${item.craft.id}`,
+        region: item.craft.region || 'Việt Nam',
+        artisan: item.craft.category || 'Nghệ Nhân Làng Nghề',
+        title: item.craft.name,
+        description: item.curatorNote || item.craft.shortDescription,
+        price: item.craft.id === 5 ? '1.150.000' : item.craft.id === 6 ? '1.850.000' : item.craft.id === 4 ? '3.200.000' : '4.500.000',
+        unit: 'đ',
+        image: item.craft.thumbnailUrl || 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80',
+      }))
+    : SEASONAL_ITEMS;
+
+  const heroBg = collection?.bannerUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCTQztKdNfWpJJ1vzPaxPp6KYzUsTZTp0DdzMaEblwLq1W-lli8QibsbrkwGXeYeWv1lbFhxKhdlMpxWgHTzADAbZ5iSutJQSoOZJ44DXPFO_o-KlTzqtyY3XZ2cl3Wzja1ZIN0kOmR4OEI8OkN_VBFFP_TLURLBO_09F46RyCsOauB_Ld4DEt6xZrI5NLNDezpfdh9N20CcyOWj8_iVuiKLSE_ONkzcaMAG8aluEs';
+  const heroTitle = collection?.title?.toUpperCase() || 'THU TRẦM & GỐM MỘC';
+  const heroConcept = collection?.themeConcept || 'Khi gió heo may về trên phố cũ, chén trà ấm cùng chiếc khay mây mộc mạc đưa con người trở về với nhịp thở nguyên sơ của đất trời.';
+  const heroSeasonBadge = collection?.seasonCode
+    ? `MÙA ${collection.seasonCode.toUpperCase()} NĂM ${collection.year}`
+    : 'Tiết Thu Phân & Thưởng Trà Cổ Điển';
 
   return (
     <div className="flex flex-col w-full bg-canvas-linen">
@@ -88,12 +152,9 @@ export default function SeasonalPage() {
       <section className="relative w-full -mt-20 overflow-hidden bg-surface-container-high">
         <div
           className="w-full min-h-[580px] lg:min-h-[640px] bg-cover bg-center flex items-center relative"
-          data-alt="Close up editorial shot of a handcrafted Vietnamese rustic wood-fired ceramic teapot and unglazed tea cup set on a coarse raw linen runner beside an artisan woven rattan tray. Soft diffused golden autumn morning light casts gentle horizontal shadows. Warm earthy tones, terracotta dust, deep brown, and subdued cream hues create a serene, tactile wabi-sabi atmosphere."
-          style={{
-            backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTQztKdNfWpJJ1vzPaxPp6KYzUsTZTp0DdzMaEblwLq1W-lli8QibsbrkwGXeYeWv1lbFhxKhdlMpxWgHTzADAbZ5iSutJQSoOZJ44DXPFO_o-KlTzqtyY3XZ2cl3Wzja1ZIN0kOmR4OEI8OkN_VBFFP_TLURLBO_09F46RyCsOauB_Ld4DEt6xZrI5NLNDezpfdh9N20CcyOWj8_iVuiKLSE_ONkzcaMAG8aluEs')`
-          }}
+          style={{ backgroundImage: `url('${heroBg}')` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-text-primary/85 via-text-primary/65 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-text-primary/90 via-text-primary/75 to-transparent"></div>
           <div className="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
           
           <div className="relative z-10 max-w-7xl mx-auto px-margin w-full pt-28 pb-space-xl">
@@ -104,18 +165,18 @@ export default function SeasonalPage() {
                 </span>
                 <span className="text-surface-variant/40 select-none">|</span>
                 <span className="font-label-signature italic text-label-signature text-secondary-fixed">
-                  Tiết Thu Phân &amp; Thưởng Trà Cổ Điển
+                  {heroSeasonBadge}
                 </span>
               </div>
 
-              <h1 className="font-display-hero text-display-hero uppercase text-surface-crisp font-light tracking-[8px] leading-[1.15] mb-space-md">
-                THU TRẦM &amp;<br />GỐM MỘC
+              <h1 className="font-display-hero text-[32px] sm:text-[44px] lg:text-[52px] uppercase text-surface-crisp font-light tracking-[6px] leading-[1.2] mb-space-md">
+                {heroTitle}
               </h1>
 
               <div className="h-0.5 w-16 bg-accent-terracotta mb-space-md"></div>
 
               <p className="font-body-default text-body-default text-surface-variant font-normal leading-relaxed mb-space-lg max-w-xl">
-                Khi gió heo may về trên phố cũ, chén trà ấm cùng chiếc khay mây mộc mạc đưa con người trở về với nhịp thở nguyên sơ của đất trời.
+                {heroConcept}
               </p>
 
               <div className="flex flex-wrap items-center gap-space-md">
@@ -126,9 +187,9 @@ export default function SeasonalPage() {
                   Khám Phá Bộ Sưu Tập
                 </a>
                 <div className="flex items-center font-spec-code text-spec-code text-surface-variant tracking-[0.12em] uppercase">
-                  <span>Đợt nung: 08/2024</span>
+                  <span>Niên khóa: {collection?.year || '2026'}</span>
                   <span className="mx-3 text-surface-variant/40">|</span>
-                  <span>Phiên bản hữu hạn</span>
+                  <span>{collection ? 'Dữ liệu CSDL trực tiếp' : 'Phiên bản mẫu'}</span>
                 </div>
               </div>
             </div>
@@ -144,21 +205,23 @@ export default function SeasonalPage() {
               <div className="flex items-center gap-space-xs mb-space-sm">
                 <span className="material-symbols-outlined text-accent-terracotta text-[20px]">spa</span>
                 <span className="font-spec-code text-spec-code uppercase tracking-[0.2em] text-text-secondary">
-                  Triết Lý Chậm &amp; Cốt Cách Đất Nung
+                  Triết Lý Giám Tuyển Văn Hóa
                 </span>
               </div>
               <blockquote className="font-headline-title text-headline-title text-text-primary font-normal italic leading-snug tracking-tight mb-space-sm">
-                “Uống một ngụm trà trong chén gốm mộc nung củi, cảm nhận sự thô ráp chân thật của đất và men rạn tự nhiên. Thủ công không vội vã; mỗi vết nứt men là một câu chuyện của nhiệt độ và thời gian.”
+                “{heroConcept}”
               </blockquote>
               <cite className="font-spec-code text-spec-code uppercase tracking-[0.14em] text-accent-terracotta not-italic block">
-                — Ghi chép từ trà thất CraftRoots, Tiết Thu 2024
+                — Tuyển tập di sản CraftRoots, Niên vụ {collection?.year || '2026'}
               </cite>
             </div>
             
             <div className="shrink-0 flex flex-col items-start md:items-end justify-center pl-0 md:pl-space-lg text-text-secondary font-spec-code text-spec-code space-y-1">
-              <div className="text-text-primary font-medium tracking-[0.15em] uppercase">Nhiệt độ nung đạt</div>
-              <div className="text-[28px] leading-tight font-display-hero font-light text-primary">1250°C</div>
-              <div className="text-[11px] tracking-[0.1em] text-text-secondary/80">Lò bầu truyền thống 72 giờ</div>
+              <div className="text-text-primary font-medium tracking-[0.15em] uppercase">Tác phẩm tuyển chọn</div>
+              <div className="text-[28px] leading-tight font-display-hero font-light text-primary">
+                {displayedItems.length.toString().padStart(2, '0')}
+              </div>
+              <div className="text-[11px] tracking-[0.1em] text-text-secondary/80">Xác thực nguyên bản</div>
             </div>
           </div>
         </div>
@@ -171,27 +234,27 @@ export default function SeasonalPage() {
             <div className="flex items-center gap-2 mb-space-xs">
               <span className="h-2 w-2 bg-accent-terracotta"></span>
               <span className="font-spec-code text-spec-code tracking-[0.2em] uppercase text-text-secondary">
-                Danh Mục Tuyển Chọn
+                Danh Mục Giám Tuyển
               </span>
             </div>
             <h2 className="font-headline-title text-headline-title text-text-primary font-semibold tracking-tight uppercase">
-              Tác Phẩm Mùa Thu
+              {collection?.title || 'Tác Phẩm Mùa Thu'}
             </h2>
           </div>
           <div className="flex items-center gap-space-sm mt-space-sm md:mt-0 font-spec-code text-spec-code text-text-secondary">
-            <span className="text-text-primary font-semibold">03 Tác phẩm tiêu biểu</span>
+            <span className="text-text-primary font-semibold">{displayedItems.length} Tác phẩm tiêu biểu</span>
             <span className="text-border-neutral opacity-60">|</span>
-            <span>Kiểm định văn hóa &amp; niên biểu</span>
+            <span>{collection ? 'Đồng bộ từ CSDL' : 'Kiểm định văn hóa'}</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-          {SEASONAL_ITEMS.map((item) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+          {displayedItems.map((item) => {
             const isSaved = savedItems.some((s) => s.id === item.id);
             return (
               <article
                 key={item.id}
-                className="group bg-surface-crisp flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                className="group bg-surface-crisp flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border border-border-neutral/60"
               >
                 <div className="relative w-full aspect-[4/5] overflow-hidden bg-surface-container">
                   <img
@@ -219,7 +282,7 @@ export default function SeasonalPage() {
                         {item.title}
                       </h3>
                     </Link>
-                    <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">
+                    <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md line-clamp-3">
                       {item.description}
                     </p>
                   </div>

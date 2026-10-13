@@ -1,95 +1,82 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../services/api';
 
-const CATALOG_ITEMS = [
-  {
-    id: 1,
-    name: 'Bình Vôi Men Lam Cổ',
-    category: 'gom-su',
-    categoryLabel: 'GỐM BÁT TRÀNG',
-    origin: 'Hà Nội — 400 năm truyền thống',
-    description: 'Đất sét cao lanh, men rạn tam thái nung củi truyền thống 1.300°C. Chạm khắc hình tượng hoa sen nổi và quai cuốn đắp nổi thủ công.',
-    refCode: 'CR-BT-7721',
-    edition: 'Độc bản số #03/12',
-    price: '3.800.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCqduILIjCsF1Kr_gNwT3HzCol9ezbm28IM-WATA6u3a0Kr8CYRzu98P3zWTne8NLrEGuVggHoQ89zJCBrkJbC8wQoA7JqQqJ2oSQM5h6CVd1OHhsmIKgJsgtVtnyopCOs05V63JZo8I6k5-nAo8X_b4jyLWbBoMi6bJctZ6aMadrS7-0MkDyYuXEvLZFi2TgKBBbD7_yBTT0-K43uVnlY0MZrXFsEgsPrvfb4lcX8',
-  },
-  {
-    id: 2,
-    name: 'Khăn Lụa Tơ Tằm Tự Nhiên Vân Mây',
-    category: 'det-may',
-    categoryLabel: 'LỤA VẠN PHÚC',
-    origin: 'Hà Đông — Đệ nhất lụa Việt',
-    description: '100% tơ tằm nguyên chất dệt khung cửi cổ truyền. Họa tiết Vân Mây chìm dệt thoi con lụa tự nhiên, nhuộm thảo mộc lá dâu tằm.',
-    refCode: 'CR-VP-1044',
-    edition: 'Tơ xe thủ công',
-    price: '1.650.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4K0Ol_73pxBmMM06fPDnGy41xLK2PbS3YgyPz35OkZ89IlWSnrnTeNLP454FyU9Mofzp1eDB9cSEAIG6aRZQiNlDT6pM-Vb0przrjZjiKc1utp1Cn5ONbNZ6j1B4M9E5sgLqRScZWRTvOeYOtWhLmkBSlNsSmesxZG__GjNUp5AbcSbH16gvVC0IzlTzoX-ob_No1jkXX0KpC1EX6KbfmzwEyF3OzciW7_wu2UyA',
-  },
-  {
-    id: 3,
-    name: 'Bộ Lẵng Hoa Mây Nếp Bện Đôi',
-    category: 'may-tre',
-    categoryLabel: 'MÂY TRE PHÚ VINH',
-    origin: 'Chương Mỹ — Tuyệt kỹ mây tre đan',
-    description: 'Mây rừng Tây Bắc vót sợi tăm mảnh 0.8mm ngâm sáp ong rừng. Kỹ pháp bện xương cá hai lớp chống ẩm mốc tự nhiên qua nhiều thập kỷ.',
-    refCode: 'CR-PV-4402',
-    edition: 'Xử lý sáp ong',
-    price: '890.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAsV1MZDEYI8Nqf-4wUPU2aRGOHgJyRlpKy__7C3hDznp7PwSvv3dh1OIfgtI4lusKj_3ZzdMCN-POKuMLeY8F2GRP-70PD9sunYB0INYwp1cCROecqA20b7_nZAyH6fNHwH0CKDDsgbL2Y-Cb236NRLwWcnZ5PB5TlXjRBTf4TDPRHqcuAsIrVUb0FG0M-IwEhMX-nmotxP-ugnLtNavxvDUx5bme36Bo1EY-7KAs',
-  },
-  {
-    id: 4,
-    name: 'Khay Trà Sơn Mài Vỏ Trứng & Bạc Phủ',
-    category: 'son-mai',
-    categoryLabel: 'SƠN MÀI HẠ THÁI',
-    origin: 'Thường Tín — 18 lớp mài nước',
-    description: 'Cốt gỗ muồng già sấy khô 1 năm, cẩn vỏ trứng gà ta tạo rạn đồng điệu và dát bạc quỳ tán mịn. Bề mặt nhẵn bóng như gương nước.',
-    refCode: 'CR-HT-8830',
-    edition: 'Phiên bản bảo tàng #02',
-    price: '4.200.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBFC4Tg8NvBiTcsIssdqzY7hYtEO9NC_6TnsfZiJ4heO_hm4zJ4ks7zYx1avpYgp1A1T_d0-qp23LS9tNRYRXuoEnHq6QSE9vJzo2gjoOvehuAoeNPKCWrr0AgG2FR6rmMmWVLLL2JsEHrSquDplNaqYv1wyp-AwvQ8jRlVvVW_7igR3cLB_HYIOCjoy875H9cUIuxUUjtIUVRSMAEvmsBdrm4wP7Pb7AxrD-mXwVg',
-  },
-  {
-    id: 5,
-    name: 'Hộp Đựng Trang Sức Bạc Chạm Kênh Bong',
-    category: 'cham-bac',
-    categoryLabel: 'CHẠM BẠC ĐỒNG XÂM',
-    origin: 'Thái Bình — Bạc ta 99.9%',
-    description: 'Chạm trổ hình tượng Tứ Linh bằng ve búa đục nhỏ li ti. Đỉnh nắp chạm rồng cuộn kênh bong nổi khối 3D sống động.',
-    refCode: 'CR-DX-3312',
-    edition: 'Chế tác theo đơn #01',
-    price: '6.500.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaUrvFnVxj2lsHDRkr-yaTRJCRIumrtcbAoBO8T7gJK22rF-l8LFMNoASMdtx_N8hQkmINE6HE7xtmJmzGpxqvbiG5mzG2TvxNKGDuu4MZjKV7e4q6ixIFOJ1PSNsl56IqQagawz_SCLeDfMjYY1bGxxdBh3e-6wBJ15RkSXBTpEZHEoWqpB_uzbwmdJy82jUtSMpkv6zROQGRW5W2GKqEOL2DxfhNLSsVd1T7ujM',
-  },
-  {
-    id: 6,
-    name: 'Tấm Vải Thổ Cẩm Hoa Văn Chăm Cổ Điển',
-    category: 'tho-cam',
-    categoryLabel: 'THỔ CẨM CHĂM',
-    origin: 'Mỹ Nghiệp — Nhuộm chàm tự nhiên',
-    description: 'Sợi bông thô trồng rẫy, dệt trên khung cửi nằm cổ xưa. Hoa văn hình kỷ hà và thần sư tượng trưng cho sự sinh sôi và che chở gia đạo.',
-    refCode: 'CR-MN-9920',
-    edition: 'Di sản làng dệt #08',
-    price: '2.100.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBay0c69D5JK7FMaxyn9PSRxcsgUqgVBC4moSSxlmkFLgKHiKIqdRgYLDbsNkoDNTWbn3aE3tjfmDVjmU7b0uCCCWly4AJRKvMbcSnFUrimhvpDJ528ysIaEbq7Vk675AvADO51B7vRlzladV4zbFP22E6K0TREwBbPB2PY6e9MzBG80dTaXhPHGxL-GcbgknPoVSiq1dmnBko_BQVJIGRkPk_Vx46iUTqabaRYxTU',
-  },
-];
-
-const TABS = [
+const DEFAULT_TABS = [
   { id: 'all', label: 'TẤT CẢ (ALL)' },
-  { id: 'gom-su', label: 'GỐM BÁT TRÀNG' },
-  { id: 'det-may', label: 'LỤA VẠN PHÚC' },
-  { id: 'may-tre', label: 'MÂY TRE PHÚ VINH' },
-  { id: 'son-mai', label: 'SƠN MÀI HẠ THÁI' },
-  { id: 'cham-bac', label: 'CHẠM BẠC ĐỒNG XÂM' },
-  { id: 'tho-cam', label: 'THỔ CẨM CHĂM' },
+  { id: '1', label: 'GỐM SỨ' },
+  { id: '2', label: 'ĐÚC ĐỒNG' },
+  { id: '3', label: 'DỆT MAY' },
+  { id: '4', label: 'MÂY TRE ĐAN' },
+  { id: '5', label: 'SƠN MÀI' },
 ];
 
 export default function DirectoryPage() {
+  const [tabs, setTabs] = useState(DEFAULT_TABS);
   const [selectedTab, setSelectedTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [crafts, setCrafts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [savedIds, setSavedIds] = useState(new Set([1, 3]));
+
+  // Nạp danh mục từ DB
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const catData = await api.getCategories();
+        if (Array.isArray(catData) && catData.length > 0) {
+          const dynamicTabs = [
+            { id: 'all', label: 'TẤT CẢ (ALL)' },
+            ...catData.map((c) => ({
+              id: String(c.id),
+              slug: c.slug,
+              label: c.name.toUpperCase(),
+            })),
+          ];
+          setTabs(dynamicTabs);
+        }
+      } catch (err) {
+        console.warn('Lỗi tải danh mục từ DB:', err.message);
+      }
+    }
+    loadCategories();
+  }, []);
+
+  // Nạp danh sách sản phẩm từ DB theo bộ lọc
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCrafts() {
+      try {
+        setLoading(true);
+        const params = { limit: 50 };
+        if (selectedTab !== 'all') {
+          params.category = selectedTab;
+        }
+        if (searchQuery.trim()) {
+          params.q = searchQuery.trim();
+        }
+
+        const data = await api.getCrafts(params);
+        const items = Array.isArray(data) ? data : data.data || [];
+        if (isMounted) {
+          setCrafts(items);
+        }
+      } catch (err) {
+        console.warn('Lỗi tải sản phẩm từ DB:', err.message);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    const timer = setTimeout(() => {
+      loadCrafts();
+    }, 250);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [selectedTab, searchQuery]);
 
   useEffect(() => {
     try {
@@ -134,15 +121,18 @@ export default function DirectoryPage() {
     });
   };
 
-  const filteredItems = CATALOG_ITEMS.filter((item) => {
-    const matchesTab = selectedTab === 'all' || item.category === selectedTab;
-    const matchesSearch =
-      searchQuery === '' ||
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.origin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
-  });
+  const displayItems = crafts.map((item) => ({
+    id: item.id,
+    name: item.name,
+    category: item.categorySlug || item.category,
+    categoryLabel: item.category || 'THỦ CÔNG VIỆT NAM',
+    origin: `${item.region || 'Làng Nghề Truyền Thống'} — Di sản sống`,
+    description: item.shortDescription || item.description || 'Chế tác thủ công từ các nghệ nhân lành nghề.',
+    refCode: `CR-${item.id < 10 ? '0' : ''}${item.id}`,
+    edition: item.isFeatured ? 'ĐẶC SẮC TUYỂN CHỌN' : `Bản ghi di sản #${item.id}`,
+    price: item.price || 'Liên hệ giám tuyển',
+    image: item.thumbnailUrl || item.image || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80',
+  }));
 
   return (
     <div className="w-full bg-canvas-linen">
@@ -191,7 +181,7 @@ export default function DirectoryPage() {
             {/* Density Counter & Quick View Mode */}
             <div className="flex items-center gap-space-md self-end md:self-center font-spec-code text-spec-code text-text-secondary">
               <span className="text-text-primary font-semibold">
-                {filteredItems.length} HIỆN VẬT KHẢ DỤNG
+                {displayItems.length} HIỆN VẬT KHẢ DỤNG
               </span>
               <span className="text-border-neutral opacity-60">|</span>
               <span className="flex items-center gap-1.5 cursor-pointer hover:text-accent-terracotta transition-colors">
@@ -212,7 +202,7 @@ export default function DirectoryPage() {
       <section className="w-full bg-surface-crisp border-b border-border-neutral sticky top-20 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-margin overflow-x-auto no-scrollbar">
           <div className="flex items-center py-4 font-label-action text-label-action tracking-[0.15em] uppercase whitespace-nowrap">
-            {TABS.map((tab, idx) => (
+            {tabs.map((tab, idx) => (
               <React.Fragment key={tab.id}>
                 {idx > 0 && <span className="mx-4 text-border-neutral opacity-60 select-none">|</span>}
                 <button
@@ -235,7 +225,14 @@ export default function DirectoryPage() {
       {/* 3-Column Sharp Grid: Artisanal Catalog */}
       <section className="w-full bg-canvas-linen py-space-xl">
         <div className="max-w-7xl mx-auto px-margin">
-          {filteredItems.length === 0 ? (
+          {loading ? (
+            <div className="py-24 text-center">
+              <div className="w-10 h-10 border-2 border-[#B86B35] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="font-spec-code text-[12px] text-text-secondary uppercase tracking-[0.15em]">
+                Đang nạp kho lưu trữ hiện vật từ CSDL...
+              </p>
+            </div>
+          ) : displayItems.length === 0 ? (
             <div className="p-16 border border-border-neutral bg-surface-crisp text-center">
               <span className="material-symbols-outlined text-5xl text-accent-terracotta mb-3">inventory_2</span>
               <h3 className="font-headline-title text-xl font-medium text-text-primary mb-2">
@@ -254,7 +251,7 @@ export default function DirectoryPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-              {filteredItems.map((item) => (
+              {displayItems.map((item) => (
                 <article
                   key={item.id}
                   className="group relative bg-surface-crisp border border-border-neutral transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col justify-between"

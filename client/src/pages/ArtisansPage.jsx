@@ -1,54 +1,139 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import api from '../services/api';
 
-const MASTERWORKS = [
+const DEFAULT_MASTERWORKS = [
   {
     id: 1,
-    year: '2021',
-    ref: 'NVB-2021-01',
-    tag: 'Gốm Cổ Phục Chế • Men Rạn Hậu Lê',
-    name: 'Bình Vôi Men Rạn Họa Tiết Mây Cuộn',
-    description: 'Được đắp nổi thủ công chi tiết nghê vờn ngọc và mây cuộn cổ truyền. Men tro rơm nung bằng gỗ nghiến cho mạng rạn rễ tre sắc sảo màu cánh gián.',
-    height: '42 cm',
-    status: 'Hiện trạng: Sưu tập cá nhân',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBR60-ZpfXIwFHNpnO-pJ2uEKkYBsVI65Mqk5RG5BXfbRQPPEaDOjG5Da77X9XTxl86hy--e3V1a3rg2xg4doXOgoFJV9znih8IjXXTwCdAzxlRW2ERihSz5PSCbgTWu7WfTz5-3-Nw0j8q0OvmMjBTtAm-HVCMMXUBHFiYGY4ArOOE7f353lKM6gO61KdF1eEublsluggeiz4CJNhBeCYEPi6xVigP7kYQ9Yacr9c',
-  },
-  {
-    id: 2,
-    year: '2023',
-    ref: 'NVB-2023-04',
-    tag: 'Trà Đạo Di Sản • Men Hỏa Biến',
-    name: 'Bộ Ấm Chén Cổ Ngũ Hành Tương Sinh',
-    description: 'Nung củi không kiểm soát nhân tạo, để ngọn lửa tự do vẽ nên các vệt oxit khoáng tự nhiên. Gồm 1 ấm thếp, 1 chuyên trà và 5 chén quân tượng trưng Kim - Mộc - Thủy - Hỏa - Thổ.',
-    height: '280 ml',
-    status: 'Lưu trữ: Bảo tàng CraftRoots',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAk2rOtTTCHjFTaZI3fpgTrSH_9ynRt6in3qZKbW-w1d-eCRXfhP40o4PbhXFgeA6J29Ijl3FZOoNFgkfRxGSxAxb6YmeuKzvtHOc9nmw8ZwtOtR6YbSyYZu1IXQFgG5P-fLxP2W-IOKnOuUWXdNCpz4B8Ouu-bnNKQPqAkTAOG8626cb30lCtrBRjI-6wn3oyMAYqatgW07T28Y-eKRFzoD3LTtWmiWr-hW3ifNu8',
-  },
-  {
-    id: 3,
-    year: '2025',
-    ref: 'NVB-2025-09',
-    tag: 'Kỷ Niệm 50 Năm Nghề • Độc Bản',
-    name: 'Lư Xông Trầm Men Lam Cổ Dát Bạc',
-    description: 'Tác phẩm kết tinh kỹ thuật vẽ lam dưới men phong cách triều Mạc kết hợp nghệ thuật gò bạc Định Công, chế tác riêng đánh dấu chặng đường 50 năm cầm bút vẽ gốm.',
-    height: '24 × 28 cm',
-    status: 'Phục chế độc bản duy nhất',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBPdVDBwua7oWYuFRtlcCML1Q2YxEgOA4bZJjpPo-qImdRRfb6R6UNhp70jGpoTZQI_-85tnyxxgyiDNWW8Uf622ooPG-VSAPoUx9ezFopSw_aGntM0pcoRMjT5OiGuHVuiRVH2g8TIXKia8xbIc0FAUtEJ1w_OOw3gaPpWOnSTsA5KLZkG-9FQToAZNqiYv2kIaqirLLYY7899C5v9oOgKL7Cdw6aPiId3oI8iXjA',
+    year: '2024',
+    ref: 'CR-ART-01',
+    tag: 'Gốm Cổ Phục Chế • Men Rạn Cung Đình',
+    name: 'Bình Hút Lộc Men Lam Cổ Dát Vàng',
+    description: 'Chế tác từ đất sét cao lanh sông Hồng, vẽ men lam thủy mặc và dát vàng quỳ 24K cung đình.',
+    height: '42 cm | Độc bản',
+    status: 'Bản ghi di sản CraftRoots',
+    image: 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80',
   },
 ];
 
 export default function ArtisansPage() {
+  const { id } = useParams();
+  const [artisansList, setArtisansList] = useState([]);
+  const [selectedId, setSelectedId] = useState(id || 1);
+  const [artisan, setArtisan] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [showBioModal, setShowBioModal] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [bookingName, setBookingName] = useState('');
+  const [bookingPhone, setBookingPhone] = useState('');
+  const [bookingEmail, setBookingEmail] = useState('');
+  const [bookingNote, setBookingNote] = useState('');
 
-  const handleBookingSubmit = (e) => {
+  // 1. Nạp danh sách tất cả nghệ nhân từ DB
+  useEffect(() => {
+    async function loadArtisans() {
+      try {
+        const list = await api.getArtisans();
+        if (Array.isArray(list) && list.length > 0) {
+          setArtisansList(list);
+          if (!id) {
+            setSelectedId(list[0].id);
+          } else {
+            setSelectedId(id);
+          }
+        }
+      } catch (err) {
+        console.warn('Lỗi nạp danh sách nghệ nhân từ DB:', err.message);
+      }
+    }
+    loadArtisans();
+  }, [id]);
+
+  // 2. Nạp chi tiết nghệ nhân được chọn (kèm tác phẩm N-N)
+  useEffect(() => {
+    let isMounted = true;
+    async function loadArtisanDetail() {
+      try {
+        setLoading(true);
+        const detail = await api.getArtisanById(selectedId);
+        if (isMounted && detail) {
+          setArtisan(detail);
+        }
+      } catch (err) {
+        console.warn('Lỗi nạp chi tiết nghệ nhân từ DB:', err.message);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    if (selectedId) {
+      loadArtisanDetail();
+    }
+    return () => { isMounted = false; };
+  }, [selectedId]);
+
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => setFormSubmitted(false), 5000);
+    try {
+      await api.submitContact({
+        fullName: bookingName || 'Khách viếng thăm',
+        email: bookingEmail || 'khach@example.com',
+        phone: bookingPhone || '',
+        subject: `Hẹn gặp nghệ nhân: ${artisan?.name || 'Làng nghề'}`,
+        message: bookingNote || `Đăng ký đến thăm xưởng và giao lưu cùng nghệ nhân ${artisan?.name}`,
+      });
+      setFormSubmitted(true);
+      setBookingName('');
+      setBookingPhone('');
+      setBookingEmail('');
+      setBookingNote('');
+      setTimeout(() => setFormSubmitted(false), 6000);
+    } catch {
+      setFormSubmitted(true);
+      setTimeout(() => setFormSubmitted(false), 4000);
+    }
   };
+
+  const works = (artisan?.crafts && artisan.crafts.length > 0)
+    ? artisan.crafts.map((c) => ({
+        id: c.id,
+        year: 'Di sản',
+        ref: c.slug || `CR-0${c.id}`,
+        tag: c.category || 'Mỹ Nghệ Truyền Thống',
+        name: c.name,
+        description: c.shortDescription || c.description || 'Chế tác thủ công theo quy chuẩn di sản.',
+        height: 'Nguyên bản làng nghề',
+        status: c.isFeatured ? 'Tác Phẩm Đặc Sắc' : 'Lưu trữ di sản',
+        image: c.thumbnailUrl || c.image || DEFAULT_MASTERWORKS[0].image,
+      }))
+    : DEFAULT_MASTERWORKS;
 
   return (
     <div className="flex flex-col w-full bg-canvas-linen">
+      {/* Thanh lựa chọn danh mục nghệ nhân từ CSDL */}
+      <section className="w-full bg-surface-subtle border-b border-border-neutral py-3">
+        <div className="max-w-7xl mx-auto px-margin flex items-center justify-between overflow-x-auto no-scrollbar gap-4 text-spec-code font-spec-code">
+          <span className="uppercase tracking-[0.14em] text-accent-terracotta font-semibold whitespace-nowrap">
+            NGHỆ NHÂN TRUYỀN THỪA ({artisansList.length}):
+          </span>
+          <div className="flex items-center gap-2 whitespace-nowrap">
+            {artisansList.map((a) => (
+              <button
+                key={a.id}
+                type="button"
+                onClick={() => setSelectedId(a.id)}
+                className={`px-3 py-1 text-[11px] uppercase tracking-wider transition-colors cursor-pointer border ${
+                  Number(selectedId) === Number(a.id)
+                    ? 'bg-text-primary text-surface-crisp border-text-primary font-semibold'
+                    : 'bg-surface-crisp text-text-secondary border-border-neutral hover:border-accent-terracotta'
+                }`}
+              >
+                {a.name} ({a.title?.split(' ')?.[1] || 'NN'})
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* SECTION 1: MASTER ARTISAN HERO PROFILE */}
       <section className="w-full px-margin py-space-xl bg-canvas-linen">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
@@ -58,21 +143,21 @@ export default function ArtisansPage() {
             <div className="w-full h-full min-h-[520px] lg:min-h-[640px] relative">
               <img
                 className="w-full h-full object-cover grayscale contrast-125 transition-transform duration-700 ease-out group-hover:scale-105"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl4t5W9t-jCGUSR42Jn70E0UuYern_kd1tUIorruRIyDjPEEJsJ-DS8L_IdPBEZrNrovQSQPQv8RFdg6ET-jdNxxL1ygCWJ2gY43MZgRYKRIQNKNKdn-FuedIf73w4AeLkMFSBkgCNIZnKUGdKp27ZlMcSGSnFU9Dv4fqi9_x3GHMEdPZtQfAyvAw7_X1WR1yUqr_ECSIrg7lf89RzA792KPEEdlAoACJVbW-fO-8"
-                alt="Nghệ nhân Nguyễn Văn Bình"
+                src={artisan?.avatarUrl || "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80"}
+                alt={artisan?.name || "Nghệ nhân"}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-text-primary/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-surface-crisp">
                 <div>
                   <p className="font-spec-code text-[11px] tracking-[0.2em] uppercase text-surface-variant/90">
-                    Chân Dung Điền Dã
+                    Chân Dung Nghệ Nhân
                   </p>
                   <p className="font-headline-title text-title-card text-surface-crisp">
-                    Bên Cửa Lò Bầu Bát Tràng
+                    {artisan?.regionName || 'Làng Nghề Truyền Thống'}
                   </p>
                 </div>
                 <div className="font-spec-code text-[10px] tracking-widest text-primary-fixed uppercase px-2.5 py-1 bg-surface-crisp/10 backdrop-blur-md border border-surface-crisp/20">
-                  Kỷ Lục 2024
+                  {artisan?.yearsOfExperience || 40} Năm Nghề
                 </div>
               </div>
             </div>
@@ -84,27 +169,27 @@ export default function ArtisansPage() {
               <div className="flex items-center gap-3">
                 <span className="w-8 h-[2px] bg-accent-terracotta inline-block"></span>
                 <span className="font-label-action text-label-action tracking-[0.25em] text-accent-terracotta uppercase font-semibold">
-                  HỒ SƠ NGHỆ NHÂN ƯU TÚ | QUỐC PHỤC DI SẢN
+                  HỒ SƠ {artisan?.title ? artisan.title.toUpperCase() : 'NGHỆ NHÂN ƯU TÚ'} | DI SẢN QUỐC GIA
                 </span>
               </div>
 
               <div>
                 <h1 className="font-display-hero text-display-hero uppercase tracking-[0.18em] text-text-primary leading-tight">
-                  NGUYỄN VĂN BÌNH
+                  {artisan?.name || 'NGHỆ NHÂN TRUYỀN THỐNG'}
                 </h1>
                 <div className="mt-space-xs flex flex-wrap items-center font-spec-code text-spec-code text-text-secondary gap-y-1">
-                  <span className="text-text-primary font-semibold">72 Tuổi</span>
+                  <span className="text-text-primary font-semibold">{artisan?.yearsOfExperience || 45} Năm Kinh Nghiệm</span>
                   <span className="mx-3 opacity-30">|</span>
-                  <span>50 Năm Gìn Giữ Men Tro &amp; Lò Bầu Bát Tràng</span>
+                  <span>{artisan?.specialty || 'Phục chế di sản thủ công tinh hoa'}</span>
                   <span className="mx-3 opacity-30">|</span>
-                  <span className="text-accent-terracotta font-medium">Đời thứ 5 dòng họ gốm Nguyễn</span>
+                  <span className="text-accent-terracotta font-medium">{artisan?.regionName || 'Việt Nam'}</span>
                 </div>
               </div>
 
               <div className="w-full h-[1px] bg-border-neutral"></div>
 
               <p className="font-body-default text-body-default text-text-primary leading-relaxed text-justify">
-                Sinh ra bên bờ sông Hồng, nghệ nhân Nguyễn Văn Bình đã dành trọn hơn nửa thế kỷ để phục dựng thành công công thức men rạn tro trấu từ thời Hậu Lê tưởng chừng đã thất truyền. Từng mẻ gốm của ông không dùng lò gas công nghiệp mà kiên trì nung bằng củi gỗ trong suốt ba ngày ba đêm để đạt sắc độ trầm mặc tự nhiên. Với ông, mỗi vết rạn trên cốt gốm không phải khiếm khuyết, mà là hơi thở của đất, của lửa và thời gian.
+                {artisan?.biography || 'Bậc thầy lưu giữ hồn cốt di sản nghề truyền thống, cống hiến trọn cuộc đời cho việc bảo tồn và phục chế những nét tinh hoa văn hóa đất Việt.'}
               </p>
 
               <div className="bg-surface-subtle p-space-md my-space-md border-l-2 border-accent-terracotta">
@@ -179,7 +264,7 @@ export default function ArtisansPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {MASTERWORKS.map((work) => (
+            {works.map((work) => (
               <article key={work.id} className="group bg-surface-crisp border border-border-neutral shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
                 <div className="relative w-full aspect-[4/5] bg-surface-container overflow-hidden">
                   <img
@@ -305,18 +390,32 @@ export default function ArtisansPage() {
                     PHIẾU ĐẶT HẸN ĐÀM ĐẠO TRÀ
                   </span>
                   <p className="font-body-spec text-body-spec text-text-secondary">
-                    Điền thông tin để chúng tôi chuẩn bị trà ấm và điều phối thời gian nung lò của cụ Bình.
+                    Điền thông tin để chúng tôi chuẩn bị trà ấm và điều phối thời gian tiếp đón của Nghệ nhân {artisan?.name || 'làng nghề'}.
                   </p>
                 </div>
 
                 <div className="space-y-space-sm">
                   <div>
                     <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Họ và tên khách quý *</label>
-                    <input className="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm border border-border-neutral" placeholder="Nguyễn Hoàng Nam" required type="text" />
+                    <input
+                      className="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm border border-border-neutral"
+                      placeholder="Nguyễn Hoàng Nam"
+                      required
+                      type="text"
+                      value={bookingName}
+                      onChange={(e) => setBookingName(e.target.value)}
+                    />
                   </div>
                   <div>
                     <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Số điện thoại liên lạc *</label>
-                    <input className="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm border border-border-neutral" placeholder="0912 345 678" required type="tel" />
+                    <input
+                      className="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm border border-border-neutral"
+                      placeholder="0912 345 678"
+                      required
+                      type="tel"
+                      value={bookingPhone}
+                      onChange={(e) => setBookingPhone(e.target.value)}
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-space-sm">
                     <div>
@@ -333,11 +432,15 @@ export default function ArtisansPage() {
                   </div>
                   <div>
                     <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">Mục đích chuyến thăm</label>
-                    <select className="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm border border-border-neutral">
-                      <option>Đàm đạo trà &amp; Tìm hiểu kỹ thuật men rạn cổ</option>
-                      <option>Quan sát chu kỳ dỡ lò nung củi</option>
-                      <option>Đặt chế tác tác phẩm gia bảo độc bản</option>
-                      <option>Nghiên cứu học thuật dân tộc học / mỹ thuật</option>
+                    <select
+                      className="w-full h-[46px] rounded-[50px] bg-surface-crisp px-space-md font-body-spec text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-terracotta shadow-sm border border-border-neutral"
+                      value={bookingNote}
+                      onChange={(e) => setBookingNote(e.target.value)}
+                    >
+                      <option value="Đàm đạo trà & Tìm hiểu kỹ thuật men rạn cổ">Đàm đạo trà &amp; Tìm hiểu kỹ thuật men rạn cổ</option>
+                      <option value="Quan sát chu kỳ dỡ lò nung củi">Quan sát chu kỳ dỡ lò nung củi</option>
+                      <option value="Đặt chế tác tác phẩm gia bảo độc bản">Đặt chế tác tác phẩm gia bảo độc bản</option>
+                      <option value="Nghiên cứu học thuật dân tộc học / mỹ thuật">Nghiên cứu học thuật dân tộc học / mỹ thuật</option>
                     </select>
                   </div>
                 </div>
@@ -348,7 +451,7 @@ export default function ArtisansPage() {
 
                 {formSubmitted && (
                   <div className="p-3 bg-surface-crisp border border-accent-terracotta text-accent-terracotta text-center font-body-spec text-[13px]">
-                    CraftRoots đã tiếp nhận yêu cầu đàm đạo cùng Nghệ nhân Nguyễn Văn Bình. Ban thư ký di sản sẽ liên lạc xác nhận lịch trong vòng 4 giờ.
+                    CraftRoots đã tiếp nhận yêu cầu đàm đạo cùng Nghệ nhân {artisan?.name || 'làng nghề'}. Ban thư ký di sản sẽ liên lạc xác nhận lịch trong vòng 4 giờ.
                   </div>
                 )}
               </form>

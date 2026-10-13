@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../services/api';
 
 const REGIONS_DATA = {
   'dong-bang-bac-bo': {
@@ -178,8 +179,78 @@ const REGION_KEYS = [
 
 export default function RegionsPage() {
   const [activeRegionKey, setActiveRegionKey] = useState('dong-bang-bac-bo');
+  const [dbRegions, setDbRegions] = useState([]);
+  const [regionCrafts, setRegionCrafts] = useState([]);
+  const [loadingCrafts, setLoadingCrafts] = useState(false);
 
-  const currentRegion = REGIONS_DATA[activeRegionKey] || REGIONS_DATA['dong-bang-bac-bo'];
+  // Nạp danh sách vùng miền từ DB
+  useEffect(() => {
+    let isMounted = true;
+    api.getRegions()
+      .then((data) => {
+        if (isMounted && Array.isArray(data)) {
+          setDbRegions(data);
+        }
+      })
+      .catch((err) => {
+        console.warn('Không thể nạp danh sách vùng miền từ DB:', err);
+      });
+    return () => { isMounted = false; };
+  }, []);
+
+  // Xác định mã / ID vùng tương ứng trong DB
+  const getDbRegionIdentifier = (key) => {
+    if (key === 'dong-bang-bac-bo') return 'dong-bang-bac-bo';
+    if (key === 'bac-trung-bo' || key === 'nam-trung-bo') return 'duyen-hai-mien-trung';
+    if (key === 'nam-bo') return 'tay-nguyen-nam-bo';
+    const found = dbRegions.find((r) => r.code === key);
+    return found ? found.id : key;
+  };
+
+  // Nạp sản phẩm di sản theo vùng từ DB
+  useEffect(() => {
+    let isMounted = true;
+    setLoadingCrafts(true);
+    const identifier = getDbRegionIdentifier(activeRegionKey);
+    api.getCraftsByRegion(identifier)
+      .then((crafts) => {
+        if (isMounted) {
+          setRegionCrafts(Array.isArray(crafts) ? crafts : []);
+        }
+      })
+      .catch((err) => {
+        console.warn(`Lỗi khi nạp sản phẩm vùng ${activeRegionKey}:`, err);
+        if (isMounted) setRegionCrafts([]);
+      })
+      .finally(() => {
+        if (isMounted) setLoadingCrafts(false);
+      });
+
+    return () => { isMounted = false; };
+  }, [activeRegionKey, dbRegions]);
+
+  const fallbackRegion = REGIONS_DATA[activeRegionKey] || REGIONS_DATA['dong-bang-bac-bo'];
+  const matchedDbRegion = dbRegions.find(
+    (r) => r.code === activeRegionKey || r.code === getDbRegionIdentifier(activeRegionKey)
+  );
+
+  const currentRegion = {
+    ...fallbackRegion,
+    name: matchedDbRegion?.name?.toUpperCase() || fallbackRegion.name,
+    description: matchedDbRegion?.description || fallbackRegion.description,
+  };
+
+  // Hiển thị sản phẩm thật từ DB nếu có
+  const displayedVillages = regionCrafts.length > 0
+    ? regionCrafts.map((c) => ({
+        name: c.name,
+        era: c.category || 'DI SẢN TRUYỀN THỐNG',
+        location: c.region || currentRegion.name,
+        description: c.description || c.short_description || fallbackRegion.description,
+        image: c.image || c.thumbnail_url || 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=400&q=80',
+        craftId: c.id,
+      }))
+    : fallbackRegion.villages;
 
   return (
     <div className="flex flex-col w-full bg-canvas-linen">
@@ -483,14 +554,19 @@ export default function RegionsPage() {
                 <div className="flex items-center gap-3 my-5">
                   <span className="h-[1px] flex-1 bg-border-neutral"></span>
                   <span className="font-spec-code text-[10px] tracking-[0.2em] uppercase text-text-secondary/70">
-                    CÁC ĐIỂM NGHỀ TIÊU BIỂU
+                    CÁC ĐIỂM NGHỀ TIÊU BIỂU {regionCrafts.length > 0 ? `(${regionCrafts.length} TỪ CSDL)` : ''}
                   </span>
                   <span className="h-[1px] flex-1 bg-border-neutral"></span>
                 </div>
 
                 {/* Featured Craft Village Thumbnails */}
                 <div className="space-y-4 mb-6">
-                  {currentRegion.villages.map((village, idx) => (
+                  {loadingCrafts ? (
+                    <div className="p-6 text-center text-text-secondary font-spec-code text-[12px] bg-canvas-linen/40 border border-border-neutral">
+                      Đang đồng bộ dữ liệu di sản vùng miền...
+                    </div>
+                  ) : (
+                    displayedVillages.map((village, idx) => (
                     <div
                       key={idx}
                       className="group flex items-start gap-4 p-3 border border-border-neutral bg-canvas-linen/40 hover:bg-canvas-linen transition-all duration-200"
@@ -521,7 +597,8 @@ export default function RegionsPage() {
                         </p>
                       </div>
                     </div>
-                  ))}
+                  )))
+                }
                 </div>
 
                 {/* Concrete Region Statistics Bar */}
