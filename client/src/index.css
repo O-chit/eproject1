@@ -1,0 +1,467 @@
+/* ==========================================================================
+   CraftRoots – Human-Crafted Sharp Linework Design System
+   Kế thừa & chuẩn hoá từ bộ thiết kế demo (demo/stitch_eproject/DESIGN.md)
+   ========================================================================== */
+
+:root {
+  /* --- 1. COLOR PALETTE (BẢNG MÀU CHỦ ĐẠO) --- */
+  /* Nền và Bề mặt */
+  --color-canvas-linen: #F9F8F6;
+  --color-surface-crisp: #FFFFFF;
+  --color-surface-subtle: #F4F2EE;
+  --color-surface-dim: #DDD9D7;
+  --color-surface-container: #F2EDEB;
+  --color-surface-container-high: #ECE7E5;
+  --color-surface-container-highest: #E6E2DF;
+  --color-surface-container-low: #F7F3F0;
+  --color-surface-container-lowest: #FFFFFF;
+
+  /* Chữ & Nội dung (Ink Typography) */
+  --color-text-primary: #1C1B1A;
+  --color-text-secondary: #5A5854;
+  --color-text-muted: #867368;
+  --color-on-surface: #1C1B1A;
+  --color-on-surface-variant: #54433A;
+
+  /* Màu thương hiệu & Điểm nhấn (Brand & Accent) */
+  --color-accent-terracotta: #B86B35;
+  --color-primary: #8E4A16;
+  --color-primary-container: #AC612C;
+  --color-on-primary: #FFFFFF;
+  --color-on-primary-container: #FFFBFF;
+  --color-primary-fixed: #FFDBC7;
+  --color-primary-fixed-dim: #FFB689;
+
+  /* Màu thứ cấp (Secondary - Slate/Charcoal) */
+  --color-secondary: #605E5A;
+  --color-secondary-container: #E6E2DC;
+  --color-on-secondary: #FFFFFF;
+  --color-on-secondary-container: #666460;
+
+  /* Màu tam cấp (Tertiary - Deep Teal / Men Ngọc Cổ) */
+  --color-tertiary: #006670;
+  --color-tertiary-container: #00818D;
+  --color-on-tertiary: #FFFFFF;
+  --color-on-tertiary-container: #F6FEFF;
+
+  /* Đường viền & Đường kẻ sắc nét (Linework) */
+  --color-border-neutral: #E6E2DA;
+  --color-outline: #867368;
+  --color-outline-variant: #D9C2B5;
+  --color-surface-tint: #914C18;
+
+  /* Trạng thái Lỗi / Cảnh báo */
+  --color-error: #BA1A1A;
+  --color-error-container: #FFDAD6;
+  --color-on-error: #FFFFFF;
+  --color-on-error-container: #93000A;
+
+  /* Điểm nhấn chuyên đề theo mùa (Seasonal Accents) */
+  --color-season-summer: #0EA5E9;
+  --color-season-autumn: #B86B35;
+  --color-season-spring: #10B981;
+  --color-season-winter: #6366F1;
+
+  /* --- 2. TYPOGRAPHY SYSTEM (HỆ THỐNG PHÔNG CHỮ & CỠ CHỮ) --- */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Montserrat', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+
+  /* --- 3. SPACING & LAYOUT (KHOẢNG CÁCH & BỐ CỤC) --- */
+  --space-2xs: 0.125rem; /* 2px */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2.5rem;    /* 40px */
+  --space-2xl: 4rem;     /* 64px */
+  --space-3xl: 6rem;     /* 96px */
+
+  --gutter: 1.5rem;
+  --gutter-mobile: 1rem;
+  --margin: 3rem;
+  --margin-mobile: 1.25rem;
+  --max-width: 1280px;
+  --header-height: 72px;
+
+  /* --- 4. BORDER RADIUS (QUY CHUẨN BO GÓC) --- */
+  /* Nguyên tắc thiết kế: Thẻ & khung sắc nét vuông vức (0px - 2px), nút/badge dáng con thoi (pill 50px) */
+  --radius-sharp: 0px;
+  --radius-subtle: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-pill: 50px;
+  --radius-circle: 50%;
+
+  /* --- 5. ELEVATION & SHADOWS (ĐỘ NỔI & BÓNG ĐỔ) --- */
+  --shadow-flat: none;
+  --shadow-subtle: 0 1px 3px rgba(28, 27, 26, 0.04);
+  --shadow-crisp: 0 4px 12px rgba(28, 27, 26, 0.05);
+  --shadow-lift: 0 12px 24px rgba(28, 27, 26, 0.08);
+  --shadow-terracotta: 0 12px 28px rgba(184, 107, 53, 0.15);
+
+  /* --- 6. TRANSITIONS & TIMING (HIỆU ỨNG CHUYỂN ĐỘNG) --- */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   CSS RESET & BASE STYLES
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-canvas-linen);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tùy chỉnh lựa chọn văn bản */
+::selection {
+  background-color: var(--color-primary-fixed);
+  color: var(--color-text-primary);
+}
+
+/* ==========================================================================
+   TYPOGRAPHY PRESETS (THEO BỘ QUY CHUẨN DESIGN.MD)
+   ========================================================================== */
+
+.display-hero {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 300;
+  line-height: 56px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 768px) {
+  .display-hero {
+    font-size: 28px;
+    line-height: 36px;
+    letter-spacing: 0.2em;
+  }
+}
+
+.headline-statement {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 32px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+.headline-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: 0.02em;
+  color: var(--color-text-primary);
+}
+
+.title-card {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 26px;
+  letter-spacing: 0.01em;
+  color: var(--color-text-primary);
+}
+
+.body-default {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0;
+  color: var(--color-text-secondary);
+}
+
+.body-spec {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.02em;
+  color: var(--color-text-secondary);
+}
+
+.spec-code {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.label-signature {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 22px;
+  letter-spacing: 0.04em;
+  color: var(--color-accent-terracotta);
+}
+
+.label-action {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   GOOGLE MATERIAL SYMBOLS
+   ========================================================================== */
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-outlined.filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ==========================================================================
+   REUSABLE UTILITY CLASSES & PATTERNS
+   ========================================================================== */
+
+/* Khung bọc giới hạn độ rộng */
+.craft-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+@media (max-width: 768px) {
+  .craft-container {
+    padding-left: var(--gutter-mobile);
+    padding-right: var(--gutter-mobile);
+  }
+}
+
+/* Thẻ Linework sắc nét đặc trưng */
+.craft-card {
+  background-color: var(--color-surface-crisp);
+  border: 1px solid var(--color-border-neutral);
+  border-radius: var(--radius-sharp);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+  overflow: hidden;
+  position: relative;
+}
+
+.craft-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-accent-terracotta);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Nút bấm & Tương tác (Button System) */
+.craft-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 0.75rem 1.75rem;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius-sharp);
+  transition: all var(--transition-normal);
+  border: 1px solid transparent;
+}
+
+.craft-btn-primary {
+  background-color: var(--color-accent-terracotta);
+  color: #FFFFFF;
+  border-color: var(--color-accent-terracotta);
+}
+
+.craft-btn-primary:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(184, 107, 53, 0.25);
+  transform: translateY(-2px);
+}
+
+.craft-btn-outline {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-border-neutral);
+}
+
+.craft-btn-outline:hover {
+  border-color: var(--color-accent-terracotta);
+  color: var(--color-accent-terracotta);
+  background-color: var(--color-surface-subtle);
+  transform: translateY(-2px);
+}
+
+.craft-btn-pill {
+  border-radius: var(--radius-pill);
+}
+
+/* Huy hiệu (Badges & Pills) */
+.craft-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background-color: var(--color-surface-container);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-neutral);
+}
+
+.craft-badge-accent {
+  background-color: rgba(184, 107, 53, 0.08);
+  color: var(--color-accent-terracotta);
+  border-color: rgba(184, 107, 53, 0.25);
+}
+
+.craft-badge-teal {
+  background-color: rgba(0, 102, 112, 0.08);
+  color: var(--color-tertiary);
+  border-color: rgba(0, 102, 112, 0.25);
+}
+
+/* Ký tự phân cách dạng cột dọc Pipe '|' theo chuẩn demo/DESIGN.md */
+.pipe-delimiter {
+  display: inline-block;
+  margin: 0 12px;
+  opacity: 0.35;
+  font-weight: 300;
+  color: var(--color-text-muted);
+}
+
+/* Ô nhập liệu chuẩn Linework (Input Fields) */
+.craft-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-crisp);
+  border: 1px solid var(--color-border-neutral);
+  border-radius: var(--radius-sharp);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.craft-input:focus {
+  border-color: var(--color-accent-terracotta);
+  box-shadow: 0 0 0 3px rgba(184, 107, 53, 0.12);
+}
+
+.craft-input-pill {
+  border-radius: var(--radius-pill);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* Phục vụ tiếp cận Accessibility (WCAG AA Focus) */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--color-accent-terracotta);
+  outline-offset: 2px;
+}
+
+/* Hiệu ứng khung xương tải trang (Skeleton Loader) */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.craft-skeleton {
+  background: linear-gradient(90deg, #EAE6DF 25%, #F4F0E9 50%, #EAE6DF 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite ease-in-out;
+  border-radius: var(--radius-subtle);
+}
+
+/* Responsive Grid System */
+.craft-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+.craft-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.craft-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+@media (max-width: 1024px) {
+  .craft-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .craft-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .craft-grid-4, .craft-grid-3, .craft-grid-2 { grid-template-columns: 1fr; }
+}
