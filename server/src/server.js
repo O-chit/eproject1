@@ -1,40 +1,3 @@
-<<<<<<< HEAD
-const app = require('./app');
-const env = require('./config/env');
-const { testConnection } = require('./config/db');
-
-const PORT = env.port || 5000;
-
-async function startServer() {
-  // Kiểm tra kết nối CSDL khi khởi động máy chủ
-  const dbHealth = await testConnection();
-  if (dbHealth.connected) {
-    console.log(`[Database] Kết nối PostgreSQL thành công (DB: ${dbHealth.database})`);
-  } else {
-    console.warn(`[Database] Chưa kết nối CSDL: ${dbHealth.error} (vẫn chạy server API)`);
-  }
-
-  const server = app.listen(PORT, () => {
-    console.log(`[Backend API] Đang chạy ngầm tại: http://localhost:${PORT}`);
-  });
-
-  const shutdown = () => {
-    console.log('\n[Backend API] Đang dừng máy chủ...');
-    server.close(() => {
-      console.log('[Backend API] Máy chủ đã dừng an toàn.');
-      process.exit(0);
-    });
-  };
-
-  process.on('SIGINT', shutdown);
-  process.on('SIGTERM', shutdown);
-}
-
-startServer().catch((err) => {
-  console.error('[Backend API Error]:', err);
-  process.exit(1);
-});
-=======
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -52,7 +15,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Cho phép mọi request cục bộ hoặc đúng CORS_ORIGIN
+      // Cho phép mọi request localhost hoặc từ CORS_ORIGIN
       if (!origin || origin.startsWith('http://localhost') || origin === env.corsOrigin) {
         callback(null, true);
       } else {
@@ -65,7 +28,7 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Logging đơn giản trong môi trường phát triển
+// Logging trong môi trường phát triển
 if (env.nodeEnv === 'development') {
   app.use((req, res, next) => {
     const start = Date.now();
@@ -104,10 +67,11 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     // Kiểm tra kết nối CSDL PostgreSQL
-    const isDbConnected = await testConnection();
-    if (!isDbConnected) {
-      console.error('❌ Không thể kết nối cơ sở dữ liệu PostgreSQL. Vui lòng kiểm tra file .env');
-      process.exit(1);
+    const dbHealth = await testConnection();
+    if (dbHealth && dbHealth.connected) {
+      console.log(`✅ [Database] Kết nối PostgreSQL thành công (DB: ${dbHealth.database})`);
+    } else {
+      console.warn(`⚠️ [Database] Cảnh báo kết nối CSDL: ${dbHealth?.error || 'Không xác định'} (Server vẫn khởi chạy)`);
     }
 
     const server = app.listen(env.port, () => {
@@ -123,7 +87,9 @@ const startServer = async () => {
     const handleShutdown = () => {
       console.log('\n🛑 Đang dừng server an toàn...');
       server.close(async () => {
-        await pool.end();
+        try {
+          await pool.end();
+        } catch (_) {}
         console.log('✅ Đã đóng kết nối CSDL và dừng server.');
         process.exit(0);
       });
@@ -140,4 +106,3 @@ const startServer = async () => {
 startServer();
 
 module.exports = app;
->>>>>>> 9f5d42e5830376d01f469d8dae2d392a6012eb14

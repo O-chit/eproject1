@@ -53,8 +53,8 @@ Hệ thống hỗ trợ chạy tập trung chỉ bằng **1 lệnh duy nhất** 
 
 ### 🚀 Khởi chạy dự án (Khuyến nghị)
 ```bash
-# 1. Cài đặt toàn bộ dependencies (Root & Client)
-npm run install:all
+# 1. Cài đặt toàn bộ dependencies (Frontend & Backend gộp chung)
+npm install
 
 # 2. Khởi chạy toàn bộ hệ thống
 npm run dev
@@ -75,10 +75,10 @@ npm run dev
 | `npm run client:build` | Build đóng gói mã nguồn Frontend ra thư mục `client/dist` |
 | `npm run server:dev` | Chỉ chạy riêng máy chủ Backend API với nodemon (`http://localhost:5000`) |
 | `npm run server:start` | Khởi động máy chủ backend API ở chế độ Production |
-| `npm run install:all` | Tự động cài đặt dependencies cho cả thư mục gốc và `client` |
+| `npm run api:test` | Kiểm thử tự động 23 endpoints REST API (Auth, Crafts, Artisans, Collections...) |
+| `npm run db:test` | Kiểm tra kết nối CSDL, thống kê bảng và kiểm chứng quan hệ N-N |
 | `npm run db:init` | Khởi tạo cấu trúc 17 bảng từ `db/schema.sql` vào CSDL PostgreSQL |
 | `npm run db:seed` | Nạp dữ liệu hạt giống từ `db/seed.sql` |
-| `npm run db:test` | Kiểm tra kết nối CSDL, thống kê bảng và kiểm chứng quan hệ N-N |
 
 ---
 

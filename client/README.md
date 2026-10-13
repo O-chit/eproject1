@@ -23,19 +23,16 @@ npm run dev
 *(Backend sẽ tự động bật ngầm, Frontend sẽ mở giao diện chính trên trình duyệt).*
 
 ### Cách 2: Khởi chạy riêng Frontend
-Đứng trực tiếp tại thư mục `client/`:
+Từ thư mục gốc dự án:
 ```bash
-# Cài đặt thư viện nếu chưa có:
-npm install
-
 # Khởi động máy chủ phát triển Vite:
-npm run dev
+npm run client:dev
 
 # Đóng gói mã nguồn cho môi trường Production:
-npm run build
+npm run client:build
 
 # Xem thử bản đóng gói (preview production build):
-npm run preview
+npm run client:preview
 ```
 
 ---
