@@ -1,0 +1,509 @@
+{
+  "info": {
+    "_postman_id": "craftroots-api-collection-v1",
+    "name": "CraftRoots REST API",
+    "description": "Bộ sưu tập kiểm thử API cho cổng thông tin di sản thủ công CraftRoots (Aptech eProject)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "System Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nguyễn Văn An\",\n  \"email\": \"an.nguyen@example.com\",\n  \"password\": \"CraftRoots@2026\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User (Tự lưu Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.token);",
+                  "    console.log('Đã tự động lưu authToken vào Collection Variable!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"an.nguyen@example.com\",\n  \"password\": \"CraftRoots@2026\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Profile (Me)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"CraftRoots@2026\",\n  \"newPassword\": \"CraftRoots@New2027\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "change-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Metadata",
+      "item": [
+        {
+          "name": "Get Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Materials",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/materials",
+              "host": ["{{baseUrl}}"],
+              "path": ["materials"]
+            }
+          }
+        },
+        {
+          "name": "Get Techniques",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/techniques",
+              "host": ["{{baseUrl}}"],
+              "path": ["techniques"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Regions",
+      "item": [
+        {
+          "name": "Get Regions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/regions",
+              "host": ["{{baseUrl}}"],
+              "path": ["regions"]
+            }
+          }
+        },
+        {
+          "name": "Get Crafts by Region ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/regions/1/crafts",
+              "host": ["{{baseUrl}}"],
+              "path": ["regions", "1", "crafts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Crafts",
+      "item": [
+        {
+          "name": "Get Crafts (Search, Filter, Pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crafts?q=gốm&page=1&limit=12&sort=latest",
+              "host": ["{{baseUrl}}"],
+              "path": ["crafts"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "gốm",
+                  "description": "Từ khóa tìm kiếm FTS"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "12"
+                },
+                {
+                  "key": "sort",
+                  "value": "latest"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Craft Detail (N-N Artisans & Images)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crafts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["crafts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Related Crafts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crafts/1/related",
+              "host": ["{{baseUrl}}"],
+              "path": ["crafts", "1", "related"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Artisans",
+      "item": [
+        {
+          "name": "Get Artisans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/artisans",
+              "host": ["{{baseUrl}}"],
+              "path": ["artisans"]
+            }
+          }
+        },
+        {
+          "name": "Get Artisan Detail (kèm tác phẩm)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/artisans/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["artisans", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Collections & Seasonal",
+      "item": [
+        {
+          "name": "Get General Collections",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/collections",
+              "host": ["{{baseUrl}}"],
+              "path": ["collections"]
+            }
+          }
+        },
+        {
+          "name": "Get Seasonal Collections",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/seasonal-collections",
+              "host": ["{{baseUrl}}"],
+              "path": ["seasonal-collections"]
+            }
+          }
+        },
+        {
+          "name": "Get Seasonal Collection Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/seasonal-collections/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["seasonal-collections", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Gallery",
+      "item": [
+        {
+          "name": "Get Gallery Images",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/gallery?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["gallery"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Favourites (Hybrid Sync)",
+      "item": [
+        {
+          "name": "Get My Favourites",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/favourites",
+              "host": ["{{baseUrl}}"],
+              "path": ["favourites"]
+            }
+          }
+        },
+        {
+          "name": "Add Favourite",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/favourites/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["favourites", "1"]
+            }
+          }
+        },
+        {
+          "name": "Remove Favourite",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/favourites/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["favourites", "1"]
+            }
+          }
+        },
+        {
+          "name": "Sync Favourites from LocalStorage",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"craftIds\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/favourites/sync",
+              "host": ["{{baseUrl}}"],
+              "path": ["favourites", "sync"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Contact",
+      "item": [
+        {
+          "name": "Submit Contact Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Lê Hoàng Nam\",\n  \"email\": \"nam.le@example.com\",\n  \"phone\": \"0912345678\",\n  \"subject\": \"Tìm hiểu về làng gốm Bát Tràng\",\n  \"message\": \"Tôi muốn liên hệ để tham quan và đặt làm sản phẩm riêng.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/contact",
+              "host": ["{{baseUrl}}"],
+              "path": ["contact"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

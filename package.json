@@ -13,7 +13,11 @@
     "db:test": "node server/src/test-db.js",
     "db:init": "psql -U postgres -d craftroots -f db/schema.sql",
     "db:seed": "psql -U postgres -d craftroots -f db/seed.sql",
+<<<<<<< HEAD
     "install:all": "npm install && npm --prefix client install"
+=======
+    "api:test": "node server/src/test-api.js"
+>>>>>>> 9f5d42e5830376d01f469d8dae2d392a6012eb14
   },
   "keywords": [
     "craftroots",
