@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html class="h-full" lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,11 +21,127 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CDN & Cấu hình Theme chuẩn từ demo/stitch_eproject -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+              "border-neutral": "#E6E2DA",
+              "inverse-surface": "#31302f",
+              "on-secondary-fixed": "#1c1b18",
+              "primary-fixed": "#ffdbc7",
+              "tertiary-fixed-dim": "#6ed5e3",
+              "tertiary": "#006670",
+              "on-secondary-container": "#666460",
+              "secondary-fixed-dim": "#cac6c1",
+              "tertiary-container": "#00818d",
+              "text-primary": "#1C1B1A",
+              "surface-crisp": "#FFFFFF",
+              "on-primary-fixed": "#311300",
+              "surface-container-high": "#ece7e5",
+              "text-secondary": "#5A5854",
+              "error": "#ba1a1a",
+              "surface": "#fdf8f6",
+              "on-surface": "#1c1b1a",
+              "on-error": "#ffffff",
+              "accent-terracotta": "#B86B35",
+              "outline": "#867368",
+              "on-tertiary": "#ffffff",
+              "surface-dim": "#ddd9d7",
+              "primary": "#8e4a16",
+              "inverse-primary": "#ffb689",
+              "inverse-on-surface": "#f4f0ee",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#e6e2df",
+              "on-tertiary-fixed": "#001f23",
+              "canvas-linen": "#F9F8F6",
+              "on-tertiary-container": "#f6feff",
+              "primary-fixed-dim": "#ffb689",
+              "on-primary-container": "#fffbff",
+              "on-background": "#1c1b1a",
+              "on-secondary-fixed-variant": "#484743",
+              "surface-bright": "#fdf8f6",
+              "secondary": "#605e5a",
+              "background": "#fdf8f6",
+              "on-primary-fixed-variant": "#733500",
+              "on-error-container": "#93000a",
+              "surface-variant": "#e6e2df",
+              "error-container": "#ffdad6",
+              "tertiary-fixed": "#90f1ff",
+              "surface-container-low": "#f7f3f0",
+              "on-secondary": "#ffffff",
+              "secondary-container": "#e6e2dc",
+              "surface-container": "#f2edeb",
+              "on-tertiary-fixed-variant": "#004f57",
+              "outline-variant": "#d9c2b5",
+              "on-primary": "#ffffff",
+              "surface-subtle": "#F4F2EE",
+              "on-surface-variant": "#54433a",
+              "secondary-fixed": "#e6e2dc",
+              "primary-container": "#ac612c",
+              "surface-tint": "#914c18"
+            },
+            "borderRadius": {
+              "DEFAULT": "0.25rem",
+              "none": "0px",
+              "sm": "0.125rem",
+              "md": "0.375rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+            "spacing": {
+              "margin": "3rem",
+              "gutter-mobile": "1rem",
+              "gutter": "1.5rem",
+              "space-xl": "2.5rem",
+              "space-md": "1rem",
+              "space-sm": "0.5rem",
+              "space-xs": "0.25rem",
+              "margin-mobile": "1.25rem",
+              "space-lg": "1.5rem"
+            },
+            "fontFamily": {
+              "spec-code": ["Inter", "sans-serif"],
+              "label-signature": ["Playfair Display", "serif"],
+              "body-spec": ["Inter", "sans-serif"],
+              "display-hero": ["Montserrat", "sans-serif"],
+              "title-card": ["Playfair Display", "serif"],
+              "display-hero-mobile": ["Montserrat", "sans-serif"],
+              "headline-title": ["Playfair Display", "serif"],
+              "headline-statement": ["Montserrat", "sans-serif"],
+              "body-default": ["Inter", "sans-serif"],
+              "label-action": ["Montserrat", "sans-serif"]
+            },
+            "fontSize": {
+              "spec-code": ["12px", { lineHeight: "18px", letterSpacing: "0.06em", fontWeight: "500" }],
+              "label-signature": ["16px", { lineHeight: "22px", letterSpacing: "0.04em", fontWeight: "400" }],
+              "body-spec": ["13px", { lineHeight: "22px", letterSpacing: "0.02em", fontWeight: "400" }],
+              "display-hero": ["48px", { lineHeight: "56px", letterSpacing: "0.3em", fontWeight: "300" }],
+              "title-card": ["18px", { lineHeight: "26px", letterSpacing: "0.01em", fontWeight: "500" }],
+              "display-hero-mobile": ["28px", { lineHeight: "36px", letterSpacing: "0.2em", fontWeight: "300" }],
+              "headline-title": ["24px", { lineHeight: "32px", letterSpacing: "0.02em", fontWeight: "600" }],
+              "headline-statement": ["22px", { lineHeight: "32px", letterSpacing: "0.25em", fontWeight: "300" }],
+              "body-default": ["15px", { lineHeight: "24px", letterSpacing: "0", fontWeight: "400" }],
+              "label-action": ["11px", { lineHeight: "16px", letterSpacing: "0.15em", fontWeight: "600" }]
+            }
+          }
+        }
+      }
+    </script>
 
     <title>CraftRoots — Cổng Thông Tin Khám Phá Nghề Thủ Công Truyền Thống</title>
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-canvas-linen font-body-default text-text-primary antialiased min-h-screen flex flex-col">
+    <div id="root" class="min-h-screen flex flex-col"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import Breadcrumbs from '../common/Breadcrumbs';
 
 export default function Layout() {
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -28,6 +29,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F9F8F6] text-[#1C1B1A]">
       <Navbar />
+      <Breadcrumbs />
 
       <main className="flex-1 w-full">
         <Outlet />

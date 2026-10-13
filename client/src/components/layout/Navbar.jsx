@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Navbar() {
+  const { isAuthenticated, user, logout } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
@@ -117,15 +119,35 @@ export default function Navbar() {
             </span>
 
             {/* Tài khoản cá nhân */}
-            <Link
-              to="/favourites"
-              className="w-9 h-9 border border-[#E6E2DA] bg-[#FFFFFF] flex items-center justify-center text-[#1C1B1A] hover:border-[#B86B35] hover:text-[#B86B35] transition-colors"
-              title="Hồ sơ tài khoản"
-            >
-              <span className="material-symbols-outlined text-[19px]">
-                person
-              </span>
-            </Link>
+            {isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                <div
+                  className="h-9 px-2.5 border border-[#B86B35] bg-[#FFFFFF] flex items-center gap-1.5 text-[12px] text-[#B86B35] font-['Montserrat'] font-medium"
+                  title={`Đã đăng nhập: ${user?.fullName || user?.email}`}
+                >
+                  <span className="material-symbols-outlined text-[17px]">account_circle</span>
+                  <span className="hidden xl:inline max-w-[100px] truncate">{user?.fullName?.split(' ')[0] || 'Tài khoản'}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="w-9 h-9 border border-[#E6E2DA] bg-[#FFFFFF] flex items-center justify-center text-[#5A5854] hover:text-[#BA1A1A] hover:border-[#BA1A1A] transition-colors"
+                  title="Đăng xuất"
+                >
+                  <span className="material-symbols-outlined text-[18px]">logout</span>
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="w-9 h-9 border border-[#E6E2DA] bg-[#FFFFFF] flex items-center justify-center text-[#1C1B1A] hover:border-[#B86B35] hover:text-[#B86B35] transition-colors"
+                title="Đăng nhập tài khoản"
+              >
+                <span className="material-symbols-outlined text-[19px]">
+                  person
+                </span>
+              </Link>
+            )}
           </div>
         </div>
 
