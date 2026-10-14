@@ -1,14 +1,18 @@
 const path = require('path');
 const dotenv = require('dotenv');
 
-// Ưu tiên nạp từ server/.env, nếu không có thì tìm ở root workspace
-const serverEnvPath = path.resolve(__dirname, '../../.env');
+// Ưu tiên nạp từ root .env, sau đó mới nạp server/.env
 const rootEnvPath = path.resolve(__dirname, '../../../.env');
+const serverEnvPath = path.resolve(__dirname, '../../.env');
 
-const result = dotenv.config({ path: serverEnvPath });
-if (result.error) {
-  dotenv.config({ path: rootEnvPath });
-}
+dotenv.config({ path: rootEnvPath });
+dotenv.config({ path: serverEnvPath });
+
+// Nếu DATABASE_URL còn chứa placeholder "your_db_password" thì bỏ qua, dùng cấu hình rời DB_*
+const rawDatabaseUrl = process.env.DATABASE_URL;
+const validConnectionString = (rawDatabaseUrl && !rawDatabaseUrl.includes('your_db_password') && !rawDatabaseUrl.includes('mật_khẩu'))
+  ? rawDatabaseUrl
+  : null;
 
 module.exports = {
   port: process.env.PORT || 5000,
@@ -20,8 +24,8 @@ module.exports = {
     port: parseInt(process.env.DB_PORT || '5432', 10),
     database: process.env.DB_NAME || 'craftroots',
     user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || '',
-    connectionString: process.env.DATABASE_URL,
+    password: String(process.env.DB_PASSWORD ?? ''),
+    connectionString: validConnectionString,
     max: 20, // Số kết nối tối đa trong Pool
     idleTimeoutMillis: 30000, // Đóng client nhàn rỗi sau 30s
     connectionTimeoutMillis: 5000, // Timeout kết nối 5s

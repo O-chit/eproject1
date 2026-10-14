@@ -2,9 +2,18 @@ const { Pool } = require('pg');
 const env = require('./env');
 
 // Khởi tạo Connection Pool theo chuẩn Postgres
+const isCloudDb = env.db.connectionString && (
+  env.db.connectionString.includes('sslmode=require') ||
+  env.db.connectionString.includes('neon.tech') ||
+  env.db.connectionString.includes('supabase.co') ||
+  env.db.connectionString.includes('render.com') ||
+  env.db.connectionString.includes('aivencloud.com')
+);
+
 const poolConfig = env.db.connectionString
   ? {
       connectionString: env.db.connectionString,
+      ssl: isCloudDb ? { rejectUnauthorized: false } : undefined,
       max: env.db.max,
       idleTimeoutMillis: env.db.idleTimeoutMillis,
       connectionTimeoutMillis: env.db.connectionTimeoutMillis,
