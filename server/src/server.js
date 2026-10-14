@@ -67,10 +67,12 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     // Kiểm tra kết nối CSDL PostgreSQL
-    const isDbConnected = await testConnection();
-    if (!isDbConnected) {
-      console.error('❌ Không thể kết nối cơ sở dữ liệu PostgreSQL. Vui lòng kiểm tra file .env');
-      process.exit(1);
+    const dbStatus = await testConnection();
+    if (!dbStatus || !dbStatus.connected) {
+      console.warn(`⚠️ [Database Warning] Chưa thể kết nối PostgreSQL: ${dbStatus?.error || 'Connection failed'}`);
+      console.warn('👉 Vui lòng kiểm tra cấu hình file .env và đảm bảo dịch vụ PostgreSQL đang chạy.');
+    } else {
+      console.log(`✅ Đã kết nối cơ sở dữ liệu PostgreSQL (${dbStatus.database})`);
     }
 
     const server = app.listen(env.port, () => {
