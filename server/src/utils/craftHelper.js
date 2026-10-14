@@ -9,8 +9,11 @@ const craftSummarySelect = `
   c.slug,
   r.name AS region,
   cat.name AS category,
+  cat.slug AS "categorySlug",
   c.thumbnail_url AS "thumbnailUrl",
+  c.thumbnail_url AS image,
   c.short_description AS "shortDescription",
+  c.short_description AS description,
   c.is_featured AS "isFeatured",
   COALESCE(
     (

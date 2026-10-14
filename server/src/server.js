@@ -15,7 +15,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Cho phép mọi request cục bộ hoặc đúng CORS_ORIGIN
+      // Cho phép mọi request localhost hoặc từ CORS_ORIGIN
       if (!origin || origin.startsWith('http://localhost') || origin === env.corsOrigin) {
         callback(null, true);
       } else {
@@ -28,7 +28,7 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Logging đơn giản trong môi trường phát triển
+// Logging trong môi trường phát triển
 if (env.nodeEnv === 'development') {
   app.use((req, res, next) => {
     const start = Date.now();
@@ -68,11 +68,11 @@ const startServer = async () => {
   try {
     // Kiểm tra kết nối CSDL PostgreSQL
     const dbStatus = await testConnection();
-    if (!dbStatus || !dbStatus.connected) {
+    if (dbStatus && dbStatus.connected) {
+      console.log(`✅ [Database] Kết nối PostgreSQL thành công (DB: ${dbStatus.database})`);
+    } else {
       console.warn(`⚠️ [Database Warning] Chưa thể kết nối PostgreSQL: ${dbStatus?.error || 'Connection failed'}`);
       console.warn('👉 Vui lòng kiểm tra cấu hình file .env và đảm bảo dịch vụ PostgreSQL đang chạy.');
-    } else {
-      console.log(`✅ Đã kết nối cơ sở dữ liệu PostgreSQL (${dbStatus.database})`);
     }
 
     const server = app.listen(env.port, () => {
@@ -88,7 +88,9 @@ const startServer = async () => {
     const handleShutdown = () => {
       console.log('\n🛑 Đang dừng server an toàn...');
       server.close(async () => {
-        await pool.end();
+        try {
+          await pool.end();
+        } catch (_) {}
         console.log('✅ Đã đóng kết nối CSDL và dừng server.');
         process.exit(0);
       });
@@ -102,6 +104,8 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
 
-module.exports = app;
+module.exports = { app, startServer };

@@ -4,18 +4,24 @@
   "description": "CraftRoots - Traditional Heritage Crafts Discovery Portal (eProject Aptech)",
   "private": true,
   "scripts": {
+    "dev": "concurrently --kill-others -n \"BACKEND,FRONTEND\" -c \"gray,cyan.bold\" \"npm run server:dev\" \"npm run client:dev\"",
+    "client:dev": "vite client",
+    "client:build": "vite build client",
+    "client:preview": "vite preview client",
     "server:dev": "nodemon server/src/server.js",
     "server:start": "node server/src/server.js",
+    "api:test": "node server/src/test-api.js",
     "db:test": "node server/src/test-db.js",
     "db:init": "psql -U postgres -d craftroots -f db/schema.sql",
-    "db:seed": "psql -U postgres -d craftroots -f db/seed.sql",
-    "api:test": "node server/src/test-api.js"
+    "db:seed": "psql -U postgres -d craftroots -f db/seed.sql"
   },
   "keywords": [
     "craftroots",
     "heritage-crafts",
     "express",
-    "postgresql"
+    "postgresql",
+    "react",
+    "vite"
   ],
   "author": "CraftRoots Team",
   "license": "ISC",
@@ -26,9 +32,17 @@
     "express": "^4.21.2",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.23.1"
+    "pg": "^8.23.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^10.0.6",
+    "nodemon": "^3.1.9",
+    "vite": "^6.2.0"
   }
 }

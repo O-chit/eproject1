@@ -1,12 +1,15 @@
 /**
  * Test script toàn diện kiểm tra 17 API endpoints theo api-contract.yaml
  */
-const http = require('http');
-const app = require('./server');
-
 const runTests = async () => {
-  // Đợi 1.5s để server kết nối DB và sẵn sàng
-  await new Promise((r) => setTimeout(r, 1500));
+  // Kiểm tra nếu server chưa chạy thì khởi động
+  try {
+    await fetch('http://localhost:5000/api/health');
+  } catch (_) {
+    const { startServer } = require('./server');
+    if (startServer) await startServer();
+    await new Promise((r) => setTimeout(r, 1500));
+  }
 
   const BASE_URL = 'http://localhost:5000/api';
   let passed = 0;

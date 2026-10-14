@@ -49,15 +49,36 @@ eproject1/
 
 ## 2. Các lệnh khởi chạy nhanh (Scripts tại Root)
 
-Dự án đã thiết lập các lệnh điều khiển tập trung ngay tại thư mục gốc:
+Hệ thống hỗ trợ chạy tập trung chỉ bằng **1 lệnh duy nhất** từ thư mục gốc. 
+
+### 🚀 Khởi chạy dự án (Khuyến nghị)
+```bash
+# 1. Cài đặt toàn bộ dependencies (Frontend & Backend gộp chung)
+npm install
+
+# 2. Khởi chạy toàn bộ hệ thống
+npm run dev
+```
+
+> [!NOTE]
+> **Cơ chế hoạt động khi chạy `npm run dev`:**
+> * **Cổng chính giao diện:** Frontend (React + Vite) khởi chạy tại `http://localhost:5173` và tự động mở trình duyệt.
+> * **Backend chạy ngầm:** Máy chủ Express API chạy ngầm tại `http://localhost:5000`.
+> * **Vite Reverse Proxy:** Toàn bộ request gọi đến `/api/*` từ giao diện sẽ được Vite tự động chuyển tiếp ngầm về backend `http://localhost:5000`, giúp người dùng chỉ cần tập trung làm việc trên một cổng duy nhất là `5173`.
+
+### 📋 Bảng danh mục lệnh điều khiển tại Root
 
 | Lệnh | Mô tả chi tiết |
 |---|---|
+| `npm run dev` | **[Chính]** Chạy đồng thời: Backend chạy ngầm, Frontend mở cổng chính `http://localhost:5173` |
+| `npm run client:dev` | Chỉ chạy riêng Frontend Vite (`http://localhost:5173`) |
+| `npm run client:build` | Build đóng gói mã nguồn Frontend ra thư mục `client/dist` |
+| `npm run server:dev` | Chỉ chạy riêng máy chủ Backend API với nodemon (`http://localhost:5000`) |
+| `npm run server:start` | Khởi động máy chủ backend API ở chế độ Production |
+| `npm run api:test` | Kiểm thử tự động 23 endpoints REST API (Auth, Crafts, Artisans, Collections...) |
+| `npm run db:test` | Kiểm tra kết nối CSDL, thống kê bảng và kiểm chứng quan hệ N-N |
 | `npm run db:init` | Khởi tạo cấu trúc 17 bảng từ `db/schema.sql` vào CSDL PostgreSQL |
 | `npm run db:seed` | Nạp dữ liệu hạt giống từ `db/seed.sql` |
-| `npm run db:test` | Kiểm tra kết nối CSDL, thống kê bảng và kiểm chứng quan hệ N-N |
-| `npm run server:dev` | Khởi động máy chủ backend API với nodemon (`http://localhost:5000`) |
-| `npm run server:start` | Khởi động máy chủ backend API ở chế độ Production |
 
 ---
 
