@@ -3,21 +3,37 @@ import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 export default function ProfilePage() {
-  const { user, logout } = useAuth();
+  const { user, logout, changePassword } = useAuth();
   const [activeTab, setActiveTab] = useState('info');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [passwordMsg, setPasswordMsg] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [submittingPassword, setSubmittingPassword] = useState(false);
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
+    setPasswordMsg('');
+    setPasswordError('');
+
     if (newPassword.length < 8) {
-      setPasswordMsg('Mật khẩu mới phải có tối thiểu 8 ký tự');
+      setPasswordError('Mật khẩu mới phải có tối thiểu 8 ký tự');
       return;
     }
-    setPasswordMsg('Đã cập nhật mật khẩu mới thành công!');
-    setCurrentPassword('');
-    setNewPassword('');
+
+    setSubmittingPassword(true);
+    try {
+      if (changePassword) {
+        await changePassword(currentPassword, newPassword);
+      }
+      setPasswordMsg('Đã cập nhật mật khẩu mới thành công trên hệ thống CSDL!');
+      setCurrentPassword('');
+      setNewPassword('');
+    } catch (err) {
+      setPasswordError(err.message || 'Mật khẩu hiện tại không chính xác');
+    } finally {
+      setSubmittingPassword(false);
+    }
   };
 
   return (
@@ -122,9 +138,14 @@ export default function ProfilePage() {
                     {passwordMsg}
                   </div>
                 )}
+                {passwordError && (
+                  <div className="p-3 bg-red-50 border border-red-300 text-red-800 text-sm font-body-spec">
+                    {passwordError}
+                  </div>
+                )}
                 <div>
                   <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-                    Mật khẩu hiện tại
+                    Mật khẩu hiện tại *
                   </label>
                   <input
                     type="password"
@@ -136,7 +157,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-                    Mật khẩu mới
+                    Mật khẩu mới (Tối thiểu 8 ký tự) *
                   </label>
                   <input
                     type="password"
@@ -148,9 +169,10 @@ export default function ProfilePage() {
                 </div>
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-accent-terracotta hover:bg-[#8E4A16] text-white font-spec-code text-[11px] uppercase tracking-wider transition-colors cursor-pointer"
+                  disabled={submittingPassword}
+                  className="px-6 py-3 bg-accent-terracotta hover:bg-[#8E4A16] text-white font-spec-code text-[11px] uppercase tracking-wider transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  CẬP NHẬT MẬT KHẨU
+                  {submittingPassword ? 'ĐANG CẬP NHẬT...' : 'CẬP NHẬT MẬT KHẨU'}
                 </button>
               </form>
             )}
