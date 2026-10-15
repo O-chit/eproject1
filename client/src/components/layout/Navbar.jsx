@@ -147,13 +147,19 @@ export default function Navbar() {
 
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
-                <div
-                  className="h-9 px-2.5 border border-border-neutral bg-surface-crisp flex items-center gap-1.5 text-[12px] text-accent-terracotta font-medium"
-                  title={`Đã đăng nhập: ${user?.fullName || user?.email}`}
+                <Link
+                  to="/profile"
+                  id="navbar-user-profile-btn"
+                  className="h-9 px-3 border border-border-neutral bg-surface-crisp hover:border-accent-terracotta hover:bg-surface-subtle transition-all flex items-center gap-2 text-[12px] text-accent-terracotta font-medium group cursor-pointer shadow-xs"
+                  title={`Xem hồ sơ cá nhân: ${user?.fullName || user?.email}`}
                 >
-                  <span className="material-symbols-outlined text-[18px]">account_circle</span>
-                  <span className="hidden xl:inline max-w-[100px] truncate">{user?.fullName?.split(' ')[0] || 'Tài khoản'}</span>
-                </div>
+                  <span className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform">
+                    account_circle
+                  </span>
+                  <span className="hidden sm:inline max-w-[120px] truncate text-text-primary group-hover:text-accent-terracotta transition-colors">
+                    {user?.fullName?.split(' ')[0] || user?.fullName || 'Hồ sơ'}
+                  </span>
+                </Link>
                 <button
                   type="button"
                   onClick={logout}
@@ -251,6 +257,56 @@ export default function Navbar() {
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </div>
+
+            {/* Khối Hồ sơ người dùng trong thanh dọc */}
+            {isAuthenticated ? (
+              <div className="mb-5 p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between gap-3">
+                <Link
+                  to="/profile"
+                  onClick={closeMenu}
+                  className="flex items-center gap-3 min-w-0 group cursor-pointer"
+                  title="Đi đến trang hồ sơ cá nhân"
+                >
+                  <div className="w-9 h-9 rounded-full bg-accent-terracotta text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                    {user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-title-card text-[14px] font-semibold text-text-primary group-hover:text-accent-terracotta transition-colors truncate">
+                      {user?.fullName || 'Người Dùng'}
+                    </span>
+                    <span className="font-spec-code text-[10px] text-accent-terracotta flex items-center gap-1">
+                      <span>Xem hồ sơ &amp; đổi mật khẩu</span>
+                      <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+                    </span>
+                  </div>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    closeMenu();
+                  }}
+                  className="w-8 h-8 flex items-center justify-center border border-border-neutral bg-surface-crisp text-text-secondary hover:text-error hover:border-error transition-colors cursor-pointer shrink-0"
+                  title="Đăng xuất"
+                >
+                  <span className="material-symbols-outlined text-[16px]">logout</span>
+                </button>
+              </div>
+            ) : (
+              <div className="mb-5 p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="font-spec-code text-[10px] uppercase tracking-wider text-text-secondary">Tài khoản</span>
+                  <span className="font-body-spec text-[12px] text-text-primary">Chưa đăng nhập</span>
+                </div>
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="font-spec-code text-[11px] font-semibold text-accent-terracotta hover:underline border border-accent-terracotta/40 px-2.5 py-1 bg-surface-crisp"
+                >
+                  Đăng nhập →
+                </Link>
+              </div>
+            )}
 
             {/* Ô tìm kiếm nhanh trong thanh dọc */}
             <div className="mb-6">
@@ -451,6 +507,28 @@ export default function Navbar() {
                   </span>
                   <span className="material-symbols-outlined text-[16px] text-text-secondary">
                     arrow_outward
+                  </span>
+                </NavLink>
+
+                <NavLink
+                  to="/profile"
+                  onClick={closeMenu}
+                  className={({ isActive }) =>
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
+                      isActive
+                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                        : 'border-transparent'
+                    }`
+                  }
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span className="material-symbols-outlined text-[18px] text-accent-terracotta">
+                      account_circle
+                    </span>
+                    Hồ Sơ Cá Nhân &amp; Tài Khoản
+                  </span>
+                  <span className="font-spec-code text-[10px] text-accent-terracotta uppercase">
+                    Cá Nhân
                   </span>
                 </NavLink>
               </nav>

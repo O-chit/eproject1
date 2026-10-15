@@ -505,11 +505,11 @@ export default function VietnamCulturalMap({
     hsEl.innerHTML = `
       <div class="flex items-center gap-1.5 px-3 py-1 bg-[#FFFFFF] border-2 border-[#B86B35] shadow-lg shadow-[#B86B35]/20 transition-transform group-hover:scale-105">
         <span class="w-2.5 h-2.5 rounded-full bg-[#B86B35] animate-ping"></span>
-        <span class="font-mono text-[10px] font-bold text-[#1C1B1A] tracking-[0.16em] uppercase whitespace-nowrap">
+        <span class="font-['Montserrat',sans-serif] text-[10px] font-bold text-[#1C1B1A] tracking-[0.16em] uppercase whitespace-nowrap">
           QUẦN ĐẢO HOÀNG SA
         </span>
       </div>
-      <span class="font-sans text-[8.5px] text-[#B86B35] tracking-widest uppercase font-bold mt-0.5 bg-[#FFFFFF] border border-[#E6E2DA] px-1.5 py-0.5 shadow-xs">
+      <span class="font-['Inter',sans-serif] text-[9px] text-[#B86B35] tracking-widest uppercase font-bold mt-0.5 bg-[#FFFFFF] border border-[#E6E2DA] px-1.5 py-0.5 shadow-xs">
         (TP. ĐÀ NẴNG – VIỆT NAM)
       </span>
     `;
@@ -524,11 +524,11 @@ export default function VietnamCulturalMap({
     tsEl.innerHTML = `
       <div class="flex items-center gap-1.5 px-3 py-1 bg-[#FFFFFF] border-2 border-[#B86B35] shadow-lg shadow-[#B86B35]/20 transition-transform group-hover:scale-105">
         <span class="w-2.5 h-2.5 rounded-full bg-[#B86B35] animate-ping"></span>
-        <span class="font-mono text-[10px] font-bold text-[#1C1B1A] tracking-[0.16em] uppercase whitespace-nowrap">
+        <span class="font-['Montserrat',sans-serif] text-[10px] font-bold text-[#1C1B1A] tracking-[0.16em] uppercase whitespace-nowrap">
           QUẦN ĐẢO TRƯỜNG SA
         </span>
       </div>
-      <span class="font-sans text-[8.5px] text-[#B86B35] tracking-widest uppercase font-bold mt-0.5 bg-[#FFFFFF] border border-[#E6E2DA] px-1.5 py-0.5 shadow-xs">
+      <span class="font-['Inter',sans-serif] text-[9px] text-[#B86B35] tracking-widest uppercase font-bold mt-0.5 bg-[#FFFFFF] border border-[#E6E2DA] px-1.5 py-0.5 shadow-xs">
         (TỈNH KHÁNH HÒA – VIỆT NAM)
       </span>
     `;
@@ -563,7 +563,7 @@ export default function VietnamCulturalMap({
               setIsModalOpen(false);
               fitToVietnamOverview(true);
             }}
-            className={`px-3 py-1 text-[11px] font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+            className={`px-3 py-1 text-[11px] font-label-action uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
               !selectedRegionId
                 ? 'bg-[#1C1B1A] text-white font-bold shadow-xs'
                 : 'text-[#5A5854] hover:text-[#1C1B1A] hover:bg-[#F4F2EE]'
@@ -583,7 +583,7 @@ export default function VietnamCulturalMap({
                   setModalRegion(reg);
                   setIsModalOpen(true);
                 }}
-                className={`flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-label-action uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                   isSelected
                     ? 'text-white font-bold shadow-xs'
                     : 'text-[#5A5854] hover:text-[#1C1B1A] hover:bg-[#F4F2EE]'
@@ -613,7 +613,7 @@ export default function VietnamCulturalMap({
         {loadingData && (
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#F9F8F6]/85 backdrop-blur-sm">
             <div className="w-10 h-10 border-3 border-[#B86B35] border-t-transparent rounded-full animate-spin mb-3"></div>
-            <span className="font-mono text-[12px] uppercase tracking-widest text-[#5A5854]">
+            <span className="font-spec-code text-[12px] uppercase tracking-widest text-[#5A5854]">
               Đang tải bản đồ 7 vùng văn hóa làng nghề...
             </span>
           </div>
@@ -622,12 +622,12 @@ export default function VietnamCulturalMap({
         {/* Tooltip di chuột theo Vùng Văn Hóa */}
         {hoveredInfo && (
           <div
-            className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full pb-3 font-mono"
+            className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full pb-3 font-body-spec"
             style={{ left: hoveredInfo.x, top: hoveredInfo.y }}
           >
-            <div className="px-3.5 py-2 bg-[#FFFFFF]/98 border border-[#E6E2DA] shadow-xl backdrop-blur-md text-[11px] flex flex-col gap-1 min-w-[200px]">
+            <div className="px-3.5 py-2.5 bg-[#FFFFFF]/98 border border-[#E6E2DA] shadow-xl backdrop-blur-md text-[12px] flex flex-col gap-1 min-w-[210px]">
               <div className="flex items-center justify-between gap-2">
-                <span className="font-bold text-[#1C1B1A] uppercase tracking-wider text-[12px] font-serif">
+                <span className="font-bold text-[#1C1B1A] uppercase tracking-wider text-[13px] font-title-card font-serif">
                   {hoveredInfo.regionName}
                 </span>
                 <span
@@ -635,12 +635,12 @@ export default function VietnamCulturalMap({
                   style={{ backgroundColor: hoveredInfo.regionColor }}
                 ></span>
               </div>
-              <span className="text-[10px] text-[#B86B35] font-mono">
+              <span className="text-[11px] text-[#B86B35] font-body-spec font-medium">
                 {hoveredInfo.subName}
               </span>
-              <div className="flex items-center justify-between text-[10px] text-[#5A5854] border-t border-[#E6E2DA] pt-1 mt-0.5">
+              <div className="flex items-center justify-between text-[11px] text-[#5A5854] border-t border-[#E6E2DA] pt-1.5 mt-0.5 font-spec-code">
                 <span>{hoveredInfo.provinces ? hoveredInfo.provinces.length : 0} tỉnh thành</span>
-                <span className="text-[#B86B35] font-bold">Nhấp xem chi tiết di sản →</span>
+                <span className="text-[#B86B35] font-semibold">Xem chi tiết di sản →</span>
               </div>
             </div>
           </div>
@@ -649,7 +649,7 @@ export default function VietnamCulturalMap({
         {/* BỘ NÚT ĐIỀU KHIỂN BẢN ĐỒ TIỆN ÍCH (Góc dưới bên trái) */}
         <div className="absolute bottom-5 left-5 z-20 flex flex-col gap-2 pointer-events-auto">
           {/* Nút Phóng to / Thu nhỏ / Căn vừa màn hình */}
-          <div className="flex flex-col bg-[#FFFFFF]/95 backdrop-blur-md border border-[#E6E2DA] shadow-lg overflow-hidden font-mono text-[12px]">
+          <div className="flex flex-col bg-[#FFFFFF]/95 backdrop-blur-md border border-[#E6E2DA] shadow-lg overflow-hidden font-spec-code text-[12px]">
             <button
               type="button"
               onClick={handleZoomIn}
@@ -689,7 +689,7 @@ export default function VietnamCulturalMap({
                   setModalRegion(CULTURAL_REGIONS[selectedRegionId]);
                   setIsModalOpen(true);
                 }}
-                className="flex items-center gap-1.5 px-3 py-2 bg-[#B86B35] hover:bg-[#8E4A16] text-white font-bold border border-[#B86B35] shadow-lg backdrop-blur-md font-mono text-[11px] uppercase tracking-wider transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-2 bg-[#B86B35] hover:bg-[#8E4A16] text-white font-bold border border-[#B86B35] shadow-lg backdrop-blur-md font-label-action text-[11px] uppercase tracking-wider transition-all cursor-pointer"
                 title="Mở popup chi tiết vùng văn hóa"
               >
                 <span>📖 Chi Tiết Vùng</span>
@@ -701,7 +701,7 @@ export default function VietnamCulturalMap({
                   setIsModalOpen(false);
                   fitToVietnamOverview(true);
                 }}
-                className="flex items-center gap-1.5 px-3 py-2 bg-[#FFFFFF]/95 hover:bg-[#F4F2EE] text-[#1C1B1A] border border-[#E6E2DA] shadow-lg backdrop-blur-md font-mono text-[11px] uppercase tracking-wider transition-all cursor-pointer group"
+                className="flex items-center gap-1.5 px-3 py-2 bg-[#FFFFFF]/95 hover:bg-[#F4F2EE] text-[#1C1B1A] border border-[#E6E2DA] shadow-lg backdrop-blur-md font-label-action text-[11px] uppercase tracking-wider transition-all cursor-pointer group"
                 title="Xem lại toàn cảnh dải đất Việt Nam"
               >
                 <span className="text-[#B86B35] group-hover:-translate-x-0.5 transition-transform">←</span>
@@ -711,7 +711,7 @@ export default function VietnamCulturalMap({
           )}
 
           {/* Badge hiển thị tỉ lệ zoom nhỏ tiện dụng */}
-          <div className="px-2 py-1 bg-[#FFFFFF]/90 border border-[#E6E2DA] text-[9px] font-mono text-[#5A5854] select-none shadow-xs">
+          <div className="px-2 py-1 bg-[#FFFFFF]/90 border border-[#E6E2DA] text-[10px] font-spec-code text-[#5A5854] select-none shadow-xs">
             Mức zoom: {currentZoom.toFixed(1)}x
           </div>
         </div>
