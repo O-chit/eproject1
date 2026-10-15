@@ -10,11 +10,33 @@ if (result.error) {
   dotenv.config({ path: rootEnvPath });
 }
 
-module.exports = {
-  port: process.env.PORT || 5000,
-  nodeEnv: process.env.NODE_ENV || 'development',
+const nodeEnv = process.env.NODE_ENV || 'development';
+const jwtSecret = process.env.JWT_SECRET || 'craftroots_default_secret_key_change_in_prod_at_least_32_chars';
 
-  // Cấu hình Database
+// Kiểm tra bảo mật môi trường production theo quy tắc nghiêm ngặt
+if (nodeEnv === 'production') {
+  const leakedKeys = [
+    'super_secret_craftroots_jwt_key_2026_x!99',
+    'craftroots_super_secret_jwt_key_2026_very_long_and_secure',
+    'craftroots_default_secret_key_change_in_prod',
+    'thay_bang_chuoi_bi_mat_dai_va_ngau_nhien',
+  ];
+
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32 || leakedKeys.includes(process.env.JWT_SECRET)) {
+    throw new Error('CRITICAL SECURITY ERROR: JWT_SECRET trong môi trường production phải có độ dài tối thiểu 32 ký tự và không được trùng các chuỗi mẫu đã công bố trong tài liệu.');
+  }
+}
+
+// Hỗ trợ nhiều origin phân tách bằng dấu phẩy
+const rawOrigin = process.env.CLIENT_ORIGIN || process.env.CORS_ORIGIN || 'http://localhost:5173';
+const allowedOrigins = rawOrigin.split(',').map((origin) => origin.trim()).filter(Boolean);
+
+module.exports = {
+  port: parseInt(process.env.PORT || '5000', 10),
+  nodeEnv,
+  bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '10', 10),
+
+  // Cấu hình Database PostgreSQL
   db: {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432', 10),
@@ -22,17 +44,22 @@ module.exports = {
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || '',
     connectionString: process.env.DATABASE_URL,
-    max: 20, // Số kết nối tối đa trong Pool
-    idleTimeoutMillis: 30000, // Đóng client nhàn rỗi sau 30s
-    connectionTimeoutMillis: 5000, // Timeout kết nối 5s
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 5000,
   },
 
   // JWT
   jwt: {
-    secret: process.env.JWT_SECRET || 'craftroots_default_secret_key_change_in_prod',
+    secret: jwtSecret,
     expiresIn: process.env.JWT_EXPIRES_IN || '1d',
   },
 
   // CORS
-  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  corsOrigin: allowedOrigins.length === 1 ? allowedOrigins[0] : allowedOrigins,
+  allowedOrigins,
+
+  // Thư mục lưu trữ media/upload
+  uploadDir: process.env.UPLOAD_DIR || path.resolve(__dirname, '../../uploads'),
 };

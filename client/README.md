@@ -41,15 +41,34 @@ npm run client:preview
 
 ```
 client/
-├── public/                 # Tài nguyên tĩnh (favicon.svg)
+├── public/                 # Tài nguyên tĩnh (favicon.svg, media assets)
 ├── src/
-│   ├── components/         # Các thành phần giao diện tái sử dụng (Navbar, Footer, Card...)
-│   ├── context/            # Context API (AuthContext quản lý trạng thái đăng nhập)
-│   ├── pages/              # Các trang chính (Home, Directory, Artisans, Regions, Seasonal...)
-│   ├── App.jsx             # Định tuyến Router (react-router-dom)
-│   ├── index.css           # Toàn bộ CSS & Design System chuẩn CraftRoots
-│   └── main.jsx            # Entrypoint của React ứng dụng
-├── index.html              # Template HTML chuẩn SEO
-├── vite.config.js          # Cấu hình Vite Dev Server & Reverse Proxy (/api -> :5000)
-└── package.json            # Quản lý dependencies Frontend
+│   ├── components/         # Linh kiện giao diện tái sử dụng
+│   │   ├── common/         # Breadcrumbs, CraftCardSkeleton, PrivateRoute, Toast...
+│   │   ├── layout/         # Navbar (sticky header, search, favs badge), Footer, Layout
+│   │   └── modals/         # ArtisanDetailPopup, VisitBookingModal, LightboxModal, SearchModal
+│   ├── context/            # Quản lý trạng thái toàn cục (AuthContext, FavouritesContext)
+│   ├── hooks/              # Custom hooks: useDebounce, useLocalStorage, useModal...
+│   ├── pages/              # 9 trang giao diện chính theo Stitch + trang bổ trợ
+│   │   ├── HomePage.jsx             # Trang chủ: kiệt tác CR-BT-2025-08MR, stats động, field note
+│   │   ├── DirectoryPage.jsx        # Danh bạ tác phẩm: facets đa diện, sort giá, phân trang
+│   │   ├── CraftDetailPage.jsx      # Chi tiết tác phẩm: layout 4 cột, specs, 4 quy trình, N-N
+│   │   ├── ArtisansPage.jsx         # Danh bạ nghệ nhân: lưới 3x2, click mở ArtisanDetailPopup
+│   │   ├── ArtisanDetailPage.jsx    # Hồ sơ chuyên sâu: milestones, specs, widget đặt lịch hẹn
+│   │   ├── RegionsPage.jsx          # Bản đồ tương tác 6 vùng di sản SVG, làng nghề, điền dã
+│   │   ├── SeasonalPage.jsx         # BST Mùa Hạ 2026 CR-ARCH-SUMMER-26, curator note, Hero Craft
+│   │   ├── FavouritesPage.jsx       # Yêu thích: hybrid sync, tóm tắt danh mục, xóa hàng loạt
+│   │   ├── ContactPage.jsx          # Liên hệ chuyên đề (thẩm định di sản, đặt lịch), cam kết 24h
+│   │   ├── LoginPage.jsx            # Đăng nhập tài khoản & tự động đồng bộ Favourites
+│   │   ├── RegisterPage.jsx         # Đăng ký tài khoản mới (validate mật khẩu bcrypt)
+│   │   ├── ProfilePage.jsx          # Quản lý hồ sơ cá nhân (cập nhật info, đổi mật khẩu)
+│   │   └── NotFoundPage.jsx         # Trang báo lỗi 404 chuẩn giao diện di sản
+│   ├── services/           # api.js (Axios client tích hợp JWT Bearer & error interceptor)
+│   ├── styles/             # Design Tokens, variables.css, typography, animations
+│   ├── App.jsx             # Định tuyến ứng dụng React Router v6
+│   ├── index.css           # Toàn bộ CSS chuẩn hóa & Design System CraftRoots
+│   └── main.jsx            # Entrypoint khởi tạo React 18 DOM
+├── index.html              # Template HTML chuẩn SEO & nạp phông chữ di sản
+├── vite.config.js          # Cấu hình Vite & Reverse Proxy (/api -> http://localhost:5000)
+└── package.json            # Cấu hình dependencies Frontend
 ```

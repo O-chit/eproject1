@@ -1,37 +1,41 @@
 # CraftRoots – Thiết Kế Cơ Sở Dữ Liệu Chi Tiết (Database Architecture & Data Dictionary)
 
 > **Tài liệu đặc tả chi tiết kiến trúc cơ sở dữ liệu PostgreSQL cho hệ thống CraftRoots.**  
-> Kế thừa định hướng từ [docs/README.md](file:///e:/eproject1/docs/README.md) và tuân thủ các nguyên tắc chuẩn hoá kiến trúc dữ liệu tại [data design/data-design.md](file:///e:/eproject1/data%20design/data-design.md).  
-> **Điểm cải tiến cốt lõi:** Chuyển đổi và chuẩn hóa mối quan hệ giữa **Nghệ nhân (Artisans)** và **Sản phẩm thủ công (Crafts)** từ quan hệ 1-N sang **mối quan hệ Nhiều - Nhiều (N-N)** thông qua bảng trung gian `craft_artisans`.
+> Phiên bản: **v1.1.0** (Nâng cấp toàn diện theo hệ thống thiết kế Stitch UI & 22 bảng CSDL).  
+> Kế thừa định hướng từ [docs/README.md](file:///e:/eproject1/docs/README.md), [docs/DESIGN.md](file:///e:/eproject1/docs/DESIGN.md) và [docs/DECISIONS.md](file:///e:/eproject1/docs/DECISIONS.md).  
+> **Điểm cải tiến cốt lõi:** Chuẩn hóa quan hệ Nhiều - Nhiều `craft_artisans`, bổ sung thực thể Làng nghề `craft_villages`, Niên biểu nghệ nhân `artisan_milestones`, Phiếu hẹn xưởng `visit_bookings`, Bản tin `newsletter_subscribers`, Ký họa điền dã `field_notes` và mở rộng các trường định danh mã SKU, giá, thông số JSONB.
 
 ---
 
 ## Mục lục
 
 1. [Tổng quan & Mục tiêu thiết kế](#1-tổng-quan--mục-tiêu-thiết-kế)
-2. [Sơ đồ quan hệ thực thể (ERD Diagram)](#2-sơ-đồ-quan-hệ-thực-thể-erd-diagram)
+2. [Sơ đồ quan hệ thực thể (ERD Diagram v1.1.0)](#2-sơ-đồ-quan-hệ-thực-thể-erd-diagram)
 3. [Quy chuẩn định danh & Kiểu dữ liệu PostgreSQL](#3-quy-chuẩn-định-danh--kiểu-dữ-liệu-postgresql)
-4. [Từ điển dữ liệu chi tiết (Data Dictionary)](#4-từ-điển-dữ-liệu-chi-tiết-data-dictionary)
+4. [Từ điển dữ liệu chi tiết 22 bảng (Data Dictionary)](#4-từ-điển-dữ-liệu-chi-tiết-data-dictionary)
    - 4.1. [Bảng `users` (Người dùng & Xác thực)](#41-bảng-users-người-dùng--xác-thực)
-   - 4.2. [Bảng `regions` (Vùng miền & Địa danh văn hóa)](#42-bảng-regions-vùng-miền--địa-danh-văn-hóa)
+   - 4.2. [Bảng `regions` (Vùng miền & 6 vùng văn hóa)](#42-bảng-regions-vùng-miền--địa-danh-văn-hóa)
    - 4.3. [Bảng `craft_categories` (Loại hình nghề thủ công)](#43-bảng-craft_categories-loại-hình-nghề-thủ-công)
-   - 4.4. [Bảng `materials` (Chất liệu chế tác)](#44-bảng-materials-chất-liệu-chế-tác)
-   - 4.5. [Bảng `techniques` (Kỹ thuật chế tác)](#45-bảng-techniques-kỹ-thuật-chế-tác)
-   - 4.6. [Bảng `artisans` (Hồ sơ nghệ nhân)](#46-bảng-artisans-hồ-sơ-nghệ-nhân)
-   - 4.7. [Bảng `crafts` (Tác phẩm / Sản phẩm thủ công)](#47-bảng-crafts-tác-phẩm--sản-phẩm-thủ-công)
-   - 4.8. [Bảng `craft_artisans` (Quan hệ N-N: Nghệ nhân ↔ Sản phẩm) ⭐](#48-bảng-craft_artisans-quan-hệ-n-n-nghệ-nhân--sản-phẩm-)
-   - 4.9. [Bảng `craft_materials` (Quan hệ N-N: Sản phẩm ↔ Chất liệu)](#49-bảng-craft_materials-quan-hệ-n-n-sản-phẩm--chất-liệu)
-   - 4.10. [Bảng `craft_techniques` (Quan hệ N-N: Sản phẩm ↔ Kỹ thuật)](#410-bảng-craft_techniques-quan-hệ-n-n-sản-phẩm--kỹ-thuật)
-   - 4.11. [Bảng `craft_images` (Thư viện ảnh chi tiết sản phẩm)](#411-bảng-craft_images-thư-viện-ảnh-chi-tiết-sản-phẩm)
-   - 4.12. [Bảng `collections` (Bộ sưu tập chuyên đề thông thường)](#412-bảng-collections-bộ-sưu-tập-chuyên-đề-thông-thường)
-   - 4.13. [Bảng `collection_crafts` (Quan hệ N-N: Bộ sưu tập ↔ Sản phẩm)](#413-bảng-collection_crafts-quan-hệ-n-n-bộ-sưu-tập--sản-phẩm)
-   - 4.14. [Bảng `seasonal_collections` (Bộ sưu tập theo mùa: Xuân, Hạ, Thu, Đông) ⭐](#414-bảng-seasonal_collections-bộ-sưu-tập-theo-mùa-xuân-hạ-thu-đông-)
-   - 4.15. [Bảng `seasonal_collection_crafts` (Quan hệ N-N: Sản phẩm thuộc Bộ sưu tập mùa) ⭐](#415-bảng-seasonal_collection_crafts-quan-hệ-n-n-sản-phẩm-thuộc-bộ-sưu-tập-mùa-)
-   - 4.16. [Bảng `favourites` (Danh sách yêu thích)](#416-bảng-favourites-danh-sách-yêu-thích)
-   - 4.17. [Bảng `contact_messages` (Tin nhắn liên hệ)](#417-bảng-contact_messages-tin-nhắn-liên-hệ)
+   - 4.4. [Bảng `craft_villages` (Làng nghề truyền thống) ⭐](#44-bảng-craft_villages-làng-nghề-truyền-thống-)
+   - 4.5. [Bảng `materials` (Chất liệu chế tác)](#45-bảng-materials-chất-liệu-chế-tác)
+   - 4.6. [Bảng `techniques` (Kỹ thuật chế tác)](#46-bảng-techniques-kỹ-thuật-chế-tác)
+   - 4.7. [Bảng `artisans` (Hồ sơ nghệ nhân) ⭐](#47-bảng-artisans-hồ-sơ-nghệ-nhân)
+   - 4.8. [Bảng `crafts` (Tác phẩm / Sản phẩm thủ công) ⭐](#48-bảng-crafts-tác-phẩm--sản-phẩm-thủ-công)
+   - 4.9. [Bảng `craft_artisans` (Quan hệ N-N: Nghệ nhân ↔ Sản phẩm) ⭐](#49-bảng-craft_artisans-quan-hệ-n-n-nghệ-nhân--sản-phẩm-)
+   - 4.10. [Bảng `craft_materials` (Quan hệ N-N: Sản phẩm ↔ Chất liệu)](#410-bảng-craft_materials-quan-hệ-n-n-sản-phẩm--chất-liệu)
+   - 4.11. [Bảng `craft_techniques` (Quan hệ N-N: Sản phẩm ↔ Kỹ thuật)](#411-bảng-craft_techniques-quan-hệ-n-n-sản-phẩm--kỹ-thuật)
+   - 4.12. [Bảng `craft_images` (Thư viện ảnh chi tiết sản phẩm)](#412-bảng-craft_images-thư-viện-ảnh-chi-tiết-sản-phẩm)
+   - 4.13. [Bảng `artisan_milestones` (Niên biểu mốc son nghệ nhân) ⭐](#413-bảng-artisan_milestones-niên-biểu-mốc-son-nghệ-nhân-)
+   - 4.14. [Bảng `collections` (Bộ sưu tập chuyên đề thông thường)](#414-bảng-collections-bộ-sưu-tập-chuyên-đề-thông-thường)
+   - 4.15. [Bảng `collection_crafts` (Quan hệ N-N: Bộ sưu tập ↔ Sản phẩm)](#415-bảng-collection_crafts-quan-hệ-n-n-bộ-sưu-tập--sản-phẩm)
+   - 4.16. [Bảng `seasonal_collections` (Bộ sưu tập theo mùa: Xuân, Hạ, Thu, Đông) ⭐](#416-bảng-seasonal_collections-bộ-sưu-tập-theo-mùa-xuân-hạ-thu-đông-)
+   - 4.17. [Bảng `seasonal_collection_crafts` (Quan hệ N-N: Sản phẩm thuộc Bộ sưu tập mùa) ⭐](#417-bảng-seasonal_collection_crafts-quan-hệ-n-n-sản-phẩm-thuộc-bộ-sưu-tập-mùa-)
+   - 4.18. [Bảng `favourites` (Danh sách yêu thích)](#418-bảng-favourites-danh-sách-yêu-thích)
+   - 4.19. [Bảng `contact_messages` (Tin nhắn liên hệ)](#419-bảng-contact_messages-tin-nhắn-liên-hệ)
+   - 4.20. [Bảng `visit_bookings` (Phiếu đăng ký hẹn thăm xưởng) ⭐](#420-bảng-visit_bookings-phiếu-đăng-ký-hẹn-thăm-xưởng-)
+   - 4.21. [Bảng `newsletter_subscribers` (Bản tin di sản) ⭐](#421-bảng-newsletter_subscribers-bản-tin-di-sản-)
+   - 4.22. [Bảng `field_notes` (Ký họa điền dã) ⭐](#422-bảng-field_notes-ký-họa-điền-dã-)
 5. [Phân tích chuyên sâu các mô hình nghiệp vụ đặc thù](#5-phân-tích-chuyên-sâu-các-mô-hình-nghiệp-vụ-đặc-thù)
-   - 5.1. [Mối quan hệ N-N Nghệ nhân – Sản phẩm (`craft_artisans`)](#51-bối-cảnh-thực-tiễn-và-lý-do-chuyển-đổi)
-   - 5.2. [Mô hình Bộ sưu tập theo mùa (`seasonal_collections`) & Case Study Mùa Hè](#52-mô-hình-bộ-sưu-tập-theo-mùa-seasonal_collections--case-study-mùa-hè)
 6. [Mã nguồn DDL PostgreSQL hoàn chỉnh (`schema.sql`)](#6-mã-nguồn-ddl-postgresql-hoàn-chỉnh-schemasql)
 7. [Dữ liệu mẫu kiểm thử (`seed.sql` minh họa N-N & Bộ sưu tập mùa hè)](#7-dữ-liệu-mẫu-kiểm-thử-seedsql-minh-họa-quan-hệ-n-n)
 8. [Chiến lược Đánh chỉ mục (Indexing Strategy) & Hiệu năng](#8-chiến-lược-đánh-chỉ-mục-indexing-strategy--hiệu-năng)
@@ -61,17 +65,25 @@ Cơ sở dữ liệu CraftRoots phục vụ nền tảng số hóa di sản làn
 ```mermaid
 erDiagram
     users ||--o{ favourites : "saves"
+    users ||--o{ visit_bookings : "books"
+    users ||--o{ contact_messages : "sends"
     crafts ||--o{ favourites : "is saved in"
     
+    regions ||--o{ craft_villages : "contains"
     regions ||--o{ crafts : "originates"
     regions ||--o{ artisans : "belongs to"
     
+    craft_categories ||--o{ craft_villages : "specializes"
     craft_categories ||--o{ crafts : "classifies"
     
-    crafts ||--|{ craft_images : "has gallery"
+    craft_villages ||--o{ artisans : "resides in"
+    craft_villages ||--o{ crafts : "produced at"
     
+    crafts ||--|{ craft_images : "has gallery"
     crafts ||--|{ craft_artisans : "crafted by"
     artisans ||--|{ craft_artisans : "participates in"
+    artisans ||--o{ artisan_milestones : "achieves"
+    artisans ||--o{ visit_bookings : "hosts"
     
     crafts ||--|{ craft_materials : "composed of"
     materials ||--|{ craft_materials : "used in"
@@ -87,13 +99,63 @@ erDiagram
     
     contact_messages {
         int id PK
+        int user_id FK
         string full_name
         string email
         string phone
+        string topic
         string subject
         text message
         string status
         timestamptz created_at
+    }
+
+    visit_bookings {
+        int id PK
+        int artisan_id FK
+        int user_id FK
+        string full_name
+        string phone
+        date visit_date
+        string time_slot
+        string purpose
+        string status
+        timestamptz created_at
+    }
+
+    newsletter_subscribers {
+        int id PK
+        string email UK
+        timestamptz created_at
+    }
+
+    field_notes {
+        int id PK
+        string title
+        text body
+        string coordinates
+        jsonb metrics
+        boolean is_published
+        timestamptz created_at
+    }
+
+    artisan_milestones {
+        int id PK
+        int artisan_id FK
+        string year
+        text event
+        int sort_order
+    }
+
+    craft_villages {
+        int id PK
+        int region_id FK
+        int category_id FK
+        string name
+        string slug UK
+        string district
+        string province
+        string century_label
     }
 
     users {
@@ -112,8 +174,12 @@ erDiagram
         int id PK
         string name UK
         string code UK
+        string map_key
         text description
         string image_url
+        int registered_village_count
+        int national_heritage_count
+        boolean is_verified
         timestamptz created_at
     }
 
@@ -140,13 +206,19 @@ erDiagram
     artisans {
         int id PK
         string name
+        string slug UK
+        string code UK
         int region_id FK
+        int village_id FK
         string title
-        string specialty
+        int age
+        int generation
         int years_of_experience
+        text quote
         text biography
-        string avatar_url
-        string contact_info
+        jsonb technique_specs
+        int visit_max_guests
+        int visit_lead_time_hours
         timestamptz created_at
     }
 
@@ -154,18 +226,19 @@ erDiagram
         int id PK
         string name
         string slug UK
+        string code UK
         int region_id FK
         int category_id FK
-        string thumbnail_url
-        text short_description
-        text cultural_context
-        text tools
-        text process
-        text traditional_use
+        int village_id FK
+        bigint price_vnd
+        string tag
+        string origin_line
+        string dimensions
+        jsonb specs
+        jsonb process_stages
+        boolean is_spotlight
         boolean is_featured
-        int view_count
         timestamptz created_at
-        timestamptz updated_at
     }
 
     craft_artisans {
@@ -175,7 +248,6 @@ erDiagram
         text contribution_notes
         boolean is_lead
         int display_order
-        timestamptz created_at
     }
 
     craft_materials {
@@ -221,7 +293,10 @@ erDiagram
         string slug UK
         string season_code
         int year
-        text theme_concept
+        text philosophy_quote
+        string archive_code
+        jsonb metrics
+        jsonb process_steps
         string banner_url
         string color_tone
         date start_date
@@ -272,16 +347,16 @@ Tuân thủ nghiêm ngặt theo **Database Architecture Standard**:
 ## 4. Từ điển dữ liệu chi tiết (Data Dictionary)
 
 ### 4.1. Bảng `users` (Người dùng & Xác thực)
-Lưu trữ thông tin định danh và tài khoản người dùng đã đăng ký.
+Lưu trữ thông tin định danh và tài khoản người dùng đã đăng ký, hỗ trợ xác thực JWT và phân quyền RBAC (`user`, `editor`, `admin`).
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
-| `id` | `SERIAL` | **PK** | Tự tăng | Mã định danh người dùng |
+| `id` | `SERIAL` | **PK** | Tự tăng | Mã định danh duy nhất của người dùng |
 | `full_name` | `VARCHAR(100)` | NOT NULL | | Họ và tên hiển thị |
-| `email` | `VARCHAR(255)` | NOT NULL, **UNIQUE** | | Địa chỉ email dùng để đăng nhập |
+| `email` | `VARCHAR(255)` | NOT NULL, **UNIQUE** | | Địa chỉ email đăng nhập (chuẩn hóa chữ thường) |
 | `password_hash` | `VARCHAR(255)` | NOT NULL | | Mật khẩu đã băm bằng thuật toán bcrypt |
-| `role` | `VARCHAR(20)` | NOT NULL, CHECK | `'user'` | Phân quyền: `'user'`, `'admin'`, `'editor'` |
-| `avatar_url` | `TEXT` | NULL | NULL | Đường dẫn ảnh đại diện người dùng |
+| `role` | `VARCHAR(20)` | NOT NULL, CHECK (`role IN ('user', 'admin', 'editor')`) | `'user'` | Vai trò người dùng trong hệ thống |
+| `avatar_url` | `TEXT` | NULL | NULL | Đường dẫn URL ảnh đại diện |
 | `is_active` | `BOOLEAN` | NOT NULL | `TRUE` | Trạng thái tài khoản (khoá/mở) |
 | `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm tạo tài khoản |
 | `updated_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm cập nhật hồ sơ gần nhất |
@@ -293,292 +368,389 @@ Lưu trữ thông tin định danh và tài khoản người dùng đã đăng k
 
 ---
 
-### 4.2. Bảng `regions` (Vùng miền & Địa danh văn hóa)
-Danh mục các vùng miền, tiểu vùng văn hóa hoặc tỉnh thành gắn liền với nghề truyền thống.
+### 4.2. Bảng `regions` (Vùng miền & 6 vùng văn hóa di sản)
+Danh mục 6 vùng văn hóa truyền thống kết nối với bản đồ SVG tương tác (`regions.html` / Stitch).
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã định danh vùng miền |
-| `name` | `VARCHAR(100)` | NOT NULL, **UNIQUE** | | Tên vùng (Ví dụ: *Đồng bằng Bắc Bộ, Tây Nguyên*) |
-| `code` | `VARCHAR(50)` | NOT NULL, **UNIQUE** | | Mã định danh/slug (Ví dụ: `bac-bo`, `tay-nguyen`) |
-| `description` | `TEXT` | NULL | NULL | Giới thiệu đặc trưng văn hóa và lịch sử làng nghề |
-| `image_url` | `TEXT` | NULL | NULL | Ảnh bản đồ tĩnh minh họa vùng miền |
-| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Ngày khởi tạo |
+| `name` | `VARCHAR(100)` | NOT NULL, **UNIQUE** | | Tên vùng văn hóa (Ví dụ: *Đồng bằng sông Hồng, Tây Bắc, Bắc Trung Bộ...*) |
+| `code` | `VARCHAR(50)` | NOT NULL, **UNIQUE** | | Mã slug định danh (Ví dụ: `dong-bang-bac-bo`, `tay-bac`) |
+| `map_key` | `VARCHAR(50)` | NULL | NULL | Mã liên kết SVG path trên bản đồ (`north`, `central`, `south`, v.v.) |
+| `description` | `TEXT` | NULL | NULL | Khái quát bối cảnh văn hóa và lịch sử làng nghề của vùng |
+| `craft_summary` | `TEXT` | NULL | NULL | Tóm tắt các dòng nghề tiêu biểu trong vùng |
+| `image_url` | `TEXT` | NULL | NULL | Ảnh toàn cảnh đặc trưng vùng miền |
+| `is_verified` | `BOOLEAN` | NOT NULL | `TRUE` | Trạng thái bảo chứng di sản văn hóa vùng |
+| `registered_village_count` | `INT` | NOT NULL | `0` | Số lượng làng nghề đã được lập hồ sơ số hóa |
+| `national_heritage_count` | `INT` | NOT NULL | `0` | Số lượng di sản văn hóa phi vật thể quốc gia được công nhận |
+| `sort_order` | `INT` | NOT NULL | `0` | Thứ tự trình bày trên bản đồ từ Bắc vào Nam |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm khởi tạo bản ghi |
+
+* **Chỉ mục:**
+  - `pk_regions`: PRIMARY KEY (`id`)
+  - `uk_regions_name`: UNIQUE (`name`)
+  - `uk_regions_code`: UNIQUE (`code`)
 
 ---
 
 ### 4.3. Bảng `craft_categories` (Loại hình nghề thủ công)
-Phân loại các dòng sản phẩm thủ công (Gốm sứ, Dệt may thổ cẩm, Mây tre đan, Điêu khắc gỗ, Đúc đồng kim hoàn...).
+Phân loại các dòng sản phẩm thủ công (Gốm sứ, Dệt may & Thổ cẩm, Mây tre đan, Điêu khắc gỗ, Đúc đồng & Kim hoàn...).
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã danh mục nghề |
-| `name` | `VARCHAR(100)` | NOT NULL, **UNIQUE** | | Tên phân loại (Ví dụ: *Gốm sứ, Thổ cẩm*) |
-| `slug` | `VARCHAR(100)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh thân thiện SEO |
-| `description` | `TEXT` | NULL | NULL | Mô tả khái quát về loại hình |
-| `icon_url` | `TEXT` | NULL | NULL | Biểu tượng icon hiển thị trên menu/bộ lọc |
+| `name` | `VARCHAR(100)` | NOT NULL, **UNIQUE** | | Tên phân loại (Ví dụ: *Gốm sứ truyền thống, Dệt lụa & Thổ cẩm*) |
+| `slug` | `VARCHAR(100)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh phục vụ URL và lọc phân loại |
+| `description` | `TEXT` | NULL | NULL | Giới thiệu đặc trưng loại hình nghề |
+| `icon_url` | `TEXT` | NULL | NULL | Đường dẫn biểu tượng danh mục (icon vector) |
 
 ---
 
-### 4.4. Bảng `materials` (Chất liệu chế tác)
-Tập danh mục nguyên vật liệu tự nhiên hoặc truyền thống (Đất sét Bát Tràng, Sợi gai, Tre gai, Đồng đỏ, Vỏ sò...).
+### 4.4. Bảng `craft_villages` (Làng nghề truyền thống) ⭐
+Lưu trữ thông tin các làng nghề cổ truyền Việt Nam, phân định theo huyện/tỉnh, niên đại và loại hình chuyên môn.
+
+| Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `SERIAL` | **PK** | Tự tăng | Mã định danh làng nghề |
+| `region_id` | `INT` | **FK** trỏ `regions(id)` | NULL | Vùng văn hóa trực thuộc (ON DELETE SET NULL) |
+| `category_id` | `INT` | **FK** trỏ `craft_categories(id)` | NULL | Dòng nghề chủ đạo của làng (ON DELETE SET NULL) |
+| `name` | `VARCHAR(150)` | NOT NULL | | Tên làng nghề (Ví dụ: *Làng Gốm Bát Tràng, Làng Lụa Vạn Phúc*) |
+| `slug` | `VARCHAR(180)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh thân thiện SEO |
+| `district` | `VARCHAR(100)` | NULL | NULL | Quận / Huyện / Thị xã |
+| `province` | `VARCHAR(100)` | NULL | NULL | Tỉnh / Thành phố trực thuộc trung ương |
+| `century_label` | `VARCHAR(100)` | NULL | NULL | Niên đại hình thành (Ví dụ: *Thế kỷ XIV, Hơn 500 năm tuổi*) |
+| `summary` | `TEXT` | NULL | NULL | Tóm tắt lịch sử và danh xưng làng nghề |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm tạo bản ghi |
+
+* **Chỉ mục:**
+  - `idx_craft_villages_region`: INDEX (`region_id`)
+  - `idx_craft_villages_category`: INDEX (`category_id`)
+
+---
+
+### 4.5. Bảng `materials` (Chất liệu chế tác)
+Danh mục nguyên vật liệu tự nhiên truyền thống (Đất sét Bát Tràng, Tro trấu men lam, Sợi tơ tằm, Tre gai, Đồng đỏ...).
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã chất liệu |
 | `name` | `VARCHAR(100)` | NOT NULL, **UNIQUE** | | Tên chất liệu |
-| `description` | `TEXT` | NULL | NULL | Đặc tính tự nhiên và nguồn gốc vật liệu |
+| `description` | `TEXT` | NULL | NULL | Đặc tính vật lý và xuất xứ tự nhiên |
 
 ---
 
-### 4.5. Bảng `techniques` (Kỹ thuật chế tác)
-Tập danh mục các phương pháp, kỹ thuật thủ công đặc thù (Vuốt tay bàn xoay, Nung củi men lam, Dệt dệt hoa văn cài chỉ, Cẩn xà cừ, Chạm đồng nổi...).
+### 4.6. Bảng `techniques` (Kỹ thuật chế tác)
+Danh mục các phương pháp, kỹ nghệ thủ công bí truyền (Vuốt tay bàn xoay, Nung củi men lam cổ, Dệt hoa văn cài chỉ, Cẩn xà cừ, Đúc đồng khuôn sáp...).
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã kỹ thuật chế tác |
 | `name` | `VARCHAR(100)` | NOT NULL, **UNIQUE** | | Tên kỹ thuật |
-| `description` | `TEXT` | NULL | NULL | Quy trình và độ khó của kỹ thuật |
+| `description` | `TEXT` | NULL | NULL | Quy trình kỹ thuật và cấp độ phức tạp |
 
 ---
 
-### 4.6. Bảng `artisans` (Hồ sơ nghệ nhân)
-Lưu trữ hồ sơ các bậc thầy, nghệ nhân dân gian nắm giữ bí quyết chế tác.
+### 4.7. Bảng `artisans` (Hồ sơ nghệ nhân & Bậc thầy chế tác) ⭐
+Lưu trữ hồ sơ các bậc thầy, nghệ nhân dân gian, thông số tiếp đón thăm xưởng và các đặc tả kỹ pháp.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã định danh nghệ nhân |
-| `name` | `VARCHAR(100)` | NOT NULL | | Họ tên nghệ nhân |
-| `region_id` | `INT` | **FK** trỏ `regions(id)` | NULL | Vùng quê hương / làng nghề gắn bó |
-| `title` | `VARCHAR(100)` | NULL | NULL | Danh hiệu (Nghệ nhân Nhân dân, Nghệ nhân Ưu tú) |
-| `specialty` | `VARCHAR(150)` | NULL | NULL | Lĩnh vực chuyên môn sở trường |
-| `years_of_experience`| `INT` | CHECK (>= 0) | NULL | Số năm tuổi nghề |
-| `biography` | `TEXT` | NULL | NULL | Tiểu sử cuộc đời và sự nghiệp cống hiến |
+| `name` | `VARCHAR(100)` | NOT NULL | | Họ và tên nghệ nhân |
+| `slug` | `VARCHAR(150)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh hồ sơ nghệ nhân |
+| `code` | `VARCHAR(50)` | NULL, **UNIQUE** | | Mã định danh di sản (Ví dụ: `ART-BT-001`) |
+| `region_id` | `INT` | **FK** trỏ `regions(id)` | NULL | Vùng địa lý xưởng chế tác (ON DELETE SET NULL) |
+| `village_id` | `INT` | **FK** trỏ `craft_villages(id)`| NULL | Làng nghề gắn bó (ON DELETE SET NULL) |
+| `title` | `VARCHAR(100)` | NULL | NULL | Danh hiệu nhà nước (Nghệ nhân Ưu tú, Nghệ nhân Nhân dân) |
+| `specialty` | `VARCHAR(150)` | NULL | NULL | Lĩnh vực sở trường (Gốm men lam, Điêu khắc...) |
+| `years_of_experience`| `INT` | CHECK (>= 0) | NULL | Số năm tuổi nghề gắn bó |
+| `generation` | `INT` | NULL | NULL | Thế hệ truyền thừa trong dòng họ (Ví dụ: `5` cho Đời thứ 5) |
+| `age` | `INT` | NULL | NULL | Tuổi đời nghệ nhân |
+| `quote` | `TEXT` | NULL | NULL | Câu châm ngôn nghệ thuật / triết lý nghề nghiệp |
+| `biography` | `TEXT` | NULL | NULL | Tiểu sử cuộc đời và cống hiến cho di sản |
 | `avatar_url` | `TEXT` | NULL | NULL | Ảnh chân dung nghệ nhân |
-| `contact_info` | `VARCHAR(255)` | NULL | NULL | Thông tin liên hệ (xưởng sản xuất / địa chỉ) |
-| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời gian tạo hồ sơ |
+| `contact_info` | `VARCHAR(255)` | NULL | NULL | Địa chỉ liên lạc xưởng chế tác |
+| `technique_specs` | `JSONB` | NULL | NULL | Bảng thông số kỹ thuật dạng cấu trúc (`[{key, value, note}]`) |
+| `visit_max_guests`| `INT` | NOT NULL | `6` | Số lượng khách tối đa cho 1 lượt tiếp đón |
+| `visit_lead_time_hours`| `INT` | NOT NULL | `48` | Thời gian đặt hẹn trước tối thiểu (giờ) |
+| `visit_open_days` | `VARCHAR(50)` | NOT NULL | `'Tue-Sun'` | Các ngày mở cửa tiếp khách trong tuần |
+| `is_featured` | `BOOLEAN` | NOT NULL | `FALSE` | Hiển thị nổi bật tại trang chủ / danh bạ |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm tạo hồ sơ |
 
-* **Ràng buộc:** `fk_artisans_region`: FOREIGN KEY (`region_id`) REFERENCES `regions(id)` ON DELETE SET NULL.
-* **Chỉ mục:** `idx_artisans_region`: INDEX (`region_id`).
+* **Chỉ mục:**
+  - `idx_artisans_region`: INDEX (`region_id`)
+  - `idx_artisans_village`: INDEX (`village_id`)
+  - `idx_artisans_code`: UNIQUE (`code`)
 
 ---
 
-### 4.7. Bảng `crafts` (Tác phẩm / Sản phẩm thủ công)
-Thực thể trung tâm của cổng thông tin CraftRoots.  
-*(Lưu ý: Trường `artisan_id` đơn lẻ trước đây đã được bãi bỏ để hỗ trợ quan hệ N-N thông qua bảng `craft_artisans`).*
+### 4.8. Bảng `crafts` (Tác phẩm / Sản phẩm thủ công) ⭐
+Thực thể trung tâm số hóa tác phẩm thủ công, hỗ trợ gắn mã định danh REF, đơn giá tham chiếu, kích thước và quy trình chế tác nhiều bước.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
-| `id` | `SERIAL` | **PK** | Tự tăng | Mã sản phẩm |
-| `name` | `VARCHAR(150)` | NOT NULL | | Tên tác phẩm / sản phẩm |
-| `slug` | `VARCHAR(180)` | NOT NULL, **UNIQUE** | | Slug cho URL chi tiết |
-| `region_id` | `INT` | **FK** trỏ `regions(id)` | | Vùng miền xuất xứ của tác phẩm |
-| `category_id` | `INT` | **FK** trỏ `craft_categories(id)`| | Loại hình nghề thủ công |
-| `thumbnail_url` | `TEXT` | NULL | NULL | Ảnh đại diện chính hiển thị trên card |
-| `short_description`| `VARCHAR(500)`| NULL | NULL | Đoạn tóm tắt ngắn phục vụ SEO/preview |
-| `cultural_context` | `TEXT` | NULL | NULL | Bối cảnh văn hóa, nguồn gốc lịch sử |
-| `tools` | `TEXT` | NULL | NULL | Dụng cụ cần thiết để chế tác |
-| `process` | `TEXT` | NULL | NULL | Các công đoạn chế tác công phu |
-| `traditional_use` | `TEXT` | NULL | NULL | Ý nghĩa phong tục, công dụng trong đời sống |
-| `is_featured` | `BOOLEAN` | NOT NULL | `FALSE` | Cờ ghim sản phẩm tiêu biểu lên trang chủ |
-| `view_count` | `INT` | NOT NULL | `0` | Số lượt xem để sắp xếp phổ biến |
+| `id` | `SERIAL` | **PK** | Tự tăng | Mã định danh sản phẩm |
+| `name` | `VARCHAR(150)` | NOT NULL | | Tên tác phẩm thủ công |
+| `slug` | `VARCHAR(180)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh thân thiện SEO |
+| `code` | `VARCHAR(50)` | NULL, **UNIQUE** | | Mã lưu trữ định danh tác phẩm (Ví dụ: `CR-BT-2025-08MR`) |
+| `region_id` | `INT` | **FK** trỏ `regions(id)` | | Vùng miền xuất xứ tác phẩm (ON DELETE RESTRICT) |
+| `category_id` | `INT` | **FK** trỏ `craft_categories(id)`| | Loại hình nghề thủ công (ON DELETE RESTRICT) |
+| `village_id` | `INT` | **FK** trỏ `craft_villages(id)` | NULL | Làng nghề nơi tác phẩm ra đời (ON DELETE SET NULL) |
+| `thumbnail_url` | `TEXT` | NULL | NULL | Ảnh đại diện chính hiển thị trên card lưới |
+| `short_description`| `VARCHAR(500)`| NULL | NULL | Đoạn tóm tắt giới thiệu phục vụ SEO và card |
+| `cultural_context` | `TEXT` | NULL | NULL | Bối cảnh văn hóa, ý nghĩa phong tục, huyền tích |
+| `tools` | `TEXT` | NULL | NULL | Dụng cụ truyền thống chế tác tác phẩm |
+| `process` | `TEXT` | NULL | NULL | Tóm tắt các công đoạn gia công |
+| `traditional_use` | `TEXT` | NULL | NULL | Ứng dụng trong đời sống truyền thống |
+| `price_vnd` | `BIGINT` | NULL | NULL | Giá tham chiếu / thẩm định tác phẩm (VND) |
+| `tag` | `VARCHAR(50)` | NULL | NULL | Thẻ nhãn định vị (`Độc bản`, `Di sản`, `Cổ phục`, `Tuyển chọn`) |
+| `origin_line` | `VARCHAR(200)` | NULL | NULL | Dòng xuất xứ thu gọn hiển thị trên card |
+| `dimensions` | `VARCHAR(100)` | NULL | NULL | Kích thước hiện vật (Ví dụ: `Cao 42cm • Đường kính 28cm`) |
+| `specs` | `JSONB` | NULL | NULL | Thông số kỹ thuật chi tiết dạng cấu trúc JSON |
+| `process_stages` | `JSONB` | NULL | NULL | Danh sách các công đoạn chế tác kèm ảnh và chú giải |
+| `is_spotlight` | `BOOLEAN` | NOT NULL | `FALSE` | Cờ tác phẩm tâm điểm (Spotlight Hero) |
+| `is_featured` | `BOOLEAN` | NOT NULL | `FALSE` | Cờ sản phẩm tiêu biểu trên trang chủ |
+| `view_count` | `INT` | NOT NULL | `0` | Lượt xem tích lũy phục vụ sắp xếp phổ biến |
 | `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Ngày tạo |
 | `updated_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Ngày cập nhật |
 
-* **Ràng buộc:**
-  - `fk_crafts_region`: FOREIGN KEY (`region_id`) REFERENCES `regions(id)` ON DELETE RESTRICT
-  - `fk_crafts_category`: FOREIGN KEY (`category_id`) REFERENCES `craft_categories(id)` ON DELETE RESTRICT
 * **Chỉ mục:**
   - `idx_crafts_region`: INDEX (`region_id`)
   - `idx_crafts_category`: INDEX (`category_id`)
+  - `idx_crafts_village`: INDEX (`village_id`)
+  - `idx_crafts_price`: INDEX (`price_vnd`)
   - `idx_crafts_featured`: INDEX (`is_featured`) WHERE `is_featured = TRUE`
-  - `idx_crafts_search_gin`: GIN INDEX trên `to_tsvector('simple', name || ' ' || COALESCE(cultural_context, ''))`
+  - `idx_crafts_fts`: GIN INDEX trên `to_tsvector('simple', ...)`
 
 ---
 
-### 4.8. Bảng `craft_artisans` (Quan hệ N-N: Nghệ nhân ↔ Sản phẩm) ⭐
-> **Bảng trọng tâm đáp ứng yêu cầu người dùng:** Biểu diễn mối quan hệ Nhiều - Nhiều giữa Nghệ nhân và Sản phẩm:  
-> - **1 Nghệ nhân sáng tạo / chế tác nhiều Sản phẩm**  
-> - **1 Sản phẩm được tạo tác / hợp tác bởi nhiều Nghệ nhân** (ví dụ: Nghệ nhân chính, Nghệ nhân phối men, Nghệ nhân điêu khắc hoa văn)
+### 4.9. Bảng `craft_artisans` (Quan hệ N-N: Nghệ nhân ↔ Sản phẩm) ⭐
+Quản lý quan hệ Nhiều - Nhiều giữa Nghệ nhân và Tác phẩm, cho phép ghi nhận nghệ nhân chủ trì (`is_lead`), vai trò phụ trách (`role_title`) và ghi chú đóng góp (`contribution_notes`).
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
-| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm thủ công |
-| `artisan_id` | `INT` | **PK**, **FK** trỏ `artisans(id)` | | Mã nghệ nhân tham gia chế tác |
-| `role_title` | `VARCHAR(100)` | NULL | `'Chủ trì chế tác'` | Vai trò cụ thể: *Nghệ nhân tạo dáng, Nghệ nhân phối men, Chạm hoa văn, Nghệ nhân truyền nghề* |
-| `contribution_notes`| `TEXT` | NULL | NULL | Ghi chú đóng góp chi tiết của nghệ nhân vào tác phẩm |
-| `is_lead` | `BOOLEAN` | NOT NULL | `FALSE` | Đánh dấu nghệ nhân chính/đại diện để hiển thị ưu tiên |
-| `display_order` | `INT` | NOT NULL | `1` | Thứ tự hiển thị trong danh sách người tạo tác |
-| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm gán liên kết |
+| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã tác phẩm thủ công (ON DELETE CASCADE) |
+| `artisan_id` | `INT` | **PK**, **FK** trỏ `artisans(id)` | | Mã nghệ nhân tham gia chế tác (ON DELETE CASCADE) |
+| `role_title` | `VARCHAR(100)` | NULL | `'Chủ trì chế tác'` | Vai trò: *Chủ trì tạo dáng, Nghệ nhân vẽ men, Cẩn xà cừ...* |
+| `contribution_notes`| `TEXT` | NULL | NULL | Ghi chú đóng góp tâm huyết vào tác phẩm |
+| `is_lead` | `BOOLEAN` | NOT NULL | `FALSE` | Đánh dấu nghệ nhân chính/đại diện của tác phẩm |
+| `display_order` | `INT` | NOT NULL | `1` | Thứ tự hiển thị trong danh sách người đồng tác |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm tạo liên kết |
 
 * **Khóa chính hợp thành (Composite PK):** `PRIMARY KEY (craft_id, artisan_id)`
-* **Ràng buộc khóa ngoại:**
-  - `fk_craft_artisans_craft`: FOREIGN KEY (`craft_id`) REFERENCES `crafts(id)` **ON DELETE CASCADE**
-  - `fk_craft_artisans_artisan`: FOREIGN KEY (`artisan_id`) REFERENCES `artisans(id)` **ON DELETE CASCADE**
-* **Chỉ mục:**
-  - `idx_craft_artisans_artisan_id`: INDEX (`artisan_id`) — Tối ưu cực đại khi truy vấn: *"Tìm tất cả tác phẩm do Nghệ nhân X làm ra"*.
+* **Chỉ mục:** `idx_craft_artisans_artisan`: INDEX (`artisan_id`)
 
 ---
 
-### 4.9. Bảng `craft_materials` (Quan hệ N-N: Sản phẩm ↔ Chất liệu)
-Biểu diễn việc 1 sản phẩm có thể kết hợp nhiều chất liệu (gỗ, đồng, xà cừ), và 1 chất liệu được dùng trong nhiều sản phẩm.
+### 4.10. Bảng `craft_materials` (Quan hệ N-N: Sản phẩm ↔ Chất liệu)
+Biểu diễn việc 1 sản phẩm kết hợp nhiều chất liệu, và 1 chất liệu cấu thành nhiều sản phẩm.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
-| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm |
-| `material_id` | `INT` | **PK**, **FK** trỏ `materials(id)`| | Mã chất liệu |
+| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm (ON DELETE CASCADE) |
+| `material_id` | `INT` | **PK**, **FK** trỏ `materials(id)`| | Mã chất liệu (ON DELETE CASCADE) |
 
 * **Khóa chính:** `PRIMARY KEY (craft_id, material_id)`
-* **Ràng buộc khóa ngoại:**
-  - `fk_craft_materials_craft`: FOREIGN KEY (`craft_id`) REFERENCES `crafts(id)` ON DELETE CASCADE
-  - `fk_craft_materials_mat`: FOREIGN KEY (`material_id`) REFERENCES `materials(id)` ON DELETE CASCADE
-* **Chỉ mục:** `idx_craft_materials_material_id`: INDEX (`material_id`)
 
 ---
 
-### 4.10. Bảng `craft_techniques` (Quan hệ N-N: Sản phẩm ↔ Kỹ thuật)
-Biểu diễn việc 1 sản phẩm trải qua nhiều kỹ thuật gia công, và 1 kỹ thuật được ứng dụng cho nhiều sản phẩm.
+### 4.11. Bảng `craft_techniques` (Quan hệ N-N: Sản phẩm ↔ Kỹ thuật)
+Biểu diễn việc 1 sản phẩm hội tụ nhiều kỹ thuật chế tác công phu.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
-| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm |
-| `technique_id`| `INT` | **PK**, **FK** trỏ `techniques(id)`| | Mã kỹ thuật |
+| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm (ON DELETE CASCADE) |
+| `technique_id`| `INT` | **PK**, **FK** trỏ `techniques(id)`| | Mã kỹ thuật chế tác (ON DELETE CASCADE) |
 
 * **Khóa chính:** `PRIMARY KEY (craft_id, technique_id)`
-* **Ràng buộc khóa ngoại:**
-  - `fk_craft_techniques_craft`: FOREIGN KEY (`craft_id`) REFERENCES `crafts(id)` ON DELETE CASCADE
-  - `fk_craft_techniques_tech`: FOREIGN KEY (`technique_id`) REFERENCES `techniques(id)` ON DELETE CASCADE
-* **Chỉ mục:** `idx_craft_techniques_technique_id`: INDEX (`technique_id`)
 
 ---
 
-### 4.11. Bảng `craft_images` (Thư viện ảnh chi tiết sản phẩm)
-Hỗ trợ chức năng Gallery và Lightbox phóng to ảnh, góc nhìn cận cảnh độ tinh xảo của sản phẩm.
+### 4.12. Bảng `craft_images` (Thư viện ảnh chi tiết sản phẩm)
+Phục vụ chức năng thư viện ảnh chi tiết và Lightbox tương tác với hình ảnh độ phân giải cao.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã ảnh |
-| `craft_id` | `INT` | **FK** trỏ `crafts(id)` | | Mã sản phẩm chứa ảnh |
-| `url` | `TEXT` | NOT NULL | | Đường dẫn URL hình ảnh độ phân giải cao |
-| `alt_text` | `VARCHAR(255)` | NOT NULL | | Văn bản thay thế hỗ trợ SEO & Accessibility |
-| `caption` | `VARCHAR(255)` | NULL | NULL | Chú thích chi tiết dưới ảnh |
-| `display_order`| `INT` | NOT NULL | `0` | Thứ tự trình chiếu trong Lightbox |
+| `craft_id` | `INT` | **FK** trỏ `crafts(id)` | | Sản phẩm liên quan (ON DELETE CASCADE) |
+| `url` | `TEXT` | NOT NULL | | URL hình ảnh góc máy chi tiết |
+| `alt_text` | `VARCHAR(255)` | NOT NULL | | Mô tả thay thế hỗ trợ SEO & Accessibility |
+| `caption` | `VARCHAR(255)` | NULL | NULL | Chú giải kỹ thuật hoặc góc chụp |
+| `display_order`| `INT` | NOT NULL | `0` | Thứ tự trình chiếu trong thư viện |
 | `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm tải lên |
-
-* **Ràng buộc:** `fk_craft_images_craft`: FOREIGN KEY (`craft_id`) REFERENCES `crafts(id)` ON DELETE CASCADE
-* **Chỉ mục:** `idx_craft_images_craft_order`: INDEX (`craft_id`, `display_order`)
 
 ---
 
-### 4.12. Bảng `collections` (Bộ sưu tập chuyên đề thông thường)
-Quản lý các bộ sưu tập tuyển chọn thông thường (Ví dụ: *Sắc gốm nghìn năm, Nghệ thuật Dệt Thổ Cẩm Tây Bắc, Độc bản Làng nghề*).
+### 4.13. Bảng `artisan_milestones` (Niên biểu mốc son nghệ nhân) ⭐
+Lưu trữ các cột mốc son sự nghiệp của nghệ nhân (năm đạt danh hiệu, năm phục chế thành công cổ vật, giải thưởng quốc tế).
+
+| Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `SERIAL` | **PK** | Tự tăng | Mã mốc sự kiện |
+| `artisan_id` | `INT` | **FK** trỏ `artisans(id)` | | Nghệ nhân chủ thể (ON DELETE CASCADE) |
+| `year` | `VARCHAR(20)` | NOT NULL | | Năm hoặc khoảng thời gian (Ví dụ: `1985`, `2004 - 2008`) |
+| `event` | `TEXT` | NOT NULL | | Nội dung mốc son sự nghiệp |
+| `sort_order` | `INT` | NOT NULL | `0` | Thứ tự sắp xếp niên biểu theo dòng thời gian |
+
+* **Chỉ mục:** `idx_artisan_milestones_artisan`: INDEX (`artisan_id`, `sort_order`)
+
+---
+
+### 4.14. Bảng `collections` (Bộ sưu tập chuyên đề thông thường)
+Quản lý các bộ sưu tập tuyển chọn thông thường (*Sắc gốm nghìn năm, Nghệ thuật Dệt Thổ Cẩm Tây Bắc*).
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã bộ sưu tập |
-| `title` | `VARCHAR(150)` | NOT NULL | | Tên chủ đề bộ sưu tập |
-| `slug` | `VARCHAR(180)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh |
-| `description` | `TEXT` | NULL | NULL | Bài viết dẫn dắt giới thiệu bộ sưu tập |
+| `title` | `VARCHAR(150)` | NOT NULL | | Tiêu đề bộ sưu tập |
+| `slug` | `VARCHAR(180)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh thân thiện SEO |
+| `description` | `TEXT` | NULL | NULL | Bài viết giới thiệu chủ đề |
 | `banner_url` | `TEXT` | NULL | NULL | Ảnh bìa banner lớn |
-| `is_featured` | `BOOLEAN` | NOT NULL | `FALSE` | Hiển thị nổi bật tại trang chủ |
-| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm tạo |
+| `season` | `VARCHAR(50)` | NULL | NULL | Ghi chú mùa (nếu có) |
+| `is_featured` | `BOOLEAN` | NOT NULL | `FALSE` | Cờ hiển thị nổi bật |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm khởi tạo |
 
 ---
 
-### 4.13. Bảng `collection_crafts` (Quan hệ N-N: Bộ sưu tập ↔ Sản phẩm)
-Một bộ sưu tập gom nhiều sản phẩm; một sản phẩm có thể thuộc nhiều bộ sưu tập khác nhau.
+### 4.15. Bảng `collection_crafts` (Quan hệ N-N: Bộ sưu tập ↔ Sản phẩm)
+Liên kết các sản phẩm nằm trong bộ sưu tập chuyên đề thông thường.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
-| `collection_id`| `INT` | **PK**, **FK** trỏ `collections(id)`| | Mã bộ sưu tập |
-| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm |
+| `collection_id`| `INT` | **PK**, **FK** trỏ `collections(id)`| | Mã bộ sưu tập (ON DELETE CASCADE) |
+| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm (ON DELETE CASCADE) |
 | `display_order`| `INT` | NOT NULL | `0` | Vị trí sắp xếp trong bộ sưu tập |
 
 * **Khóa chính:** `PRIMARY KEY (collection_id, craft_id)`
-* **Ràng buộc:**
-  - `fk_coll_crafts_coll`: FOREIGN KEY (`collection_id`) REFERENCES `collections(id)` ON DELETE CASCADE
-  - `fk_coll_crafts_craft`: FOREIGN KEY (`craft_id`) REFERENCES `crafts(id)` ON DELETE CASCADE
 
 ---
 
-### 4.14. Bảng `seasonal_collections` (Bộ sưu tập theo mùa: Xuân, Hạ, Thu, Đông) ⭐
-Quản lý các chiến dịch bộ sưu tập gắn chặt với 4 mùa trong năm và các dịp thời tiết/lễ hội đặc thù (Ví dụ: *Bộ sưu tập Mùa Hè: Gió Biển & Mây Tre Đan*, *Sắc Lam Mát Lạnh Ngày Hè*, *Bộ sưu tập Thu Quyến Rũ*). Bảng này hỗ trợ chu kỳ thời gian kích hoạt tự động theo mùa (`start_date`, `end_date`), tông màu giao diện chủ đạo (`color_tone`), và định danh mùa cụ thể (`season_code`).
+### 4.16. Bảng `seasonal_collections` (Bộ sưu tập theo mùa: Xuân, Hạ, Thu, Đông) ⭐
+Quản lý các chiến dịch bộ sưu tập di sản gắn chặt với 4 mùa trong năm, hỗ trợ hiển thị triết lý giám tuyển, mã lưu trữ và thông số JSONB.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã định danh bộ sưu tập mùa |
 | `title` | `VARCHAR(150)` | NOT NULL | | Tên bộ sưu tập (Ví dụ: *Sắc Lam Mát Lành – Bộ Sưu Tập Mùa Hè 2026*) |
-| `slug` | `VARCHAR(180)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh thân thiện SEO (`mua-he-2026-mat-lanh`) |
-| `season_code` | `VARCHAR(20)` | NOT NULL, CHECK | | Phân loại mùa: `'summer'` (Mùa Hè), `'spring'` (Mùa Xuân), `'autumn'` (Mùa Thu), `'winter'` (Mùa Đông) |
-| `year` | `INT` | NOT NULL, CHECK (> 2000) | | Năm áp dụng (Ví dụ: 2026) |
-| `theme_concept` | `TEXT` | NULL | NULL | Triết lý/chủ đề mùa (Ví dụ: *Ứng dụng chất liệu tre nứa, chiếu cói, lụa tơ tằm và gốm men mát giúp điều hòa không khí ngày hè oi bức*) |
-| `banner_url` | `TEXT` | NULL | NULL | Ảnh bìa banner chủ đề mùa hè rộng lớn |
-| `color_tone` | `VARCHAR(30)` | NULL | `'#0ea5e9'` | Mã màu sắc chủ đạo đại diện cho mùa (phục vụ giao diện động UI) |
-| `start_date` | `DATE` | NOT NULL | | Ngày mở chiến dịch mùa (Ví dụ: `2026-05-01` bắt đầu hè) |
-| `end_date` | `DATE` | NOT NULL, CHECK | | Ngày kết thúc chiến dịch mùa (Ví dụ: `2026-08-31`) |
-| `is_active` | `BOOLEAN` | NOT NULL | `TRUE` | Bật/tắt trạng thái hiển thị bộ sưu tập mùa trên trang chủ |
-| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm khởi tạo |
+| `slug` | `VARCHAR(180)` | NOT NULL, **UNIQUE** | | Đường dẫn tĩnh SEO (`mua-he-2026-mat-lanh`) |
+| `season_code` | `VARCHAR(20)` | NOT NULL, CHECK (`season_code IN ('summer', 'spring', 'autumn', 'winter')`) | | Phân loại mùa: `'summer'`, `'spring'`, `'autumn'`, `'winter'` |
+| `year` | `INT` | NOT NULL, CHECK (`year >= 2000`) | | Năm áp dụng (Ví dụ: `2026`) |
+| `theme_concept` | `TEXT` | NULL | NULL | Triết lý/chủ đề nghệ thuật theo mùa |
+| `philosophy_quote` | `TEXT` | NULL | NULL | Câu danh ngôn triết lý văn hóa mùa |
+| `archive_code` | `VARCHAR(50)` | NULL | NULL | Mã lưu trữ bộ sưu tập (Ví dụ: *CR-ARCH-SUMMER-26*) |
+| `metrics` | `JSONB` | NULL | NULL | Thông số tổng hợp (Ví dụ: *`{"artisan_count": 8, "piece_count": 24}`*) |
+| `process_steps`| `JSONB` | NULL | NULL | Các giai đoạn tuyển chọn và thẩm định di sản |
+| `banner_url` | `TEXT` | NULL | NULL | Ảnh bìa banner chủ đề mùa |
+| `color_tone` | `VARCHAR(30)` | NULL | `'#0ea5e9'` | Mã màu HEX chủ đạo đại diện cho mùa |
+| `start_date` | `DATE` | NOT NULL | | Ngày mở chiến dịch |
+| `end_date` | `DATE` | NOT NULL, CHECK (`end_date >= start_date`) | | Ngày kết thúc chiến dịch |
+| `is_active` | `BOOLEAN` | NOT NULL | `TRUE` | Bật/tắt trạng thái hiển thị trên cổng thông tin |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm tạo |
 
 * **Chỉ mục:**
-  - `pk_seasonal_collections`: PRIMARY KEY (`id`)
-  - `uk_seasonal_collections_slug`: UNIQUE (`slug`)
   - `idx_seasonal_collections_active`: INDEX (`is_active`, `season_code`, `year`)
   - `idx_seasonal_collections_dates`: INDEX (`start_date`, `end_date`)
 
 ---
 
-### 4.15. Bảng `seasonal_collection_crafts` (Quan hệ N-N: Sản phẩm thuộc Bộ sưu tập mùa) ⭐
-> **Bảng trọng tâm theo yêu cầu:** Biểu diễn danh sách các sản phẩm thủ công được tuyển chọn chuyên biệt cho từng bộ sưu tập mùa (Ví dụ: *Bộ mùa hè thì có các sản phẩm quạt nan Chàng Sơn, chiếu cói Nga Sơn, bình gốm men ngọc Bát Tràng, lụa mỏng Vạn Phúc...*).
+### 4.17. Bảng `seasonal_collection_crafts` (Quan hệ N-N: Sản phẩm thuộc Bộ sưu tập mùa) ⭐
+Tuyển chọn danh mục tác phẩm riêng biệt cho từng mùa kèm lời bình giám tuyển và cờ Hero Item.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
-| `seasonal_collection_id` | `INT` | **PK**, **FK** trỏ `seasonal_collections(id)` | | Mã bộ sưu tập mùa (Ví dụ: Bộ sưu tập Mùa Hè) |
-| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm thủ công |
-| `curator_note` | `TEXT` | NULL | NULL | Lời bình giám tuyển giải thích vì sao sản phẩm phù hợp cho mùa hè (Ví dụ: *"Chất liệu cói dệt tay tự nhiên có đặc tính tản nhiệt cao, mang lại giấc ngủ thanh mát không bí bách trong những đêm hè nóng ẩm"*) |
-| `highlight_badge` | `VARCHAR(50)` | NULL | NULL | Nhãn ấn tượng theo mùa: *'Giải nhiệt mùa hạ'*, *'Tươi mát tự nhiên'*, *'Tiêu điểm mùa hè'* |
-| `is_hero` | `BOOLEAN` | NOT NULL | `FALSE` | Đánh dấu tác phẩm tâm điểm (Hero Item) hiển thị đầu danh mục mùa |
-| `display_order` | `INT` | NOT NULL | `1` | Thứ tự trình bày trên giao diện lưới sản phẩm theo mùa |
-| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm thêm sản phẩm vào bộ mùa |
+| `seasonal_collection_id` | `INT` | **PK**, **FK** trỏ `seasonal_collections(id)` | | Mã bộ sưu tập mùa (ON DELETE CASCADE) |
+| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm thủ công (ON DELETE CASCADE) |
+| `curator_note` | `TEXT` | NULL | NULL | Lời bình giám tuyển giải thích tính phù hợp mùa |
+| `highlight_badge` | `VARCHAR(50)` | NULL | NULL | Nhãn ấn tượng: *'Tiêu điểm ngày hè'*, *'Thanh lọc không gian'* |
+| `is_hero` | `BOOLEAN` | NOT NULL | `FALSE` | Cờ tác phẩm tâm điểm (Hero Item) mở đầu bộ sưu tập |
+| `display_order` | `INT` | NOT NULL | `1` | Thứ tự trình bày trong bộ sưu tập |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm đưa vào bộ sưu tập |
 
 * **Khóa chính hợp thành:** `PRIMARY KEY (seasonal_collection_id, craft_id)`
-* **Ràng buộc khóa ngoại:**
-  - `fk_sc_crafts_collection`: FOREIGN KEY (`seasonal_collection_id`) REFERENCES `seasonal_collections(id)` **ON DELETE CASCADE**
-  - `fk_sc_crafts_craft`: FOREIGN KEY (`craft_id`) REFERENCES `crafts(id)` **ON DELETE CASCADE**
-* **Chỉ mục:**
-  - `idx_sc_crafts_craft_id`: INDEX (`craft_id`)
-  - `idx_sc_crafts_hero`: INDEX (`seasonal_collection_id`, `is_hero`)
+* **Chỉ mục:** `idx_sc_crafts_hero`: INDEX (`seasonal_collection_id`, `is_hero`)
 
 ---
 
-### 4.16. Bảng `favourites` (Danh sách yêu thích)
-Lưu trữ danh sách sản phẩm yêu thích của từng người dùng đã đăng nhập (hỗ trợ đồng bộ đa thiết bị từ LocalStorage).
+### 4.18. Bảng `favourites` (Danh sách yêu thích)
+Lưu trữ danh sách tác phẩm yêu thích của người dùng đăng nhập, hỗ trợ cơ chế đồng bộ Hybrid hai chiều từ LocalStorage.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
-| `user_id` | `INT` | **PK**, **FK** trỏ `users(id)` | | Mã người dùng |
-| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm yêu thích |
-| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm nhấn yêu thích |
+| `user_id` | `INT` | **PK**, **FK** trỏ `users(id)` | | Mã người dùng (ON DELETE CASCADE) |
+| `craft_id` | `INT` | **PK**, **FK** trỏ `crafts(id)` | | Mã sản phẩm yêu thích (ON DELETE CASCADE) |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm đánh dấu yêu thích |
 
-* **Khóa chính:** `PRIMARY KEY (user_id, craft_id)`
-* **Ràng buộc:**
-  - `fk_fav_user`: FOREIGN KEY (`user_id`) REFERENCES `users(id)` ON DELETE CASCADE
-  - `fk_fav_craft`: FOREIGN KEY (`craft_id`) REFERENCES `crafts(id)` ON DELETE CASCADE
+* **Khóa chính hợp thành:** `PRIMARY KEY (user_id, craft_id)`
 
 ---
 
-### 4.17. Bảng `contact_messages` (Tin nhắn liên hệ)
-Tiếp nhận tin nhắn, thắc mắc hoặc đề xuất hợp tác từ biểu mẫu liên hệ của khách truy cập.
+### 4.19. Bảng `contact_messages` (Tin nhắn liên hệ)
+Tiếp nhận câu hỏi, đề xuất hợp tác giám tuyển hoặc khiếu nại từ khách truy cập.
 
 | Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | **PK** | Tự tăng | Mã tin nhắn |
+| `user_id` | `INT` | **FK** trỏ `users(id)` | NULL | Người dùng gửi thư (nếu đã đăng nhập, ON DELETE SET NULL) |
 | `full_name` | `VARCHAR(100)` | NOT NULL | | Họ tên người gửi |
-| `email` | `VARCHAR(255)` | NOT NULL | | Email liên hệ |
-| `phone` | `VARCHAR(30)` | NULL | NULL | Số điện thoại (tùy chọn) |
-| `subject` | `VARCHAR(200)` | NULL | NULL | Tiêu đề thư |
-| `message` | `TEXT` | NOT NULL | | Nội dung lời nhắn |
-| `status` | `VARCHAR(30)` | NOT NULL | `'unread'` | Trạng thái: `'unread'`, `'read'`, `'replied'` |
-| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm gửi |
+| `email` | `VARCHAR(255)` | NOT NULL | | Email liên hệ phản hồi |
+| `phone` | `VARCHAR(30)` | NULL | NULL | Số điện thoại liên hệ |
+| `topic` | `VARCHAR(100)` | NULL | NULL | Chủ đề liên hệ (*Hợp tác giám tuyển, Thăm làng nghề, Bảo tồn...*) |
+| `subject` | `VARCHAR(200)` | NULL | NULL | Tiêu đề thông điệp |
+| `message` | `TEXT` | NOT NULL | | Nội dung chi tiết bức thư |
+| `status` | `VARCHAR(30)` | NOT NULL, CHECK (`status IN ('unread', 'read', 'replied')`) | `'unread'` | Trạng thái xử lý tin nhắn |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm gửi thư |
+
+---
+
+### 4.20. Bảng `visit_bookings` (Phiếu đăng ký hẹn thăm xưởng) ⭐
+Quản lý quy trình đăng ký đàm đạo trà và tham quan không gian chế tác của nghệ nhân với các điều kiện ràng buộc khắt khe.
+
+| Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `SERIAL` | **PK** | Tự tăng | Mã phiếu hẹn |
+| `artisan_id` | `INT` | **FK** trỏ `artisans(id)` | | Nghệ nhân xưởng tiếp đón (ON DELETE CASCADE) |
+| `user_id` | `INT` | **FK** trỏ `users(id)` | NULL | Tài khoản người đặt (nếu đã đăng nhập, ON DELETE SET NULL) |
+| `full_name` | `VARCHAR(100)` | NOT NULL | | Họ tên người đại diện đoàn khách |
+| `phone` | `VARCHAR(30)` | NOT NULL | | Số điện thoại liên lạc xác nhận |
+| `visit_date` | `DATE` | NOT NULL | | Ngày dự kiến ghé thăm (phải trước 24h hoặc 48h theo lead-time) |
+| `time_slot` | `VARCHAR(20)` | NOT NULL, CHECK (`time_slot IN ('morning', 'afternoon')`) | | Khung giờ tiếp đón: Buổi sáng (`morning`) hoặc Chiều (`afternoon`) |
+| `guest_count` | `INT` | NOT NULL, CHECK (`guest_count BETWEEN 1 AND 10`) | `1` | Số lượng khách trong đoàn (tối đa 6 hoặc 10 người tùy xưởng) |
+| `purpose` | `TEXT` | NULL | NULL | Mục đích chuyến thăm (*Đàm đạo trà, Chiêm ngưỡng độc bản, Nghiên cứu...*) |
+| `status` | `VARCHAR(30)` | NOT NULL, CHECK (`status IN ('pending', 'confirmed', 'cancelled', 'completed')`) | `'pending'` | Trạng thái phiếu hẹn |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm gửi phiếu |
+
+* **Chỉ mục:** `idx_visit_bookings_artisan_date`: INDEX (`artisan_id`, `visit_date`, `time_slot`)
+
+---
+
+### 4.21. Bảng `newsletter_subscribers` (Bản tin di sản) ⭐
+Lưu trữ danh sách độc giả đăng ký nhận bản tin di sản làng nghề hàng tháng.
+
+| Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `SERIAL` | **PK** | Tự tăng | Mã thuê bao bản tin |
+| `email` | `VARCHAR(255)` | NOT NULL | | Email đăng ký (kiểm tra chuẩn định dạng RFC 5322) |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm đăng ký |
+
+* **Chỉ mục duy nhất không phân biệt hoa thường:**
+  - `idx_newsletter_email_lower`: UNIQUE INDEX (`LOWER(email)`)
+
+---
+
+### 4.22. Bảng `field_notes` (Ký họa điền dã) ⭐
+Lưu trữ nhật ký điền dã thực địa của đội ngũ giám tuyển văn hóa tại các lò nung và xưởng thủ công cổ truyền.
+
+| Cột | Kiểu dữ liệu | Ràng buộc | Mặc định | Mô tả nghiệp vụ |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `SERIAL` | **PK** | Tự tăng | Mã nhật ký điền dã |
+| `title` | `VARCHAR(200)` | NOT NULL | | Tiêu đề bài ký họa (Ví dụ: *Lò Bầu Bát Tràng - Ký Họa Khói Lửa*) |
+| `body` | `TEXT` | NOT NULL | | Nội dung bút ký chi tiết |
+| `coordinates` | `VARCHAR(100)` | NULL | NULL | Tọa độ GPS thực địa (Ví dụ: `20.9782° N, 105.9103° E`) |
+| `metrics` | `JSONB` | NULL | NULL | Các chỉ số kỹ thuật thực địa (nhiệt độ lò, độ ẩm men, thời gian ủ) |
+| `is_published` | `BOOLEAN` | NOT NULL | `TRUE` | Trạng thái công bố bài viết |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL | `NOW()` | Thời điểm ghi chép |
+
+---
 
 ---
 
@@ -714,16 +886,40 @@ GROUP BY sc.id, sc.title, sc.theme_concept, sc.banner_url, sc.color_tone;
 
 ## 6. Mã nguồn DDL PostgreSQL hoàn chỉnh (`schema.sql`)
 
-Dưới đây là mã nguồn DDL SQL hoàn chỉnh, sẵn sàng nạp trực tiếp vào PostgreSQL (`npm run db:init` hoặc `psql -U postgres -d craftroots -f db/schema.sql`):
+Dưới đây là mã nguồn DDL SQL hoàn chỉnh (22 bảng), sẵn sàng nạp trực tiếp vào PostgreSQL (`npm run db:init` hoặc `psql -U postgres -d craftroots -f db/schema.sql`):
 
 ```sql
 -- =============================================================================
 -- CRAFTROOTS DATABASE SCHEMA (PostgreSQL 14+)
 -- Hệ thống Cổng Thông Tin Khám Phá Nghề Thủ Công Truyền Thống
--- Hỗ trợ quan hệ N-N Nghệ nhân - Sản phẩm (craft_artisans)
+-- Tuân thủ chuẩn kiến trúc dữ liệu data-design.md, docs/data.md và docs/DESIGN.md
 -- =============================================================================
 
--- Xóa bảng cũ theo thứ tự phụ thuộc (nếu cần tái thiết lập)
+-- Thiết lập múi giờ UTC và bảng mã chuẩn
+SET timezone = 'UTC';
+
+-- Kích hoạt extensions nếu có
+DO $$
+BEGIN
+    CREATE EXTENSION IF NOT EXISTS unaccent;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Không thể kích hoạt extension unaccent: %', SQLERRM;
+END $$;
+
+DO $$
+BEGIN
+    CREATE EXTENSION IF NOT EXISTS pg_trgm;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Không thể kích hoạt extension pg_trgm: %', SQLERRM;
+END $$;
+
+-- Dọn dẹp bảng cũ nếu có (theo thứ tự phụ thuộc khóa ngoại)
+DROP TABLE IF EXISTS field_notes CASCADE;
+DROP TABLE IF EXISTS newsletter_subscribers CASCADE;
+DROP TABLE IF EXISTS visit_bookings CASCADE;
+DROP TABLE IF EXISTS artisan_milestones CASCADE;
 DROP TABLE IF EXISTS contact_messages CASCADE;
 DROP TABLE IF EXISTS favourites CASCADE;
 DROP TABLE IF EXISTS seasonal_collection_crafts CASCADE;
@@ -736,13 +932,14 @@ DROP TABLE IF EXISTS craft_materials CASCADE;
 DROP TABLE IF EXISTS craft_artisans CASCADE;
 DROP TABLE IF EXISTS crafts CASCADE;
 DROP TABLE IF EXISTS artisans CASCADE;
+DROP TABLE IF EXISTS craft_villages CASCADE;
 DROP TABLE IF EXISTS techniques CASCADE;
 DROP TABLE IF EXISTS materials CASCADE;
 DROP TABLE IF EXISTS craft_categories CASCADE;
 DROP TABLE IF EXISTS regions CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
--- 1. Bảng USERS
+-- 1. Bảng USERS (Quản lý người dùng & phân quyền)
 CREATE TABLE users (
     id            SERIAL PRIMARY KEY,
     full_name     VARCHAR(100) NOT NULL,
@@ -755,17 +952,23 @@ CREATE TABLE users (
     updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
--- 2. Bảng REGIONS (Vùng miền)
+-- 2. Bảng REGIONS (Vùng miền & Bản đồ 6 vùng văn hóa)
 CREATE TABLE regions (
-    id          SERIAL PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL UNIQUE,
-    code        VARCHAR(50)  NOT NULL UNIQUE,
-    description TEXT,
-    image_url   TEXT,
-    created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+    id                       SERIAL PRIMARY KEY,
+    name                     VARCHAR(100) NOT NULL UNIQUE,
+    code                     VARCHAR(50)  NOT NULL UNIQUE,
+    map_key                  VARCHAR(50),
+    description              TEXT,
+    craft_summary            TEXT,
+    image_url                TEXT,
+    is_verified              BOOLEAN      NOT NULL DEFAULT TRUE,
+    registered_village_count INT          NOT NULL DEFAULT 0,
+    national_heritage_count  INT          NOT NULL DEFAULT 0,
+    sort_order               INT          NOT NULL DEFAULT 0,
+    created_at               TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
--- 3. Bảng CRAFT_CATEGORIES (Loại hình nghề)
+-- 3. Bảng CRAFT_CATEGORIES (Danh mục phân loại nghề)
 CREATE TABLE craft_categories (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(100) NOT NULL UNIQUE,
@@ -774,54 +977,99 @@ CREATE TABLE craft_categories (
     icon_url    TEXT
 );
 
--- 4. Bảng MATERIALS (Chất liệu)
+-- 4. Bảng CRAFT_VILLAGES (Làng nghề truyền thống)
+CREATE TABLE craft_villages (
+    id            SERIAL PRIMARY KEY,
+    region_id     INT REFERENCES regions(id) ON DELETE SET NULL,
+    category_id   INT REFERENCES craft_categories(id) ON DELETE SET NULL,
+    name          VARCHAR(150) NOT NULL,
+    slug          VARCHAR(180) NOT NULL UNIQUE,
+    district      VARCHAR(100),
+    province      VARCHAR(100),
+    century_label VARCHAR(100),
+    summary       TEXT,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 5. Bảng MATERIALS (Chất liệu chế tác)
 CREATE TABLE materials (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(100) NOT NULL UNIQUE,
     description TEXT
 );
 
--- 5. Bảng TECHNIQUES (Kỹ thuật chế tác)
+-- 6. Bảng TECHNIQUES (Kỹ thuật chế tác thủ công)
 CREATE TABLE techniques (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(100) NOT NULL UNIQUE,
     description TEXT
 );
 
--- 6. Bảng ARTISANS (Nghệ nhân)
+-- 7. Bảng ARTISANS (Hồ sơ nghệ nhân & danh hiệu)
 CREATE TABLE artisans (
-    id                  SERIAL PRIMARY KEY,
-    name                VARCHAR(100) NOT NULL,
-    region_id           INT REFERENCES regions(id) ON DELETE SET NULL,
-    title               VARCHAR(100), -- Nghệ nhân Nhân dân / Nghệ nhân Ưu tú
-    specialty           VARCHAR(150),
-    years_of_experience INT CHECK (years_of_experience >= 0),
-    biography           TEXT,
-    avatar_url          TEXT,
-    contact_info        VARCHAR(255),
-    created_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+    id                    SERIAL PRIMARY KEY,
+    name                  VARCHAR(100) NOT NULL,
+    slug                  VARCHAR(180) UNIQUE,
+    code                  VARCHAR(50) UNIQUE,
+    region_id             INT REFERENCES regions(id) ON DELETE SET NULL,
+    village_id            INT REFERENCES craft_villages(id) ON DELETE SET NULL,
+    title                 VARCHAR(100), -- Nghệ nhân Nhân dân, Nghệ nhân Ưu tú...
+    specialty             VARCHAR(150),
+    age                   INT,
+    generation            INT,
+    years_of_experience   INT CHECK (years_of_experience >= 0),
+    quote                 TEXT,
+    biography             TEXT,
+    signature_work        TEXT,
+    technique_summary     TEXT,
+    technique_specs       JSONB DEFAULT '[]'::jsonb,
+    verification_label    VARCHAR(255),
+    is_national_heritage  BOOLEAN NOT NULL DEFAULT TRUE,
+    avatar_url            TEXT,
+    contact_info          VARCHAR(255),
+    visit_max_guests      INT NOT NULL DEFAULT 6,
+    visit_lead_time_hours INT NOT NULL DEFAULT 48,
+    visit_open_days       INT[] DEFAULT '{2,3,4,5,6,7}',
+    visit_hours           VARCHAR(100) DEFAULT '09:00 - 17:30',
+    visit_address         TEXT,
+    lat                   NUMERIC(10, 6),
+    lng                   NUMERIC(10, 6),
+    sort_order            INT NOT NULL DEFAULT 0,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 7. Bảng CRAFTS (Sản phẩm thủ công - đã chuyển artisan_id sang bảng n-n)
+-- 8. Bảng CRAFTS (Tác phẩm / Sản phẩm thủ công truyền thống)
 CREATE TABLE crafts (
     id                SERIAL PRIMARY KEY,
     name              VARCHAR(150) NOT NULL,
     slug              VARCHAR(180) NOT NULL UNIQUE,
+    code              VARCHAR(100) UNIQUE,
     region_id         INT NOT NULL REFERENCES regions(id) ON DELETE RESTRICT,
     category_id       INT NOT NULL REFERENCES craft_categories(id) ON DELETE RESTRICT,
+    village_id        INT REFERENCES craft_villages(id) ON DELETE SET NULL,
     thumbnail_url     TEXT,
     short_description VARCHAR(500),
+    price_vnd         BIGINT,
+    tag               VARCHAR(150),
+    origin_line       VARCHAR(200),
+    era               VARCHAR(100),
+    dimensions        VARCHAR(150),
+    specs             JSONB DEFAULT '[]'::jsonb,
+    process_stages    JSONB DEFAULT '[]'::jsonb,
     cultural_context  TEXT,
     tools             TEXT,
     process           TEXT,
     traditional_use   TEXT,
+    batch_note        TEXT,
     is_featured       BOOLEAN     NOT NULL DEFAULT FALSE,
+    is_spotlight      BOOLEAN     NOT NULL DEFAULT FALSE,
+    handmade          BOOLEAN     NOT NULL DEFAULT TRUE,
     view_count        INT         NOT NULL DEFAULT 0,
     created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 8. Bảng CRAFT_ARTISANS (Quan hệ Nhiều - Nhiều giữa Crafts và Artisans) ⭐
+-- 9. Bảng CRAFT_ARTISANS (Quan hệ N-N: Nghệ nhân ↔ Sản phẩm)
 CREATE TABLE craft_artisans (
     craft_id           INT NOT NULL REFERENCES crafts(id) ON DELETE CASCADE,
     artisan_id         INT NOT NULL REFERENCES artisans(id) ON DELETE CASCADE,
@@ -833,21 +1081,21 @@ CREATE TABLE craft_artisans (
     PRIMARY KEY (craft_id, artisan_id)
 );
 
--- 9. Bảng CRAFT_MATERIALS (Quan hệ n-n: Sản phẩm ↔ Chất liệu)
+-- 10. Bảng CRAFT_MATERIALS (Quan hệ N-N: Sản phẩm ↔ Chất liệu)
 CREATE TABLE craft_materials (
     craft_id    INT NOT NULL REFERENCES crafts(id) ON DELETE CASCADE,
     material_id INT NOT NULL REFERENCES materials(id) ON DELETE CASCADE,
     PRIMARY KEY (craft_id, material_id)
 );
 
--- 10. Bảng CRAFT_TECHNIQUES (Quan hệ n-n: Sản phẩm ↔ Kỹ thuật)
+-- 11. Bảng CRAFT_TECHNIQUES (Quan hệ N-N: Sản phẩm ↔ Kỹ thuật)
 CREATE TABLE craft_techniques (
     craft_id     INT NOT NULL REFERENCES crafts(id) ON DELETE CASCADE,
     technique_id INT NOT NULL REFERENCES techniques(id) ON DELETE CASCADE,
     PRIMARY KEY (craft_id, technique_id)
 );
 
--- 11. Bảng CRAFT_IMAGES (Thư viện ảnh tương tác Lightbox)
+-- 12. Bảng CRAFT_IMAGES (Thư viện ảnh tương tác Lightbox)
 CREATE TABLE craft_images (
     id            SERIAL PRIMARY KEY,
     craft_id      INT NOT NULL REFERENCES crafts(id) ON DELETE CASCADE,
@@ -858,19 +1106,28 @@ CREATE TABLE craft_images (
     created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 12. Bảng COLLECTIONS (Bộ sưu tập theo mùa / tuyển chọn)
+-- 13. Bảng ARTISAN_MILESTONES (Niên biểu mốc son nghệ nhân)
+CREATE TABLE artisan_milestones (
+    id         SERIAL PRIMARY KEY,
+    artisan_id INT NOT NULL REFERENCES artisans(id) ON DELETE CASCADE,
+    year       VARCHAR(50) NOT NULL,
+    event      TEXT NOT NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 14. Bảng COLLECTIONS (Bộ sưu tập chuyên đề thông thường)
 CREATE TABLE collections (
     id          SERIAL PRIMARY KEY,
     title       VARCHAR(150) NOT NULL,
     slug        VARCHAR(180) NOT NULL UNIQUE,
     description TEXT,
     banner_url  TEXT,
-    season      VARCHAR(50),
-    is_featured BOOLEAN NOT NULL DEFAULT FALSE,
+    is_featured BOOLEAN     NOT NULL DEFAULT FALSE,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 13. Bảng COLLECTION_CRAFTS (Quan hệ n-n: Bộ sưu tập ↔ Sản phẩm)
+-- 15. Bảng COLLECTION_CRAFTS (Quan hệ N-N: Bộ sưu tập ↔ Sản phẩm)
 CREATE TABLE collection_crafts (
     collection_id INT NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
     craft_id      INT NOT NULL REFERENCES crafts(id) ON DELETE CASCADE,
@@ -878,23 +1135,28 @@ CREATE TABLE collection_crafts (
     PRIMARY KEY (collection_id, craft_id)
 );
 
--- 14. Bảng SEASONAL_COLLECTIONS (Bộ sưu tập theo mùa: Xuân, Hạ, Thu, Đông) ⭐
+-- 16. Bảng SEASONAL_COLLECTIONS (Bộ sưu tập theo mùa: Xuân, Hạ, Thu, Đông)
 CREATE TABLE seasonal_collections (
-    id            SERIAL PRIMARY KEY,
-    title         VARCHAR(150) NOT NULL,
-    slug          VARCHAR(180) NOT NULL UNIQUE,
-    season_code   VARCHAR(20)  NOT NULL CHECK (season_code IN ('summer', 'spring', 'autumn', 'winter')),
-    year          INT          NOT NULL CHECK (year >= 2000),
-    theme_concept TEXT,
-    banner_url    TEXT,
-    color_tone    VARCHAR(30)  DEFAULT '#0ea5e9',
-    start_date    DATE         NOT NULL,
-    end_date      DATE         NOT NULL CHECK (end_date >= start_date),
-    is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
-    created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+    id               SERIAL PRIMARY KEY,
+    title            VARCHAR(150) NOT NULL,
+    slug             VARCHAR(180) NOT NULL UNIQUE,
+    season_code      VARCHAR(20)  NOT NULL CHECK (season_code IN ('summer', 'spring', 'autumn', 'winter')),
+    year             INT          NOT NULL CHECK (year >= 2000),
+    theme_concept    TEXT,
+    philosophy_quote TEXT,
+    quote_source     VARCHAR(200),
+    metrics          JSONB        DEFAULT '[]'::jsonb,
+    process_steps    JSONB        DEFAULT '[]'::jsonb,
+    archive_code     VARCHAR(100),
+    banner_url       TEXT,
+    color_tone       VARCHAR(30)  DEFAULT '#0ea5e9',
+    start_date       DATE         NOT NULL,
+    end_date         DATE         NOT NULL CHECK (end_date >= start_date),
+    is_active        BOOLEAN      NOT NULL DEFAULT TRUE,
+    created_at       TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
--- 15. Bảng SEASONAL_COLLECTION_CRAFTS (Quan hệ N-N: Sản phẩm thuộc Bộ sưu tập mùa) ⭐
+-- 17. Bảng SEASONAL_COLLECTION_CRAFTS (Quan hệ N-N: Sản phẩm thuộc Bộ sưu tập mùa)
 CREATE TABLE seasonal_collection_crafts (
     seasonal_collection_id INT NOT NULL REFERENCES seasonal_collections(id) ON DELETE CASCADE,
     craft_id               INT NOT NULL REFERENCES crafts(id) ON DELETE CASCADE,
@@ -906,7 +1168,7 @@ CREATE TABLE seasonal_collection_crafts (
     PRIMARY KEY (seasonal_collection_id, craft_id)
 );
 
--- 16. Bảng FAVOURITES (Danh sách yêu thích của người dùng)
+-- 18. Bảng FAVOURITES (Danh sách yêu thích của người dùng)
 CREATE TABLE favourites (
     user_id    INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     craft_id   INT NOT NULL REFERENCES crafts(id) ON DELETE CASCADE,
@@ -914,47 +1176,97 @@ CREATE TABLE favourites (
     PRIMARY KEY (user_id, craft_id)
 );
 
--- 17. Bảng CONTACT_MESSAGES (Tin nhắn từ form liên hệ)
+-- 19. Bảng CONTACT_MESSAGES (Tin nhắn từ form liên hệ)
 CREATE TABLE contact_messages (
     id         SERIAL PRIMARY KEY,
+    user_id    INT REFERENCES users(id) ON DELETE SET NULL,
     full_name  VARCHAR(100) NOT NULL,
     email      VARCHAR(255) NOT NULL,
     phone      VARCHAR(30),
+    topic      VARCHAR(100) DEFAULT 'other',
     subject    VARCHAR(200),
     message    TEXT NOT NULL,
     status     VARCHAR(30) NOT NULL DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'replied')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- 20. Bảng VISIT_BOOKINGS (Phiếu đăng ký hẹn thăm xưởng)
+CREATE TABLE visit_bookings (
+    id         SERIAL PRIMARY KEY,
+    artisan_id INT NOT NULL REFERENCES artisans(id) ON DELETE CASCADE,
+    user_id    INT REFERENCES users(id) ON DELETE SET NULL,
+    full_name  VARCHAR(150) NOT NULL,
+    phone      VARCHAR(50) NOT NULL,
+    email      VARCHAR(255),
+    visit_date DATE NOT NULL,
+    time_slot  VARCHAR(20) NOT NULL CHECK (time_slot IN ('morning', 'afternoon')),
+    purpose    VARCHAR(200) NOT NULL,
+    note       TEXT,
+    status     VARCHAR(30) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'cancelled')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 21. Bảng NEWSLETTER_SUBSCRIBERS (Bản tin di sản)
+CREATE TABLE newsletter_subscribers (
+    id         SERIAL PRIMARY KEY,
+    email      VARCHAR(255) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE UNIQUE INDEX idx_newsletter_email_lower ON newsletter_subscribers (LOWER(email));
+
+-- 22. Bảng FIELD_NOTES (Ký họa điền dã di sản)
+CREATE TABLE field_notes (
+    id           SERIAL PRIMARY KEY,
+    title        VARCHAR(200) NOT NULL,
+    body         TEXT NOT NULL,
+    image_url    TEXT,
+    caption      VARCHAR(255),
+    coordinates  VARCHAR(100),
+    metrics      JSONB DEFAULT '[]'::jsonb,
+    sort_order   INT NOT NULL DEFAULT 0,
+    is_published BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- =============================================================================
 -- HỆ THỐNG CHỈ MỤC TỐI ƯU HIỆU NĂNG (INDEXES)
 -- =============================================================================
 
--- Chỉ mục hỗ trợ lọc và sắp xếp sản phẩm
 CREATE INDEX idx_crafts_region ON crafts(region_id);
 CREATE INDEX idx_crafts_category ON crafts(category_id);
+CREATE INDEX idx_crafts_village ON crafts(village_id);
+CREATE INDEX idx_crafts_code ON crafts(code);
 CREATE INDEX idx_crafts_featured ON crafts(is_featured) WHERE is_featured = TRUE;
+CREATE INDEX idx_crafts_spotlight ON crafts(is_spotlight) WHERE is_spotlight = TRUE;
 CREATE INDEX idx_crafts_created_at ON crafts(created_at DESC);
 
--- Chỉ mục cho bảng nối n-n nghệ nhân - sản phẩm
+CREATE INDEX idx_artisans_slug ON artisans(slug);
+CREATE INDEX idx_artisans_code ON artisans(code);
+CREATE INDEX idx_artisans_village ON artisans(village_id);
+CREATE INDEX idx_artisans_region ON artisans(region_id);
+
+CREATE INDEX idx_craft_villages_region ON craft_villages(region_id);
+CREATE INDEX idx_craft_villages_category ON craft_villages(category_id);
+CREATE INDEX idx_craft_villages_slug ON craft_villages(slug);
+
 CREATE INDEX idx_craft_artisans_artisan ON craft_artisans(artisan_id);
 CREATE INDEX idx_craft_artisans_lead ON craft_artisans(craft_id, is_lead);
 
--- Chỉ mục cho các bảng nối n-n khác
+CREATE INDEX idx_artisan_milestones_artisan ON artisan_milestones(artisan_id, sort_order);
+CREATE INDEX idx_visit_bookings_lookup ON visit_bookings(artisan_id, visit_date);
+
 CREATE INDEX idx_craft_materials_mat ON craft_materials(material_id);
 CREATE INDEX idx_craft_techniques_tech ON craft_techniques(technique_id);
 CREATE INDEX idx_collection_crafts_craft ON collection_crafts(craft_id);
 
--- Chỉ mục cho bộ sưu tập theo mùa
 CREATE INDEX idx_seasonal_collections_active ON seasonal_collections(is_active, season_code, year);
 CREATE INDEX idx_seasonal_collections_dates ON seasonal_collections(start_date, end_date);
 CREATE INDEX idx_sc_crafts_craft ON seasonal_collection_crafts(craft_id);
 CREATE INDEX idx_sc_crafts_hero ON seasonal_collection_crafts(seasonal_collection_id, is_hero);
 
--- Chỉ mục cho gallery ảnh
 CREATE INDEX idx_craft_images_craft_order ON craft_images(craft_id, display_order);
 
--- Chỉ mục hỗ trợ tìm kiếm toàn văn bản (Full-Text Search với GIN Index)
+-- Full-Text Search GIN Indexes
 CREATE INDEX idx_crafts_fts ON crafts USING gin (
     to_tsvector('simple', name || ' ' || COALESCE(cultural_context, '') || ' ' || COALESCE(short_description, ''))
 );

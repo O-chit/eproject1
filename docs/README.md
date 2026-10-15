@@ -1,16 +1,19 @@
-# CraftRoots – Cổng thông tin khám phá nghề thủ công truyền thống
+# CraftRoots – Cổng Thông Tin Khám Phá Nghề Thủ Công Truyền Thống
 
-CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thông tin về các nghề thủ công truyền thống vào một trải nghiệm web duy nhất, có tổ chức và trực quan. Người dùng có thể khám phá sản phẩm theo vùng miền, chất liệu, kỹ thuật; tìm hiểu hồ sơ nghệ nhân; xem bộ sưu tập ảnh tương tác và lưu các sản phẩm yêu thích.
+CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thông tin về các nghề thủ công truyền thống vào một trải nghiệm web duy nhất, có tổ chức và trực quan. Người dùng có thể khám phá sản phẩm theo vùng miền, chất liệu, kỹ thuật; tìm hiểu hồ sơ nghệ nhân; xem bộ sưu tập ảnh tương tác; lưu các sản phẩm yêu thích; đăng ký bản tin di sản; và đặt lịch hẹn thăm xưởng thủ công.
 
-> Dự án thuộc chương trình **eProject – Aptech**, xây dựng dưới dạng ứng dụng một trang (SPA) responsive, có hỗ trợ xác thực người dùng an toàn.
+> Dự án thuộc chương trình **eProject – Aptech Computer Education**, xây dựng dưới dạng ứng dụng một trang (SPA) responsive bám sát 9 mẫu thiết kế trực quan Stitch, có hỗ trợ xác thực người dùng an toàn.
 >
 > 📚 **Bộ tài liệu đặc tả kỹ thuật chi tiết:**
-> - [feature-spec.md](file:///e:/eproject1/docs/feature-spec.md): Mô tả nghiệp vụ, user flow, business rules.
-> - [architecture.md](file:///e:/eproject1/docs/architecture.md): Các module và cách chúng giao tiếp.
-> - [database-schema.md](file:///e:/eproject1/docs/database-schema.md): 17 bảng, quan hệ N-N và migration.
-> - [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml): OpenAPI 3.0.3 đặc tả đầy đủ request/response.
-> - [task-breakdown.md](file:///e:/eproject1/docs/task-breakdown.md): WBS theo Sprint, phân công, phụ thuộc và acceptance criteria.
-> - [test-plan.md](file:///e:/eproject1/docs/test-plan.md): Kế hoạch và 10 luồng kiểm thử chi tiết.
+> - [DECISIONS.md](file:///e:/eproject1/docs/DECISIONS.md): Nhật ký quyết định kiến trúc & đối soát 9 trang Stitch.
+> - [DESIGN.md](file:///e:/eproject1/docs/DESIGN.md): Hệ thống thiết kế CraftRoots & đặc tả component **Artisan Detail Popup Modal**.
+> - [feature-spec.md](file:///e:/eproject1/docs/feature-spec.md): Mô tả nghiệp vụ v1.1.0, user flows, business rules (BR-01 đến BR-15).
+> - [architecture.md](file:///e:/eproject1/docs/architecture.md): Các module và cách chúng giao tiếp, sơ đồ tuần tự v1.1.0.
+> - [database-schema.md](file:///e:/eproject1/docs/database-schema.md): 22 bảng, quan hệ N-N và kịch bản migration.
+> - [data.md](file:///e:/eproject1/docs/data.md): Từ điển dữ liệu toàn diện 22 bảng & DDL.
+> - [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml): OpenAPI 3.0.3 v1.1.0 đặc tả đầy đủ request/response.
+> - [task-breakdown.md](file:///e:/eproject1/docs/task-breakdown.md): WBS theo Phases 0 – 8, phân công, phụ thuộc và acceptance criteria.
+> - [test-plan.md](file:///e:/eproject1/docs/test-plan.md): Kế hoạch và 10 luồng kiểm thử chi tiết v1.1.0.
 
 ---
 
@@ -20,13 +23,13 @@ CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thôn
 2. [Công nghệ sử dụng](#2-công-nghệ-sử-dụng)
 3. [Kiến trúc hệ thống](#3-kiến-trúc-hệ-thống)
 4. [Cấu trúc thư mục](#4-cấu-trúc-thư-mục)
-5. [Cơ sở dữ liệu PostgreSQL](#5-cơ-sở-dữ-liệu-postgresql)
+5. [Cơ sở dữ liệu PostgreSQL (22 Bảng)](#5-cơ-sở-dữ-liệu-postgresql-22-bảng)
 6. [Xác thực: JWT + bcrypt](#6-xác-thực-jwt--bcrypt)
-7. [Danh sách API](#7-danh-sách-api)
+7. [Danh sách API RESTful v1.1.0](#7-danh-sách-api-restful-v110)
 8. [Yêu cầu hệ thống](#8-yêu-cầu-hệ-thống)
 9. [Hướng dẫn cài đặt và chạy](#9-hướng-dẫn-cài-đặt-và-chạy)
 10. [Biến môi trường](#10-biến-môi-trường)
-11. [Dữ liệu kiểm thử](#11-dữ-liệu-kiểm-thử)
+11. [Dữ liệu kiểm thử & Tiêu chuẩn Anti-AI](#11-dữ-liệu-kiểm-thử--tiêu-chuẩn-anti-ai)
 12. [Yêu cầu phi chức năng](#12-yêu-cầu-phi-chức-năng)
 13. [Sản phẩm bàn giao](#13-sản-phẩm-bàn-giao)
 14. [Giả định](#14-giả-định)
@@ -38,25 +41,27 @@ CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thôn
 ### Dành cho khách truy cập
 | # | Chức năng | Mô tả |
 |---|-----------|-------|
-| 1 | Trang chủ / Landing page | Giới thiệu thương hiệu, sản phẩm/vùng miền/bộ sưu tập nổi bật, thanh tìm kiếm nổi bật, lối tắt đến các danh mục chính |
-| 2 | Danh mục sản phẩm (Craft Directory) | Hiển thị dạng lưới/thẻ responsive: tên, vùng miền, danh mục, chất liệu, ảnh đại diện; có sắp xếp và lọc |
-| 3 | Tìm kiếm & bộ lọc thông minh | Tìm theo tên/từ khóa/vùng miền; lọc theo loại hình, vùng miền, chất liệu, kỹ thuật; tự cập nhật kết quả; thông báo khi không có kết quả |
-| 4 | Chi tiết sản phẩm | Ảnh, bối cảnh văn hóa, vật liệu & dụng cụ, kỹ thuật chế tác, công dụng/ý nghĩa, sản phẩm liên quan |
-| 5 | Hồ sơ nghệ nhân | Tên, vùng miền, chuyên môn, tiểu sử và các tác phẩm liên quan |
-| 6 | Thư viện ảnh tương tác | Gallery responsive, lightbox phóng to, chuyển ảnh qua lại, alt text và chú thích |
-| 7 | Khám phá vùng miền / bản đồ văn hóa | Chọn vùng miền để xem các sản phẩm gắn liền (bản đồ minh họa tĩnh) |
-| 8 | Bộ sưu tập theo mùa / nổi bật | Bộ sưu tập tuyển chọn (lễ hội, dệt may, trang trí nội thất...) bằng component tái sử dụng |
-| 9 | Giới thiệu CraftRoots | Mục đích, tầm nhìn, tầm quan trọng của nghề thủ công và tri thức nghệ nhân |
-| 10 | Liên hệ | Form họ tên / email / tin nhắn, validate phía client + server, lưu vào PostgreSQL |
-| 11 | Điều hướng & UI dùng chung | Header, footer, breadcrumbs, mobile menu, hỗ trợ bàn phím và focus rõ ràng, back-to-top, trạng thái loading/empty/validation |
+| 1 | Trang chủ / Landing page | Kiệt tác spotlight `CR-BT-2025-08MR`, thống kê động (`GET /api/stats`), sản phẩm/vùng miền/bộ sưu tập nổi bật, thanh tìm kiếm nổi bật, lối tắt danh mục chính |
+| 2 | Danh mục sản phẩm (Craft Directory) | Hiển thị dạng lưới/thẻ responsive: tên, vùng miền, danh mục, chất liệu, ảnh đại diện, giá VND, nhãn tag; có sắp xếp theo giá và facets đa diện |
+| 3 | Tìm kiếm & bộ lọc đa diện | Tìm kiếm toàn văn bản (FTS tsvector) theo tên/từ khóa; lọc theo loại hình, vùng miền, làng nghề (`craft_villages`), chất liệu, khoảng giá; debounce 350ms |
+| 4 | Chi tiết kiệt tác Masterwork | Bố cục 4 cột: Tác phẩm & Kỹ pháp, Đội ngũ nghệ nhân N-N, Kích thước & Thông số (`specs`), Quy trình 4 bước (`process_stages`), tác phẩm liên quan |
+| 5 | Hồ sơ nghệ nhân & Artisan Detail Popup | Ma trận 3×2 hồ sơ bậc thầy; click bất kỳ vị trí nào trên thẻ mở popup chi tiết (tiểu sử, kỹ pháp, thông số kỹ thuật, tác phẩm tiêu biểu, quy trình hẹn xưởng, focus trap) |
+| 6 | Thư viện ảnh tương tác Lightbox | Gallery responsive, lightbox phóng to toàn màn hình, chuyển ảnh bằng chuột hoặc phím mũi tên `←`/`→`, alt text và caption chuẩn WCAG |
+| 7 | Bản đồ văn hóa 6 vùng di sản | Tương tác bản đồ SVG 6 vùng di sản văn hóa Việt Nam (`map_key`), lọc danh sách làng nghề đã xác thực (`craft_villages`) và ghi chú điền dã (`field_notes`) |
+| 8 | Bộ sưu tập theo mùa tuyển chọn | Bộ sưu tập Mùa Hạ 2026 (`CR-ARCH-SUMMER-26`), lời bình của Giám tuyển Văn hóa (`curator_note`), tác phẩm tiêu điểm (`is_hero`) |
+| 9 | Giới thiệu CraftRoots | Mục đích, tầm nhìn, bảo tồn tri thức dân gian và nghệ nhân thủ công truyền thống |
+| 10 | Biểu mẫu liên hệ chuyên đề | Form chọn chủ đề (`general`, `workshop_booking`, `artisan_verification`, `press_media`), cam kết phản hồi xác thực di sản trong vòng 24h |
+| 11 | Đăng ký bản tin di sản | Nhập email nhận ấn phẩm số hàng tuần, kiểm tra chuẩn RFC 5322, lưu bảng `newsletter_subscribers` |
+| 12 | Điều hướng & UI dùng chung | Header sticky, footer di sản, breadcrumbs, mobile drawer, hỗ trợ bàn phím và focus trap rõ ràng, back-to-top, skeletons |
 
 ### Dành cho người dùng đã đăng nhập
 | # | Chức năng | Mô tả |
 |---|-----------|-------|
-| 12 | Đăng ký / tạo mật khẩu | Tạo tài khoản với email + mật khẩu, mật khẩu được băm bằng **bcrypt** |
-| 13 | Đăng nhập / đăng xuất | Xác thực bằng **JWT** |
-| 14 | Yêu thích (Favourites) | Khách lưu bằng **Local Storage**; khi đăng nhập, danh sách được đồng bộ vào **PostgreSQL** để dùng trên nhiều thiết bị |
-| 15 | Hồ sơ cá nhân | Xem thông tin tài khoản và đổi mật khẩu |
+| 13 | Đăng ký / tạo mật khẩu | Tạo tài khoản với email + mật khẩu, mật khẩu được băm một chiều bằng **bcrypt (salt rounds = 10)** |
+| 14 | Đăng nhập / đăng xuất | Xác thực bằng **JWT HS256** (hạn 1 ngày) |
+| 15 | Yêu thích lưỡng thể (Hybrid Favourites) | Khách lưu bằng **Local Storage**; khi đăng nhập, danh sách tự động đồng bộ vào **PostgreSQL** (`/api/favourites/sync`); hỗ trợ xóa hàng loạt và tóm tắt theo danh mục |
+| 16 | Đặt lịch thăm xưởng thủ công | Đăng ký tham quan xưởng nghệ nhân (`visit_bookings`), kiểm tra lead time 24h/48h, ngày mở cửa (`open_days`), quy mô đoàn (`max_guests_per_slot`) |
+| 17 | Quản lý hồ sơ cá nhân | Xem thông tin tài khoản, cập nhật họ tên / số điện thoại / ảnh đại diện (`PUT /api/auth/profile`), và đổi mật khẩu an toàn |
 
 ---
 
@@ -64,14 +69,14 @@ CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thôn
 
 | Thành phần | Công nghệ |
 |------------|-----------|
-| Frontend | **React 18+** (SPA), React Router, Axios / Fetch API |
-| Backend | **Node.js** + **Express.js** (REST API) |
-| Cơ sở dữ liệu | **PostgreSQL** (driver `pg`) |
+| Frontend | **React 18+** (SPA), React Router v6, Axios, Vanilla CSS (Design Tokens) |
+| Backend | **Node.js** + **Express.js** (REST API v1.1.0) |
+| Cơ sở dữ liệu | **PostgreSQL 14+** (driver `pg.Pool`, 22 bảng quan hệ) |
 | Xác thực | **JSON Web Token (JWT)** – `jsonwebtoken` |
-| Mã hóa mật khẩu | **bcrypt** (`bcrypt` hoặc `bcryptjs`) |
-| Validation | `express-validator` (server), validate form (client) |
-| Bảo mật bổ sung | `helmet`, `cors`, `express-rate-limit` |
-| Công cụ phát triển | VS Code (+ tiện ích AI), Figma (+ plugin AI), Git, Postman |
+| Mã hóa mật khẩu | **bcrypt** (`bcrypt` hoặc `bcryptjs`, salt = 10) |
+| Validation | `express-validator` (server), validation form (client) |
+| Bảo mật bổ sung | `helmet`, `cors` (whitelist multi-origin), `express-rate-limit` |
+| Công cụ phát triển | VS Code, Figma, Git, Postman |
 
 ---
 
@@ -79,20 +84,14 @@ CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thôn
 
 ```
 ┌────────────────────┐   HTTP/JSON    ┌──────────────────────┐    SQL    ┌──────────────┐
-│  React SPA         │ ─────────────► │  Express.js API      │ ────────► │ PostgreSQL   │
-│  (client)          │ ◄───────────── │  (Node.js)           │ ◄──────── │ (craftroots) │
-│  - Router, UI      │  Bearer JWT    │  - Routes/Controllers│           └──────────────┘
-│  - LocalStorage    │                │  - Auth middleware   │
-│    (khách)         │                │  - bcrypt, JWT       │
+│  React 18 SPA      │ ─────────────► │  Express.js API      │ ────────► │ PostgreSQL   │
+│  (client)          │ ◄───────────── │  (Node.js v18+)      │ ◄──────── │ (22 bảng)    │
+│  - 9 Stitch Pages  │  Bearer JWT    │  - Routes/Controllers│           └──────────────┘
+│  - Modals (Popup)  │                │  - Auth middleware   │
+│  - LocalStorage    │                │  - bcrypt, JWT HS256 │
+│    (khách)         │                │  - Anti-AI & Stats   │
 └────────────────────┘                └──────────────────────┘
 ```
-
-**Luồng xác thực**
-
-1. Người dùng đăng ký → server băm mật khẩu bằng bcrypt → lưu `password_hash` vào PostgreSQL.
-2. Người dùng đăng nhập → server so sánh mật khẩu bằng `bcrypt.compare` → ký và trả về JWT.
-3. Client lưu token và gửi kèm header `Authorization: Bearer <token>` ở các request cần bảo vệ.
-4. Middleware `authenticate` xác minh JWT trước khi cho truy cập route được bảo vệ.
 
 ---
 
@@ -100,464 +99,211 @@ CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thôn
 
 ```
 craftroots/
-├── client/                      # Frontend (chứa toàn bộ giao diện người dùng React SPA)
-├── server/                      # Backend (chứa toàn bộ logic backend, REST API, Express)
+├── client/                      # Frontend (React 18 + Vite SPA bám sát 9 thiết kế Stitch)
+│   ├── public/                  # Tài nguyên tĩnh (favicon.svg, media assets)
 │   ├── src/
-│   │   ├── config/              # db.js (pg Pool kết nối CSDL), env.js
-│   │   ├── controllers/         # auth, crafts, artisans, regions, collections, favourites, contact
+│   │   ├── components/          # Linh kiện giao diện tái sử dụng
+│   │   │   ├── common/          # Breadcrumbs, CraftCardSkeleton, PrivateRoute, Toast...
+│   │   │   ├── layout/          # Navbar (sticky header, search, favs badge), Footer, Layout
+│   │   │   └── modals/          # ArtisanDetailPopup, VisitBookingModal, LightboxModal, SearchModal
+│   │   ├── context/             # Quản lý trạng thái toàn cục (AuthContext, FavouritesContext)
+│   │   ├── hooks/               # Custom hooks: useDebounce, useLocalStorage, useModal...
+│   │   ├── pages/               # 9 trang giao diện chính theo Stitch + trang bổ trợ
+│   │   │   ├── HomePage.jsx             # Trang chủ: kiệt tác CR-BT-2025-08MR, stats động, field note
+│   │   │   ├── DirectoryPage.jsx        # Danh bạ tác phẩm: facets đa diện, sort giá, phân trang
+│   │   │   ├── CraftDetailPage.jsx      # Chi tiết tác phẩm: layout 4 cột, specs, 4 quy trình, N-N
+│   │   │   ├── ArtisansPage.jsx         # Danh bạ nghệ nhân: lưới 3x2, click mở ArtisanDetailPopup
+│   │   │   ├── ArtisanDetailPage.jsx    # Hồ sơ chuyên sâu: milestones, specs, widget đặt lịch hẹn
+│   │   │   ├── RegionsPage.jsx          # Bản đồ tương tác 6 vùng di sản SVG, làng nghề, điền dã
+│   │   │   ├── SeasonalPage.jsx         # BST Mùa Hạ 2026 CR-ARCH-SUMMER-26, curator note, Hero Craft
+│   │   │   ├── FavouritesPage.jsx       # Yêu thích: hybrid sync, tóm tắt danh mục, xóa hàng loạt
+│   │   │   ├── ContactPage.jsx          # Liên hệ chuyên đề (thẩm định di sản, đặt lịch), cam kết 24h
+│   │   │   ├── LoginPage.jsx            # Đăng nhập tài khoản & tự động đồng bộ Favourites
+│   │   │   ├── RegisterPage.jsx         # Đăng ký tài khoản mới (validate mật khẩu bcrypt)
+│   │   │   ├── ProfilePage.jsx          # Quản lý hồ sơ cá nhân (cập nhật info, đổi mật khẩu)
+│   │   │   └── NotFoundPage.jsx         # Trang báo lỗi 404 chuẩn giao diện di sản
+│   │   ├── services/            # api.js (Axios client tích hợp JWT Bearer & error interceptor)
+│   │   ├── styles/              # Design Tokens, variables.css, typography, animations
+│   │   ├── App.jsx              # Định tuyến ứng dụng React Router v6
+│   │   ├── index.css            # Toàn bộ CSS chuẩn hóa & Design System CraftRoots
+│   │   └── main.jsx             # Entrypoint khởi tạo React 18 DOM
+│   ├── index.html               # Template HTML chuẩn SEO & nạp phông chữ di sản
+│   ├── vite.config.js           # Cấu hình Vite & Reverse Proxy (/api -> http://localhost:5000)
+│   └── package.json             # Cấu hình dependencies Frontend
+├── server/                      # Backend (Node.js + Express REST API v1.1.0)
+│   ├── src/
+│   │   ├── config/              # db.js (pg Pool), env.js (kiểm tra an toàn production)
+│   │   ├── controllers/         # auth, crafts, artisans, regions, collections, favourites, contact, home, search, bookings, newsletter
 │   │   ├── middleware/          # authenticate.js, validate.js, errorHandler.js
-│   │   ├── routes/              # Routing endpoint RESTful
+│   │   ├── routes/              # Định nghĩa API routes RESTful v1.1.0
 │   │   ├── utils/               # token.js (JWT), password.js (bcrypt)
 │   │   ├── app.js
 │   │   └── server.js
 │   ├── .env.example
 │   └── package.json
 │
-├── db/                          # Dữ liệu chung của toàn bộ dự án (PostgreSQL scripts)
-│   ├── schema.sql               # Tạo cấu trúc 17 bảng, chỉ mục và quan hệ N-N
-│   └── seed.sql                 # Dữ liệu mẫu (hạt giống) cho toàn hệ thống
+├── db/                          # Dữ liệu chung toàn dự án (PostgreSQL 22 bảng)
+│   ├── migrations/              # 001_expand_schema.sql (mở rộng lên 22 bảng)
+│   ├── schema.sql               # Tạo cấu trúc 22 bảng, chỉ mục và quan hệ N-N
+│   └── seed.sql                 # Dữ liệu hạt giống chuẩn di sản (Anti-AI Content)
 │
-├── node_modules/                # Môi trường dependencies chung cho toàn dự án
+├── node_modules/                # Thư viện phụ thuộc dùng chung
+├── demo/                        # Mẫu giao diện & Hệ thống thiết kế
+│   └── artisan-page/            # Giao diện Danh sách & Chi tiết Nghệ nhân
+│       ├── DESIGN.md            # Hệ thống thiết kế CraftRoots & đặc tả Artisan Detail Popup
+│       ├── code.html            # Bản mẫu giao diện HTML hoàn chỉnh
+│       └── screen.png           # Ảnh chụp màn hình giao diện
 ├── docs/                        # Báo cáo, đặc tả kỹ thuật, kiến trúc, API contract, WBS
-├── package.json                 # Quản lý scripts và môi trường dùng chung tại root
+│   └── design/                  # 9 bản thiết kế HTML / Stitch tham chiếu
+├── package.json                 # Quản lý scripts tại thư mục gốc
 ├── .env                         # Biến môi trường hệ thống
 └── README.md                    # Tài liệu tổng quan dự án
 ```
 
 ---
 
-## 5. Cơ sở dữ liệu PostgreSQL
+## 5. Cơ sở dữ liệu PostgreSQL (22 Bảng)
 
-> 💡 **Chi tiết thiết kế dữ liệu & Data Dictionary đầy đủ:** Xem tại [docs/data.md](file:///e:/eproject1/docs/data.md).
+> 💡 **Chi tiết thiết kế dữ liệu & Data Dictionary đầy đủ:** Xem tại [docs/data.md](file:///e:/eproject1/docs/data.md) và [docs/database-schema.md](file:///e:/eproject1/docs/database-schema.md).
 
-### Các bảng chính
+### Danh mục 22 Bảng hệ thống
 
-| Bảng | Mục đích |
-|------|----------|
-| `users` | Tài khoản người dùng (email, `password_hash`, họ tên, vai trò) |
-| `regions` | Vùng miền / tiểu bang và thông tin văn hóa |
-| `craft_categories` | Loại hình thủ công (gốm, dệt, mây tre đan, điêu khắc...) |
-| `materials` | Chất liệu |
-| `techniques` | Kỹ thuật chế tác |
-| `artisans` | Hồ sơ nghệ nhân |
-| `crafts` | Sản phẩm thủ công |
-| `craft_artisans` | **Liên kết nhiều-nhiều: nghệ nhân ↔ sản phẩm** (1 nghệ nhân nhiều sản phẩm, 1 sản phẩm nhiều nghệ nhân) |
-| `craft_materials` | Liên kết nhiều-nhiều: sản phẩm ↔ chất liệu |
-| `craft_techniques` | Liên kết nhiều-nhiều: sản phẩm ↔ kỹ thuật |
-| `craft_images` | Ảnh của sản phẩm (có alt text và chú thích) |
-| `collections` / `collection_crafts` | Bộ sưu tập chuyên đề / nổi bật |
-| `seasonal_collections` / `seasonal_collection_crafts` | **Bộ sưu tập theo mùa** (Bộ mùa hè, thu, đông, xuân & các sản phẩm được chọn vào mùa) |
-| `favourites` | Sản phẩm yêu thích của từng người dùng |
-| `contact_messages` | Tin nhắn từ form liên hệ |
-
-### Schema rút gọn (`db/schema.sql`)
-
-```sql
-CREATE TABLE users (
-  id            SERIAL PRIMARY KEY,
-  full_name     VARCHAR(100) NOT NULL,
-  email         VARCHAR(255) NOT NULL UNIQUE,
-  password_hash VARCHAR(255) NOT NULL,          -- bcrypt hash, KHÔNG lưu mật khẩu gốc
-  role          VARCHAR(20)  NOT NULL DEFAULT 'user',
-  created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE regions (
-  id          SERIAL PRIMARY KEY,
-  name        VARCHAR(100) NOT NULL UNIQUE,
-  description TEXT
-);
-
-CREATE TABLE craft_categories (
-  id   SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL UNIQUE
-);
-
-CREATE TABLE materials (
-  id   SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL UNIQUE
-);
-
-CREATE TABLE techniques (
-  id   SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL UNIQUE
-);
-
-CREATE TABLE artisans (
-  id          SERIAL PRIMARY KEY,
-  name        VARCHAR(100) NOT NULL,
-  region_id   INT REFERENCES regions(id),
-  specialty   VARCHAR(150),
-  biography   TEXT,
-  avatar_url  TEXT
-);
-
-CREATE TABLE crafts (
-  id               SERIAL PRIMARY KEY,
-  name             VARCHAR(150) NOT NULL,
-  region_id        INT REFERENCES regions(id),
-  category_id      INT REFERENCES craft_categories(id),
-  thumbnail_url    TEXT,
-  cultural_context TEXT,
-  tools            TEXT,
-  process          TEXT,
-  traditional_use  TEXT,
-  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
--- Quan hệ nhiều - nhiều giữa Nghệ nhân và Sản phẩm
-CREATE TABLE craft_artisans (
-  craft_id           INT NOT NULL REFERENCES crafts(id) ON DELETE CASCADE,
-  artisan_id         INT NOT NULL REFERENCES artisans(id) ON DELETE CASCADE,
-  role_title         VARCHAR(100) DEFAULT 'Chủ trì chế tác',
-  contribution_notes TEXT,
-  is_lead            BOOLEAN NOT NULL DEFAULT FALSE,
-  display_order      INT NOT NULL DEFAULT 1,
-  PRIMARY KEY (craft_id, artisan_id)
-);
-
-CREATE TABLE craft_materials (
-  craft_id    INT REFERENCES crafts(id)    ON DELETE CASCADE,
-  material_id INT REFERENCES materials(id) ON DELETE CASCADE,
-  PRIMARY KEY (craft_id, material_id)
-);
-
-CREATE TABLE craft_techniques (
-  craft_id     INT REFERENCES crafts(id)     ON DELETE CASCADE,
-  technique_id INT REFERENCES techniques(id) ON DELETE CASCADE,
-  PRIMARY KEY (craft_id, technique_id)
-);
-
-CREATE TABLE craft_images (
-  id        SERIAL PRIMARY KEY,
-  craft_id  INT REFERENCES crafts(id) ON DELETE CASCADE,
-  url       TEXT NOT NULL,
-  alt_text  VARCHAR(255) NOT NULL,
-  caption   VARCHAR(255)
-);
-
-CREATE TABLE collections (
-  id          SERIAL PRIMARY KEY,
-  title       VARCHAR(150) NOT NULL,
-  description TEXT,
-  season      VARCHAR(50),
-  is_featured BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE TABLE collection_crafts (
-  collection_id INT REFERENCES collections(id) ON DELETE CASCADE,
-  craft_id      INT REFERENCES crafts(id)      ON DELETE CASCADE,
-  PRIMARY KEY (collection_id, craft_id)
-);
-
-CREATE TABLE favourites (
-  user_id    INT REFERENCES users(id)  ON DELETE CASCADE,
-  craft_id   INT REFERENCES crafts(id) ON DELETE CASCADE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  PRIMARY KEY (user_id, craft_id)
-);
-
-CREATE TABLE contact_messages (
-  id         SERIAL PRIMARY KEY,
-  full_name  VARCHAR(100) NOT NULL,
-  email      VARCHAR(255) NOT NULL,
-  message    TEXT NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
--- Chỉ mục hỗ trợ tìm kiếm / lọc nhanh
-CREATE INDEX idx_crafts_region   ON crafts(region_id);
-CREATE INDEX idx_crafts_category ON crafts(category_id);
-CREATE INDEX idx_crafts_name     ON crafts USING gin (to_tsvector('simple', name));
-```
+| Nhóm | Tên bảng | Mục đích |
+|---|---|---|
+| **Người dùng** | `users` | Tài khoản người dùng (email, `password_hash`, họ tên, số điện thoại, vai trò) |
+| **Phân loại di sản** | `regions` | 6 vùng di sản văn hóa Việt Nam (`code`, `map_key`, `cultural_summary`) |
+| | `craft_villages` | **(Mới)** Làng nghề truyền thống đã xác thực gắn với vùng miền |
+| | `craft_categories` | Loại hình thủ công (gốm sứ, dệt may, mây tre đan, điêu khắc, chạm bạc...) |
+| | `materials` | Chất liệu chế tác (đất sét cao lanh, tơ tằm, tre luồng, đồng đỏ...) |
+| | `techniques` | Kỹ pháp truyền thống (chuốt gốm bàn xoay, men rạn tam thái, dệt ikat...) |
+| **Nghệ nhân** | `artisans` | Hồ sơ nghệ nhân (REF code, đời thứ, thâm niên, thông số kỹ thuật `technique_specs`, thông tin xưởng) |
+| | `artisan_milestones` | **(Mới)** Niên biểu sự nghiệp và danh hiệu vinh danh của nghệ nhân |
+| **Tác phẩm & N-N** | `crafts` | Sản phẩm kiệt tác (mã code, giá VND, nhãn tag, thông số `specs`, quy trình `process_stages`) |
+| | `craft_artisans` | **Liên kết N-N:** Nghệ nhân ↔ Tác phẩm (vai trò `role_title`, nghệ nhân đại diện `is_lead`) |
+| | `craft_materials` | **Liên kết N-N:** Tác phẩm ↔ Chất liệu |
+| | `craft_techniques` | **Liên kết N-N:** Tác phẩm ↔ Kỹ pháp |
+| | `craft_images` | Album ảnh tác phẩm (URL, alt text, caption WCAG) |
+| **Bộ sưu tập** | `collections` | Bộ sưu tập chuyên đề thông thường |
+| | `collection_crafts` | Liên kết Bộ sưu tập ↔ Tác phẩm |
+| | `seasonal_collections` | **Bộ sưu tập theo mùa** (Hạ 2026 `CR-ARCH-SUMMER-26`, `curator_note`, `is_hero`) |
+| | `seasonal_collection_crafts`| Tác phẩm được tuyển chọn vào mùa (`highlight_badge`, `display_order`) |
+| **Tương tác & Dịch vụ** | `favourites` | Danh sách yêu thích của người dùng trên đám mây |
+| | `contact_messages` | Tin nhắn liên hệ theo chuyên đề (`topic`, trạng thái `unread`) |
+| | `visit_bookings` | **(Mới)** Phiếu đăng ký đặt lịch thăm xưởng thủ công (mã `VB-...`, lead time, số khách) |
+| | `newsletter_subscribers` | **(Mới)** Danh bạ đăng ký nhận bản tin di sản hàng tuần |
+| | `field_notes` | **(Mới)** Ghi chép điền dã thực địa của chuyên gia tại làng nghề |
 
 ---
 
 ## 6. Xác thực: JWT + bcrypt
 
-### Quy tắc mật khẩu (khi tạo mật khẩu)
-- Tối thiểu **8 ký tự**, gồm chữ hoa, chữ thường và chữ số (khuyến nghị thêm ký tự đặc biệt).
-- Kiểm tra ở cả client (phản hồi tức thì) và server (bắt buộc).
-- Có ô **xác nhận mật khẩu** khi đăng ký.
+### Quy tắc mật khẩu
+- Tối thiểu **8 ký tự**, gồm ít nhất 1 chữ hoa, 1 chữ thường và 1 chữ số.
+- Băm một chiều bằng **bcrypt** (salt rounds = 10), tuyệt đối không lưu plain text.
+- Kiểm tra ở cả Client (phản hồi tức thì) và Server (bắt buộc).
 
-### Băm và kiểm tra mật khẩu – `server/src/utils/password.js`
-```js
-const bcrypt = require('bcrypt');
-const SALT_ROUNDS = 10;
-
-exports.hashPassword = (plain) => bcrypt.hash(plain, SALT_ROUNDS);
-exports.comparePassword = (plain, hash) => bcrypt.compare(plain, hash);
-```
-
-### Tạo và xác minh JWT – `server/src/utils/token.js`
-```js
-const jwt = require('jsonwebtoken');
-
-exports.signToken = (user) =>
-  jwt.sign(
-    { sub: user.id, email: user.email, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
-  );
-
-exports.verifyToken = (token) => jwt.verify(token, process.env.JWT_SECRET);
-```
-
-### Middleware bảo vệ route – `server/src/middleware/authenticate.js`
-```js
-const { verifyToken } = require('../utils/token');
-
-module.exports = (req, res, next) => {
-  const header = req.headers.authorization || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
-  if (!token) return res.status(401).json({ message: 'Chưa đăng nhập' });
-
-  try {
-    req.user = verifyToken(token);
-    next();
-  } catch {
-    res.status(401).json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
-  }
-};
-```
-
-### Nguyên tắc bảo mật
-- Không bao giờ lưu mật khẩu gốc; chỉ lưu `password_hash`.
-- `JWT_SECRET` phải dài, ngẫu nhiên và chỉ nằm trong file `.env` (không commit lên Git).
-- Thông báo lỗi đăng nhập chung chung ("Email hoặc mật khẩu không đúng") để tránh lộ thông tin tài khoản.
-- Dùng truy vấn tham số hóa (`$1, $2...`) để chống SQL Injection.
-- Bật `helmet`, cấu hình `cors` đúng origin, giới hạn tần suất đăng nhập bằng `express-rate-limit`.
-- Phục vụ qua **HTTPS** khi triển khai thực tế.
+### Tạo và xác minh JWT HS256
+- `JWT_SECRET` ngẫu nhiên, bí mật, tối thiểu 32 ký tự, cấu hình an toàn trong `.env`.
+- Thời hạn mặc định 24 giờ (`1d`). Request đến route bảo vệ bắt buộc có header `Authorization: Bearer <token>`.
 
 ---
 
-## 7. Danh sách API
+## 7. Danh sách API RESTful v1.1.0
 
 Base URL: `http://localhost:5000/api`
 
-### Auth
-| Method | Endpoint | Bảo vệ | Mô tả |
-|--------|----------|:------:|-------|
-| POST | `/auth/register` | – | Đăng ký (body: `fullName`, `email`, `password`) |
-| POST | `/auth/login` | – | Đăng nhập, trả về `token` + thông tin user |
-| GET | `/auth/me` | ✔ | Lấy thông tin người dùng hiện tại |
-| PUT | `/auth/change-password` | ✔ | Đổi mật khẩu (`currentPassword`, `newPassword`) |
-
-### Nội dung (công khai)
+### 7.1. Cổng thông tin & Thống kê động (Home & Stats)
 | Method | Endpoint | Mô tả |
 |--------|----------|-------|
-| GET | `/crafts` | Danh sách sản phẩm. Query: `q`, `region`, `category`, `material`, `technique`, `sort`, `page`, `limit` |
-| GET | `/crafts/:id` | Chi tiết sản phẩm (kèm ảnh, chất liệu, kỹ thuật, nghệ nhân) |
-| GET | `/crafts/:id/related` | Sản phẩm liên quan |
-| GET | `/artisans` · `/artisans/:id` | Danh sách / hồ sơ nghệ nhân |
-| GET | `/regions` · `/regions/:id/crafts` | Vùng miền và sản phẩm theo vùng |
-| GET | `/categories` · `/materials` · `/techniques` | Dữ liệu cho bộ lọc |
-| GET | `/collections` · `/collections/:id` | Bộ sưu tập nổi bật / theo mùa |
-| GET | `/gallery` | Ảnh cho thư viện ảnh |
-| POST | `/contact` | Gửi form liên hệ |
+| GET | `/home` | Dữ liệu tổng hợp Trang chủ: kiệt tác spotlight `CR-BT-2025-08MR`, stats, featured grid, seasonal snippet, field note |
+| GET | `/stats` | Chỉ số thống kê động thời gian thực từ CSDL 22 bảng (tác phẩm, nghệ nhân, làng nghề, vùng văn hóa) |
+| GET | `/search` | Tìm kiếm đa diện tập trung trên tác phẩm, nghệ nhân và làng nghề di sản |
 
-### Yêu thích (cần đăng nhập)
+### 7.2. Tác phẩm thủ công (Crafts)
 | Method | Endpoint | Mô tả |
 |--------|----------|-------|
-| GET | `/favourites` | Lấy danh sách yêu thích |
-| POST | `/favourites/:craftId` | Thêm vào yêu thích |
-| DELETE | `/favourites/:craftId` | Xóa khỏi yêu thích |
-| POST | `/favourites/sync` | Đồng bộ danh sách từ Local Storage lên server sau khi đăng nhập |
+| GET | `/crafts` | Danh sách tác phẩm (query: `q`, `region`, `category`, `village`, `material`, `priceRange`, `ids`, `sort=newest|price_asc|price_desc`, `page`, `limit`) kèm `facets` |
+| GET | `/crafts/:id` | Chi tiết kiệt tác (hỗ trợ ID số hoặc mã `CR-BT-2025-08MR`, trả về `specs`, `processStages`, nghệ nhân N-N) |
+| GET | `/crafts/:id/related` | Gợi ý sản phẩm liên quan (`by=artisan|region|category`) |
 
-### Ví dụ
-```http
-POST /api/auth/register
-Content-Type: application/json
+### 7.3. Nghệ nhân & Lịch hẹn thăm xưởng (Artisans & Bookings)
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/artisans` | Danh sách nghệ nhân bậc thầy (phân trang, lọc theo làng nghề, vùng miền) |
+| GET | `/artisans/:idOrCode` | Hồ sơ nghệ nhân (hỗ trợ ID hoặc mã REF `ART-BT-001`, trả về `milestones`, `techniqueSpecs`, `visitInfo`) |
+| POST | `/visit-bookings` | Đăng ký lịch hẹn thăm xưởng (validate lead time 24h/48h, open days, max guests) |
+| GET | `/visit-bookings` | Danh sách lịch hẹn đã đăng ký (yêu cầu Bearer Token) |
 
-{ "fullName": "Nguyen Van A", "email": "a@example.com", "password": "Craft@1234" }
-```
-```http
-POST /api/auth/login
-Content-Type: application/json
+### 7.4. Vùng miền, Làng nghề & Bộ sưu tập mùa (Regions & Collections)
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/regions` | Danh sách 6 vùng di sản văn hóa Việt Nam |
+| GET | `/regions/:idOrCode` | Chi tiết vùng kèm làng nghề xác thực (`craft_villages`), tác phẩm và ghi chú điền dã (`field_notes`) |
+| GET | `/seasonal-collections` | Danh sách bộ sưu tập theo mùa |
+| GET | `/seasonal-collections/latest` | Bộ sưu tập mùa hiện tại (Mùa Hạ 2026 `CR-ARCH-SUMMER-26` kèm tác phẩm Hero) |
 
-{ "email": "a@example.com", "password": "Craft@1234" }
-```
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": { "id": 1, "fullName": "Nguyen Van A", "email": "a@example.com", "role": "user" }
-}
-```
+### 7.5. Yêu thích lưỡng thể (Favourites)
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/favourites` | Lấy danh sách tác phẩm yêu thích của người dùng đã đăng nhập |
+| GET | `/favourites/summary` | Thống kê số lượng yêu thích theo danh mục |
+| POST | `/favourites/:craftId` | Thêm tác phẩm vào danh sách yêu thích |
+| DELETE | `/favourites/:craftId` | Xóa một tác phẩm khỏi danh sách yêu thích |
+| DELETE | `/favourites` | Xóa hàng loạt tác phẩm yêu thích (body `{ ids: [...] }` hoặc query `all=true`) |
+| POST | `/favourites/sync` | Đồng bộ mảng `craftIds` từ Local Storage lên CSDL (`ON CONFLICT DO NOTHING`) |
+
+### 7.6. Liên hệ, Bản tin & Xác thực (Contact, Newsletter & Auth)
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| POST | `/contact` | Gửi form liên hệ theo chủ đề (`topic`: thẩm định di sản, đặt lịch, báo chí...) |
+| POST | `/newsletter` | Đăng ký nhận bản tin di sản hàng tuần (RFC 5322 regex, idempotent) |
+| POST | `/auth/register` | Đăng ký tài khoản người dùng mới |
+| POST | `/auth/login` | Đăng nhập tài khoản, nhận JWT token |
+| GET | `/auth/me` | Lấy thông tin tài khoản hiện tại |
+| PUT | `/auth/profile` | Cập nhật thông tin cá nhân (họ tên, ảnh đại diện, số điện thoại) |
+| PUT | `/auth/change-password` | Đổi mật khẩu tài khoản an toàn |
 
 ---
 
-## 8. Yêu cầu hệ thống
+## 8. Hướng dẫn cài đặt và chạy
 
-### Phần cứng
-- CPU Intel Core i5/i7 (hoặc tương đương)
-- RAM 8 GB trở lên
-- Ổ cứng 500 GB HDD/SSD
-- Kết nối Internet
-
-### Phần mềm
-- **Node.js** 18 LTS trở lên (kèm npm)
-- **PostgreSQL** 14 trở lên
-- **React** 18.x trở lên
-- VS Code (khuyến nghị cài thêm tiện ích AI), Figma (plugin AI) cho thiết kế
-- Trình duyệt hiện đại (Chrome, Edge, Firefox, Safari)
-- Postman hoặc công cụ tương đương để kiểm thử API (tùy chọn)
-
----
-
-## 9. Hướng dẫn cài đặt và chạy
-
-### Bước 1 – Lấy mã nguồn
-```bash
-git clone <repository-url>
-cd craftroots
-```
-
-### Bước 2 – Tạo cơ sở dữ liệu PostgreSQL
+### Bước 1: Khởi tạo CSDL PostgreSQL
 ```bash
 psql -U postgres
-```
-```sql
 CREATE DATABASE craftroots;
 \q
 ```
-Nạp schema và dữ liệu mẫu:
+
+### Bước 2: Nạp CSDL 22 Bảng và Dữ liệu hạt giống
 ```bash
-# Cách 1: Sử dụng npm scripts từ thư mục gốc
-npm run db:init          # nạp db/schema.sql vào PostgreSQL
-npm run db:seed          # nạp db/seed.sql dữ liệu mẫu
-npm run db:test          # kiểm tra kết nối và tính toàn vẹn 17 bảng
-
-# Cách 2: Chạy trực tiếp qua psql
-psql -U postgres -d craftroots -f db/schema.sql
-psql -U postgres -d craftroots -f db/seed.sql
+npm run db:init          # Khởi tạo 22 bảng từ db/schema.sql
+npm run db:seed          # Nạp dữ liệu chuẩn di sản từ db/seed.sql
+npm run db:test          # Kiểm tra tính toàn vẹn CSDL
 ```
 
-### Bước 3 – Cài đặt và chạy Backend
+### Bước 3: Khởi chạy toàn bộ hệ thống
 ```bash
-# Môi trường node_modules đã được tách ra thư mục gốc dùng chung cho toàn dự án
-# Bạn có thể chạy trực tiếp từ thư mục gốc:
-npm run server:dev       # chạy API tại http://localhost:5000
-
-# Hoặc di chuyển vào thư mục server/:
-cd server
-npm run dev              # chạy API tại http://localhost:5000
+npm run dev              # Chạy cả Frontend (5173) và Backend (5000)
 ```
 
-### Bước 4 – Chạy Frontend (khi phát triển)
-```bash
-cd client
-# Khi tiến hành xây dựng giao diện frontend, khởi chạy theo lệnh dự án
-```
+---
 
-### Các script thường dùng (tại thư mục gốc)
+## 9. Dữ liệu kiểm thử & Tiêu chuẩn Anti-AI
 
-| Lệnh | Mô tả |
-|------|-------|
-| `npm run server:dev` | Chạy Backend API với nodemon |
-| `npm run server:start` | Chạy Backend API ở chế độ production |
-| `npm run db:init` | Khởi tạo 17 bảng từ `db/schema.sql` |
-| `npm run db:seed` | Nạp dữ liệu mẫu từ `db/seed.sql` |
-| `npm run db:test` | Kiểm tra kết nối và tính toàn vẹn CSDL |
-
-### Triển khai (tùy chọn)
-- Build frontend (`npm run build`) và host trên dịch vụ static (Netlify, Vercel...) hoặc cho Express phục vụ thư mục build.
-- Triển khai backend lên dịch vụ Node (Render, Railway...) và dùng PostgreSQL được quản lý (managed).
-- Đặt biến môi trường production, bật HTTPS và cấu hình `CORS_ORIGIN` đúng tên miền frontend.
+- **Tài khoản mẫu đã nạp sẵn:**
+  - Email: `user@craftroots.test` | Mật khẩu: `Craft@1234`
+  - Email: `admin@craftroots.test` | Mật khẩu: `Craft@1234` (Vai trò `admin`)
+- **Nguyên tắc Anti-AI Content (BR-15):**
+  - Thuật ngữ nghề truyền thống chính xác: "men rạn tam thái", "nung củi lò bầu", "chuốt gốm bàn xoay", "sa Nam Đàn", "cẩn xà cừ".
+  - Nghệ nhân Nguyễn Văn Bình: Đời thứ 5 làng gốm Bát Tràng, 42 năm nghề, thời gian tiếp nhận đặt hẹn xưởng trước 24 giờ.
+  - Kiệt tác trung tâm: `CR-BT-2025-08MR` (Bình Gốm Men Rạn Cổ Dáng Tỳ Bà), giá 18.500.000 VND.
 
 ---
 
-## 10. Biến môi trường
+## 10. Tiêu chuẩn bàn giao eProject Aptech
 
-### `server/.env.example`
-```env
-PORT=5000
-NODE_ENV=development
-
-# PostgreSQL
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=craftroots
-DB_USER=postgres
-DB_PASSWORD=your_db_password
-
-# JWT
-JWT_SECRET=thay_bang_chuoi_bi_mat_dai_va_ngau_nhien
-JWT_EXPIRES_IN=1d
-
-# CORS
-CORS_ORIGIN=http://localhost:5173
-```
-
-### `client/.env.example`
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-> ⚠️ Không commit file `.env` lên Git. Hãy thêm `.env` vào `.gitignore`.
-
----
-
-## 11. Dữ liệu kiểm thử
-
-Tài khoản mẫu (nằm trong `seed.sql`, mật khẩu đã được băm bcrypt):
-
-| Vai trò | Email | Mật khẩu |
-|---------|-------|----------|
-| Người dùng | `user@craftroots.test` | `Craft@1234` |
-
-Các kịch bản kiểm thử gợi ý:
-
-| Kịch bản | Kết quả mong đợi |
-|----------|------------------|
-| Đăng ký email đã tồn tại | Trả về lỗi 409 |
-| Đăng ký mật khẩu yếu | Báo lỗi validation |
-| Đăng nhập sai mật khẩu | Lỗi 401, thông báo chung chung |
-| Gọi `/favourites` không có token | Lỗi 401 |
-| Gọi `/favourites` với token hết hạn | Lỗi 401 |
-| Tìm kiếm từ khóa không có kết quả | Hiển thị trạng thái rỗng (empty state) |
-| Lọc kết hợp vùng miền + chất liệu | Kết quả cập nhật đúng |
-| Gửi form liên hệ thiếu trường / sai email | Hiển thị lỗi validation |
-| Thêm/xóa yêu thích khi chưa đăng nhập | Lưu/xóa trong Local Storage |
-| Đăng nhập sau khi đã có yêu thích ở Local Storage | Dữ liệu được đồng bộ lên server |
-
----
-
-## 12. Yêu cầu phi chức năng
-
-- Hoạt động mượt mà trên các trình duyệt hiện đại.
-- Responsive hoàn toàn trên máy tính, máy tính bảng và thiết bị di động.
-- Truy cập an toàn và xác thực đáng tin cậy (JWT + bcrypt).
-- Tốc độ tải trang nhanh (lazy loading ảnh, code splitting, phân trang API).
-- Kiến trúc dễ mở rộng cho các mô-đun AI trong tương lai.
-- Thiết kế UI/UX thẩm mỹ, hỗ trợ truy cập (keyboard navigation, focus rõ ràng, alt text).
-
----
-
-## 13. Sản phẩm bàn giao
-
-- Định nghĩa bài toán (Problem Definition)
-- Đặc tả thiết kế (Design Specifications)
-- Sơ đồ: flowchart, DFD, ERD...
-- Toàn bộ mã nguồn (Source Code)
-- Dữ liệu kiểm thử (Test Data)
-- Hướng dẫn cài đặt và triển khai (file này)
-- Video clip quay lại hoạt động thực tế của website
-- (Tùy chọn) URL website đã triển khai online
-
-Toàn bộ dự án được nộp dưới dạng một tệp **ZIP** kèm tệp ReadMe liệt kê các giả định.
-
----
-
-## 14. Giả định
-
-- Đề bài gốc ưu tiên xử lý dữ liệu phía client và lưu yêu thích bằng Local Storage. Dự án này **mở rộng** thêm backend Express + PostgreSQL và xác thực JWT/bcrypt; Local Storage vẫn được giữ cho khách chưa đăng nhập.
-- Nội dung sản phẩm, nghệ nhân và hình ảnh trong `seed.sql` là dữ liệu mẫu phục vụ minh họa.
-- Bản đồ vùng miền dùng hình minh họa tĩnh, không phụ thuộc dịch vụ bản đồ trực tuyến.
-- Mã nguồn do AI hỗ trợ tạo ra đã được rà soát, kiểm thử và chỉnh sửa trước khi nộp.
-
----
-
-## Giấy phép & Liên hệ
-
-Dự án phục vụ mục đích học tập trong chương trình eProject – Aptech.
-Mọi thắc mắc vui lòng liên hệ Đội ngũ eProjects hoặc qua mục **Liên hệ** trên website.
+Dự án bàn giao đầy đủ:
+1. Mã nguồn hoàn chỉnh `client/`, `server/`, `db/`.
+2. Toàn bộ 11 tài liệu kỹ thuật chuẩn mực trong thư mục `docs/`.
+3. Bản mẫu thiết kế 9 trang Stitch trong `docs/design/` và `demo/artisan-page/`.
+4. Cơ sở dữ liệu PostgreSQL 22 bảng với kịch bản migration và seed data hoàn chỉnh.
