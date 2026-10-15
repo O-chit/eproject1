@@ -184,8 +184,9 @@ Vui lòng tham khảo thư viện tài liệu tại thư mục [`docs/`](file://
 - **Đặc tả API OpenAPI 3.0.3 v1.1.0:** [docs/api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml)
 - **Thiết kế CSDL & Migration (22 bảng):** [docs/database-schema.md](file:///e:/eproject1/docs/database-schema.md)
 - **Data Dictionary 22 bảng & DDL:** [docs/data.md](file:///e:/eproject1/docs/data.md)
-- **Đặc tả nghiệp vụ & Business Rules:** [docs/feature-spec.md](file:///e:/eproject1/docs/feature-spec.md)
-- **Phân rã công việc WBS Phases 0 – 8:** [docs/task-breakdown.md](file:///e:/eproject1/docs/task-breakdown.md)
+- **Đặc tả nghiệp vụ & Business Rules:** [docs/feature-spec.md](file:///c:/Users/Admin/studyspace/eproject1/eproject1/docs/feature-spec.md)
+- **Đặc tả Bản đồ Di sản 7 Vùng & Popup Modal:** [docs/vietnam-cultural-map.md](file:///c:/Users/Admin/studyspace/eproject1/eproject1/docs/vietnam-cultural-map.md)
+- **Phân rã công việc WBS Phases 0 – 8:** [docs/task-breakdown.md](file:///c:/Users/Admin/studyspace/eproject1/eproject1/docs/task-breakdown.md)
 - **Kế hoạch & 10 Luồng kiểm thử chi tiết:** [docs/test-plan.md](file:///e:/eproject1/docs/test-plan.md)
 
 ---
