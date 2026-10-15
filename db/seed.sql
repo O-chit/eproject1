@@ -10,10 +10,10 @@ SET timezone = 'UTC';
 -- 1. NẠP USERS (Mật khẩu hash bcrypt salt 10 của 'Craft@1234')
 -- -----------------------------------------------------------------------------
 INSERT INTO users (id, full_name, email, password_hash, role, avatar_url, is_active) VALUES
-(1, 'Ban Quản Trị CraftRoots', 'admin@craftroots.vn', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'admin', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80', TRUE),
-(2, 'Nguyễn Văn An (Người Dùng)', 'user@craftroots.test', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'user', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80', TRUE),
-(3, 'Trần Thu Hà (Biên Tập Viên)', 'editor@craftroots.vn', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'editor', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80', TRUE),
-(4, 'Hoàng Minh Nam (Kiến Trúc Sư)', 'nam.hoang@gmail.com', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'user', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80', TRUE);
+(1, 'Ban Quản Trị CraftRoots', 'admin@craftroots.vn', '$2b$10$hEr123EcpgUdIobAJYYUSuzmDYfNYwiWCSScglY2xCngHqHrK71U2', 'admin', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80', TRUE),
+(2, 'Nguyễn Văn An (Người Dùng)', 'user@craftroots.test', '$2b$10$hEr123EcpgUdIobAJYYUSuzmDYfNYwiWCSScglY2xCngHqHrK71U2', 'user', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80', TRUE),
+(3, 'Trần Thu Hà (Biên Tập Viên)', 'editor@craftroots.vn', '$2b$10$hEr123EcpgUdIobAJYYUSuzmDYfNYwiWCSScglY2xCngHqHrK71U2', 'editor', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80', TRUE),
+(4, 'Hoàng Minh Nam (Kiến Trúc Sư)', 'nam.hoang@gmail.com', '$2b$10$hEr123EcpgUdIobAJYYUSuzmDYfNYwiWCSScglY2xCngHqHrK71U2', 'user', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80', TRUE);
 
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
@@ -517,7 +517,7 @@ INSERT INTO collections (id, title, slug, description, banner_url, is_featured) 
 SELECT setval('collections_id_seq', (SELECT MAX(id) FROM collections));
 
 INSERT INTO collection_crafts (collection_id, craft_id, display_order) VALUES
-(1, 1, 1), (1, 3), (1, 7),
+(1, 1, 1), (1, 3, 2), (1, 7, 3),
 (2, 6, 1), (2, 5, 2);
 
 -- BỘ SƯU TẬP THEO MÙA: MÙA HẠ 2026 (CR-ARCH-SUMMER-26)

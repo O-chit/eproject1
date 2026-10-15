@@ -11,6 +11,9 @@ const seasonalCollectionRoutes = require('./seasonalCollection.routes');
 const galleryRoutes = require('./gallery.routes');
 const favouriteRoutes = require('./favourite.routes');
 const contactRoutes = require('./contact.routes');
+const bookingRoutes = require('./booking.routes');
+const newsletterRoutes = require('./newsletter.routes');
+const homeController = require('../controllers/home.controller');
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -22,6 +25,11 @@ router.get('/health', (req, res) => {
   });
 });
 
+// Home, Stats & Search Endpoints
+router.get('/home', homeController.getHome);
+router.get('/stats', homeController.getStats);
+router.get('/search', homeController.search);
+
 // Gắn các phân hệ routes theo OpenAPI 3.0.3 Contract
 router.use('/auth', authRoutes);
 router.use('/crafts', craftRoutes);
@@ -32,6 +40,8 @@ router.use('/collections', collectionRoutes);
 router.use('/seasonal-collections', seasonalCollectionRoutes);
 router.use('/gallery', galleryRoutes);
 router.use('/favourites', favouriteRoutes);
+router.use('/visit-bookings', bookingRoutes);
+router.use('/newsletter', newsletterRoutes);
 router.use('/contact', contactRoutes);
 
 module.exports = router;
