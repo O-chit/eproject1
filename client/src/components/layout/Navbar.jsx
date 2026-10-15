@@ -6,7 +6,7 @@ export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [savedCount, setSavedCount] = useState(4);
+  const [savedCount, setSavedCount] = useState(0);
   const navigate = useNavigate();
 
   // Đọc số lượng mục yêu thích từ localStorage

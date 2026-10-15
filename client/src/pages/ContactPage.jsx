@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../services/api';
 
 const TOPICS = [
   'Đặt Tác Phẩm Thửa Riêng',
@@ -17,21 +18,32 @@ export default function ContactPage() {
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg('');
 
-    // Simulate direct inquiry submission
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await api.submitContact({
+        fullName,
+        phone,
+        email,
+        subject: topic,
+        message,
+      });
+
       setSubmitted(true);
-      // reset form
       setFullName('');
       setPhone('');
       setEmail('');
       setMessage('');
-    }, 600);
+    } catch (err) {
+      setErrorMsg(err.message || 'Không thể gửi tin nhắn đến hệ thống. Vui lòng thử lại.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -189,6 +201,13 @@ export default function ContactPage() {
 
                 {/* Form Body */}
                 <form className="space-y-6" onSubmit={handleSubmit}>
+                  {errorMsg && (
+                    <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-[13px] flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[18px]">error</span>
+                      <span>{errorMsg}</span>
+                    </div>
+                  )}
+
                   {/* Field 1 & 2: Row for Name and Phone */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
