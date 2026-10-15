@@ -78,6 +78,12 @@ export const api = {
 
   // Tin nhắn liên hệ
   submitContact: (payload) => request('/contact', { method: 'POST', body: JSON.stringify(payload) }),
+
+  // Xác thực tài khoản (Auth) khớp chuẩn backend Express
+  login: (credentials) => request('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }),
+  register: (payload) => request('/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
+  getMe: () => request('/auth/me'),
+  changePassword: (payload) => request('/auth/change-password', { method: 'PUT', body: JSON.stringify(payload) }),
 };
 
 export default api;
