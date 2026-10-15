@@ -9,6 +9,7 @@ router.post('/login', authController.login);
 
 // Protected routes (BearerAuth)
 router.get('/me', authenticate, authController.getMe);
+router.put('/profile', authenticate, authController.updateProfile);
 router.put('/change-password', authenticate, authController.changePassword);
 
 module.exports = router;

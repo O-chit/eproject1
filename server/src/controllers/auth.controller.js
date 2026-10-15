@@ -185,9 +185,56 @@ const changePassword = async (req, res, next) => {
   }
 };
 
+/**
+ * Cập nhật thông tin hồ sơ người dùng
+ * PUT /api/auth/profile
+ */
+const updateProfile = async (req, res, next) => {
+  try {
+    const { fullName, avatarUrl } = req.body;
+
+    const updates = [];
+    const values = [];
+
+    if (fullName !== undefined) {
+      if (fullName.trim() === '') {
+        return error(res, 400, 'BAD_REQUEST', 'Họ và tên không được để trống');
+      }
+      values.push(fullName.trim());
+      updates.push(`full_name = $${values.length}`);
+    }
+
+    if (avatarUrl !== undefined) {
+      values.push(avatarUrl);
+      updates.push(`avatar_url = $${values.length}`);
+    }
+
+    if (updates.length === 0) {
+      return error(res, 400, 'BAD_REQUEST', 'Không có thông tin nào được yêu cầu cập nhật');
+    }
+
+    values.push(req.user.id);
+    const updateSql = `
+      UPDATE users 
+      SET ${updates.join(', ')}, updated_at = NOW() 
+      WHERE id = $${values.length} 
+      RETURNING id, full_name AS "fullName", email, role, avatar_url AS "avatarUrl"
+    `;
+
+    const result = await db.query(updateSql, values);
+    return res.status(200).json({
+      success: true,
+      data: result.rows[0],
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   register,
   login,
   getMe,
   changePassword,
+  updateProfile,
 };
