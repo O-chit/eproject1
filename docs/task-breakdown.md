@@ -2,9 +2,10 @@
 
 > **Dự án:** CraftRoots – Cổng Thông Tin Khám Phá Nghề Thủ Công Truyền Thống  
 > **Chương trình:** eProject – Aptech Computer Education  
-> **Phiên bản:** v1.0.0  
-> **Phương pháp quản lý:** Agile / Scrum (6 Sprints x 1 tuần)  
-> **Tài liệu liên quan:** [feature-spec.md](file:///e:/eproject1/docs/feature-spec.md) | [architecture.md](file:///e:/eproject1/docs/architecture.md) | [database-schema.md](file:///e:/eproject1/docs/database-schema.md) | [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml)
+> **Phiên bản tài liệu:** v1.1.0  
+> **Ngày cập nhật:** 2026-10-15  
+> **Phương pháp quản lý:** Agile / Scrum kết hợp WBS 9 Giai đoạn (Phases 0 – 8)  
+> **Tài liệu liên quan:** [README.md](file:///e:/eproject1/docs/README.md) | [DESIGN.md](file:///e:/eproject1/docs/DESIGN.md) | [DECISIONS.md](file:///e:/eproject1/docs/DECISIONS.md) | [feature-spec.md](file:///e:/eproject1/docs/feature-spec.md) | [architecture.md](file:///e:/eproject1/docs/architecture.md) | [database-schema.md](file:///e:/eproject1/docs/database-schema.md) | [data.md](file:///e:/eproject1/docs/data.md) | [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml) | [test-plan.md](file:///e:/eproject1/docs/test-plan.md)
 
 ---
 
@@ -12,26 +13,29 @@
 1. [Cơ cấu nhân sự & Phân vai dự án](#1-cơ-cấu-nhân-sự--phân-vai-dự-án)
 2. [Quy ước thang điểm ước lượng (Story Points & Time Estimation)](#2-quy-ước-thang-điểm-ước-lượng-story-points--time-estimation)
 3. [Lộ trình các Sprint & Mốc bàn giao (Milestones)](#3-lộ-trình-các-sprint--mốc-bàn-giao-milestones)
-4. [Bảng phân rã chi tiết công việc (Detailed Work Breakdown Structure)](#4-bảng-phân-rã-chi-tiết-công-việc-detailed-work-breakdown-structure)
-   - [Sprint 1: Nền tảng hạ tầng, CSDL PostgreSQL & Module Xác thực Auth](#sprint-1-nền-tảng-hạ-tầng-csdl-postgresql--module-xác-thực-auth)
-   - [Sprint 2: Xây dựng RESTful API dữ liệu & Bộ lọc thông minh](#sprint-2-xây-dựng-restful-api-dữ-liệu--bộ-lọc-thông-minh)
-   - [Sprint 3: Xây dựng nền tảng Client React SPA, Layout & Trang chủ](#sprint-3-xây-dựng-nền-tảng-client-react-spa-layout--trang-chủ)
-   - [Sprint 4: Khám phá sản phẩm, Hồ sơ Nghệ nhân N-N & Lightbox Gallery](#sprint-4-khám-phá-sản-phẩm-hồ-sơ-nghệ-nhân-n-n--lightbox-gallery)
-   - [Sprint 5: Yêu thích lưỡng thể, Bộ sưu tập mùa & Form liên hệ](#sprint-5-yêu-thích-lưỡng-thể-bộ-sưu-tập-mùa--form-liên-hệ)
-   - [Sprint 6: Kiểm thử chất lượng, Tối ưu hiệu năng & Đóng gói eProject](#sprint-6-kiểm-thử-chất-lượng-tối-ưu-hiệu-năng--đóng-gói-eproject)
+4. [Bảng phân rã chi tiết công việc theo các giai đoạn (Detailed WBS Phases 0 – 8)](#4-bảng-phân-rã-chi-tiết-công-việc-theo-các-giai-đoạn-detailed-wbs-phases-0--8)
+   - [Phase 0: Khảo sát thiết kế Stitch & Nâng cấp tài liệu kỹ thuật (Audit & Docs)](#phase-0-khảo-sát-thiết-kế-stitch--nâng-cấp-tài-liệu-kỹ-thuật-audit--docs)
+   - [Phase 1: Nâng cấp Cơ sở dữ liệu 22 Bảng & Dữ liệu hạt giống chuẩn di sản (DB & Seed)](#phase-1-nâng-cấp-cơ-sở-dữ-liệu-22-bảng--dữ-liệu-hạt-giống-chuẩn-di-sản-db--seed)
+   - [Phase 2: Xây dựng Design System & Nền tảng Styling (Design Tokens & CSS)](#phase-2-xây-dựng-design-system--nền-tảng-styling-design-tokens--css)
+   - [Phase 3: Phát triển Components dùng chung & Hệ thống Modals (Shared UI & Modals)](#phase-3-phát-triển-components-dùng-chung--hệ-thống-modals-shared-ui--modals)
+   - [Phase 4: Nâng cấp Server RESTful API v1.1.0 & Bảo mật (Server API Upgrades)](#phase-4-nâng-cấp-server-restful-api-v110--bảo-mật-server-api-upgrades)
+   - [Phase 5: Xây dựng 9 Trang giao diện React SPA theo thiết kế Stitch (Client Pages)](#phase-5-xây-dựng-9-trang-giao-diện-react-spa-theo-thiết-kế-stitch-client-pages)
+   - [Phase 6: Tích hợp Đồng bộ Yêu thích Lưỡng thể & Tìm kiếm Đa diện (Sync & Search)](#phase-6-tích-hợp-đồng-bộ-yêu-thích-lưỡng-thể--tìm-kiếm-đa-diện-sync--search)
+   - [Phase 7: Kiểm thử toàn diện, Đánh giá Bảo mật & Tối ưu Hiệu năng (QA & Testing)](#phase-7-kiểm-thử-toàn-diện-đánh-giá-bảo-mật--tối-ưu-hiệu-năng-qa--testing)
+   - [Phase 8: Đóng gói dự án eProject, Hướng dẫn triển khai & Nghiệm thu (Delivery)](#phase-8-đóng-gói-dự-án-eproject-hướng-dẫn-triển-khai--nghiệm-thu-delivery)
 5. [Đường găng dự án & Quản lý rủi ro (Critical Path & Risk Management)](#5-đường-găng-dự-án--quản-lý-rủi-ro-critical-path--risk-management)
 
 ---
 
 ## 1. Cơ cấu nhân sự & Phân vai dự án
 
-| Ký hiệu | Vai trò trong nhóm | Trách nhiệm chính |
+| Ký hiệu | Vai trò trong nhóm | Trách nhiệm chính trong phiên bản v1.1.0 |
 |---|---|---|
-| **TECH-LEAD** | Fullstack Lead & Architect | Quản trị kiến trúc, thiết kế schema CSDL, review mã nguồn, điều phối tích hợp hệ thống. |
-| **BACKEND-DEV** | Backend Engineer | Thiết kế REST API Express, viết controller, middleware, cấu hình pg connection pool, bảo mật API. |
-| **FRONTEND-DEV** | Frontend Engineer | Xây dựng UI React 18, React Router, tích hợp API Axios, quản lý Context và Custom Hooks. |
-| **DESIGN-AI** | UI/UX & AI Designer | Phác thảo wireframe, thiết kế style guide Figma, tạo ảnh di sản bằng công cụ AI, tối ưu tài nguyên media. |
-| **QA-TESTER** | QA / Test Engineer | Viết kịch bản test plan, thực hiện kiểm thử tự động/thủ công, kiểm tra bảo mật, viết báo cáo bug. |
+| **TECH-LEAD** | Fullstack Lead & Solution Architect | Quản trị kiến trúc, thiết kế schema CSDL 22 bảng, review mã nguồn, phân giải xung đột kỹ thuật, giám sát tiêu chuẩn Anti-AI. |
+| **BACKEND-DEV** | Backend Engineer | Mở rộng REST API Express (`/home`, `/stats`, `/search`, `/visit-bookings`, `/newsletter`...), tối ưu `pg.Pool`, bảo mật Helmet, CORS và Rate Limiting. |
+| **FRONTEND-DEV** | Frontend Engineer | Tái cấu trúc Client React 18 SPA bám sát 9 mẫu thiết kế Stitch, xây dựng hệ thống Modal (Artisan Detail Popup, Visit Booking, Lightbox), quản lý Context. |
+| **DESIGN-AI** | UI/UX & Heritage Content Designer | Chuẩn hóa Design System tokens trong `DESIGN.md`, trích xuất tài nguyên hình ảnh từ Stitch, thẩm định tính xác thực của thuật ngữ di sản thủ công truyền thống. |
+| **QA-TESTER** | QA / Test Engineer | Mở rộng Master Test Plan cho 22 bảng và các luồng mới, thực hiện kiểm thử tự động API, kiểm thử UI/UX, audit an ninh mạng và hiệu năng Core Web Vitals. |
 
 ---
 
@@ -39,7 +43,7 @@
 
 - Thang điểm Fibonacci: `1, 2, 3, 5, 8` Story Points (SP).
 - Quy đổi chuẩn: `1 SP ≈ 3 - 4 giờ làm việc tập trung`.
-- Tổng quy mô dự án: **48 Story Points** (~ 180 giờ kỹ thuật).
+- Tổng quy mô dự án mở rộng: **68 Story Points** (~ 240 giờ kỹ thuật).
 
 ---
 
@@ -47,116 +51,157 @@
 
 ```mermaid
 gantt
-    title LỘ TRÌNH TRIỂN KHAI DỰ ÁN CRAFTROOTS (ePROJECT APTECH)
+    title LỘ TRÌNH TRIỂN KHAI DỰ ÁN CRAFTROOTS v1.1.0 (ePROJECT APTECH)
     dateFormat  YYYY-MM-DD
-    section Sprint 1
-    Hạ tầng CSDL & Auth Core        :done, s1, 2026-10-13, 7d
-    section Sprint 2
-    REST API Lõi & Bộ lọc đa chiều :active, s2, 2026-10-20, 7d
-    section Sprint 3
-    Frontend React SPA & Home Page  :s3, 2026-10-27, 7d
-    section Sprint 4
-    Catalog, Nghệ nhân N-N & Gallery :s4, 2026-11-03, 7d
-    section Sprint 5
-    Hybrid Favourites & Seasonal    :s5, 2026-11-10, 7d
-    section Sprint 6
-    Kiểm thử, Đóng gói & Báo cáo    :s6, 2026-11-17, 7d
+    section Phase 0: Audit & Docs
+    Khảo sát Stitch & Nâng cấp 8 Docs:done, p0, 2026-10-12, 4d
+    section Phase 1: DB & Seed
+    CSDL 22 Bảng & Seed Anti-AI      :active, p1, 2026-10-16, 4d
+    section Phase 2: Design System
+    Design Tokens, CSS & Typography  :p2, 2026-10-20, 3d
+    section Phase 3: Shared Modals
+    Artisan Popup, Booking & Lightbox:p3, 2026-10-23, 5d
+    section Phase 4: Server Upgrades
+    REST API v1.1.0 & Dynamic Stats  :p4, 2026-10-28, 6d
+    section Phase 5: Client Pages
+    9 Trang Giao Diện React Stitch   :p5, 2026-11-03, 8d
+    section Phase 6: Sync & Search
+    Faceted Search & Hybrid Favourites:p6, 2026-11-11, 4d
+    section Phase 7: QA & Testing
+    Kiểm thử tự động & Security Audit:p7, 2026-11-15, 5d
+    section Phase 8: Handover
+    Đóng gói eProject & Báo cáo      :p8, 2026-11-20, 3d
 ```
 
 ---
 
-## 4. Bảng phân rã chi tiết công việc (Detailed Work Breakdown Structure)
+## 4. Bảng phân rã chi tiết công việc theo các giai đoạn (Detailed WBS Phases 0 – 8)
 
-### Sprint 1: Nền tảng hạ tầng, CSDL PostgreSQL & Module Xác thực Auth
-*Mục tiêu:* Thiết lập môi trường dự án, khởi tạo thành công 17 bảng CSDL PostgreSQL, hoàn thành luồng đăng ký/đăng nhập bằng JWT & bcrypt.
+### Phase 0: Khảo sát thiết kế Stitch & Nâng cấp tài liệu kỹ thuật (Audit & Docs)
+*Mục tiêu:* Đối soát toàn diện 9 bản thiết kế HTML Stitch, phân giải triệt để các xung đột kỹ thuật, đồng bộ hóa 100% tài liệu trong thư mục `docs/`.
 
-| Task ID | Module / Epic | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
 |---|---|---|---|---|---|---|
-| **TSK-01** | Infra & DB | Thiết lập repository Git, cấu hình ESLint, Prettier và cấu trúc thư mục chuẩn `client/`, `server/`, `db/`, `docs/`. | TECH-LEAD | 2 SP (7h) | Không | Git repo hoạt động tốt, có branch protection, `.gitignore` loại trừ node_modules và file `.env`. |
-| **TSK-02** | Database | Viết mã nguồn DDL `db/schema.sql` khởi tạo 17 bảng, các ràng buộc toàn vẹn khóa ngoại và chỉ mục B-Tree, GIN FTS. | TECH-LEAD | 3 SP (11h) | TSK-01 | Chạy lệnh `npm run db:init` tạo thành công 17 bảng không lỗi cú pháp trên PostgreSQL 14+. |
-| **TSK-03** | Database | Xây dựng tập dữ liệu hạt giống `db/seed.sql` gồm vùng miền, danh mục, chất liệu, kỹ thuật, nghệ nhân và tác phẩm mẫu. | BACKEND-DEV | 3 SP (10h) | TSK-02 | Chạy `npm run db:seed` nạp thành công 3 users mẫu, 3 regions, 6 categories, 10 nghệ nhân và 20 tác phẩm. |
-| **TSK-04** | Backend Core | Cấu hình Node.js Express server, tích hợp middleware `helmet`, `cors`, `express-rate-limit`, và thiết lập `pg.Pool` kết nối DB. | BACKEND-DEV | 2 SP (8h) | TSK-01 | Endpoint `GET /api/health` trả về `{ status: 'UP', database: 'connected' }`, bảo vệ HTTP headers chuẩn. |
-| **TSK-05** | Auth API | Xây dựng API Đăng ký `POST /api/auth/register` mã hóa mật khẩu bằng bcrypt (salt rounds = 10) và lưu bảng `users`. | BACKEND-DEV | 3 SP (10h) | TSK-02, TSK-04 | Validate email hợp lệ, mật khẩu >= 8 ký tự; trả về mã HTTP 201 kèm token; không lưu plain-text password. |
-| **TSK-06** | Auth API | Xây dựng API Đăng nhập `POST /api/auth/login` so sánh mật khẩu và ký JWT token (thời hạn 1 ngày). | BACKEND-DEV | 2 SP (7h) | TSK-05 | Sai tài khoản/mật khẩu trả HTTP 401; đúng trả về HTTP 200 kèm access token và thông tin user. |
-| **TSK-07** | Middleware | Viết middleware `authenticate.js` kiểm tra Bearer token và middleware xử lý lỗi tập trung `errorHandler.js`. | BACKEND-DEV | 2 SP (6h) | TSK-06 | Request thiếu/sai token trả về HTTP 401 JSON chuẩn; controller ném ngoại lệ được bắt và định dạng đúng schema. |
+| **TSK-P0-01** | Phase 0 | Khảo sát 9 file `code.html` của Stitch, lập ma trận Gap Analysis ghi nhận vào [DECISIONS.md](file:///e:/eproject1/docs/DECISIONS.md). | TECH-LEAD | 3 SP (10h) | Không | Tài liệu DECISIONS.md ghi rõ phân tích 9 trang, giải pháp cho 9 xung đột kỹ thuật (Nguyễn Văn Bình đời thứ 5, kiệt tác `CR-BT-2025-08MR`, lead time 24h vs 48h, 6 vùng di sản). |
+| **TSK-P0-02** | Phase 0 | Mở rộng [DESIGN.md](file:///e:/eproject1/docs/DESIGN.md) với Design Tokens hoàn chỉnh và đặc tả **Artisan Detail Popup Modal**. | DESIGN-AI | 3 SP (11h) | TSK-P0-01 | DESIGN.md chứa token màu, font, bóng đổ, z-index, cùng đặc tả 6 view của popup và mô hình dữ liệu JSON cho Nguyễn Văn Bình `ART-BT-001`. |
+| **TSK-P0-03** | Phase 0 | Nâng cấp [database-schema.md](file:///e:/eproject1/docs/database-schema.md) & [data.md](file:///e:/eproject1/docs/data.md) lên chuẩn v1.1.0 (22 bảng). | TECH-LEAD | 3 SP (10h) | TSK-P0-01 | ERD Mermaid 22 bảng; từ điển dữ liệu chi tiết cho 5 bảng mới (`craft_villages`, `artisan_milestones`, `visit_bookings`, `newsletter_subscribers`, `field_notes`) và các cột mở rộng. |
+| **TSK-P0-04** | Phase 0 | Nâng cấp [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml) lên OpenAPI 3.0.3 v1.1.0 đầy đủ schemas và endpoints mới. | BACKEND-DEV | 3 SP (11h) | TSK-P0-03 | Bổ sung tags: Home, Stats, Search, Bookings, Newsletter; mở rộng query params và schemas cho toàn bộ endpoints mới. |
+| **TSK-P0-05** | Phase 0 | Cập nhật [architecture.md](file:///e:/eproject1/docs/architecture.md), [feature-spec.md](file:///e:/eproject1/docs/feature-spec.md), [task-breakdown.md](file:///e:/eproject1/docs/task-breakdown.md) và [test-plan.md](file:///e:/eproject1/docs/test-plan.md). | TECH-LEAD & QA | 4 SP (14h) | TSK-P0-04 | 100% bộ tài liệu `docs/` đồng bộ phiên bản v1.1.0, không có mâu thuẫn hay sai lệch tên biến, bảng, endpoint. |
 
 ---
 
-### Sprint 2: Xây dựng RESTful API dữ liệu & Bộ lọc thông minh
-*Mục tiêu:* Cung cấp đầy đủ các endpoint đọc dữ liệu sản phẩm, tìm kiếm toàn văn bản, dữ liệu phân loại và nghệ nhân.
+### Phase 1: Nâng cấp Cơ sở dữ liệu 22 Bảng & Dữ liệu hạt giống chuẩn di sản (DB & Seed)
+*Mục tiêu:* Triển khai migration mở rộng schema PostgreSQL lên 22 bảng, nạp tập dữ liệu hạt giống chuẩn văn hóa di sản (Anti-AI).
 
-| Task ID | Module / Epic | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
 |---|---|---|---|---|---|---|
-| **TSK-08** | Crafts API | Xây dựng API `GET /api/crafts` hỗ trợ phân trang (`page`, `limit`), sắp xếp (`sort`) và lọc đa tiêu chí (region, category, material). | BACKEND-DEV | 5 SP (18h) | TSK-03, TSK-07 | Trả về danh sách sản phẩm kèm siêu dữ liệu phân trang chuẩn RFC; latency truy vấn < 100ms. |
-| **TSK-09** | Search Engine | Tích hợp Full-Text Search PostgreSQL với chỉ mục GIN trên trường `name` và `cultural_context` vào endpoint `GET /api/crafts?q=...`. | BACKEND-DEV | 3 SP (10h) | TSK-08 | Tìm kiếm từ khóa trả về kết quả chính xác không phụ thuộc dấu tiếng Việt cơ bản; không bị SQL injection. |
-| **TSK-10** | Detail API | Xây dựng API `GET /api/crafts/:id` trả về đầy đủ chi tiết sản phẩm, gallery ảnh, chất liệu, kỹ thuật và nghệ nhân đồng chế tác N-N. | BACKEND-DEV | 3 SP (11h) | TSK-08 | Query ghép nối (JOIN) trả về đúng danh sách nghệ nhân liên kết kèm vai trò (`role_title`, `is_lead`); trả 404 nếu không tìm thấy. |
-| **TSK-11** | Artisans API | Xây dựng API `GET /api/artisans` và `GET /api/artisans/:id` lấy hồ sơ nghệ nhân cùng danh sách tác phẩm liên quan. | BACKEND-DEV | 3 SP (10h) | TSK-10 | Trả về thông tin nghệ nhân và mảng các tác phẩm do nghệ nhân đó tham gia thực hiện; sắp xếp tác phẩm mới nhất. |
-| **TSK-12** | Meta APIs | Xây dựng các API lấy danh mục bộ lọc: `GET /regions`, `GET /categories`, `GET /materials`, `GET /techniques`. | BACKEND-DEV | 2 SP (7h) | TSK-04 | Các endpoint trả về mảng dữ liệu danh mục để phục vụ Client render thanh filter. |
+| **TSK-P1-01** | Phase 1 | Viết file migration `db/migrations/001_expand_schema.sql` và cập nhật `db/schema.sql` (22 bảng, FKs, indexes). | TECH-LEAD | 2 SP (7h) | TSK-P0-03 | Chạy migration thành công trên PostgreSQL 14+, bảo toàn dữ liệu cũ của 17 bảng và tạo mới 5 bảng mở rộng. |
+| **TSK-P1-02** | Phase 1 | Nâng cấp `db/seed.sql` với dữ liệu chuẩn di sản (6 vùng văn hóa, 6 làng nghề di sản, 6 nghệ nhân tiêu biểu, kiệt tác `CR-BT-2025-08MR`, BST Hạ 2026). | BACKEND-DEV | 3 SP (12h) | TSK-P1-01 | Dữ liệu đúng thuật ngữ làng nghề truyền thống, không bịa đặt niên đại; nghệ nhân Nguyễn Văn Bình đời thứ 5 thâm niên 42 năm; nạp thành công qua `npm run db:seed`. |
 
 ---
 
-### Sprint 3: Xây dựng nền tảng Client React SPA, Layout & Trang chủ
-*Mục tiêu:* Thiết lập khung giao diện React 18 SPA với Vite, hệ thống điều hướng React Router, layout dùng chung và Trang chủ ấn tượng.
+### Phase 2: Xây dựng Design System & Nền tảng Styling (Design Tokens & CSS)
+*Mục tiêu:* Thiết lập toàn bộ hệ thống biến CSS (Vanilla CSS), typography Google Fonts (Cinzel / Playfair Display kết hợp Inter), bảng màu di sản và hiệu ứng chuyển động mượt mà.
 
-| Task ID | Module / Epic | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
 |---|---|---|---|---|---|---|
-| **TSK-13** | UI Design | Thiết kế Style Guide (màu sắc HSL, font Inter, bo góc, bóng đổ) và Wireframe các trang chính trên Figma kết hợp AI. | DESIGN-AI | 3 SP (12h) | Không | Bộ Figma đầy đủ biến màu, kiểu typography, linh kiện Card, Button, Navbar, tương thích Mobile và Desktop. |
-| **TSK-14** | Client Infra | Khởi tạo dự án React 18 với Vite, cài đặt `react-router-dom`, cấu hình biến môi trường `.env` (`VITE_API_URL`) và hệ thống biến CSS. | FRONTEND-DEV | 2 SP (6h) | TSK-13 | Ứng dụng chạy mượt mà trên `localhost:5173`, nạp biến CSS toàn cục chuẩn xác, không có lỗi console. |
-| **TSK-15** | Layout Module | Xây dựng `Navbar` (có menu di động Drawer), `Footer` chuẩn bản quyền Aptech, `Breadcrumbs` và nút `BackToTop`. | FRONTEND-DEV | 3 SP (11h) | TSK-14 | Navbar cố định (sticky), menu mở trượt mượt trên mobile, nút BackToTop tự hiện khi cuộn quá 400px. |
-| **TSK-16** | Context Layer | Xây dựng `AuthContext` quản lý token, trạng thái đăng nhập và các phương thức `login()`, `logout()`, `register()`. | FRONTEND-DEV | 3 SP (10h) | TSK-06, TSK-14 | Lưu JWT vào state/storage; tự động giải mã lấy thông tin `user`; cung cấp component bảo vệ `PrivateRoute`. |
-| **TSK-17** | Landing Page | Xây dựng `HomePage`: Hero Section với ô tìm kiếm nhanh, Khối danh mục phím tắt, Carousel tác phẩm nổi bật (`is_featured`). | FRONTEND-DEV | 4 SP (15h) | TSK-08, TSK-15 | Giao diện hiện đại, hình ảnh tối ưu, có Skeleton Loader khi đang fetch dữ liệu từ API; responsive 100%. |
+| **TSK-P2-01** | Phase 2 | Xây dựng file `client/src/styles/variables.css` chứa đầy đủ tokens (colors, typography, spacing, shadows, z-indexes, modal overlay). | FRONTEND-DEV | 2 SP (8h) | TSK-P0-02 | Các biến CSS khớp chuẩn [DESIGN.md](file:///e:/eproject1/docs/DESIGN.md), hỗ trợ tông màu hoàng gia, đất nung terracotta, men lam cobalt và xanh lục ngọc. |
+| **TSK-P2-02** | Phase 2 | Thiết lập `client/src/styles/global.css` với CSS Reset hiện đại, hiệu ứng cuộn mượt (smooth scrolling), typography hierarchy và utilities. | FRONTEND-DEV | 2 SP (6h) | TSK-P2-01 | Toàn bộ giao diện có nền tảng đồng nhất; phông chữ hiển thị sắc nét tiếng Việt có dấu; hiệu ứng focus-visible chuẩn WCAG 2.1 AA. |
 
 ---
 
-### Sprint 4: Khám phá sản phẩm, Hồ sơ Nghệ nhân N-N & Lightbox Gallery
-*Mục tiêu:* Hoàn thành trang Danh mục sản phẩm (Directory), Bộ lọc đa diện kết hợp Debounce, Trang chi tiết sản phẩm và Thư viện ảnh tương tác Lightbox.
+### Phase 3: Phát triển Components dùng chung & Hệ thống Modals (Shared UI & Modals)
+*Mục tiêu:* Xây dựng các linh kiện giao diện nền tảng tái sử dụng và bộ 4 modal tương tác (Artisan Detail Popup, Visit Booking, Lightbox, Search).
 
-| Task ID | Module / Epic | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
 |---|---|---|---|---|---|---|
-| **TSK-18** | Filter Bar | Xây dựng component `FilterBar` đa tiêu chí (Vùng miền, Thể loại, Chất liệu) và ô tìm kiếm tích hợp `useDebounce` (350ms). | FRONTEND-DEV | 3 SP (11h) | TSK-12, TSK-14 | Người dùng gõ tìm kiếm không bị giật lag; chọn nhiều bộ lọc cùng lúc tự động đồng bộ lên URL query parameters. |
-| **TSK-19** | Directory Page | Xây dựng `DirectoryPage` hiển thị lưới sản phẩm (`CraftCard`), phân trang phân đoạn và thông báo khi rỗng (Empty State). | FRONTEND-DEV | 4 SP (14h) | TSK-18, TSK-08 | Thẻ sản phẩm có ảnh, badge, tên, hover zoom nhẹ; khi không có kết quả hiển thị thông điệp văn hóa và nút xóa lọc. |
-| **TSK-20** | Craft Detail | Xây dựng trang `CraftDetailPage` hiển thị bối cảnh văn hóa, công cụ, quy trình chế tác và danh sách nghệ nhân N-N. | FRONTEND-DEV | 4 SP (16h) | TSK-10, TSK-15 | Hiển thị thẻ nghệ nhân chủ trì (`is_lead`); danh sách sản phẩm liên quan; nút bấm yêu thích phản hồi tức thì. |
-| **TSK-21** | Lightbox Modal | Xây dựng component `LightboxModal` phóng to ảnh chất lượng cao, chuyển ảnh bằng chuột hoặc phím mũi tên bàn phím (`←`/`→`, `ESC`). | FRONTEND-DEV | 3 SP (10h) | TSK-20 | Mở ảnh nét căng toàn màn hình, có chú thích (`caption`) và `alt` text; bấm vùng ngoài hoặc phím ESC tự động đóng. |
-| **TSK-22** | Artisan Page | Xây dựng trang `ArtisansPage` và `ArtisanDetailPage` giới thiệu tiểu sử, danh hiệu và các tác phẩm tiêu biểu của từng nghệ nhân. | FRONTEND-DEV | 3 SP (10h) | TSK-11, TSK-15 | Hiển thị danh hiệu (Nghệ nhân Nhân dân/Ưu tú), thâm niên nghề nghiệp và danh sách tác phẩm liên kết N-N. |
+| **TSK-P3-01** | Phase 3 | Xây dựng `Navbar` (Sticky header, Search button, Favs badge counter, Mobile drawer) và `Footer` (Heritage branding, Aptech eProject credits). | FRONTEND-DEV | 3 SP (11h) | TSK-P2-02 | Navbar bám sát thiết kế Stitch; menu di động trượt mượt mà; badge đếm yêu thích cập nhật thời gian thực. |
+| **TSK-P3-02** | Phase 3 | Xây dựng component đặc tả **Artisan Detail Popup Modal** (`ArtisanDetailPopup.jsx`). | FRONTEND-DEV | 4 SP (14h) | TSK-P0-02, TSK-P2-02 | Hỗ trợ 6 view, 5 tabs thông tin, bẫy tiêu điểm (focus trap), đóng bằng phím ESC / click backdrop, nút chuyển nghệ nhân Next/Prev. |
+| **TSK-P3-03** | Phase 3 | Xây dựng `VisitBookingModal.jsx` tích hợp form đăng ký lịch hẹn thăm xưởng với validation lead time (24h/48h) và open days. | FRONTEND-DEV | 3 SP (10h) | TSK-P3-02 | Form validate ngày hẹn hợp lệ; chặn chọn ngày quá khứ hoặc chưa đủ lead time; hiển thị thông báo kết quả qua Toast. |
+| **TSK-P3-04** | Phase 3 | Xây dựng `LightboxModal.jsx` (phóng to ảnh kiệt tác, chuyển ảnh mũi tên, caption, WCAG alt) và `SearchModal.jsx` (tìm kiếm nhanh toàn trang). | FRONTEND-DEV | 3 SP (10h) | TSK-P2-02 | Lightbox chuyển ảnh mượt mà bằng bàn phím; Search Modal tích hợp debounce tìm kiếm đa năng. |
 
 ---
 
-### Sprint 5: Yêu thích lưỡng thể, Bộ sưu tập mùa & Form liên hệ
-*Mục tiêu:* Hiện thực hóa cơ chế Favourites Hybrid Sync, xây dựng không gian trưng bày Bộ sưu tập mùa và Biểu mẫu liên hệ hoàn chỉnh.
+### Phase 4: Nâng cấp Server RESTful API v1.1.0 & Bảo mật (Server API Upgrades)
+*Mục tiêu:* Mở rộng các router và controller backend để phục vụ đầy đủ dữ liệu động cho 9 trang Stitch và hệ thống modals mới.
 
-| Task ID | Module / Epic | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
 |---|---|---|---|---|---|---|
-| **TSK-23** | Favourites API | Xây dựng các API quản lý yêu thích trên server: `GET /api/favourites`, `POST /api/favourites/:id`, `DELETE /api/favourites/:id`. | BACKEND-DEV | 3 SP (10h) | TSK-07 | Chỉ cho phép truy cập khi có token hợp lệ; thao tác thêm/xóa cập nhật trực tiếp vào bảng `favourites` của PostgreSQL. |
-| **TSK-24** | Favourites Sync | Xây dựng API đồng bộ `POST /api/favourites/sync` nhận mảng `craftIds` từ client và insert an toàn `ON CONFLICT DO NOTHING`. | BACKEND-DEV | 2 SP (8h) | TSK-23 | Đồng bộ không gây lỗi 500 nếu ID đã tồn tại; trả về số lượng bản ghi đã đồng bộ và danh sách cập nhật mới nhất. |
-| **TSK-25** | Favourites Ctx | Xây dựng `FavouritesContext` phía React: khách vãng lai lưu vào `localStorage`, khi đăng nhập tự kích hoạt API sync và làm sạch storage. | FRONTEND-DEV | 4 SP (14h) | TSK-16, TSK-24 | Khách chưa đăng nhập thả tim được ngay; sau khi đăng nhập tim vẫn đỏ và được chuyển lên đám mây; đồng bộ đa thiết bị. |
-| **TSK-26** | Seasonal API | Xây dựng API `GET /api/seasonal-collections` và `GET /api/seasonal-collections/:id` lấy chi tiết BST mùa kèm tác phẩm Hero. | BACKEND-DEV | 3 SP (11h) | TSK-02 | Trả về đúng thông tin mùa hiện tại (Xuân/Hạ/Thu/Đông), cờ `is_hero`, tông màu `color_tone` và ghi chú giám tuyển. |
-| **TSK-27** | Seasonal UI | Xây dựng giao diện trưng bày Bộ sưu tập mùa trên Frontend với theme màu linh hoạt theo từng mùa và banner tác phẩm Hero. | FRONTEND-DEV | 3 SP (11h) | TSK-26 | Đổi tông màu chủ đạo linh hoạt theo thuộc tính `color_tone` của BST mùa; liên kết trực tiếp vào trang chi tiết sản phẩm. |
-| **TSK-28** | Contact Module | Xây dựng API `POST /api/contact` và giao diện Form liên hệ `ContactPage` có validate 2 đầu (Client + Server), lưu vào bảng `contact_messages`. | FULLSTACK | 3 SP (10h) | TSK-02, TSK-15 | Validate email regex, nội dung tối thiểu 10 ký tự; gửi thành công hiển thị Toast notification xanh và làm mới form. |
+| **TSK-P4-01** | Phase 4 | Xây dựng controller và router `GET /api/home` & `GET /api/stats` tổng hợp dữ liệu động từ PostgreSQL (không mock). | BACKEND-DEV | 3 SP (10h) | TSK-P1-02 | Endpoint trả về đầy đủ hero spotlight kiệt tác `CR-BT-2025-08MR`, số lượng thực tế tác phẩm, nghệ nhân, làng nghề, và field notes. |
+| **TSK-P4-02** | Phase 4 | Nâng cấp `GET /api/crafts` bổ sung query params `village`, `ids`, `sort=price_asc|price_desc` và trả về `facets` động. | BACKEND-DEV | 3 SP (11h) | TSK-P1-02 | Hỗ trợ lọc theo nhiều làng nghề, nhiều ID cùng lúc cho Favourites; trả về facets danh mục/chất liệu/khoảng giá; truy vấn < 100ms. |
+| **TSK-P4-03** | Phase 4 | Nâng cấp `GET /api/crafts/:id` trả về `specs`, `dimensions`, `processStages` 4 bước và API `GET /api/crafts/:id/related`. | BACKEND-DEV | 3 SP (10h) | TSK-P1-02 | Trả về chuẩn cấu trúc 4 cột thông tin kiệt tác; endpoint related gợi ý chính xác theo artisan / region / category. |
+| **TSK-P4-04** | Phase 4 | Nâng cấp `GET /api/artisans` và `GET /api/artisans/:idOrCode` (tìm theo ID số hoặc mã REF `ART-BT-001`, trả về milestones & specs). | BACKEND-DEV | 3 SP (10h) | TSK-P1-02 | Tìm kiếm linh hoạt theo cả ID số và mã REF; trả về niên biểu sự nghiệp và thông số kỹ thuật chế tác từ bảng quan hệ. |
+| **TSK-P4-05** | Phase 4 | Xây dựng phân hệ Đặt lịch thăm xưởng: `POST /api/visit-bookings` (validate lead time, open days, max guests) và `GET /api/visit-bookings`. | BACKEND-DEV | 3 SP (10h) | TSK-P1-02 | Kiểm tra nghiêm ngặt BR-13; sinh mã booking code chuẩn `VB-YYYYMMDD-XXXX`; lưu trữ an toàn trong DB. |
+| **TSK-P4-06** | Phase 4 | Xây dựng API Đăng ký bản tin di sản `POST /api/newsletter` và Tìm kiếm đa diện tập trung `GET /api/search?q=...`. | BACKEND-DEV | 2 SP (8h) | TSK-P1-02 | Newsletter validate email RFC 5322 và xử lý idempotent; search API tìm kiếm đồng thời trên crafts, artisans, villages. |
+| **TSK-P4-07** | Phase 4 | Nâng cấp Favourites API: `GET /api/favourites/summary` và `DELETE /api/favourites` hỗ trợ xóa hàng loạt (bulk delete). | BACKEND-DEV | 2 SP (7h) | TSK-P1-02 | Xóa danh sách nhiều ID hoặc toàn bộ yêu thích; thống kê tổng số tác phẩm yêu thích theo từng danh mục. |
+| **TSK-P4-08** | Phase 4 | Nâng cấp Auth API: `PUT /api/auth/profile` cập nhật thông tin cá nhân và tăng cường bảo mật CORS / JWT_SECRET trong `env.js`. | BACKEND-DEV | 2 SP (7h) | TSK-P1-02 | Cập nhật họ tên, ảnh đại diện, số điện thoại; chặn khởi động nếu JWT_SECRET yếu ở chế độ production. |
 
 ---
 
-### Sprint 6: Kiểm thử chất lượng, Tối ưu hiệu năng & Đóng gói eProject
-*Mục tiêu:* Thực hiện toàn bộ kịch bản kiểm thử, tối ưu hóa điểm số Lighthouse, rà soát lỗ hổng bảo mật và xuất bản báo cáo theo tiêu chuẩn Aptech.
+### Phase 5: Xây dựng 9 Trang giao diện React SPA theo thiết kế Stitch (Client Pages)
+*Mục tiêu:* Hiện thực hóa toàn bộ 9 trang giao diện React 18 SPA bám sát từng dòng mã HTML và cấu trúc thị giác trong các file `code.html` của Stitch.
 
-| Task ID | Module / Epic | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
 |---|---|---|---|---|---|---|
-| **TSK-29** | API Testing | Viết bộ kiểm thử tự động API trên Postman / Supertest cho 100% các endpoint trong tài liệu `api-contract.yaml`. | QA-TESTER | 4 SP (14h) | Toàn bộ API | Đạt 100% test cases Pass, bao gồm cả trường hợp hợp lệ và các mã lỗi 400, 401, 404, 409. |
-| **TSK-30** | Security Audit | Kiểm thử rà soát lỗ hổng: tấn công SQL Injection, XSS qua input form, Brute-Force đăng nhập, truy cập API trái phép. | QA-TESTER | 3 SP (10h) | TSK-29 | Hệ thống chặn 100% payload tấn công; rate limiter khóa tạm thời sau 5 lần thử sai; không rò rỉ stack trace. |
-| **TSK-31** | Responsive QA | Kiểm thử giao diện và độ tương thích trên các thiết bị thực tế (iPhone, iPad, Laptop màn hình rộng) và đa trình duyệt. | QA-TESTER | 3 SP (11h) | Toàn bộ UI | Không vỡ layout ở mọi breakpoint (375px, 768px, 1024px, 1440px); bàn phím điều hướng được toàn bộ các nút. |
-| **TSK-32** | Performance Opt | Tối ưu hóa kích thước ảnh (WebP format), Lazy loading hình ảnh, nén gzip backend, đạt điểm Lighthouse Performance > 85. | TECH-LEAD | 3 SP (10h) | TSK-31 | FCP < 1.5s, TBT < 200ms, đạt tiêu chuẩn Core Web Vitals của Google. |
-| **TSK-33** | Documentation | Hoàn thiện toàn bộ bộ tài liệu báo cáo eProject: Flowchart, DFD, Test Data, hướng dẫn cài đặt và video demo sản phẩm. | TECH-LEAD & ALL | 4 SP (15h) | TSK-32 | Bộ tài liệu hoàn chỉnh, không lỗi chính tả, tuân thủ đúng yêu cầu đề bài của Aptech; đóng gói tệp ZIP bàn giao. |
+| **TSK-P5-01** | Phase 5 | Xây dựng `HomePage.jsx` theo Stitch `home/code.html` (Hero kiệt tác `CR-BT-2025-08MR`, Dynamic Stats, Featured Grid, Seasonal Snippet, Field Note). | FRONTEND-DEV | 4 SP (15h) | TSK-P3-01, TSK-P4-01 | Giao diện ấn tượng, nạp dữ liệu động từ API, hình ảnh sắc nét, tương tác mượt mà trên cả di động và desktop. |
+| **TSK-P5-02** | Phase 5 | Xây dựng `DirectoryPage.jsx` theo Stitch `directory/code.html` (Thanh lọc đa diện Facets, sắp xếp giá/mới nhất, phân trang, thẻ CraftCard chuẩn). | FRONTEND-DEV | 4 SP (14h) | TSK-P4-02, TSK-P2-02 | Lưới sản phẩm responsive, lọc đa tiêu chí không giật lag, hiển thị đúng tag/originLine/priceVnd. |
+| **TSK-P5-03** | Phase 5 | Xây dựng `CraftDetailPage.jsx` theo Stitch `craft-detail/code.html` (Bố cục 4 cột: Tác phẩm, Nghệ nhân N-N, Kích thước/Thông số, Quy trình 4 bước). | FRONTEND-DEV | 5 SP (18h) | TSK-P4-03, TSK-P3-04 | Tái hiện xuất sắc layout 4 cột của kiệt tác; click vào nghệ nhân mở Artisan Popup; click ảnh mở Lightbox. |
+| **TSK-P5-04** | Phase 5 | Xây dựng `ArtisansPage.jsx` theo Stitch `artisans/code.html` (Lưới 3 cột x 2 hàng, 6 thẻ nghệ nhân với ảnh grayscale hover color, click mở popup). | FRONTEND-DEV | 4 SP (14h) | TSK-P4-04, TSK-P3-02 | Bấm vào bất kỳ vị trí nào trên thẻ nghệ nhân đều mở Artisan Detail Popup Modal tương ứng. |
+| **TSK-P5-05** | Phase 5 | Xây dựng `ArtisanDetailPage.jsx` theo Stitch `artisan-detail/code.html` (Hồ sơ toàn diện, Niên biểu cống hiến, Bảng thông số kỹ thuật, Widget đặt lịch). | FRONTEND-DEV | 4 SP (15h) | TSK-P4-04, TSK-P3-03 | Trang độc lập chuyên sâu, hiển thị timeline mốc son sự nghiệp và tích hợp form đặt lịch thăm xưởng. |
+| **TSK-P5-06** | Phase 5 | Xây dựng `RegionsPage.jsx` theo Stitch `regions/code.html` (Bản đồ tương tác 6 vùng di sản SVG, Làng nghề đã xác thực, Ghi chú điền dã). | FRONTEND-DEV | 4 SP (14h) | TSK-P4-01, TSK-P2-02 | Click vào từng vùng trên bản đồ SVG đổi trạng thái sáng viền và lọc danh sách làng nghề/tác phẩm tương ứng. |
+| **TSK-P5-07** | Phase 5 | Xây dựng `SeasonalPage.jsx` theo Stitch `seasonal/code.html` (Bộ sưu tập Mùa Hạ 2026 `CR-ARCH-SUMMER-26`, Lời bình Giám tuyển, Tác phẩm Hero). | FRONTEND-DEV | 3 SP (12h) | TSK-P4-01, TSK-P2-02 | Theme màu xanh hạ tươi mát, khối tác phẩm Hero nổi bật trung tâm, lưới tác phẩm tuyển chọn đồng điệu. |
+| **TSK-P5-08** | Phase 5 | Xây dựng `FavouritesPage.jsx` theo Stitch `favourites/code.html` (Hỗ trợ khách vãng lai + đã đăng nhập, xóa hàng loạt, tóm tắt theo danh mục). | FRONTEND-DEV | 3 SP (11h) | TSK-P4-07, TSK-P2-02 | Hiển thị sản phẩm yêu thích kèm thống kê phân loại; nút xóa tất cả hoạt động tức thì. |
+| **TSK-P5-09** | Phase 5 | Xây dựng `ContactPage.jsx` theo Stitch `contact/code.html` (Bộ chọn chủ đề topic, cam kết xác thực di sản 24h, form liên hệ chuẩn). | FRONTEND-DEV | 3 SP (10h) | TSK-P1-02, TSK-P2-02 | Form nhập liệu trực quan, validate email regex, gửi thành công hiển thị Toast notification xanh. |
+| **TSK-P5-10** | Phase 5 | Hoàn thiện các trang phụ trợ: `AboutPage.jsx`, `LoginPage.jsx`, `RegisterPage.jsx`, `ProfilePage.jsx`, `NotFoundPage.jsx`. | FRONTEND-DEV | 3 SP (10h) | TSK-P4-08, TSK-P3-01 | Đồng bộ phong cách thiết kế di sản, cập nhật hồ sơ cá nhân mượt mà, định tuyến an toàn. |
+
+---
+
+### Phase 6: Tích hợp Đồng bộ Yêu thích Lưỡng thể & Tìm kiếm Đa diện (Sync & Search)
+*Mục tiêu:* Hoàn thiện các cơ chế dữ liệu phức tạp phía máy khách: Hybrid Sync Favourites, Search Modal kết hợp Debounce, và liên kết tương tác giữa các trang.
+
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+|---|---|---|---|---|---|---|
+| **TSK-P6-01** | Phase 6 | Hoàn thiện `FavouritesContext`: quản lý song song `localStorage` và PostgreSQL, kích hoạt API sync tự động sau khi login. | FRONTEND-DEV | 3 SP (10h) | TSK-P4-07, TSK-P5-08 | Khách chưa đăng nhập thả tim được ngay; sau khi đăng nhập dữ liệu tự đẩy lên CSDL không gây lỗi trùng lặp. |
+| **TSK-P6-02** | Phase 6 | Tích hợp `SearchModal` toàn cục: phím tắt `Ctrl + K` hoặc nút kính lúp trên Navbar, debounce 350ms, kết quả phân nhóm. | FRONTEND-DEV | 3 SP (10h) | TSK-P4-06, TSK-P3-04 | Tìm kiếm tức thì theo thời gian thực; phân chia rõ kết quả: Tác phẩm, Nghệ nhân, Làng nghề di sản. |
+
+---
+
+### Phase 7: Kiểm thử toàn diện, Đánh giá Bảo mật & Tối ưu Hiệu năng (QA & Testing)
+*Mục tiêu:* Thực hiện toàn bộ 40+ ca kiểm thử trong Master Test Plan, thẩm định bảo mật và tối ưu Core Web Vitals.
+
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+|---|---|---|---|---|---|---|
+| **TSK-P7-01** | Phase 7 | Chạy bộ kiểm thử tự động API (Postman / Supertest) cho toàn bộ 20+ endpoints RESTful v1.1.0. | QA-TESTER | 4 SP (14h) | Phase 4 | Đạt 100% Pass rate cho cả mã 200/201 và các tình huống ngoại lệ 400, 401, 404, 409, 429. |
+| **TSK-P7-02** | Phase 7 | Kiểm thử tương tác UI/UX: Artisan Detail Popup Modal (6 view, phím ESC, focus trap), Visit Booking, Bản đồ SVG 6 vùng. | QA-TESTER | 3 SP (11h) | Phase 5 | Mọi tương tác chuyển động êm ái, không vỡ khung hình, không xung đột sự kiện cuộn trang. |
+| **TSK-P7-03** | Phase 7 | Rà soát an ninh mạng: Thử nghiệm payload SQL Injection, XSS, Brute-Force Rate Limiting (5 lần/15 phút). | QA-TESTER | 3 SP (10h) | TSK-P7-01 | Hệ thống an toàn tuyệt đối, không làm lộ stack trace hay thông tin nhạy cảm. |
+| **TSK-P7-04** | Phase 7 | Đo lường hiệu năng bằng Google Lighthouse và kiểm định chuẩn tiếp cận WCAG 2.1 AA. | TECH-LEAD | 3 SP (10h) | TSK-P7-02 | Điểm số Lighthouse: Performance > 85, Accessibility > 90, Best Practices > 90, SEO = 100. |
+
+---
+
+### Phase 8: Đóng gói dự án eProject, Hướng dẫn triển khai & Nghiệm thu (Delivery)
+*Mục tiêu:* Đóng gói mã nguồn sạch, cập nhật tài liệu nghiệm thu và hoàn thiện hồ sơ báo cáo theo quy chuẩn Aptech Computer Education.
+
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+|---|---|---|---|---|---|---|
+| **TSK-P8-01** | Phase 8 | Cập nhật root `README.md` và `docs/README.md` phản ánh đầy đủ hướng dẫn cài đặt, cấu hình `.env`, lệnh khởi tạo DB 22 bảng. | TECH-LEAD | 2 SP (7h) | Phase 7 | Hướng dẫn rõ ràng từng bước, người mới có thể khởi chạy dự án trong dưới 5 phút. |
+| **TSK-P8-02** | Phase 8 | Rà soát tính toàn vẹn của mã nguồn, chạy linter dọn dẹp mã thừa, kiểm tra `.gitignore`. | TECH-LEAD | 2 SP (6h) | TSK-P8-01 | Không có file rác, file `.env` không bị lộ vào Git, mã nguồn tuân thủ clean code. |
+| **TSK-P8-03** | Phase 8 | Xuất bản báo cáo eProject Aptech hoàn chỉnh: Sơ đồ kiến trúc, Lược đồ CSDL, Danh mục kiểm thử và Video demo vận hành. | TOÀN ĐỘI | 3 SP (11h) | TSK-P8-02 | Hồ sơ nghiệm thu chỉn chu, đáp ứng 100% tiêu chí chấm điểm xuất sắc của Hội đồng Aptech. |
 
 ---
 
 ## 5. Đường găng dự án & Quản lý rủi ro (Critical Path & Risk Management)
 
-### 5.1. Chuỗi công việc trên đường găng (Critical Path):
-`TSK-01 (Setup)` ➔ `TSK-02 (Schema DDL)` ➔ `TSK-04 (Server & Pool)` ➔ `TSK-05 / 06 (Auth & JWT)` ➔ `TSK-08 (Crafts API)` ➔ `TSK-10 (Detail N-N API)` ➔ `TSK-16 (Auth Context)` ➔ `TSK-20 (Craft Detail UI)` ➔ `TSK-24 / 25 (Hybrid Favourites Sync)` ➔ `TSK-29 / 30 (Security & Testing)` ➔ `TSK-33 (Bàn giao eProject)`.
+### 5.1. Chuỗi công việc trên đường găng (Critical Path v1.1.0)
+```
+TSK-P0-01 (Audit Stitch) ➔ TSK-P0-03 (Schema Docs 22 Bảng) ➔ TSK-P1-01 (DDL & Migrations) ➔ TSK-P1-02 (Anti-AI Seed) ➔ TSK-P4-01/02/03 (Server APIs v1.1.0) ➔ TSK-P3-02 (Artisan Popup Modal) ➔ TSK-P5-01/03/04 (9 Stitch Client Pages) ➔ TSK-P6-01 (Hybrid Sync) ➔ TSK-P7-01/03 (QA & Security) ➔ TSK-P8-03 (Bàn giao eProject).
+```
 
 ### 5.2. Ma trận rủi ro & Kế hoạch giảm thiểu (Risk Matrix)
-1. **Rủi ro rò rỉ dữ liệu hoặc lộ mật khẩu:**
-   - *Biện pháp:* Bắt buộc mã hóa bcrypt tại Backend; không lưu token trong cookie không an toàn; biến môi trường nhạy cảm giữ trong `.env` không commit Git.
-2. **Rủi ro xung đột dữ liệu khi đồng bộ Yêu thích (Favourites Conflict):**
-   - *Biện pháp:* Khóa chính kép `(user_id, craft_id)` và sử dụng mệnh đề `ON CONFLICT DO NOTHING` ở câu lệnh INSERT.
-3. **Rủi ro suy giảm hiệu năng khi tìm kiếm từ khóa:**
-   - *Biện pháp:* Tích hợp kỹ thuật `useDebounce` ở frontend (350ms) kết hợp với chỉ mục GIN Index của PostgreSQL trên backend.
+
+| Rủi ro kỹ thuật | Mức độ | Hậu quả tiềm tàng | Biện pháp giảm thiểu & Kiểm soát |
+|---|---|---|---|
+| **Lệch cấu trúc dữ liệu giữa thiết kế Stitch và CSDL cũ** | Cao | Giao diện thiếu trường thông tin (giá VND, tag, 4 bước chế tác, specs, milestones). | Đã giải quyết triệt để tại Phase 0 & Phase 1 qua tài liệu [DECISIONS.md](file:///e:/eproject1/docs/DECISIONS.md) và migration 22 bảng v1.1.0. |
+| **Nội dung do AI tạo ra làm sai lệch tri thức làng nghề truyền thống** | Cao | Bị trừ điểm học thuật eProject; sai niên đại, sai kỹ pháp men gốm, xúc phạm di sản. | Áp dụng triệt để quy tắc **BR-15 (Anti-AI Content)**: đối soát với tài liệu Bảo tàng Lịch sử Quốc gia; mọi chi tiết chưa kiểm chứng gắn nhãn `[CẦN XÁC MINH: nguồn đối soát]`. |
+| **Xung đột cuộn trang & Bẫy tiêu điểm khi mở Artisan Detail Popup Modal** | Trung bình | Người dùng bị kẹt cuộn nền hoặc không thể đóng modal bằng phím ESC trên di động. | Áp dụng kỹ thuật bẫy tiêu điểm (focus trap), khóa scroll `document.body.style.overflow = 'hidden'`, bắt sự kiện phím `Escape` toàn cục. |
+| **Lỗi tràn bộ nhớ do lưu quá nhiều Yêu thích trong Local Storage** | Thấp | Trình duyệt máy khách báo lỗi QuotaExceeded. | Giới hạn tối đa 50 ID sản phẩm trong `localStorage`; tự động làm sạch ngay khi đồng bộ lên PostgreSQL sau đăng nhập. |
+| **Tấn công từ chối dịch vụ vào API Đặt lịch thăm xưởng và Bản tin** | Trung bình | Cơ sở dữ liệu bị spam hàng ngàn bản ghi rác. | Áp dụng `express-rate-limit` tối đa 5 request / 15 phút trên từng IP; validate nghiêm ngặt email RFC 5322 và quy tắc BR-13. |
