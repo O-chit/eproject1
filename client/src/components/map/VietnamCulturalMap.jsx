@@ -14,19 +14,20 @@ import {
   getRegionBoundingBox,
   SOVEREIGNTY_DATA
 } from '../../data/regionsConfig';
+import RegionDetailModal from './RegionDetailModal';
 
-// CẤU HÌNH MAPSTYLE TỐI GIẢN CHỈ CHỨA DUY NHẤT LAYER BACKGROUND MÀU TỐI SÂU
-// Tuyệt đối không tải tiles thế giới, không hiển thị nước khác, cô lập 100% lãnh thổ Việt Nam
-const BLANK_DARK_MAP_STYLE = {
+// CẤU HÌNH BẢN ĐỒ DI SẢN CRAFTROOTS
+// Nền biển mang sắc men ngọc nhạt (#EAF2F4), dịu mát, đồng điệu 100% với gam màu Linen #F9F8F6 của trang web
+const HERITAGE_MAP_STYLE = {
   version: 8,
   sources: {},
   glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
   layers: [
     {
-      id: 'blank-dark-background',
+      id: 'heritage-ocean-background',
       type: 'background',
       paint: {
-        'background-color': '#0B0F19' // Xanh đen sâu thẳm, tôn vinh màu sắc 7 vùng
+        'background-color': '#EAF2F4' // Biển men ngọc nhạt thanh khiết
       }
     }
   ]
@@ -53,7 +54,12 @@ export default function VietnamCulturalMap({
   const [mapLoaded, setMapLoaded] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [currentZoom, setCurrentZoom] = useState(4.8);
-  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
+
+  // Quản lý trạng thái mở/đóng Popup Trang Chi Tiết Vùng Văn Hóa
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalRegion, setModalRegion] = useState(
+    initialRegionId ? CULTURAL_REGIONS[initialRegionId] : null
+  );
 
   // 1. Tải dữ liệu GeoJSON 7 VÙNG VĂN HÓA (Đã hợp nhất, chỉ giữ lại ranh giới giữa 7 vùng, bỏ ranh giới tỉnh)
   useEffect(() => {
@@ -78,27 +84,15 @@ export default function VietnamCulturalMap({
     };
   }, []);
 
-  // Thông tin vùng văn hóa đang được chọn
-  const activeRegion = selectedRegionId ? CULTURAL_REGIONS[selectedRegionId] : null;
-
-  // Tính toán vùng đệm (padding) tự động, an toàn tuyệt đối với mọi kích thước màn hình
+  // Tính toán vùng đệm (padding) tự động, an toàn tuyệt đối, bản đồ luôn nằm giữa màn hình
   const getDynamicPadding = useCallback(
     (isDetailedRegion = false) => {
-      const containerWidth = mapContainerRef.current?.clientWidth || (typeof window !== 'undefined' ? window.innerWidth : 1200);
-      const isLg = containerWidth >= 1024;
-      
-      // Đảm bảo padding không bao giờ vượt quá chiều rộng container (tránh lỗi zoom = NaN)
-      let rightPad = 40;
-      if (isLg && !isPanelCollapsed) {
-        rightPad = Math.max(40, Math.min(440, containerWidth - 320));
-      }
-
       if (isDetailedRegion) {
         return {
-          top: 70,
-          bottom: 70,
-          left: 50,
-          right: rightPad
+          top: 60,
+          bottom: 60,
+          left: 60,
+          right: 60
         };
       }
 
@@ -106,10 +100,10 @@ export default function VietnamCulturalMap({
         top: 60,
         bottom: 40,
         left: 40,
-        right: rightPad
+        right: 40
       };
     },
-    [isPanelCollapsed]
+    []
   );
 
   // 2. Căn vừa vặn toàn bộ dải đất và biển đảo Việt Nam trong một màn hình
@@ -171,25 +165,6 @@ export default function VietnamCulturalMap({
     [zoomToRegion, onRegionSelect]
   );
 
-  // Toggle thu gọn/mở rộng Side Panel
-  const handleTogglePanel = () => {
-    setIsPanelCollapsed((prev) => {
-      const nextState = !prev;
-      setTimeout(() => {
-        const map = mapInstanceRef.current;
-        if (map) {
-          map.resize();
-          if (selectedRegionId) {
-            zoomToRegion(selectedRegionId);
-          } else {
-            fitToVietnamOverview(true);
-          }
-        }
-      }, 250);
-      return nextState;
-    });
-  };
-
   // 4. Khởi tạo bản đồ 2D nghiêm ngặt MapLibre GL
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
@@ -198,7 +173,7 @@ export default function VietnamCulturalMap({
     try {
       map = new Map({
         container: mapContainerRef.current,
-        style: BLANK_DARK_MAP_STYLE,
+        style: HERITAGE_MAP_STYLE,
         center: [108.5, 15.5],
         zoom: 4.8,
         minZoom: 3.2,
@@ -296,56 +271,87 @@ export default function VietnamCulturalMap({
             data: regionsGeoJson
           });
 
-          // 1. Layer Fill tô màu 7 vùng
+          // 1. Layer Fill tô màu 7 vùng văn hóa di sản (Ý tưởng 2: Ngũ Sắc Tranh Dân Gian & Men Tro Củi)
           map.addLayer({
             id: 'regions-fill',
             type: 'fill',
             source: 'vn-regions-source',
             paint: {
-              'fill-color': ['get', 'regionColor'],
-              'fill-opacity': 0.88,
+              'fill-color': [
+                'match',
+                ['get', 'regionId'],
+                'TAY_BAC_VIET_BAC', '#D49A24',      // Vàng Hoa Hòe (Tranh dân gian & Dệt thổ cẩm)
+                'DONG_BANG_SONG_HONG', '#A83827',   // Đỏ Vang Gỗ Vang (Son tranh Đông Hồ & Gốm Bát Tràng)
+                'BAC_TRUNG_BO', '#5E4B7A',          // Tím Men Tro Lam Huế (Cố Đô & Men tro cổ)
+                'NAM_TRUNG_BO', '#266B88',          // Lam Chàm Men Chu Đậu (Hải dương & Men lam cổ)
+                'TAY_NGUYEN', '#CE5C23',            // Cam Lửa Nung Củi (Bazan nung củi & Lửa cồng chiêng)
+                'DONG_NAM_BO', '#8A5232',           // Nâu Hổ Phách Nam Bộ (Gỗ mật, sơn mài & Gốm sành)
+                'TAY_NAM_BO', '#327555',            // Xanh Gỉ Đồng Cổ Mộc (Phù sa miệt vườn Cửu Long)
+                ['coalesce', ['get', 'regionColor'], '#B86B35']
+              ],
+              'fill-opacity': 0.92,
               'fill-antialias': true
             }
           });
 
-          // 2. Layer ranh giới CHỈ GIỮ LẠI giữa 7 vùng (và bờ biển ngoài)
+          // 2a. Lớp rãnh viền trắng bọc ngoài (Outer Casing) - bảo đảm ranh giới 7 vùng luôn sắc nét nổi bật
+          map.addLayer({
+            id: 'regions-boundary-casing',
+            type: 'line',
+            source: 'vn-regions-source',
+            paint: {
+              'line-color': '#FFFFFF',
+              'line-width': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                3.2, 2.5,
+                6.0, 3.8,
+                9.0, 5.2
+              ],
+              'line-opacity': 0.95
+            }
+          });
+
+          // 2b. Lớp chỉ ranh giới chính màu mực đen (Inner Sharp Linework)
           map.addLayer({
             id: 'regions-boundary',
             type: 'line',
             source: 'vn-regions-source',
             paint: {
-              'line-color': 'rgba(255, 255, 255, 0.65)',
+              'line-color': '#1C1B1A',
               'line-width': [
                 'interpolate',
                 ['linear'],
                 ['zoom'],
-                3.2, 0.8,
-                6.0, 1.5,
-                9.0, 2.5
-              ]
+                3.2, 1.2,
+                6.0, 1.8,
+                9.0, 2.6
+              ],
+              'line-opacity': 0.85
             }
           });
 
-          // 3. Layer viền sáng khi hover vào vùng
+          // 3. Layer viền Terracotta khi hover vào vùng
           map.addLayer({
             id: 'region-hover-stroke',
             type: 'line',
             source: 'vn-regions-source',
             paint: {
-              'line-color': '#38BDF8',
-              'line-width': 2.8,
+              'line-color': '#B86B35',
+              'line-width': 3.8,
               'line-opacity': 0
             }
           });
 
-          // 4. Layer viền nổi bật cho vùng đang được chọn
+          // 4. Layer viền mực đen nổi bật cho vùng đang được chọn
           map.addLayer({
             id: 'region-highlight-line',
             type: 'line',
             source: 'vn-regions-source',
             paint: {
-              'line-color': '#FEF08A',
-              'line-width': 3.5,
+              'line-color': '#1C1B1A',
+              'line-width': 4.5,
               'line-opacity': 0
             }
           });
@@ -367,9 +373,9 @@ export default function VietnamCulturalMap({
             source: 'vn-sovereignty-source',
             filter: ['==', 'type', 'island'],
             paint: {
-              'circle-radius': 7,
-              'circle-color': '#38BDF8',
-              'circle-opacity': 0.35
+              'circle-radius': 8,
+              'circle-color': '#B86B35',
+              'circle-opacity': 0.25
             }
           });
 
@@ -379,10 +385,10 @@ export default function VietnamCulturalMap({
             source: 'vn-sovereignty-source',
             filter: ['==', 'type', 'island'],
             paint: {
-              'circle-radius': 3.5,
-              'circle-color': '#38BDF8',
-              'circle-stroke-width': 1.5,
-              'circle-stroke-color': '#F8FAFC'
+              'circle-radius': 4.0,
+              'circle-color': '#B86B35',
+              'circle-stroke-width': 2.0,
+              'circle-stroke-color': '#FFFFFF'
             }
           });
         }
@@ -438,6 +444,10 @@ export default function VietnamCulturalMap({
       if (features.length > 0) {
         const clickedRegionId = features[0].properties.regionId;
         handleSelectRegion(clickedRegionId);
+        if (CULTURAL_REGIONS[clickedRegionId]) {
+          setModalRegion(CULTURAL_REGIONS[clickedRegionId]);
+          setIsModalOpen(true);
+        }
       }
     };
 
@@ -493,13 +503,13 @@ export default function VietnamCulturalMap({
     const hsEl = document.createElement('div');
     hsEl.className = 'group flex flex-col items-center pointer-events-auto cursor-pointer select-none';
     hsEl.innerHTML = `
-      <div class="flex items-center gap-1.5 px-2.5 py-1 bg-[#0B0F19]/95 border border-[#38BDF8] shadow-lg shadow-[#38BDF8]/25 transition-transform group-hover:scale-105">
-        <span class="w-2 h-2 rounded-full bg-[#38BDF8] animate-ping"></span>
-        <span class="font-mono text-[10px] font-bold text-[#F8FAFC] tracking-[0.16em] uppercase whitespace-nowrap">
+      <div class="flex items-center gap-1.5 px-3 py-1 bg-[#FFFFFF] border-2 border-[#B86B35] shadow-lg shadow-[#B86B35]/20 transition-transform group-hover:scale-105">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#B86B35] animate-ping"></span>
+        <span class="font-mono text-[10px] font-bold text-[#1C1B1A] tracking-[0.16em] uppercase whitespace-nowrap">
           QUẦN ĐẢO HOÀNG SA
         </span>
       </div>
-      <span class="font-sans text-[8px] text-[#38BDF8] tracking-widest uppercase font-semibold mt-0.5 bg-[#0B0F19]/80 px-1 py-0.2">
+      <span class="font-sans text-[8.5px] text-[#B86B35] tracking-widest uppercase font-bold mt-0.5 bg-[#FFFFFF] border border-[#E6E2DA] px-1.5 py-0.5 shadow-xs">
         (TP. ĐÀ NẴNG – VIỆT NAM)
       </span>
     `;
@@ -512,13 +522,13 @@ export default function VietnamCulturalMap({
     const tsEl = document.createElement('div');
     tsEl.className = 'group flex flex-col items-center pointer-events-auto cursor-pointer select-none';
     tsEl.innerHTML = `
-      <div class="flex items-center gap-1.5 px-2.5 py-1 bg-[#0B0F19]/95 border border-[#38BDF8] shadow-lg shadow-[#38BDF8]/25 transition-transform group-hover:scale-105">
-        <span class="w-2 h-2 rounded-full bg-[#38BDF8] animate-ping"></span>
-        <span class="font-mono text-[10px] font-bold text-[#F8FAFC] tracking-[0.16em] uppercase whitespace-nowrap">
+      <div class="flex items-center gap-1.5 px-3 py-1 bg-[#FFFFFF] border-2 border-[#B86B35] shadow-lg shadow-[#B86B35]/20 transition-transform group-hover:scale-105">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#B86B35] animate-ping"></span>
+        <span class="font-mono text-[10px] font-bold text-[#1C1B1A] tracking-[0.16em] uppercase whitespace-nowrap">
           QUẦN ĐẢO TRƯỜNG SA
         </span>
       </div>
-      <span class="font-sans text-[8px] text-[#38BDF8] tracking-widest uppercase font-semibold mt-0.5 bg-[#0B0F19]/80 px-1 py-0.2">
+      <span class="font-sans text-[8.5px] text-[#B86B35] tracking-widest uppercase font-bold mt-0.5 bg-[#FFFFFF] border border-[#E6E2DA] px-1.5 py-0.5 shadow-xs">
         (TỈNH KHÁNH HÒA – VIỆT NAM)
       </span>
     `;
@@ -542,33 +552,41 @@ export default function VietnamCulturalMap({
   };
 
   return (
-    <div className={`relative w-full h-full flex flex-col lg:flex-row overflow-hidden bg-[#0B0F19] ${className}`}>
+    <div className={`relative w-full h-full flex flex-col overflow-hidden bg-[#F9F8F6] ${className}`}>
       {/* THANH ĐIỀU HƯỚNG VÙNG NHANH Ở TRÊN (Quick Region Pills Bar) */}
       <div className="absolute top-3 left-4 right-4 z-20 flex items-center justify-between gap-2 pointer-events-none">
-        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pointer-events-auto bg-[#0B0F19]/90 backdrop-blur-md p-1.5 border border-white/10 shadow-2xl max-w-full">
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pointer-events-auto bg-[#FFFFFF]/95 backdrop-blur-md p-1.5 border border-[#E6E2DA] shadow-md max-w-full">
           <button
             type="button"
-            onClick={() => handleSelectRegion(null)}
+            onClick={() => {
+              handleSelectRegion(null);
+              setIsModalOpen(false);
+              fitToVietnamOverview(true);
+            }}
             className={`px-3 py-1 text-[11px] font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
               !selectedRegionId
-                ? 'bg-white text-[#0B0F19] font-bold shadow-sm'
-                : 'text-slate-300 hover:text-white hover:bg-white/5'
+                ? 'bg-[#1C1B1A] text-white font-bold shadow-xs'
+                : 'text-[#5A5854] hover:text-[#1C1B1A] hover:bg-[#F4F2EE]'
             }`}
           >
             Toàn Cảnh Việt Nam
           </button>
-          <span className="text-white/20 select-none">|</span>
+          <span className="text-[#E6E2DA] select-none">|</span>
           {Object.values(CULTURAL_REGIONS).map((reg) => {
             const isSelected = selectedRegionId === reg.id;
             return (
               <button
                 key={reg.id}
                 type="button"
-                onClick={() => handleSelectRegion(reg.id)}
+                onClick={() => {
+                  handleSelectRegion(reg.id);
+                  setModalRegion(reg);
+                  setIsModalOpen(true);
+                }}
                 className={`flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                   isSelected
-                    ? 'text-white font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    ? 'text-white font-bold shadow-xs'
+                    : 'text-[#5A5854] hover:text-[#1C1B1A] hover:bg-[#F4F2EE]'
                 }`}
                 style={isSelected ? { backgroundColor: reg.color } : {}}
               >
@@ -583,7 +601,7 @@ export default function VietnamCulturalMap({
         </div>
       </div>
 
-      {/* KHUNG BẢN ĐỒ 2D MAPLIBRE CANVAS */}
+      {/* KHUNG BẢN ĐỒ 2D MAPLIBRE CANVAS (FULL WIDTH & FULL HEIGHT) */}
       <div className="relative flex-1 w-full h-full min-h-[450px]">
         <div
           ref={mapContainerRef}
@@ -593,9 +611,9 @@ export default function VietnamCulturalMap({
 
         {/* Loading Spinner */}
         {loadingData && (
-          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#0B0F19]/85 backdrop-blur-sm">
-            <div className="w-10 h-10 border-3 border-amber-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-            <span className="font-mono text-[12px] uppercase tracking-widest text-slate-300">
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#F9F8F6]/85 backdrop-blur-sm">
+            <div className="w-10 h-10 border-3 border-[#B86B35] border-t-transparent rounded-full animate-spin mb-3"></div>
+            <span className="font-mono text-[12px] uppercase tracking-widest text-[#5A5854]">
               Đang tải bản đồ 7 vùng văn hóa làng nghề...
             </span>
           </div>
@@ -607,22 +625,22 @@ export default function VietnamCulturalMap({
             className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full pb-3 font-mono"
             style={{ left: hoveredInfo.x, top: hoveredInfo.y }}
           >
-            <div className="px-3.5 py-2 bg-[#0B0F19]/95 border border-white/20 shadow-2xl backdrop-blur-md text-[11px] flex flex-col gap-1 min-w-[200px]">
+            <div className="px-3.5 py-2 bg-[#FFFFFF]/98 border border-[#E6E2DA] shadow-xl backdrop-blur-md text-[11px] flex flex-col gap-1 min-w-[200px]">
               <div className="flex items-center justify-between gap-2">
-                <span className="font-bold text-white uppercase tracking-wider text-[12px]">
+                <span className="font-bold text-[#1C1B1A] uppercase tracking-wider text-[12px] font-serif">
                   {hoveredInfo.regionName}
                 </span>
                 <span
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
                   style={{ backgroundColor: hoveredInfo.regionColor }}
                 ></span>
               </div>
-              <span className="text-[10px] text-amber-400/90 font-mono">
+              <span className="text-[10px] text-[#B86B35] font-mono">
                 {hoveredInfo.subName}
               </span>
-              <div className="flex items-center justify-between text-[10px] text-slate-400 border-t border-white/10 pt-1 mt-0.5">
+              <div className="flex items-center justify-between text-[10px] text-[#5A5854] border-t border-[#E6E2DA] pt-1 mt-0.5">
                 <span>{hoveredInfo.provinces ? hoveredInfo.provinces.length : 0} tỉnh thành</span>
-                <span className="text-slate-300">Nhấp để xem chi tiết →</span>
+                <span className="text-[#B86B35] font-bold">Nhấp xem chi tiết di sản →</span>
               </div>
             </div>
           </div>
@@ -631,11 +649,11 @@ export default function VietnamCulturalMap({
         {/* BỘ NÚT ĐIỀU KHIỂN BẢN ĐỒ TIỆN ÍCH (Góc dưới bên trái) */}
         <div className="absolute bottom-5 left-5 z-20 flex flex-col gap-2 pointer-events-auto">
           {/* Nút Phóng to / Thu nhỏ / Căn vừa màn hình */}
-          <div className="flex flex-col bg-[#0B0F19]/90 backdrop-blur-md border border-white/20 shadow-2xl overflow-hidden font-mono text-[12px]">
+          <div className="flex flex-col bg-[#FFFFFF]/95 backdrop-blur-md border border-[#E6E2DA] shadow-lg overflow-hidden font-mono text-[12px]">
             <button
               type="button"
               onClick={handleZoomIn}
-              className="w-9 h-9 flex items-center justify-center text-slate-200 hover:text-white hover:bg-white/10 transition-colors border-b border-white/10 cursor-pointer font-bold text-base"
+              className="w-9 h-9 flex items-center justify-center text-[#1C1B1A] hover:text-[#B86B35] hover:bg-[#F4F2EE] transition-colors border-b border-[#E6E2DA] cursor-pointer font-bold text-base"
               title="Phóng to bản đồ"
             >
               +
@@ -643,7 +661,7 @@ export default function VietnamCulturalMap({
             <button
               type="button"
               onClick={handleZoomOut}
-              className="w-9 h-9 flex items-center justify-center text-slate-200 hover:text-white hover:bg-white/10 transition-colors border-b border-white/10 cursor-pointer font-bold text-base"
+              className="w-9 h-9 flex items-center justify-center text-[#1C1B1A] hover:text-[#B86B35] hover:bg-[#F4F2EE] transition-colors border-b border-[#E6E2DA] cursor-pointer font-bold text-base"
               title="Thu nhỏ bản đồ (Xem toàn cảnh)"
             >
               −
@@ -652,192 +670,59 @@ export default function VietnamCulturalMap({
               type="button"
               onClick={() => {
                 handleSelectRegion(null);
+                setIsModalOpen(false);
                 fitToVietnamOverview(true);
               }}
-              className="w-9 h-9 flex items-center justify-center text-amber-400 hover:text-amber-300 hover:bg-white/10 transition-colors cursor-pointer text-sm"
+              className="w-9 h-9 flex items-center justify-center text-[#B86B35] hover:bg-[#F4F2EE] transition-colors cursor-pointer text-sm"
               title="Toàn cảnh Việt Nam vừa vặn màn hình"
             >
               ⛶
             </button>
           </div>
 
-          {/* Nút Xem Toàn Bộ Việt Nam khi đang ở trong chế độ chọn vùng */}
-          {selectedRegionId && (
-            <button
-              type="button"
-              onClick={() => handleSelectRegion(null)}
-              className="flex items-center gap-2 px-3 py-2 bg-[#0B0F19]/90 hover:bg-[#0B0F19] text-white border border-white/20 shadow-xl backdrop-blur-md font-mono text-[11px] uppercase tracking-wider transition-all cursor-pointer group"
-            >
-              <span className="text-amber-400 group-hover:-translate-x-0.5 transition-transform">←</span>
-              <span>Xem Toàn Cảnh</span>
-            </button>
+          {/* Cụm nút khi đang chọn một vùng văn hóa */}
+          {selectedRegionId && CULTURAL_REGIONS[selectedRegionId] && (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setModalRegion(CULTURAL_REGIONS[selectedRegionId]);
+                  setIsModalOpen(true);
+                }}
+                className="flex items-center gap-1.5 px-3 py-2 bg-[#B86B35] hover:bg-[#8E4A16] text-white font-bold border border-[#B86B35] shadow-lg backdrop-blur-md font-mono text-[11px] uppercase tracking-wider transition-all cursor-pointer"
+                title="Mở popup chi tiết vùng văn hóa"
+              >
+                <span>📖 Chi Tiết Vùng</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleSelectRegion(null);
+                  setIsModalOpen(false);
+                  fitToVietnamOverview(true);
+                }}
+                className="flex items-center gap-1.5 px-3 py-2 bg-[#FFFFFF]/95 hover:bg-[#F4F2EE] text-[#1C1B1A] border border-[#E6E2DA] shadow-lg backdrop-blur-md font-mono text-[11px] uppercase tracking-wider transition-all cursor-pointer group"
+                title="Xem lại toàn cảnh dải đất Việt Nam"
+              >
+                <span className="text-[#B86B35] group-hover:-translate-x-0.5 transition-transform">←</span>
+                <span>Toàn Cảnh</span>
+              </button>
+            </div>
           )}
 
           {/* Badge hiển thị tỉ lệ zoom nhỏ tiện dụng */}
-          <div className="px-2 py-1 bg-[#0B0F19]/80 border border-white/10 text-[9px] font-mono text-slate-400 select-none">
+          <div className="px-2 py-1 bg-[#FFFFFF]/90 border border-[#E6E2DA] text-[9px] font-mono text-[#5A5854] select-none shadow-xs">
             Mức zoom: {currentZoom.toFixed(1)}x
           </div>
         </div>
-
-        {/* Nút Thu gọn / Mở rộng Side Panel ở cạnh phải màn hình lớn */}
-        <button
-          type="button"
-          onClick={handleTogglePanel}
-          className="hidden lg:flex absolute top-1/2 -translate-y-1/2 right-0 z-30 w-6 h-12 bg-[#0F172A] hover:bg-[#1E293B] border-y border-l border-white/20 items-center justify-center text-slate-300 hover:text-white transition-all shadow-xl cursor-pointer"
-          title={isPanelCollapsed ? 'Mở rộng bảng chi tiết' : 'Thu gọn bảng để xem bản đồ rộng hơn'}
-        >
-          <span className="text-xs">{isPanelCollapsed ? '◀' : '▶'}</span>
-        </button>
       </div>
 
-      {/* BẢNG THÔNG TIN CHI TIẾT VÙNG VĂN HÓA LÀNG NGHỀ (SIDE PANEL) */}
-      <div
-        className={`w-full lg:w-[420px] shrink-0 bg-[#0F172A] border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-300 z-20 ${
-          isPanelCollapsed
-            ? 'hidden'
-            : activeRegion
-            ? 'translate-x-0 opacity-100 flex'
-            : 'hidden lg:flex'
-        }`}
-      >
-        {activeRegion ? (
-          <div className="flex-1 flex flex-col h-full overflow-hidden">
-            {/* Header Vùng */}
-            <div className="p-5 border-b border-white/10 bg-[#0B0F19] flex flex-col gap-2 shrink-0">
-              <div className="flex items-center justify-between">
-                <span
-                  className="px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-white"
-                  style={{ backgroundColor: activeRegion.color }}
-                >
-                  {activeRegion.id}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => handleSelectRegion(null)}
-                  className="text-slate-400 hover:text-white text-sm cursor-pointer p-1"
-                  title="Đóng chi tiết"
-                >
-                  ✕
-                </button>
-              </div>
-              <h2 className="text-[20px] font-bold text-white tracking-wide uppercase mt-1">
-                {activeRegion.name}
-              </h2>
-              <span className="text-[12px] text-amber-400/90 font-mono">
-                {activeRegion.subName}
-              </span>
-            </div>
-
-            {/* Nội dung chi tiết cuộn */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-white/10">
-              {/* Đặc trưng văn hóa */}
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 block mb-1.5">
-                  Đặc Trưng Văn Hóa Nghề
-                </span>
-                <p className="text-[13px] text-slate-300 leading-relaxed bg-[#0B0F19]/60 p-3.5 border border-white/5">
-                  {activeRegion.description}
-                </p>
-              </div>
-
-              {/* Làng nghề tiêu biểu */}
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 block mb-2">
-                  Làng Nghề Truyền Thống Tiêu Biểu ({activeRegion.crafts.length})
-                </span>
-                <div className="space-y-2.5">
-                  {activeRegion.crafts.map((craft) => (
-                    <div
-                      key={craft.id}
-                      className="p-3 bg-[#0B0F19] border border-white/5 hover:border-amber-500/50 transition-colors"
-                    >
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="font-bold text-[13px] text-white">
-                          {craft.name}
-                        </span>
-                        <span
-                          className="text-[10px] font-mono px-2 py-0.5 shrink-0"
-                          style={{
-                            color: activeRegion.color,
-                            backgroundColor: activeRegion.badgeBg
-                          }}
-                        >
-                          {craft.province}
-                        </span>
-                      </div>
-                      <p className="text-[12px] text-slate-400 leading-normal">
-                        {craft.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Danh sách tỉnh thành trực thuộc */}
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 block mb-2">
-                  Tỉnh Thành Trực Thuộc ({activeRegion.provinces.length})
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {activeRegion.provinces.map((prov) => (
-                    <span
-                      key={prov}
-                      className="px-2 py-1 bg-[#0B0F19] border border-white/10 text-slate-300 text-[11px] font-mono"
-                    >
-                      {prov}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Footer hành động */}
-            <div className="p-4 border-t border-white/10 bg-[#0B0F19] flex items-center gap-3 shrink-0">
-              <button
-                type="button"
-                onClick={() => handleSelectRegion(null)}
-                className="w-full py-2.5 px-4 bg-white/10 hover:bg-white text-slate-200 hover:text-[#0B0F19] font-mono text-[11px] uppercase tracking-wider font-bold transition-colors text-center cursor-pointer"
-              >
-                Thu Nhỏ Toàn Cảnh
-              </button>
-            </div>
-          </div>
-        ) : (
-          /* Màn hình chờ khi chưa chọn vùng */
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-[#0B0F19]">
-            <div className="w-12 h-12 rounded-full border border-amber-500/30 bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4 text-xl">
-              🗺️
-            </div>
-            <h3 className="font-mono text-[13px] uppercase tracking-widest text-white font-bold mb-2">
-              Bản Đồ 7 Vùng Văn Hóa Làng Nghề
-            </h3>
-            <p className="text-[12px] text-slate-400 leading-relaxed max-w-xs mb-5">
-              Nhấp chuột trực tiếp vào bất kỳ vùng màu nào trên bản đồ để khám phá tinh hoa làng nghề, nghệ nhân và kỹ pháp truyền thống của vùng đó.
-            </p>
-            <div className="space-y-1.5 w-full text-left font-mono text-[11px]">
-              {Object.values(CULTURAL_REGIONS).map((reg) => (
-                <button
-                  key={reg.id}
-                  type="button"
-                  onClick={() => handleSelectRegion(reg.id)}
-                  className="w-full flex items-center justify-between p-2 bg-[#0F172A] hover:bg-white/5 border border-white/5 transition-colors cursor-pointer"
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full"
-                      style={{ backgroundColor: reg.color }}
-                    ></span>
-                    <span className="text-slate-300">{reg.name}</span>
-                  </div>
-                  <span className="text-slate-500 text-[10px]">
-                    {reg.provinces.length} Tỉnh →
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      {/* POPUP TRANG CHI TIẾT VÙNG VĂN HÓA LÀNG NGHỀ (MODAL) */}
+      <RegionDetailModal
+        isOpen={isModalOpen}
+        region={modalRegion}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

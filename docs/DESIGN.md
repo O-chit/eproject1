@@ -399,3 +399,66 @@ Cấu trúc dữ liệu JSON quy chuẩn cho một nghệ nhân (áp dụng mẫ
   - Container chính: Khai báo đầy đủ `role="dialog"`, `aria-modal="true"`, `aria-labelledby="artisan-popup-title"`, `aria-describedby="artisan-popup-desc"`.
   - Nút biểu tượng (icon-only buttons): Toàn bộ nút biểu tượng phải có thuộc tính `aria-label` minh bạch ngữ nghĩa (ví dụ: `aria-label="Đóng cửa sổ chi tiết nghệ nhân"`, `aria-label="Xem nghệ nhân tiếp theo: #03"`, `aria-label="Lưu hồ sơ nghệ nhân vào mục yêu thích"`).
   - Hình ảnh chân dung & tác phẩm: Mọi thẻ `<img>` phải có thuộc tính `alt` mô tả chân thực nội dung hình ảnh, tuyệt đối không để trống hoặc đặt văn bản vô nghĩa.
+
+---
+
+## 4. Đặc tả Popup Trang Chi Tiết Vùng Văn Hóa Làng Nghề (Region Detail Modal Specification)
+
+### 4.1 Bối cảnh & Mục tiêu Kiến trúc UX
+- **Vấn đề bản đồ cũ**: Khung hiển thị cố định side panel 420px bên phải thu hẹp diện tích canvas bản đồ, làm dải đất chữ S và biển đảo bị dồn ép sang một bên và gây lỗi tràn padding âm khi tính toán bounds trên màn hình nhỏ.
+- **Giải pháp thiết kế mới**: 
+  - Toàn bộ khung bản đồ chiếm 100% full-width và full-height, cân đối hoàn hảo dải đất liền và hai quần đảo Hoàng Sa, Trường Sa ở trung tâm màn hình.
+  - Khi người dùng bấm vào một vùng văn hóa (trên bản đồ hoặc trên thanh điều hướng pills), hệ thống mở **Popup Trang Chi Tiết Vùng Văn Hóa (`RegionDetailModal.jsx`)** ở dạng modal độc lập, nổi bật trên lớp backdrop tối sâu (`bg-black/80 backdrop-blur-md`).
+
+### 4.2 Cấu trúc Giao diện & Thành phần Popup Modal (`RegionDetailModal`)
+- **Bảng màu chủ đạo đồng bộ hệ thống CraftRoots (Human-Crafted Sharp Linework)**:
+  - **Backdrop**: Màu mực đen `bg-[#1C1B1A]/65` kết hợp hiệu ứng mờ kính `backdrop-blur-sm`, tạo chiều sâu trầm tĩnh, ấm áp.
+  - **Khung chứa Modal Container**: Nền Canvas Linen mộc `bg-[#F9F8F6]`, đường viền sắc nét `border border-[#E6E2DA]`, đổ bóng `shadow-2xl` kết hợp viền mộc tinh tế.
+  - **Bề mặt thẻ & Khối nội dung**: Thẻ làng nghề và khối bài viết mang màu bề mặt tinh khiết `bg-[#FFFFFF]` nổi bật trên nền kem linen, phân tách bằng đường kẻ `border-[#E6E2DA]`.
+  - **Kiểu chữ (Ink Typography)**: Tiêu đề và nội dung sử dụng mực đen cổ điển `text-[#1C1B1A]`, phụ đề và thông số kỹ thuật dùng xám than `text-[#5A5854]`, nhãn phân loại dùng nâu ấm `text-[#867368]`.
+  - **Điểm nhấn thương hiệu (Brand Accent)**: Gam màu đất nung Terracotta `text-[#B86B35]` / `bg-[#B86B35]` xuất hiện ở nhãn tiêu đề, số liệu thống kê làng nghề, viền hover thẻ card, nút hành động chính và các liên kết tác phẩm.
+1. **Accent Identification Stripe**: Đường viền line 6px trên đỉnh mang màu sắc nhận diện đặc trưng của vùng văn hóa (ví dụ: Đỏ son gốm sứ `#B91C1C` cho Đồng bằng Bắc Bộ, Vàng thổ hoàng `#D97706` cho Bắc Trung Bộ, Xanh ngọc men `#0284C7` cho Duyên hải Nam Trung Bộ...).
+2. **Modal Header**:
+   - Badge mã vùng văn hóa (V01 - V07) và nhãn "DI SẢN LÀNG NGHỀ TRUYỀN THỐNG" màu Terracotta `#B86B35`.
+   - Tên vùng văn hóa in hoa font serif trang trọng (`Playfair Display`), kèm phụ đề đặc trưng (ví dụ: *Nôi di sản thủ công ngàn năm & cái nôi gốm, lụa, đồng, khắc gỗ*).
+   - Nút đóng `✕` tinh tế với nền `bg-[#F4F2EE] hover:bg-[#1C1B1A] text-[#5A5854] hover:text-white border-[#E6E2DA]`, hỗ trợ phím tắt `Esc` và click backdrop.
+3. **Heritage Stats Bar (Thanh chỉ số di sản)**:
+   - Nền `bg-[#F4F2EE] border-b border-[#E6E2DA] divide-x divide-[#E6E2DA]`: Thống kê 3 cột chia vạch: Số tỉnh thành địa phương, Số làng nghề tiêu biểu (màu Terracotta `#B86B35`), Bản sắc thủ công cốt lõi.
+4. **Scrollable Heritage Content (Nội dung cuộn)**:
+   - **Đặc trưng văn hóa nghề & Không gian di sản**: Bài viết tư liệu điền dã chuyên sâu trên nền `bg-[#FFFFFF]` với đường viền mộc `#E6E2DA`.
+   - **Danh sách làng nghề tiêu biểu (Lưới 2 cột)**: Mỗi làng nghề là một thẻ card trắng `bg-[#FFFFFF]` có viền `#E6E2DA`, hover chuyển viền `#B86B35`, nhãn xuất xứ mộc, đoạn mô tả kỹ pháp và nút điều hướng "Xem tác phẩm →" màu `#B86B35` dẫn tới kho tư liệu `/crafts?q=...`.
+   - **Địa giới tỉnh thành trực thuộc**: Hệ thống badge `bg-[#F9F8F6] border-[#E6E2DA] hover:border-[#B86B35]` liệt kê đầy đủ toàn bộ các tỉnh thành thuộc phân vùng văn hóa.
+5. **Modal Action Footer**:
+   - Nút hành động chính "Khám Phá Toàn Bộ Di Sản Vùng": Nền Terracotta `bg-[#B86B35] hover:bg-[#8E4A16] text-white`, dẫn tới danh bạ tác phẩm đã lọc theo vùng văn hóa.
+   - Nút "Quay Lại Bản Đồ": Nền `bg-[#F4F2EE] hover:bg-[#E6E2DA] text-[#1C1B1A] border-[#E6E2DA]`, đóng popup mượt mà và tiếp tục hành trình tương tác GIS.
+
+### 4.3 Trải nghiệm Tương tác & Khả năng Tiếp cận (Accessibility)
+- **Hiệu ứng chuyển động (Micro-animations)**:
+  - Backdrop xuất hiện với hiệu ứng mờ dần (`animate-fadeIn`).
+  - Hộp modal mở rộng nhẹ nhàng từ tâm với độ nảy nhẹ (`animate-scaleUp`).
+- **Focus & Phím tắt**:
+  - Hỗ trợ phím `Escape` để đóng modal lập tức.
+  - Sự kiện `onClick` của backdrop có `e.stopPropagation()` để ngăn việc vô tình đóng modal khi nhấp chuột đọc nội dung bên trong.
+- **Phản hồi bản đồ thời gian thực**:
+  - Khi modal đóng, vùng văn hóa vừa chọn vẫn giữ trạng thái highlight nhẹ trên bản đồ, kèm nút bấm nổi "📖 Chi Tiết Vùng" và "← Toàn Cảnh" ở góc dưới bên trái giúp người dùng mở lại nhanh chóng mà không cần tìm kiếm lại.
+
+### 4.4 Hệ Thống Bản Đồ Địa Chí Di Sản Đồng Bộ (Heritage Cartographic GIS System)
+- **Hài hòa với bảng màu Website (Light Canvas Heritage Theme)**:
+  - **Nền Biển & Đại dương (`#EAF2F4`)**: Mang sắc men ngọc nhạt thanh thoát của gốm men lam, thay thế cho nền đen kịt trước đây, tạo sự kết nối tự nhiên và liền mạch tuyệt đối với nền Canvas Linen `#F9F8F6` của toàn bộ trang web.
+  - **Bảng màu 7 Vùng: Ý Tưởng 2 - Ngũ Sắc Tranh Dân Gian & Men Tro Củi**:
+    - *V01 - Trung du & Miền núi phía Bắc (`TAY_BAC_VIET_BAC`)*: **Vàng Hoa Hòe** `#D49A24` (Sắc vàng tự nhiên của hoa hòe nhuộm tranh Hàng Trống & trang phục thổ cẩm dân tộc).
+    - *V02 - Đồng bằng sông Hồng (`DONG_BANG_SONG_HONG`)*: **Đỏ Vang Gỗ Vang** `#A83827` (Sắc son tự nhiên của gỗ vang trong mộc bản Đông Hồ & gạch gốm nung Bát Tràng).
+    - *V03 - Bắc Trung Bộ (`BAC_TRUNG_BO`)*: **Tím Men Tro Lam Huế** `#5E4B7A` (Sắc tím thâm trầm Cung đình Huế hòa quyện với men tro cổ truyền).
+    - *V04 - Duyên hải Nam Trung Bộ (`NAM_TRUNG_BO`)*: **Lam Chàm Men Chu Đậu** `#266B88` (Màu lam biển duyên hải & sắc chàm gốm men lam truyền thống).
+    - *V05 - Tây Nguyên (`TAY_NGUYEN`)*: **Cam Lửa Nung Củi** `#CE5C23` (Sắc đất đỏ bazan nung củi & ánh lửa cồng chiêng đại ngàn).
+    - *V06 - Đông Nam Bộ (`DONG_NAM_BO`)*: **Nâu Hổ Phách Nam Bộ** `#8A5232` (Màu gỗ mật, sơn mài cổ truyền & gốm sành Lái Thiêu / Biên Hòa).
+    - *V07 - Đồng bằng sông Cửu Long (`TAY_NAM_BO`)*: **Xanh Gỉ Đồng Cổ Mộc** `#327555` (Màu rêu cổ miệt vườn, phù sa phù sa & lục bình sông nước Cửu Long).
+- **Kỹ thuật Ranh giới Nổi bật (Double-Stroke Boundary Casing)**:
+  - Để bảo đảm ranh giới giữa 7 vùng luôn sắc nét, rõ ràng trên nền bản đồ sáng:
+    - **Outer White Casing (`#FFFFFF`)**: Lớp viền trắng dập nổi bọc ngoài dày từ `2.5px` đến `5.2px`.
+    - **Inner Sharp Ink Linework (`#1C1B1A`)**: Đường chỉ rãnh mực đen sắc nét bên trong dày `1.2px` đến `2.6px`, giúp phân định ranh giới giữa các mảng màu tự nhiên như một tác phẩm mộc bản địa chí cổ truyền.
+- **Chủ quyền Biển đảo & Linh kiện Điều hướng**:
+  - Quần đảo Hoàng Sa và Trường Sa được định danh trang trọng với hộp chỉ dẫn nền trắng viền kép Terracotta `#B86B35`, chữ đen mực `#1C1B1A` và chấm đỏ son rực rỡ.
+  - Bộ nút điều khiển Zoom và thanh Quick Pills mang phong cách nền trắng viền kẻ mộc `#E6E2DA`, đổ bóng mềm mại `shadow-md`.
+
+

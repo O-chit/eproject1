@@ -155,3 +155,14 @@ spacing:
 - **Anti-AI Content**: Strict realistic Vietnamese cultural craft data, verified village origins, genuine master craftsman profiles, exact physical dimensions and materials, no filler or generic marketing hype.
 - **Choice Boundaries**: Explicit separation using `|` pipe dividers for menus, tabs, and action icons.
 - **Sharp Cards**: Crisp rectangular containers, geometric aspect ratios, object-fit cover imagery.
+
+## Interactive GIS Map & Region Detail Modal Architecture
+- **Full-Screen 2D Isolated Canvas**:
+  - Không gian bản đồ chiếm trọn 100% diện tích không bị cản trở bởi side panel cố định.
+  - Tọa độ trung tâm và độ phóng đại tối ưu: `center: [108.5, 15.5]`, `zoom: 4.8`, bao trọn toàn vẹn đất liền và biển đảo Hoàng Sa, Trường Sa.
+- **Heritage Region Detail Modal (`RegionDetailModal.jsx`)**:
+  - Kích hoạt khi click vào bất kỳ vùng văn hóa nào trên bản đồ hoặc thanh điều hướng.
+  - Hiển thị thông tin di sản chi tiết: Mã phân vùng, dải màu đặc trưng, tên vùng, tên phụ, số liệu tỉnh thành, làng nghề tiêu biểu, kỹ pháp truyền thống và danh sách địa phương.
+  - Điều hướng tức thời: Liên kết trực tiếp tới các tác phẩm thủ công theo từng làng nghề hoặc toàn vùng (`/crafts?q=...`).
+  - Tương tác công thái học: Đóng bằng phím `Escape`, nút `✕` hoặc click nền mờ backdrop.
+

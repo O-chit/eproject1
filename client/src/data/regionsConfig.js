@@ -24,9 +24,9 @@ export const CULTURAL_REGIONS = {
     code: 'TAY_BAC_VIET_BAC',
     name: 'Trung du & Miền núi phía Bắc',
     subName: 'Tây Bắc – Đông Bắc & Việt Bắc',
-    color: '#F59E0B', // Vàng hổ phách rực
-    badgeBg: 'rgba(245, 158, 11, 0.15)',
-    borderColor: '#F59E0B',
+    color: '#D49A24', // Vàng Hoa Hòe (Tranh dân gian & Dệt thổ cẩm)
+    badgeBg: 'rgba(212, 154, 36, 0.15)',
+    borderColor: '#D49A24',
     description:
       'Vùng rẻo cao và thung lũng đại ngàn hùng vĩ, cái nôi gìn giữ kỹ nghệ dệt lanh thổ cẩm, rèn đúc thép thủ công, chạm khắc trang sức bạc và nhuộm chàm cổ truyền của các đồng bào Mông, Thái, Dao, Nùng, Tày.',
     provinces: [
@@ -78,9 +78,9 @@ export const CULTURAL_REGIONS = {
     code: 'DONG_BANG_SONG_HONG',
     name: 'Đồng bằng sông Hồng',
     subName: 'Châu thổ Sông Hồng & Kinh Kỳ Ngàn Năm',
-    color: '#EF4444', // Đỏ son tươi
-    badgeBg: 'rgba(239, 68, 68, 0.15)',
-    borderColor: '#EF4444',
+    color: '#A83827', // Đỏ Vang Gỗ Vang (Son tranh Đông Hồ & Gốm Bát Tràng)
+    badgeBg: 'rgba(168, 56, 39, 0.15)',
+    borderColor: '#A83827',
     description:
       'Cái nôi văn minh lúa nước sông Hồng và trung tâm thủ công mỹ nghệ tinh hoa bậc nhất với mật độ làng nghề dày đặc: Gốm sứ men lam, lụa tơ tằm Vân, mộc bản giấy điệp và đúc đồng kim hoàn đỉnh cao.',
     provinces: [
@@ -135,9 +135,9 @@ export const CULTURAL_REGIONS = {
     code: 'BAC_TRUNG_BO',
     name: 'Bắc Trung Bộ',
     subName: 'Dải Đất Cố Đô & Di Sản Miền Trung',
-    color: '#A855F7', // Tím sáng hoàng gia
-    badgeBg: 'rgba(168, 85, 247, 0.15)',
-    borderColor: '#A855F7',
+    color: '#5E4B7A', // Tím Men Tro Lam Huế (Cố Đô & Men tro cổ)
+    badgeBg: 'rgba(94, 75, 122, 0.15)',
+    borderColor: '#5E4B7A',
     description:
       'Dải đất lịch sử giao thoa giữa văn hóa cung đình triều Nguyễn và làng nghề dân gian duyên hải: Hoa giấy thờ tự, nón lá bài thơ, chiếu cói dệt hoa và nghệ thuật chạm khắc mộc truyền đời.',
     provinces: [
@@ -181,9 +181,9 @@ export const CULTURAL_REGIONS = {
     code: 'NAM_TRUNG_BO',
     name: 'Duyên hải Nam Trung Bộ',
     subName: 'Giao Thoa Văn Hóa Biển & Di Sản Chăm Pa',
-    color: '#06B6D4', // Xanh ngọc biển sáng (Cyan)
-    badgeBg: 'rgba(6, 182, 212, 0.15)',
-    borderColor: '#06B6D4',
+    color: '#266B88', // Lam Chàm Men Chu Đậu (Hải dương & Men lam cổ)
+    badgeBg: 'rgba(38, 107, 136, 0.15)',
+    borderColor: '#266B88',
     description:
       'Miền cát trắng và biển đảo trù phú với sự giao thoa độc đáo giữa di sản văn hóa Việt và nghệ thuật tạo hình Chăm Pa cổ đại: Gốm nung lộ thiên, điêu khắc đá cẩm thạch và dệt thổ cẩm hình chim phượng.',
     provinces: [
@@ -235,9 +235,9 @@ export const CULTURAL_REGIONS = {
     code: 'TAY_NGUYEN',
     name: 'Tây Nguyên',
     subName: 'Không Gian Văn Hóa Cồng Chiêng Đại Ngàn',
-    color: '#F97316', // Cam lửa cao nguyên
-    badgeBg: 'rgba(249, 115, 22, 0.15)',
-    borderColor: '#F97316',
+    color: '#CE5C23', // Cam Lửa Nung Củi (Bazan nung củi & Lửa cồng chiêng)
+    badgeBg: 'rgba(206, 92, 35, 0.15)',
+    borderColor: '#CE5C23',
     description:
       'Không gian huyền thoại của rẫy nương và cồng chiêng đại ngàn, nổi bật với nghệ thuật dệt thổ cẩm luồn tay rực sắc lửa, chế tác nhạc khí tre nứa vang vọng và điêu khắc tượng gỗ nhà mồ nguyên sơ.',
     provinces: [
@@ -280,9 +280,9 @@ export const CULTURAL_REGIONS = {
     code: 'DONG_NAM_BO',
     name: 'Đông Nam Bộ',
     subName: 'Thủ Phủ Công Mỹ Nghệ Nam Bộ',
-    color: '#EC4899', // Hồng sen rực
-    badgeBg: 'rgba(236, 72, 153, 0.15)',
-    borderColor: '#EC4899',
+    color: '#8A5232', // Nâu Hổ Phách Nam Bộ (Gỗ mật, sơn mài & Gốm sành)
+    badgeBg: 'rgba(138, 82, 50, 0.15)',
+    borderColor: '#8A5232',
     description:
       'Vùng đất phù sa cổ trù phú hội tụ các dòng nghề thủ công mỹ nghệ quy mô lớn của phương Nam: Gốm men xanh Lái Thiêu - Biên Hòa, sơn mài cẩn xà cừ óng ánh và nghề bánh tráng phơi sương trứ danh.',
     provinces: [
@@ -326,9 +326,9 @@ export const CULTURAL_REGIONS = {
     code: 'TAY_NAM_BO',
     name: 'Đồng bằng sông Cửu Long',
     subName: 'Văn Minh Miệt Vườn & Sông Nước Cửu Long',
-    color: '#10B981', // Xanh ngọc lục bảo
-    badgeBg: 'rgba(16, 185, 129, 0.15)',
-    borderColor: '#10B981',
+    color: '#327555', // Xanh Gỉ Đồng Cổ Mộc (Phù sa miệt vườn Cửu Long)
+    badgeBg: 'rgba(50, 117, 85, 0.15)',
+    borderColor: '#327555',
     description:
       'Vùng đồng bằng châu thổ sông Cửu Long sông ngòi kênh rạch chằng chịt, sản sinh các làng nghề gắn liền với phù sa và thảo mộc: Vương quốc gạch gốm đỏ, lụa mặc nưa huyền thoại, dệt chiếu hoa và mỹ nghệ dừa.',
     provinces: [
@@ -412,7 +412,7 @@ export const SOVEREIGNTY_DATA = {
         name: 'QUẦN ĐẢO HOÀNG SA',
         admin: 'Thành phố Đà Nẵng, Việt Nam',
         type: 'archipelago',
-        labelColor: '#38BDF8',
+        labelColor: '#B86B35',
         isSovereignty: true
       },
       geometry: {
@@ -445,7 +445,7 @@ export const SOVEREIGNTY_DATA = {
         name: 'QUẦN ĐẢO TRƯỜNG SA',
         admin: 'Tỉnh Khánh Hòa, Việt Nam',
         type: 'archipelago',
-        labelColor: '#38BDF8',
+        labelColor: '#B86B35',
         isSovereignty: true
       },
       geometry: {

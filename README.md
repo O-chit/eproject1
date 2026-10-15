@@ -29,7 +29,7 @@ eproject1/
 │   │   │   ├── CraftDetailPage.jsx      # Chi tiết tác phẩm: layout 4 cột, specs, 4 quy trình, N-N
 │   │   │   ├── ArtisansPage.jsx         # Danh bạ nghệ nhân: lưới 3x2, click mở ArtisanDetailPopup
 │   │   │   ├── ArtisanDetailPage.jsx    # Hồ sơ chuyên sâu: milestones, specs, widget đặt lịch hẹn
-│   │   │   ├── RegionsPage.jsx          # Bản đồ tương tác 6 vùng di sản SVG, làng nghề, điền dã
+│   │   │   ├── RegionsPage.jsx          # Bản đồ tương tác 2D 7 vùng văn hóa làng nghề (MapLibre GL, popup chi tiết)
 │   │   │   ├── SeasonalPage.jsx         # BST Mùa Hạ 2026 CR-ARCH-SUMMER-26, curator note, Hero Craft
 │   │   │   ├── FavouritesPage.jsx       # Yêu thích: hybrid sync, tóm tắt danh mục, xóa hàng loạt
 │   │   │   ├── ContactPage.jsx          # Liên hệ chuyên đề (thẩm định di sản, đặt lịch), cam kết 24h
@@ -196,3 +196,8 @@ Vui lòng tham khảo thư viện tài liệu tại thư mục [`docs/`](file://
 3. **Component đặc tả Artisan Detail Popup Modal:** Mở popup chi tiết khi click bất kỳ vị trí nào trên thẻ nghệ nhân, hỗ trợ 6 view, 5 tabs thông tin, bẫy tiêu điểm (focus trap), đóng bằng phím ESC hoặc click backdrop.
 4. **Quy chuẩn đặt lịch thăm xưởng (`visit_bookings`):** Quy định lead time 24h cho Nghệ nhân Nguyễn Văn Bình / 48h mặc định, kiểm tra ngày mở cửa (`open_days`), và giới hạn số khách (`max_guests_per_slot`).
 5. **Tiêu chuẩn dữ liệu Anti-AI (BR-15):** Toàn bộ dữ liệu sử dụng thuật ngữ di sản chuẩn xác, không bịa đặt niên đại, loại bỏ hoàn toàn số liệu thống kê mock tĩnh (counters tổng hợp trực tiếp từ CSDL).
+6. **Bản đồ tương tác 2D 7 Vùng Văn Hóa Làng Nghề & Popup Chi Tiết Di Sản (`RegionDetailModal`):**
+   - Bản đồ GIS 2D nghiêm ngặt MapLibre GL cô lập lãnh thổ Việt Nam trên nền tối sâu (`#0B0F19`), không hiển thị nước khác, bảo đảm chủ quyền toàn vẹn đất liền và hai quần đảo Hoàng Sa, Trường Sa.
+   - Dữ liệu 7 phân vùng văn hóa làng nghề được hợp nhất (dissolved) ranh giới tỉnh, chỉ hiển thị ranh giới 7 vùng văn hóa với màu sắc nhận diện trực quan.
+   - **Popup Trang Chi Tiết Vùng (`RegionDetailModal.jsx`)**: Thay thế side panel cố định, giúp bản đồ hiển thị 100% full-screen căn giữa cân đối. Khi người dùng bấm vào một vùng bất kỳ trên bản đồ, popup modal sẽ hiện ra với dải màu nhận diện vùng, chỉ số di sản (số tỉnh thành, số làng nghề tiêu biểu, bản sắc thủ công), danh sách làng nghề truyền thống có kỹ pháp và link xem tác phẩm, thẻ badge tất cả các tỉnh thành trực thuộc, cùng các nút điều hướng khám phá toàn bộ di sản vùng. Hỗ trợ đóng nhanh bằng phím `Escape` hoặc click backdrop.
+
