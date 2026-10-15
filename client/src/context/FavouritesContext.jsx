@@ -1,11 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import {
-  getFavouritesApi,
-  addFavouriteApi,
-  removeFavouriteApi,
-  syncFavouritesApi,
-} from '../api/favourites';
+import api from '../services/api';
 
 const FavouritesContext = createContext(null);
 const GUEST_FAVS_KEY = 'craftroots_guest_favs';
@@ -27,7 +22,7 @@ export function FavouritesProvider({ children }) {
             try {
               const guestIds = JSON.parse(rawGuestFavs);
               if (Array.isArray(guestIds) && guestIds.length > 0) {
-                await syncFavouritesApi(guestIds);
+                await api.syncFavourites(guestIds);
                 localStorage.removeItem(GUEST_FAVS_KEY);
               }
             } catch (err) {
@@ -37,8 +32,10 @@ export function FavouritesProvider({ children }) {
 
           // 2. Tải danh sách yêu thích từ máy chủ
           try {
-            const res = await getFavouritesApi();
-            const serverFavs = (res.data || []).map((item) => item.craft_id || item.id || item);
+            const res = await api.getFavourites();
+            const serverFavs = (Array.isArray(res) ? res : res.data || []).map(
+              (item) => item.craft_id || item.craftId || item.id || item
+            );
             setFavourites(serverFavs);
           } catch (err) {
             console.warn('[FavouritesContext] Máy chủ chưa sẵn sàng, giữ state hiện tại');
@@ -90,9 +87,9 @@ export function FavouritesProvider({ children }) {
       if (isAuthenticated) {
         try {
           if (isCurrentlyFav) {
-            await removeFavouriteApi(idNum);
+            await api.removeFavourite(idNum);
           } else {
-            await addFavouriteApi(idNum);
+            await api.addFavourite(idNum);
           }
         } catch (err) {
           console.warn('[FavouritesContext] Không thể lưu yêu thích lên server:', err);

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import * as maplibregl from 'maplibre-gl';
+import { Map, Marker } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+
 
 import {
   CULTURAL_REGIONS,
@@ -170,7 +171,7 @@ export default function VietnamCulturalMap({
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
-    const map = new maplibregl.Map({
+    const map = new Map({
       container: mapContainerRef.current,
       style: BLANK_DARK_MAP_STYLE,
       center: [108.5, 15.5],
@@ -456,7 +457,7 @@ export default function VietnamCulturalMap({
         (TP. ĐÀ NẴNG – VIỆT NAM)
       </span>
     `;
-    const hsMarker = new maplibregl.Marker({ element: hsEl, anchor: 'center' })
+    const hsMarker = new Marker({ element: hsEl, anchor: 'center' })
       .setLngLat([112.0, 16.5])
       .addTo(map);
     sovereigntyMarkersRef.current.push(hsMarker);
@@ -475,7 +476,7 @@ export default function VietnamCulturalMap({
         (TỈNH KHÁNH HÒA – VIỆT NAM)
       </span>
     `;
-    const tsMarker = new maplibregl.Marker({ element: tsEl, anchor: 'center' })
+    const tsMarker = new Marker({ element: tsEl, anchor: 'center' })
       .setLngLat([114.0, 10.0])
       .addTo(map);
     sovereigntyMarkersRef.current.push(tsMarker);
