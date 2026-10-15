@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
 
       return { success: true, user: receivedUser };
     } catch (err) {
-      // Trường hợp Backend chưa khởi chạy: Mock login dự phòng cho kiểm thử giao diện
+      // Mock login dự phòng nếu backend chưa bật
       if (email === 'user@craftroots.test' && password === 'Craft@1234') {
         const mockUser = {
           id: 1,
@@ -130,3 +130,5 @@ export function useAuth() {
   }
   return context;
 }
+
+export default AuthContext;
