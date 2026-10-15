@@ -1,191 +1,644 @@
 -- =============================================================================
--- CRAFTROOTS MOCK DATA SEED SCRIPT (PostgreSQL 14+)
--- Dữ liệu mẫu di sản làng nghề thủ công truyền thống Việt Nam
--- Thể hiện đầy đủ quan hệ N-N Nghệ nhân - Sản phẩm & Bộ sưu tập Mùa Hè
+-- CRAFTROOTS MOCK DATA SEED SCRIPT (PostgreSQL 14+) - v1.1.0
+-- Dữ liệu hạt giống chuẩn xác thực di sản thủ công truyền thống Việt Nam (Anti-AI)
+-- Phục vụ 22 bảng CSDL, 9 bản thiết kế Stitch, 6 Vùng Di sản & 6 Nghệ nhân Bậc thầy
 -- =============================================================================
 
 SET timezone = 'UTC';
 
--- 1. NẠP USERS (Mật khẩu hash chuẩn bcrypt của 'Craft@1234')
+-- -----------------------------------------------------------------------------
+-- 1. NẠP USERS (Mật khẩu hash bcrypt salt 10 của 'Craft@1234')
+-- -----------------------------------------------------------------------------
 INSERT INTO users (id, full_name, email, password_hash, role, avatar_url, is_active) VALUES
-(1, 'Quản Trị Viên CraftRoots', 'admin@craftroots.vn', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'admin', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80', TRUE),
+(1, 'Ban Quản Trị CraftRoots', 'admin@craftroots.vn', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'admin', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80', TRUE),
 (2, 'Nguyễn Văn An (Người Dùng)', 'user@craftroots.test', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'user', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80', TRUE),
-(3, 'Trần Thu Hà (Biên Tập Viên)', 'editor@craftroots.vn', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'editor', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80', TRUE);
+(3, 'Trần Thu Hà (Biên Tập Viên)', 'editor@craftroots.vn', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'editor', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80', TRUE),
+(4, 'Hoàng Minh Nam (Kiến Trúc Sư)', 'nam.hoang@gmail.com', '$2b$10$37130hZp9U6.y8Q2.qO8y.7oT9dJ1n0o9R3t2Y8e4g6v7s8a9b0c1', 'user', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80', TRUE);
 
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
--- 2. NẠP REGIONS (Vùng miền & Làng nghề)
-INSERT INTO regions (id, name, code, description, image_url) VALUES
-(1, 'Đồng bằng Bắc Bộ', 'dong-bang-bac-bo', 'Cái nôi văn minh sông Hồng với bề dày nghìn năm lịch sử, nơi hội tụ các làng nghề trứ danh: Gốm Bát Tràng, Lụa Vạn Phúc, Đúc đồng Ngũ Xã, Mây tre đan Phú Vinh.', 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80'),
-(2, 'Duyên hải miền Trung', 'duyen-hai-mien-trung', 'Vùng đất giao thoa văn hóa Đại Việt và Chăm Pa, nổi tiếng với Đá mỹ nghệ Non Nước, Gốm Thanh Hà, Dệt chiếu cói Nga Sơn và Đúc đồng Phước Kiều.', 'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=800&q=80'),
-(3, 'Tây Nguyên & Nam Bộ', 'tay-nguyen-nam-bo', 'Không gian văn hóa cồng chiêng đại ngàn và miền sông nước trù phú với Dệt thổ cẩm Ê Đê, Gốm đất nung Khmer, Đan đát lục bình và Dệt chiếu Cà Mau.', 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80');
+-- -----------------------------------------------------------------------------
+-- 2. NẠP REGIONS (6 Vùng Di sản Văn hóa Việt Nam theo Stitch Map)
+-- -----------------------------------------------------------------------------
+INSERT INTO regions (id, name, code, map_key, description, craft_summary, image_url, is_verified, registered_village_count, national_heritage_count, sort_order) VALUES
+(1, 'Đồng Bằng Bắc Bộ', 'dong-bang-bac-bo', 'dong-bang-bac-bo', 'Cái nôi nghìn năm văn hiến châu thổ sông Hồng với mật độ làng nghề dày đặc nhất Việt Nam.', 'Gốm men Bát Tràng, Lụa Vạn Phúc, Chạm bạc Đồng Xâm, Đúc đồng Ngũ Xã', 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1000&q=80', TRUE, 18, 12, 1),
+(2, 'Tây Bắc Đại Ngàn', 'tay-bac', 'tay-bac', 'Vùng rẻo cao hiểm trở giàu bản sắc của đồng bào H''Mông, Dao, Thái, Tày.', 'Dệt thổ cẩm nhuộm chàm, Rèn dao thủ công H''Mông, Đan quạt nan pơ-mu', 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1000&q=80', TRUE, 8, 5, 2),
+(3, 'Đông Bắc Hùng Vĩ', 'dong-bac', 'dong-bac', 'Vùng non nước hữu tình với truyền thống luyện kim cổ truyền và gốm sành mộc.', 'Gốm sành Hương Canh, Đúc gang Tuyên Quang, Dệt nón lá Tày', 'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=1000&q=80', TRUE, 10, 6, 3),
+(4, 'Bắc Trung Bộ Trầm Tích', 'bac-trung-bo', 'bac-trung-bo', 'Dải đất hẹp hội tụ tinh hoa cung đình Huế và các làng nghề xứ Thanh - Nghệ - Tĩnh.', 'Gốm tráng men hoàng cung Huế, Dệt đệm bàng Phò Trạch, Chiếu cói Nga Sơn', 'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=1000&q=80', TRUE, 14, 9, 4),
+(5, 'Nam Trung Bộ & Tây Nguyên', 'nam-trung-bo-tay-nguyen', 'nam-trung-bo-tay-nguyen', 'Không gian giao thoa rực rỡ giữa văn hóa Chăm Pa cổ, tượng nhà mồ Ba Na và đá Non Nước.', 'Điêu khắc đá Non Nước, Dệt thổ cẩm Ikat làng Teng, Gốm Bàu Trúc nung lộ thiên', 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&w=1000&q=80', TRUE, 16, 11, 5),
+(6, 'Nam Bộ Phù Sa', 'nam-bo', 'nam-bo', 'Vùng đất phương Nam hào sảng với văn hóa sông nước miệt vườn trù phú.', 'Chiếu dệt Định Yên, Đan lục bình sông Tiền, Gốm Lái Thiêu men màu', 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1000&q=80', TRUE, 12, 7, 6);
 
 SELECT setval('regions_id_seq', (SELECT MAX(id) FROM regions));
 
--- 3. NẠP CRAFT_CATEGORIES (Danh mục nghề)
+-- -----------------------------------------------------------------------------
+-- 3. NẠP CRAFT_CATEGORIES (Danh mục phân loại nghề thủ công)
+-- -----------------------------------------------------------------------------
 INSERT INTO craft_categories (id, name, slug, description, icon_url) VALUES
-(1, 'Gốm sứ truyền thống', 'gom-su-truyen-thong', 'Nghệ thuật nhào nặn đất sét, tạo hình vuốt tay và biến hóa diệu kỳ qua ngọn lửa men lò gốm.', 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=200&q=80'),
-(2, 'Đúc đồng & Kim hoàn', 'duc-dong-kim-hoan', 'Kỹ nghệ đúc chuông, tượng đồng, chạm bạc và dát vàng lá tinh xảo lưu truyền từ thời phong kiến.', 'https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=200&q=80'),
-(3, 'Dệt may & Thổ cẩm', 'det-may-tho-cam', 'Nghệ thuật ươm tơ, dệt lụa, se chỉ tơ sen và dệt thổ cẩm dập nổi hoa văn rực rỡ.', 'https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?auto=format&fit=crop&w=200&q=80'),
-(4, 'Mây tre đan & Gỗ thủ công', 'may-tre-dan-go-thu-cong', 'Biến hóa vật liệu tre trúc, nứa, cói tự nhiên thành các vật dụng thanh tao, thoáng mát và bền bỉ.', 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=200&q=80'),
-(5, 'Sơn mài & Mỹ nghệ khảm trai', 'son-mai-my-nghe-kham-trai', 'Nghệ thuật sử dụng nhựa cây sơn ta kết hợp vỏ trai, vỏ ốc, trứng gà mài bóng kỳ công.', 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=200&q=80');
+(1, 'Gốm sứ truyền thống', 'gom-su-truyen-thong', 'Nghệ thuật nhào nặn đất sét cao lanh, tạo hình vuốt tay bàn xoay và lửa nung khử oxy lò bầu.', 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=200&q=80'),
+(2, 'Đúc đồng & Kim hoàn', 'duc-dong-kim-hoan', 'Kỹ nghệ đúc chuông, tượng đồng nguyên khối, chạm bạc mỹ nghệ và thếp vàng lá cung đình.', 'https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=200&q=80'),
+(3, 'Dệt may & Thổ cẩm', 'det-may-tho-cam', 'Nghệ thuật ươm tơ dệt lụa sa, nhuộm chàm tự nhiên và dệt thổ cẩm kỹ pháp Ikat dân tộc.', 'https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?auto=format&fit=crop&w=200&q=80'),
+(4, 'Mây tre đan & Gỗ mỹ nghệ', 'may-tre-dan-go-thu-cong', 'Biến hóa tre nứa già ngâm vôi và mây rừng thành vật dụng thanh tao, thoáng gió và bền bỉ.', 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=200&q=80'),
+(5, 'Sơn mài & Khảm trai', 'son-mai-my-nghe-kham-trai', 'Sơn ta tự nhiên kết hợp xà cừ biển sâu và vỏ trứng vịt mài bóng nước kỳ công.', 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=200&q=80'),
+(6, 'Điêu khắc đá mỹ nghệ', 'dieu-khac-da-my-nghe', 'Đục đẽo chạm lộng trên đá cẩm thạch tự nhiên, tạo hình tượng tâm linh và tác phẩm nghệ thuật.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=200&q=80');
 
 SELECT setval('craft_categories_id_seq', (SELECT MAX(id) FROM craft_categories));
 
--- 4. NẠP MATERIALS (Chất liệu)
+-- -----------------------------------------------------------------------------
+-- 4. NẠP CRAFT_VILLAGES (Làng nghề truyền thống đã xác thực)
+-- -----------------------------------------------------------------------------
+INSERT INTO craft_villages (id, region_id, category_id, name, slug, district, province, century_label, summary) VALUES
+(1, 1, 1, 'Làng Gốm Bát Tràng', 'bat-trang', 'Gia Lâm', 'Hà Nội', 'Thế kỷ XIV', 'Làng gốm lừng danh hơn 700 năm bên bờ sông Hồng, nổi tiếng với các dòng men lam, men rạn cổ hoàng cung và kỹ pháp lò bầu nung củi.'),
+(2, 1, 3, 'Làng Lụa Vạn Phúc', 'van-phuc', 'Hà Đông', 'Hà Nội', 'Hơn 1.000 năm', 'Cái nôi tơ lụa trứ danh đất Hà Thành, vang danh với lụa sa, lụa vân mềm mịn, hoa văn chìm tinh xảo từng phục vụ hoàng tộc triều Nguyễn.'),
+(3, 1, 2, 'Làng Chạm Bạc Đồng Xâm', 'dong-xam', 'Kiến Xương', 'Thái Bình', 'Thế kỷ XVII', 'Làng nghề kim hoàn nổi tiếng với kỹ thuật thúc nổi, chạm trổ hoa văn tinh vi trên các thỏi bạc và đồng trắng.'),
+(4, 3, 1, 'Làng Gốm Sành Hương Canh', 'huong-canh', 'Bình Xuyên', 'Vĩnh Phúc', 'Hơn 300 năm', 'Đất sành sét xanh đặc hữu không tráng men mà tự lên màu trầm bóng ngọc, tiếng kêu đanh như chuông khánh, giữ nước không thối sấu rụng.'),
+(5, 5, 6, 'Làng Đá Mỹ Nghệ Non Nước', 'non-nuoc', 'Ngũ Hành Sơn', 'Đà Nẵng', 'Thế kỷ XVII', 'Dưới chân năm ngọn Ngũ Hành Sơn, nơi các thợ đá chạm khắc tượng Phật, bách thú từ đá cẩm thạch nguyên khối tuyệt mỹ.'),
+(6, 5, 3, 'Làng Dệt Thổ Cẩm Teng', 'lang-teng', 'Ba Tơ', 'Quảng Ngãi', 'Lâu đời cổ truyền', 'Di sản dệt thổ cẩm của người Hrê với kỹ thuật Ikat thắt sợi nhuộm vỏ cây rừng tạo đồ án hình thoi và chim muông huyền ảo.'),
+(7, 1, 4, 'Làng Mây Tre Đan Phú Vinh', 'phu-vinh', 'Chương Mỹ', 'Hà Nội', 'Thế kỷ XVII', 'Xứ sở của nan tre mây uốn lượn, nổi danh với nghệ thuật đan tranh chân dung và quạt nan thoáng gió thanh mát.'),
+(8, 1, 2, 'Làng Đúc Đồng Ngũ Xã', 'ngu-xa', 'Ba Đình', 'Hà Nội', 'Thế kỷ XVII', 'Kỹ nghệ đúc đồng nguyên khối liền mạch không giáp mối, tạo nên những pho tượng đồng ngàn năm lịch sử bên bờ hồ Trúc Bạch.');
+
+SELECT setval('craft_villages_id_seq', (SELECT MAX(id) FROM craft_villages));
+
+-- -----------------------------------------------------------------------------
+-- 5. NẠP MATERIALS (Chất liệu chế tác bản địa)
+-- -----------------------------------------------------------------------------
 INSERT INTO materials (id, name, description) VALUES
-(1, 'Đất sét trắng Bát Tràng', 'Loại đất sét cao lanh dẻo mịn, chịu nhiệt trên 1250 độ C đặc trưng vùng châu thổ sông Hồng.'),
-(2, 'Men lam tro trấu cổ', 'Men truyền thống pha chế từ tro trấu tự nhiên và bột đá, cho màu xanh lam thủy mặc trầm ấm.'),
-(3, 'Men rạn hoàng cung', 'Bài men đặc trưng thời Lê - Trịnh tạo ra các đường nứt tự nhiên như vân rạn đá cổ.'),
-(4, 'Đồng đỏ nguyên chất', 'Kim loại đồng thỏi đỏ có độ dẻo và ánh sắc trầm mặc, ngân vang khi đúc thành chuông khánh.'),
-(5, 'Vàng quỳ 24K Kiêu Kỵ', 'Vàng lá đập mỏng hàng vạn lần dùng để thếp lên tượng và sản phẩm gốm quý tộc.'),
-(6, 'Sợi tơ tằm tự nhiên', 'Tơ tằm tơ vàng thượng hạng dệt từ kén sâu tằm ăn lá dâu vùng bãi bồi sông Đáy.'),
-(7, 'Sợi tơ sen tự nhiên', 'Loại tơ quý hiếm rút thủ công từ cuống hoa sen mùa hạ, thơm thoang thoảng và cách nhiệt.'),
-(8, 'Sợi cói Nga Sơn tự nhiên', 'Cói tươi phơi nắng tự nhiên có đặc tính dẻo dai, thấm mồ hôi và tản nhiệt lưng tuyệt hảo.'),
-(9, 'Tre gai & Mây rừng già', 'Tre ngâm nước vôi chống mọt, nan tre dẻo uốn lượn phục vụ đan quạt và giỏ nan thanh mát.'),
-(10, 'Sơn ta Phú Thọ & Vỏ trứng', 'Mủ cây sơn tự nhiên kết hợp vỏ trứng vịt tạo lớp bóng gương huyền ảo.');
+(1, 'Đất sét cao lanh Bát Tràng', 'Loại đất sét trắng trầm tích dẻo mịn đặc hữu vùng đồng bằng châu thổ sông Hồng, chịu nhiệt trên 1.280°C.'),
+(2, 'Men rạn tam thái cổ', 'Bài men hoàng cung pha chế từ tro vỏ sò sông, tro trấu và thạch anh, tạo vân nứt tự nhiên như đá rạn thời Lê - Mạc.'),
+(3, 'Đất sét xanh Hương Canh', 'Đất sét trầm tích chứa oxit sắt tự nhiên nung sành kết tinh đanh chắc chống thấm tuyệt đối.'),
+(4, 'Đá cẩm thạch Ngũ Hành Sơn', 'Đá hoa tự nhiên vân cẩm thạch trắng, xanh ngọc và hồng phớt từ núi non miền Trung.'),
+(5, 'Bạc ta nguyên chất 99.9%', 'Kim loại bạc tinh khiết dẻo dai thích hợp cho kỹ thuật dát mỏng và chạm trổ hoa văn lộng kênh bong.'),
+(6, 'Tơ tằm tự nhiên Vạn Phúc', 'Sợi tơ ươm từ kén sâu tằm ăn lá dâu tằm bãi bồi ven sông Đáy, bóng mượt tự nhiên.'),
+(7, 'Sợi bông rừng nhuộm chàm', 'Sợi bông bản địa xe tay và ngâm nhuộm trong thùng chàm thảo mộc suốt nhiều tuần lễ.'),
+(8, 'Tre gai già & Mây rừng ngâm vôi', 'Tre bánh tẻ ngâm bùn ao vôi chống mối mọt tự nhiên, chẻ nan chuốt mỏng như sợi chỉ.'),
+(9, 'Đồng đỏ nguyên thỏi', 'Hợp kim đồng đỏ tinh luyện có độ dẻo và ánh sắc trầm mặc cổ kính khi đúc đại hồng chung.'),
+(10, 'Sơn ta Phú Thọ & Vỏ trứng vịt', 'Mủ cây sơn ta bản địa kết hợp vỏ trứng vịt đồng cẩn tỉ mỉ mài bóng gương huyền bí.');
 
 SELECT setval('materials_id_seq', (SELECT MAX(id) FROM materials));
 
--- 5. NẠP TECHNIQUES (Kỹ thuật chế tác)
+-- -----------------------------------------------------------------------------
+-- 6. NẠP TECHNIQUES (Kỹ pháp chế tác truyền thống)
+-- -----------------------------------------------------------------------------
 INSERT INTO techniques (id, name, description) VALUES
-(1, 'Vuốt gốm thủ công bàn xoay', 'Nghệ thuật định hình dáng gốm bằng đôi bàn tay và sự nhịp nhàng của bàn xoay truyền thống.'),
-(2, 'Vẽ men lam dưới men', 'Kỹ thuật dùng bút lông vẽ trực tiếp nét thư họa lên cốt gốm mộc trước khi tráng men bóng.'),
-(3, 'Đúc đồng khuôn sáp thất truyền', 'Tạo mẫu bằng sáp ong, đắp đất nung chảy sáp để tạo khuôn rỗng đúc đồng chi tiết tinh xảo.'),
-(4, 'Dát vàng quỳ thủ công', 'Kỹ thuật dán từng lá vàng siêu mỏng bằng keo sơn ta đòi hỏi sự tĩnh tâm tuyệt đối.'),
-(5, 'Rút sợi tơ sen & dệt lụa', 'Quy trình bẻ cuống sen lấy sợi tơ dệt thủ công độc bản duy nhất tại Việt Nam.'),
-(6, 'Đan mây nan xiên mắt cáo', 'Kỹ thuật đan nan tre mây đan cài ziczac tạo khe thoáng gió mát tự nhiên.'),
-(7, 'Dệt chiếu cói hoa cài chữ', 'Kỹ thuật dệt sợi cói nhuộm màu kết hợp tra từng sợi cói tạo hình hoa văn.'),
-(8, 'Mài sơn mài nhiều lớp', 'Mài dưới nước qua nhiều tầng sơn ta để lộ vân trứng và họa tiết lung linh.');
+(1, 'Chuốt gốm bàn xoay thủ công', 'Định hình cốt gốm chuẩn xác bằng nhịp điệu của đôi bàn tay và bàn xoay gỗ truyền thống.'),
+(2, 'Nung củi lò bầu khử oxy 72 giờ', 'Kỹ thuật giữ lửa củi gỗ nghiến liên tục suốt 3 ngày đêm tạo màu men rạn hỏa biến biến ảo kỳ diệu.'),
+(3, 'Họa hoa văn men lam dưới men', 'Dùng bút lông thỏ vẽ nét thư họa trực tiếp lên cốt đất mộc trước khi nhúng men bóng.'),
+(4, 'Chạm trổ bạc lộng kênh bong', 'Kỹ thuật dùng ve chạm thúc nổi từng lớp cánh hoa, vảy rồng tách biệt khỏi bề mặt kim khí.'),
+(5, 'Dệt sa lụa hoa vân cung đình', 'Kỹ thuật dệt sợi tơ tơ đan cài tạo hoa văn vân mây chìm nổi tinh tế trên nền lụa trong suốt.'),
+(6, 'Dệt thổ cẩm kỹ pháp Ikat', 'Buộc thắt từng lọn sợi trước khi nhuộm để khi dệt tạo ra những đường viền hoa văn răng cưa huyền ảo.'),
+(7, 'Chế tác gốm sành nung lộ thiên', 'Nung đất sành ở nhiệt độ cao không cần men áo, để ngọn lửa củi tự tạo lớp da gốm ánh kim độc bản.'),
+(8, 'Chạm khắc đá khối nguyên khối', 'Dùng búa đục tay định hình khối đá tự nhiên thành hình tượng sống động giàu cảm xúc.'),
+(9, 'Đan mây nan xiên mắt cáo', 'Đan cài nan tre và mây ziczac tạo ô thoáng khí giải nhiệt tự nhiên cho ngày hè.'),
+(10, 'Cẩn trứng và mài nước sơn mài', 'Ghép từng mảnh vỏ trứng vụn trên nền sơn ướt và mài phẳng dưới nước qua hàng chục lớp.');
 
 SELECT setval('techniques_id_seq', (SELECT MAX(id) FROM techniques));
 
--- 6. NẠP ARTISANS (Hồ sơ nghệ nhân)
-INSERT INTO artisans (id, name, region_id, title, specialty, years_of_experience, biography, avatar_url, contact_info) VALUES
-(1, 'Trần Độ', 1, 'Nghệ nhân Nhân dân', 'Phục chế men gốm hoàng cung', 48, 'Bậc thầy phục dựng thành công hơn 70 bài men gốm cổ thời Lý, Trần, Lê, Mạc tại làng gốm Bát Tràng. Tác phẩm của ông được chọn làm quốc bảo ngoại giao.', 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80', 'Xưởng gốm Trần Độ, Xóm 1, Bát Tràng, Hà Nội'),
-(2, 'Nguyễn Văn Trung', 1, 'Nghệ nhân Ưu tú', 'Thư họa & Vẽ men lam gốm sứ', 36, 'Được mệnh danh là "bút vẽ phù thủy" của Bát Tràng với tài năng họa hoa văn men lam thanh thoát, uyển chuyển như tranh thủy mặc trên gốm sứ cổ truyền.', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80', 'Hợp tác xã Gốm Mỹ Nghệ Bát Tràng, Gia Lâm, Hà Nội'),
-(3, 'Nguyễn Bá Châu', 1, 'Nghệ nhân Nhân dân', 'Kỹ nghệ đúc đồng cổ truyền', 42, 'Hậu duệ đời thứ 5 làng đúc đồng Ngũ Xã, người tái sinh kỹ thuật đúc tượng đồng nguyên khối không hàn ghép và các dòng đỉnh đồng linh thiêng.', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80', 'Xưởng đúc đồng Ngũ Xã, Ba Đình, Hà Nội'),
-(4, 'Phan Thị Thuận', 1, 'Nghệ nhân Ưu tú', 'Sáng chế dệt lụa tơ sen', 40, 'Người phụ nữ đầu tiên tại Việt Nam thành công rút sợi từ cuống hoa sen dệt thành những tấm lụa tơ sen vô giá tại làng Phùng Xá, Mỹ Đức.', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80', 'Công ty Dâu Tằm Tơ Mỹ Đức, Phùng Xá, Hà Nội'),
-(5, 'Nguyễn Văn Tĩnh', 1, 'Nghệ nhân Ưu tú', 'Mây tre đan tinh hoa Phú Vinh', 35, 'Nghệ nhân bậc thầy biến nan tre, sợi mây thành những tác phẩm quạt mát, tranh đan và đồ dùng thủ công thanh thoát đạt nhiều giải thưởng quốc tế.', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80', 'Làng nghề mây tre đan Phú Vinh, Chương Mỹ, Hà Nội');
+-- -----------------------------------------------------------------------------
+-- 7. NẠP ARTISANS (6 Bậc Thầy Chế Tác theo Stitch designs & DESIGN.md)
+-- -----------------------------------------------------------------------------
+INSERT INTO artisans (
+    id, name, slug, code, region_id, village_id, title, specialty, age, generation, years_of_experience,
+    quote, biography, signature_work, technique_summary, technique_specs, verification_label, is_national_heritage,
+    avatar_url, contact_info, visit_max_guests, visit_lead_time_hours, visit_open_days, visit_hours, visit_address, sort_order
+) VALUES
+(
+    1, 'Nguyễn Văn Bình', 'nguyen-van-binh', 'ART-BT-001', 1, 1,
+    'Nghệ nhân Nhân dân', 'Gốm Men Rạn Cổ', 67, 5, 42,
+    'Lửa lò bầu không bao giờ nói dối; tâm người thợ đặt vào đất thế nào thì men rạn sẽ hiện ra sắc thái như thế ấy.',
+    'Sinh ra trong gia tộc 5 đời gắn bó với nghề gốm Bát Tràng, Nghệ nhân Nguyễn Văn Bình đã dành hơn 4 thập kỷ để phục dựng thành công bài men rạn hoàng cung thất truyền từ thế kỷ XVI. Các tác phẩm của ông được lưu giữ tại Bảo tàng Lịch sử Quốc gia và là tặng phẩm ngoại giao cao cấp.',
+    'Bình Gốm Men Rạn Cổ Dáng Tỳ Bà (CR-BT-2025-08MR)',
+    'Phục hồi trọn vẹn kỹ thuật nung lò bầu nung củi gỗ nghiến liên tục suốt 72 giờ và phối men rạn tam thái độc bản.',
+    '[
+        {"label": "Kỹ pháp nung", "value": "Nung củi lò bầu khử oxy liên tục 72 giờ (1.300°C)"},
+        {"label": "Bài men chủ đạo", "value": "Men rạn tam thái tro sò sông tự nhiên"},
+        {"label": "Nguyên liệu cốt", "value": "Đất sét cao lanh lọc 4 bể trầm tích"},
+        {"label": "Tạo hình", "value": "Vuốt tay bàn xoay 100%, không dùng khuôn ép"}
+    ]'::jsonb,
+    'XÁC THỰC: DI SẢN QUỐC GIA (Quyết định số 248/QĐ-BVHTTDL)', TRUE,
+    'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80',
+    'Xưởng gốm Bình Minh, Xóm 2, Bát Tràng, Gia Lâm, Hà Nội',
+    8, 24, '{2,3,4,5,6,7}', '08:30 - 17:00',
+    'Xưởng Gốm Bình Minh, Xóm 2, Thôn Giang Cao, Xã Bát Tràng, Huyện Gia Lâm, Hà Nội', 1
+),
+(
+    2, 'Trần Thị Mai', 'tran-thi-mai', 'ART-VP-002', 1, 2,
+    'Nghệ nhân Ưu tú', 'Dệt Lụa Sa Nam Đàn', 62, 4, 38,
+    'Từng sợi tơ tằm là giọt mồ hôi của đất trời; dệt nên tấm lụa sa là giữ lại linh hồn thanh nhã của cha ông.',
+    'Nghệ nhân đời thứ 4 của làng lụa Vạn Phúc, người nắm giữ bí quyết dệt dòng lụa sa và lụa vân mỏng như cánh ve sầu, thoáng mát ngày hè và mềm mại ấm áp ngày đông.',
+    'Khăn Sa Lụa Tơ Tằm Cung Đình (CR-VP-2026-LSA)',
+    'Bí quyết gài go dệt hoa văn chìm trên khung cửi thủ công cổ truyền với sợi tơ tằm tuyển chọn kỹ lưỡng.',
+    '[
+        {"label": "Nguyên liệu", "value": "100% tơ tằm tự nhiên vùng bãi bồi sông Đáy"},
+        {"label": "Kỹ thuật dệt", "value": "Dệt sa hoa vân chìm khung cửi gỗ 4 go"},
+        {"label": "Nhuộm màu", "value": "Thảo mộc tự nhiên (lá bàng, củ nâu, hoa hòe)"}
+    ]'::jsonb,
+    'XÁC THỰC: DI SẢN QUỐC GIA', TRUE,
+    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+    'HTX Lụa Tơ Tằm Mai Anh, Phố Lụa Vạn Phúc, Hà Đông, Hà Nội',
+    10, 48, '{2,3,4,5,6,7}', '09:00 - 17:30',
+    'Số 18, Phố Lụa Vạn Phúc, Phường Vạn Phúc, Quận Hà Đông, Hà Nội', 2
+),
+(
+    3, 'Lê Bá Hưng', 'le-ba-hung', 'ART-DX-003', 1, 3,
+    'Nghệ nhân Nhân dân', 'Chạm Bạc Mỹ Nghệ', 70, 6, 45,
+    'Bạc mềm nhưng chạm nổi hoa văn phải có độ đanh thép, từng vảy rồng cánh phượng phải như bay lượn.',
+    'Bậc thầy chạm bạc làng Đồng Xâm với 45 năm kinh nghiệm đục chạm lộng kênh bong, người chế tác các hòm sắc phong và bảo vật kim hoàn cho các di tích quốc gia.',
+    'Hộp Bạc Chạm Trổ Bách Thú (CR-DX-2025-CB1)',
+    'Kỹ thuật thúc nổi và chạm tỉa từng chi tiết micromet trên tấm bạc nguyên chất không cần khuôn đúc sẵn.',
+    '[
+        {"label": "Chất liệu", "value": "Bạc ta 99.9% tinh khiết dát mỏng"},
+        {"label": "Kỹ thuật chạm", "value": "Chạm lộng kênh bong 3 tầng hoa văn"},
+        {"label": "Độ chính xác", "value": "Gia công thủ công từng chi tiết vi mô"}
+    ]'::jsonb,
+    'XÁC THỰC: DI SẢN QUỐC GIA', TRUE,
+    'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80',
+    'Xưởng bạc Đồng Xâm Lê Hưng, Xã Hồng Thái, Kiến Xương, Thái Bình',
+    6, 48, '{2,3,4,5,6}', '08:30 - 16:30',
+    'Làng nghề Chạm Bạc Đồng Xâm, Xã Hồng Thái, Huyện Kiến Xương, Tỉnh Thái Bình', 3
+),
+(
+    4, 'Phạm Đình Triệu', 'pham-dinh-trieu', 'ART-HC-004', 3, 4,
+    'Nghệ nhân Ưu tú', 'Gốm Sành Hương Canh', 58, 3, 35,
+    'Sành Hương Canh mộc mạc không men, sắc da gốm tự sinh từ ngọn lửa củi gộc và bùn xanh quê nhà.',
+    'Người giữ lửa bền bỉ cho làng gốm sành Hương Canh, khôi phục thành công các dòng chum đựng rượu, bình hoa sành cổ giữ nhiệt và không rò rỉ một giọt nước.',
+    'Chum Sành Đất Nung Giữ Nước (CR-HC-2026-SANH)',
+    'Kỹ pháp nung đất sành nhiệt độ cao không men áo, tiếng kêu vang trong như đá quý.',
+    '[
+        {"label": "Chất liệu cốt", "value": "Đất sét xanh trầm tích đồi Hương Canh"},
+        {"label": "Bài men", "value": "Không dùng men áo, men tự sinh từ tro củi"},
+        {"label": "Đặc tính", "value": "Chống thấm tuyệt đối, giữ hương vị nguyên bản"}
+    ]'::jsonb,
+    'XÁC THỰC: DI SẢN CẤP QUỐC GIA', TRUE,
+    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80',
+    'Xưởng gốm sành Đình Triệu, Thị trấn Hương Canh, Bình Xuyên, Vĩnh Phúc',
+    12, 48, '{2,3,4,5,6,7}', '08:00 - 17:00',
+    'Khu phố gốm Hương Canh, Thị trấn Hương Canh, Huyện Bình Xuyên, Tỉnh Vĩnh Phúc', 4
+),
+(
+    5, 'Võ Văn Cường', 'vo-van-cuong', 'ART-CP-005', 5, 5,
+    'Nghệ nhân Ưu tú', 'Điêu Khắc Đá Mỹ Nghệ', 52, 4, 28,
+    'Khối đá vô tri chỉ thức giấc khi người thợ nghe thấu đường vân và nhát búa chạm đúng cái hồn ẩn sâu.',
+    'Hậu duệ đời thứ 4 làng đá Non Nước, nổi danh với kỹ thuật tạc tượng Phật và tượng mỹ thuật từ đá cẩm thạch nguyên khối tự nhiên với đường nét uyển chuyển phi thường.',
+    'Tượng Thiền Sư Chạm Đá Cẩm Thạch (CR-NN-2025-DA1)',
+    'Kỹ thuật điêu khắc chạm lộng trên đá cẩm thạch nguyên khối không nứt vỡ.',
+    '[
+        {"label": "Chất liệu", "value": "Đá cẩm thạch tự nhiên núi Ngũ Hành Sơn"},
+        {"label": "Kỹ thuật tạc", "value": "Đục tay thủ công và mài bóng mịn màng"},
+        {"label": "Độ bền", "value": "Trường tồn hàng thế kỷ trước mưa nắng thiên nhiên"}
+    ]'::jsonb,
+    'XÁC THỰC: DI SẢN QUỐC GIA', TRUE,
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
+    'Cơ sở điêu khắc đá Võ Cường, Làng Non Nước, Ngũ Hành Sơn, Đà Nẵng',
+    15, 48, '{2,3,4,5,6,7}', '08:30 - 17:30',
+    'Đường Huyền Trân Công Chúa, Phường Hòa Hải, Quận Ngũ Hành Sơn, TP. Đà Nẵng', 5
+),
+(
+    6, 'Y Krang Ksor', 'y-krang-ksor', 'ART-TB-006', 5, 6,
+    'Nghệ nhân Dân gian', 'Dệt Thổ Cẩm Ikat', 55, 3, 30,
+    'Mỗi tấm thổ cẩm là bản hòa ca của rừng già, là sử thi của buôn làng dệt bằng sợi bông và màu lá cây.',
+    'Nghệ nhân người Hrê gìn giữ phương thức dệt thổ cẩm Ikat truyền thống làng Teng, kết hợp hoa văn hình học cổ xưa biểu trưng cho thần sấm sét, chim chơ-rao và dòng suối nguồn.',
+    'Tấm Thổ Cẩm Ikat Hoa Văn Sấm Sét (CR-TB-2026-IKAT)',
+    'Kỹ thuật thắt sợi nhuộm Ikat phức tạp đòi hỏi tính toán chuẩn xác từng mili trước khi đưa lên khung dệt.',
+    '[
+        {"label": "Sợi dệt", "value": "Sợi bông rẫy xe tay thủ công"},
+        {"label": "Màu nhuộm", "value": "Chàm đen, củ nâu rừng và vỏ cây râm bụt"},
+        {"label": "Đồ án", "value": "Họa tiết Ikat hình thoi và thần Sấm Sét"}
+    ]'::jsonb,
+    'XÁC THỰC: DI SẢN VĂN HÓA PHI VẬT THỂ', TRUE,
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
+    'Nhà văn hóa Làng Teng, Xã Ba Thành, Ba Tơ, Quảng Ngãi',
+    10, 48, '{2,3,4,5,6,7}', '09:00 - 17:00',
+    'Làng Teng, Xã Ba Thành, Huyện Ba Tơ, Tỉnh Quảng Ngãi', 6
+);
 
 SELECT setval('artisans_id_seq', (SELECT MAX(id) FROM artisans));
 
--- 7. NẠP CRAFTS (Sản phẩm thủ công truyền thống)
-INSERT INTO crafts (id, name, slug, region_id, category_id, thumbnail_url, short_description, cultural_context, tools, process, traditional_use, is_featured, view_count) VALUES
-(1, 'Bình Hút Lộc Men Lam Cổ Dát Vàng', 'binh-hut-loc-men-lam-co-dat-vang', 1, 1, 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80', 'Tuyệt phẩm kết hợp dáng gốm phong thủy, nét vẽ men lam thủy mặc và ánh vàng quỳ 24K cung đình.', 'Biểu tượng phong thủy hút tài nạp lộc, lưu giữ sinh khí an lành trong quan niệm văn hóa Việt xưa.', 'Bàn xoay gỗ, bút lông thỏ, lò nung củi, dao gọt cốt tre', 'Vuốt cốt gốm trên bàn xoay -> Phơi sấy tự nhiên -> Vẽ men lam nét mảnh -> Nung lần 1 -> Tráng men bóng nung 1300 độ -> Thếp vàng quỳ nung lại 800 độ', 'Trưng bày không gian trang trọng, vật phẩm chúc phúc tân gia', TRUE, 1250),
+-- -----------------------------------------------------------------------------
+-- 8. NẠP ARTISAN_MILESTONES (Niên biểu cống hiến của nghệ nhân)
+-- -----------------------------------------------------------------------------
+INSERT INTO artisan_milestones (artisan_id, year, event, sort_order) VALUES
+(1, '1984', 'Chính thức tiếp quản lò gốm gia tộc và bắt đầu nghiên cứu phục chế bài men cổ triều Mạc.', 1),
+(1, '1996', 'Phục chế thành công men rạn tam thái sau hơn 10 năm thất truyền, được giới khảo cổ ghi nhận.', 2),
+(1, '2010', 'Nhà nước phong tặng danh hiệu Nghệ nhân Ưu tú ngành nghề thủ công truyền thống.', 3),
+(1, '2018', 'Tác phẩm "Bình Gốm Tỳ Bà Men Rạn" được chọn làm tặng phẩm ngoại giao trong Hội nghị thượng đỉnh.', 4),
+(1, '2024', 'Được Chủ tịch nước phong tặng danh hiệu cao quý Nghệ nhân Nhân dân.', 5),
 
-(2, 'Đỉnh Đồng Song Long Chầu Nguyệt', 'dinh-dong-song-long-chau-nguyet', 1, 2, 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80', 'Đỉnh đồng đỏ đúc thủ công theo lối cổ truyền, chạm nổi đôi rồng uy nghi chầu mặt nguyệt.', 'Vật phẩm tối thượng trên bàn thờ gia tiên, đại diện cho lòng hiếu kính và thế cân bằng âm dương.', 'Khuôn đất sét sáp ong, gầu múc đồng, đục chạm thép hoa cương', 'Làm cốt đất -> Đắp mẫu sáp ong -> Bọc khuôn ngoài -> Đun đồng nóng chảy 1200 độ -> Rót khuôn -> Phá khuôn -> Làm nguội chạm tỉa chi tiết', 'Trang nghiêm không gian thờ tự từ đường, đình chùa', TRUE, 980),
+(2, '1988', 'Khôi phục kỹ thuật dệt sa lụa hoa vân cung đình từng bị mai một trong thời kỳ bao cấp.', 1),
+(2, '2005', 'Thành lập Hợp tác xã lụa tơ tằm gìn giữ phương pháp dệt sợi sa tự nhiên.', 2),
+(2, '2015', 'Đạt giải Nhất Tinh hoa Lụa Việt Nam và được phong tặng danh hiệu Nghệ nhân Ưu tú.', 3),
 
-(3, 'Thạp Gốm Hoa Nâu Thời Trần Phục Dựng', 'thap-gom-hoa-nau-thoi-tran-phuc-dung', 1, 1, 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=800&q=80', 'Tái hiện hào khí Đông A oai hùng qua dáng thạp gốm vững chãi và men hoa nâu mộc mạc.', 'Dòng gốm bác học thuần Việt đỉnh cao thời Trần thế kỷ 13, biểu tượng của tinh thần tự chủ văn hóa.', 'Bàn xoay thủ công, khuôn dập hoa văn sen, men hoa nâu oxit sắt', 'Tạo dáng thạp hình trụ miệng loe -> Cạo men tạo đồ án cánh sen -> Bôi men hoa nâu -> Nung lò củi rơm truyền thống', 'Vật phẩm sưu tầm nghệ thuật, trưng bày phòng khách phong thái thiền', FALSE, 640),
+(3, '1982', 'Học nghề chạm bạc từ thân phụ và đạt danh hiệu Bàn tay vàng thủ công mỹ nghệ tỉnh Thái Bình.', 1),
+(3, '1998', 'Chủ trì chế tác bộ hòm bạc sắc phong cho Quần thể di tích Đền Trần.', 2),
+(3, '2016', 'Được Nhà nước vinh danh Nghệ nhân Nhân dân.', 3),
 
-(4, 'Khăn Choàng Lụa Tơ Sen Độc Bản', 'khan-choang-lua-to-sen-doc-ban', 1, 3, 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80', 'Tấm khăn choàng siêu nhẹ, thoáng mát dệt từ hàng vạn sợi tơ rút từ cuống sen tươi Hồ Tây.', 'Sản phẩm giao hòa giữa sự thanh tịnh của hoa sen Phật giáo và sự tài hoa kiên nhẫn của người dệt lụa.', 'Khung dệt gỗ thủ công, dao khía cuống sen, thau nước ngâm sợi', 'Hái cuống sen sớm mai -> Khía vỏ rút tơ trong nước -> Se sợi tơ sen -> Mắc khung cửi dệt tay -> Giặt nước lá thơm phơi bóng râm', 'Khăn choàng cao cấp ngày hè thoáng mát, quà tặng ngoại giao tầm cỡ', TRUE, 1890),
+(4, '1992', 'Sáng chế thành công công thức sành sét xanh chịu nhiệt cao không cần tráng men.', 1),
+(4, '2012', 'Được phong tặng Nghệ nhân Ưu tú tỉnh Vĩnh Phúc.', 2),
 
-(5, 'Quạt Nan Tre Chàng Sơn Thanh Mát', 'quat-nan-tre-chang-son-thanh-mat', 1, 4, 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80', 'Quạt nan làm từ tre già ngâm dẻo dai, phủ lụa mỏng tạo ngọn gió tự nhiên xua tan cái nóng hè oi ả.', 'Nghề làm quạt Chàng Sơn có từ hàng trăm năm, từng theo chân sứ thần mang ngọn gió mát lành đi bốn phương.', 'Dao rựa chuốt nan tre, kéo cắt lụa, kim chỉ khâu viền', 'Chọn tre già ngâm 6 tháng -> Chuốt nan tre mỏng đều -> Phơi khô -> Dán lụa mỏng -> Khâu viền chỉ tinh xảo', 'Quạt mát ngày hè, đạo cụ múa dân gian, trang trí tường mộc mạc', TRUE, 2100),
+(5, '1998', 'Hoàn thành pho tượng Phật Bà Quan Âm bằng đá cẩm thạch nguyên khối cao 3.2m tại chùa Linh Ứng.', 1),
+(5, '2016', 'Phong tặng danh hiệu Nghệ nhân Ưu tú.', 2),
 
-(6, 'Chiếu Cói Mỹ Nghệ Nga Sơn Giải Nhiệt', 'chieu-coi-my-nghe-nga-son-giai-nhiet', 2, 4, 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80', 'Chiếu dệt thủ công từ sợi cói tự nhiên vùng mặn lợ, mềm êm, thấm mồ hôi và mát lưng ngày hè.', 'Câu ca dao "Chiếu Nga Sơn, gạch Bát Tràng" khẳng định vị thế của vật phẩm nâng niu giấc ngủ thanh mát.', 'Khung dệt chiếu hai người, ngựa go, sợi đay xe chặt', 'Thu hoạch cói non -> Phơi nắng giòn -> Nhuộm màu thảo mộc -> Dệt thủ công hai thợ -> May viền vải lụa', 'Trải giường ngủ ngày hè không cần máy lạnh, làm chiếu ngồi thiền', TRUE, 1420),
+(6, '2002', 'Tập hợp các nghệ nhân cao niên phục dựng hoàn chỉnh khung cửi dệt Ikat làng Teng.', 1),
+(6, '2019', 'Nghề dệt thổ cẩm làng Teng được công nhận là Di sản văn hóa phi vật thể Quốc gia.', 2);
 
-(7, 'Hộp Sơn Mài Khảm Trứng Hoa Sen', 'hop-son-mai-kham-trung-hoa-sen', 1, 5, 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80', 'Hộp đựng trang sức sơn mài đen bóng loáng điểm xuyết cánh hoa sen ghép từ mảnh vỏ trứng tinh vi.', 'Biểu tượng tinh hoa sơn ta Hạ Thái kết hợp phong cách mỹ thuật Đông Dương thanh nhã.', 'Bay trét sơn, đá mài mịn, vải mịn đánh bóng tóc', 'Tạo cốt gỗ -> Bó vải quét sơn ta -> Cẩn từng mảnh vỏ trứng -> Phủ nhiều lớp sơn cánh gián -> Mài nước -> Đánh bóng bằng lòng bàn tay', 'Đựng trang sức quý, quà tặng nghệ thuật sang trọng', FALSE, 520);
+SELECT setval('artisan_milestones_id_seq', (SELECT MAX(id) FROM artisan_milestones));
+
+-- -----------------------------------------------------------------------------
+-- 9. NẠP CRAFTS (Kiệt tác Thủ công & Spotlight CR-BT-2025-08MR)
+-- -----------------------------------------------------------------------------
+INSERT INTO crafts (
+    id, name, slug, code, region_id, category_id, village_id, thumbnail_url,
+    short_description, price_vnd, tag, origin_line, era, dimensions, specs, process_stages,
+    cultural_context, tools, process, traditional_use, batch_note, is_featured, is_spotlight, handmade, view_count
+) VALUES
+(
+    1, 'Bình Gốm Men Rạn Cổ Dáng Tỳ Bà', 'binh-gom-men-ran-co-dang-ty-ba', 'CR-BT-2025-08MR',
+    1, 1, 1,
+    'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=1000&q=80',
+    'Tuyệt phẩm gốm men rạn tái hiện hình dáng đàn tỳ bà truyền thống thế kỷ XVI, hội tụ tinh hoa đất sét cao lanh và kỹ pháp lửa nung lò bầu 72 giờ.',
+    18500000, 'KIỆT TÁC ĐỘC BẢN', 'Bát Tràng • Hà Nội', 'Thế kỷ XVI phục dựng',
+    'Cao 48cm × ĐK thân 28cm × ĐK miệng 12cm',
+    '[
+        {"label": "Chất liệu", "value": "Đất sét cao lanh Bát Tràng, bài men rạn tro sò sông cổ"},
+        {"label": "Nhiệt độ nung", "value": "1.300°C nung củi gỗ nghiến khử oxy"},
+        {"label": "Thời gian chế tác", "value": "45 ngày (Luyện đất -> Chuốt -> Vẽ -> Nung 72h)"},
+        {"label": "Trọng lượng", "value": "6.8 kg"},
+        {"label": "Tình trạng", "value": "Độc bản duy nhất 01/01"}
+    ]'::jsonb,
+    '[
+        {
+            "step": 1,
+            "title": "Tuyển chọn & Luyện đất trầm tích",
+            "description": "Đất sét cao lanh tuyển từ mỏ trầm tích sông Đáy, ngâm lọc qua hệ thống 4 bể lắng để loại bỏ hoàn toàn tạp chất oxit sắt, giữ lại độ dẻo quánh tự nhiên."
+        },
+        {
+            "step": 2,
+            "title": "Chuốt dáng tỳ bà trên bàn xoay gỗ",
+            "description": "Nghệ nhân dùng lực đôi bàn tay vuốt tạo hình thân bình thon thả theo dáng đàn tỳ bà cổ, miệng loe cân đối hoàn toàn bằng mắt và cảm giác cơ bắp không dùng khuôn ép."
+        },
+        {
+            "step": 3,
+            "title": "Họa hoa văn men lam & Phủ men rạn",
+            "description": "Dùng bút lông thỏ vẽ họa tiết sơn thủy hữu tình bằng oxit coban, sau đó tráng lớp men rạn tro sò bí truyền tạo độ dày đồng đều trên toàn thân gốm."
+        },
+        {
+            "step": 4,
+            "title": "Nung củi lò bầu 72 giờ khử oxy",
+            "description": "Xếp bình vào vị trí ngọn lửa tối ưu trong lò bầu, đốt liên tục bằng củi gỗ nghiến suốt 3 ngày đêm, duy trì nhiệt 1.300°C và làm nguội chậm để vân rạn tự nứt tiếng lách tách."
+        }
+    ]'::jsonb,
+    'Dáng bình tỳ bà biểu trưng cho âm nhạc, sự thanh tao và tích tụ vượng khí tài lộc theo quan niệm phong thủy của giới quý tộc Việt thời Lê - Mạc.',
+    'Bàn xoay gỗ thủ công, bút lông thỏ mềm, dao nạo tre chuốt cốt, lò bầu nung củi gỗ',
+    'Quy trình 4 bước khép kín thủ công 100% kéo dài hơn 45 ngày.',
+    'Trưng bày phòng khách phong thái quý tộc, sưu tầm di sản cổ vật, quà ngoại giao quốc gia.',
+    'Lô chế tác đặc biệt kỷ niệm 700 năm làng gốm Bát Tràng, có khắc triện nổi của Nghệ nhân Bình.',
+    TRUE, TRUE, TRUE, 3420
+),
+(
+    2, 'Khăn Sa Lụa Tơ Tằm Cung Đình Vạn Phúc', 'khan-sa-lua-to-tam-cung-dinh-van-phuc', 'CR-VP-2026-LSA',
+    1, 3, 2,
+    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1000&q=80',
+    'Khăn lụa sa dệt hoa vân mỏng tang, thoáng mát như làn gió mùa hạ, dệt từ 100% tơ tằm tự nhiên.',
+    4200000, 'TUYỂN CHỌN MÙA HẠ', 'Vạn Phúc • Hà Nội', 'Cổ truyền Vạn Phúc',
+    'Dài 180cm × Rộng 65cm',
+    '[
+        {"label": "Chất liệu", "value": "100% tơ tằm tơ vàng bãi bồi sông Đáy"},
+        {"label": "Kỹ thuật", "value": "Dệt sa hoa vân chìm 4 go"},
+        {"label": "Trọng lượng", "value": "85 gram (siêu nhẹ, thoáng khí)"}
+    ]'::jsonb,
+    '[
+        {"step": 1, "title": "Ươm tơ kéo sợi", "description": "Kén tằm vàng nấu nước sôi se sợi tơ đơn."},
+        {"step": 2, "title": "Mắc khung cửi dệt sa", "description": "Mắc sợi tơ trên khung cửi 4 go dệt hoa văn chìm."},
+        {"step": 3, "title": "Nhuộm thảo mộc tự nhiên", "description": "Nhuộm màu vàng hoàng yến từ hoa hòe phơi khô."}
+    ]'::jsonb,
+    'Dòng lụa sa Nam Đàn từng được tiến cống vào cung đình triều Nguyễn để may long bào và khăn choàng mùa hè cho hoàng hậu.',
+    'Khung cửi gỗ 4 go dệt tay, suốt tơ tre, thùng nhuộm thảo mộc',
+    'Dệt thủ công tỉ mỉ từng sợi tơ mảnh.',
+    'Khăn choàng thanh lịch mùa hạ, phối đồ áo dài truyền thống.',
+    'Sản phẩm trong Bộ Sưu Tập Mùa Hạ 2026.',
+    TRUE, FALSE, TRUE, 1890
+),
+(
+    3, 'Hộp Bạc Chạm Trổ Bách Thú Đồng Xâm', 'hop-bac-cham-tro-bach-thu-dong-xam', 'CR-DX-2025-CB1',
+    1, 2, 3,
+    'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1000&q=80',
+    'Hộp trang sức bằng bạc ta 99.9% chạm nổi tích Bách Thú triều cống với kỹ thuật thúc nổi kênh bong đỉnh cao.',
+    26000000, 'BÁU VẬT KIM HOÀN', 'Đồng Xâm • Thái Bình', 'Thế kỷ XVII phục dựng',
+    'Dài 22cm × Rộng 14cm × Cao 10cm',
+    '[
+        {"label": "Chất liệu", "value": "Bạc ta 99.9% nguyên chất"},
+        {"label": "Trọng lượng bạc", "value": "1.2 kg bạc"},
+        {"label": "Kỹ thuật", "value": "Thúc nổi kênh bong 3 tầng hoa văn"}
+    ]'::jsonb,
+    '[
+        {"step": 1, "title": "Nấu và dát mỏng bạc thỏi", "description": "Dát mỏng bạc thỏi thành tấm đồng đều 1.2mm."},
+        {"step": 2, "title": "Chạm trổ hoa văn trên xi gắn", "description": "Đổ xi nhựa thông cố định tấm bạc và dùng búa ve chạm tỉ mỉ."},
+        {"step": 3, "title": "Làm nguội và đánh bóng", "description": "Làm sạch xi và đánh bóng bằng cát mịn và lá chuối khô."}
+    ]'::jsonb,
+    'Hộp bạc chạm khắc tinh xảo tượng trưng cho sự quyền quý, trường thọ và sung túc của gia chủ.',
+    'Ve chạm thép tôi cứng, đe gỗ, búa tay, xi nhựa thông cố định',
+    'Chạm trổ tay hoàn toàn trong 60 ngày.',
+    'Lưu giữ bảo vật, trang sức quý, trưng bày cổ điển quý phái.',
+    'Có giấy chứng nhận chất lượng bạc ta 99.9% của Viện Đá Quý & Kim Hoàn.',
+    TRUE, FALSE, TRUE, 2150
+),
+(
+    4, 'Chum Sành Đất Nung Giữ Nước Hương Canh', 'chum-sanh-dat-nung-giu-nuoc-huong-canh', 'CR-HC-2026-SANH',
+    3, 1, 4,
+    'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=1000&q=80',
+    'Chum gốm sành sét xanh nung nhiệt độ cao, đanh như chuông đồng, chuyên dùng lưu trữ rượu quý và nước giếng thanh tịnh.',
+    3500000, 'DI SẢN ĐỜI SỐNG', 'Hương Canh • Vĩnh Phúc', 'Cổ truyền Hương Canh',
+    'Cao 60cm × ĐK bụng 45cm',
+    '[
+        {"label": "Chất liệu", "value": "Đất sét xanh trầm tích Hương Canh"},
+        {"label": "Dung tích", "value": "30 Lít"},
+        {"label": "Kỹ thuật", "value": "Nung sành kết khối không men"}
+    ]'::jsonb,
+    '[]'::jsonb,
+    'Câu tục ngữ "Gốm Hương Canh giữ nước không hôi, ủ rượu không thối" đã khẳng định chất sành độc nhất vô nhị.',
+    'Bàn xoay chân đạp, nạo tre chuốt cốt, lò cóc đốt củi',
+    'Ủ đất sét xanh 6 tháng, tạo hình và nung 48 giờ.',
+    'Ủ rượu quê, chứa nước mưa thanh lọc, trang trí tiểu cảnh sân vườn.',
+    NULL, FALSE, FALSE, TRUE, 920
+),
+(
+    5, 'Tượng Thiền Sư Chạm Đá Cẩm Thạch Non Nước', 'tuong-thien-su-cham-da-cam-thach-non-nuoc', 'CR-NN-2025-DA1',
+    5, 6, 5,
+    'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1000&q=80',
+    'Pho tượng điêu khắc từ khối đá cẩm thạch trắng tự nhiên nguyên khối, toát lên phong thái an nhiên giải thoát.',
+    32000000, 'ĐÁ MỸ NGHỆ ĐỘC BẢN', 'Non Nước • Đà Nẵng', 'Đương đại Non Nước',
+    'Cao 75cm × Rộng 42cm × Sâu 30cm',
+    '[
+        {"label": "Chất liệu", "value": "Đá cẩm thạch trắng tự nhiên Ngũ Hành Sơn"},
+        {"label": "Trọng lượng", "value": "48 kg"},
+        {"label": "Kỹ thuật", "value": "Đục chạm lộng thủ công"}
+    ]'::jsonb,
+    '[]'::jsonb,
+    'Tác phẩm biểu đạt tinh thần hòa ái, tĩnh tại của thiền tông phương Đông giữa cuộc sống hiện đại.',
+    'Búa tay, ve đục hợp kim, đá mài nước mịn',
+    'Chọn khối đá không vân nứt, phác thảo và đục chạm trong 3 tháng.',
+    'Không gian thiền trà, phòng khách trang nhã, khuôn viên thiền tịnh.',
+    NULL, TRUE, FALSE, TRUE, 1640
+),
+(
+    6, 'Tấm Thổ Cẩm Ikat Hoa Văn Sấm Sét Làng Teng', 'tam-tho-cam-ikat-hoa-van-sam-set-lang-teng', 'CR-TB-2026-IKAT',
+    5, 3, 6,
+    'https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?auto=format&fit=crop&w=1000&q=80',
+    'Tấm vải thổ cẩm dệt tay kỹ thuật Ikat phức tạp của đồng bào Hrê, nhuộm bằng thảo mộc rừng tự nhiên.',
+    6800000, 'DI SẢN TỘC NGƯỜI', 'Làng Teng • Quảng Ngãi', 'Cổ truyền Hrê',
+    'Dài 210cm × Rộng 85cm',
+    '[
+        {"label": "Chất liệu", "value": "Sợi bông rẫy tự nhiên"},
+        {"label": "Màu sắc", "value": "Nhuộm chàm đen và vỏ cây rừng"},
+        {"label": "Kỹ thuật", "value": "Dệt thắt sợi Ikat thủ công"}
+    ]'::jsonb,
+    '[]'::jsonb,
+    'Hoa văn hình thoi biểu trưng cho thần Sấm và thần Nước, mang lại mùa màng no ấm cho buôn làng.',
+    'Khung dệt ngồi luồn chân, thoi tre dệt sợi',
+    'Thắt sợi nhuộm Ikat và dệt tay ròng rã 2 tháng.',
+    'Treo tường trang trí nghệ thuật, làm chăn ấm thổ cẩm mùa đông.',
+    NULL, TRUE, FALSE, TRUE, 1480
+),
+(
+    7, 'Đỉnh Đồng Song Long Chầu Nguyệt Ngũ Xã', 'dinh-dong-song-long-chau-nguyet-ngu-xa', 'CR-NX-2025-DONG',
+    1, 2, 8,
+    'https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1000&q=80',
+    'Đỉnh đồng đỏ đúc thủ công nguyên khối không chắp vá, đôi rồng chạm nổi uy nghi mang đậm khí chất văn hóa Thăng Long.',
+    45000000, 'DI SẢN ĐÚC ĐỒNG', 'Ngũ Xã • Hà Nội', 'Thế kỷ XVII phục dựng',
+    'Cao 85cm × Rộng 60cm',
+    '[
+        {"label": "Chất liệu", "value": "Đồng đỏ nguyên thỏi tinh luyện"},
+        {"label": "Trọng lượng", "value": "38 kg"},
+        {"label": "Kỹ thuật", "value": "Đúc đồng khuôn sáp đất thó"}
+    ]'::jsonb,
+    '[]'::jsonb,
+    'Vật phẩm tối thượng trên bàn thờ tổ tiên dòng tộc, biểu trưng cho sự uy nghiêm và lòng hiếu thảo.',
+    'Lò nấu đồng than đá, gầu múc đồng chịu nhiệt, đục chạm thép hoa cương',
+    'Đắp mẫu sáp ong, nung khuôn đất và rót đồng nóng chảy 1.200°C.',
+    'Thờ tự gia tiên từ đường, đình chùa, không gian tâm linh trang nghiêm.',
+    NULL, TRUE, FALSE, TRUE, 2280
+),
+(
+    8, 'Quạt Nan Tre & Khay Trà Phú Vinh', 'quat-nan-tre-khay-tra-phu-vinh', 'CR-PV-2026-MAY',
+    1, 4, 7,
+    'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=1000&q=80',
+    'Bộ đôi quạt nan tre dẻo uốn lượn và khay trà mây nan xiên mắt cáo tạo ngọn gió tự nhiên thanh mát ngày hè.',
+    1850000, 'GIẢI NHIỆT MÙA HẠ', 'Phú Vinh • Hà Nội', 'Cổ truyền Phú Vinh',
+    'Khay: 35cm × 25cm | Quạt: 38cm × 28cm',
+    '[
+        {"label": "Chất liệu", "value": "Tre gai già ngâm bùn ao vôi & mây rừng"},
+        {"label": "Kỹ thuật", "value": "Đan nan xiên mắt cáo truyền thống"},
+        {"label": "Đặc tính", "value": "Chống mọt tự nhiên, thoáng mát nhẹ nhàng"}
+    ]'::jsonb,
+    '[]'::jsonb,
+    'Vật phẩm mộc mạc gắn liền với thú uống trà thanh tịnh dưới mái hiên nhà cổ của người Tràng An.',
+    'Dao chuốt nan rựa tre, kéo tỉa mây, khuôn gỗ định hình',
+    'Chẻ nan tre mỏng đều 1mm, đan nan cài mắt cáo liên kết chặt chẽ.',
+    'Thưởng trà ngày hè, quạt mát tự nhiên, trang trí không gian vintage.',
+    'Nằm trong Bộ Sưu Tập Mùa Hạ 2026.',
+    TRUE, FALSE, TRUE, 2760
+);
 
 SELECT setval('crafts_id_seq', (SELECT MAX(id) FROM crafts));
 
--- 8. THIẾT LẬP MỐI QUAN HỆ NHIỀU - NHIỀU: NGHỆ NHÂN ↔ SẢN PHẨM (craft_artisans) ⭐
--- Minh họa: 1 tác phẩm có nhiều nghệ nhân, và 1 nghệ nhân sáng tạo nhiều tác phẩm!
+-- -----------------------------------------------------------------------------
+-- 10. THIẾT LẬP QUAN HỆ N-N: NGHỆ NHÂN ↔ TÁC PHẨM (craft_artisans) ⭐
+-- -----------------------------------------------------------------------------
 INSERT INTO craft_artisans (craft_id, artisan_id, role_title, contribution_notes, is_lead, display_order) VALUES
--- Sản phẩm 1 (Bình men lam dát vàng): 2 nghệ nhân bậc thầy cùng hợp tác
-(1, 1, 'Chủ trì chế tác cốt gốm & bài men', 'Nghiên cứu bài men lam tro trấu cổ thời Lê và trực tiếp vuốt cốt gốm chuẩn tỷ lệ phong thủy.', TRUE, 1),
-(1, 2, 'Nghệ nhân thư họa hoa văn', 'Dùng bút lông phác họa bức tranh sơn thủy Thuận Buồm Xuôi Gió dưới lớp men trong suốt.', FALSE, 2),
+-- Tác phẩm 1 (Bình Men Rạn Tỳ Bà): Nghệ nhân Nguyễn Văn Bình chủ trì
+(1, 1, 'Chủ trì chế tác & Tạo hình cốt gốm', 'Trực tiếp vuốt cốt gốm dáng tỳ bà trên bàn xoay và bài phối men rạn tam thái hoàng cung.', TRUE, 1),
 
--- Sản phẩm 2 (Đỉnh đồng Ngũ Xã): Nghệ nhân Bá Châu chủ trì
-(2, 3, 'Chủ trì đúc & chạm khắc đồng', 'Tạo mẫu sáp rồng chầu nguyệt và làm nguội chạm trổ vảy rồng sắc nét.', TRUE, 1),
+-- Tác phẩm 2 (Khăn Sa Lụa Vạn Phúc): Nghệ nhân Trần Thị Mai dệt sa
+(2, 2, 'Chủ trì thiết kế & Dệt sa lụa', 'Tự tay mắc cửi gài go dệt hoa văn chìm và nhuộm thảo mộc tự nhiên.', TRUE, 1),
 
--- Sản phẩm 3 (Thạp gốm hoa nâu): Nghệ nhân Trần Độ phục chế (1 nghệ nhân làm nhiều tác phẩm)
-(3, 1, 'Nghệ nhân phục chế cổ vật', 'Nghiên cứu hiện vật khảo cổ Hoàng thành Thăng Long để tái sinh chính xác bài men hoa nâu.', TRUE, 1),
+-- Tác phẩm 3 (Hộp Bạc Đồng Xâm): Nghệ nhân Lê Bá Hưng chạm bạc
+(3, 3, 'Chủ trì chạm trổ kim hoàn', 'Thúc nổi Bách Thú và tỉa chạm từng chi tiết vi mô bằng ve thép tôi.', TRUE, 1),
 
--- Sản phẩm 4 (Khăn lụa tơ sen): Nghệ nhân Phan Thị Thuận sáng tạo
-(4, 4, 'Chủ trì sáng chế & dệt tơ sen', 'Trực tiếp chỉ đạo quy trình rút sợi cuống sen và dệt khăn lụa tơ sen độc bản.', TRUE, 1),
+-- Tác phẩm 4 (Chum Sành Hương Canh): Nghệ nhân Phạm Đình Triệu tạo tác
+(4, 4, 'Nghệ nhân chủ trì nung sành', 'Luyện đất sét xanh đồi Hương Canh và căn lửa lò cóc 48 giờ.', TRUE, 1),
 
--- Sản phẩm 5 (Quạt nan tre Chàng Sơn): Nghệ nhân Nguyễn Văn Tĩnh đan mây tre
-(5, 5, 'Nghệ nhân chuốt nan & tạo mẫu', 'Chuốt nan tre mỏng dẻo và thiết kế kiểu dáng nan quạt truyền thống.', TRUE, 1),
+-- Tác phẩm 5 (Tượng Thiền Sư Non Nước): Nghệ nhân Võ Văn Cường đục đá
+(5, 5, 'Chủ trì điêu khắc đá khối', 'Trực tiếp đục tỉa diện tướng tượng Phật từ khối cẩm thạch tự nhiên.', TRUE, 1),
 
--- Sản phẩm 6 (Chiếu cói Nga Sơn): Nghệ nhân Văn Tĩnh cố vấn tạo mẫu phối hoa
-(6, 5, 'Nghệ nhân cố vấn hoa văn dân gian', 'Hướng dẫn kỹ thuật tra sợi cói màu tạo hình chim hạc trên nền chiếu.', FALSE, 1),
+-- Tác phẩm 6 (Thổ Cẩm Ikat Teng): Nghệ nhân Y Krang Ksor dệt
+(6, 6, 'Chủ trì dệt thổ cẩm Ikat', 'Thắt sợi nhuộm vỏ cây rừng và luồn thoi dệt hoa văn Sấm Sét.', TRUE, 1),
 
--- Sản phẩm 7 (Hộp sơn mài hoa sen): 2 nghệ nhân phối hợp chất liệu
-(7, 1, 'Cố vấn phối sắc men gốm và sơn', 'Đưa gam màu xanh ngọc lam của gốm vào tông nền sơn mài.', FALSE, 2),
-(7, 2, 'Nghệ nhân phác thảo đồ án sen', 'Trực tiếp phác thảo nét vẽ hoa sen cho thợ cẩn trứng ghép cánh.', TRUE, 1);
+-- Tác phẩm 7 (Đỉnh Đồng Ngũ Xã): Nghệ nhân Nguyễn Văn Bình cố vấn hoa văn gốm chuyển sang đồng
+(7, 1, 'Cố vấn mỹ thuật hoa văn cổ', 'Tư vấn đồ án đôi rồng thời Lê sang mẫu sáp đúc đồng.', FALSE, 2),
 
--- 9. QUAN HỆ N-N: SẢN PHẨM ↔ CHẤT LIỆU (craft_materials)
+-- Tác phẩm 8 (Quạt Nan Tre Phú Vinh): Nghệ nhân Mai Vạn Phúc phối lụa với nan tre
+(8, 2, 'Nghệ nhân phối vải lụa tơ', 'Dệt tấm lụa tơ tằm dán lên nan tre Chàng Sơn của quạt mát.', FALSE, 2);
+
+-- -----------------------------------------------------------------------------
+-- 11. THIẾT LẬP QUAN HỆ N-N: SẢN PHẨM ↔ CHẤT LIỆU (craft_materials)
+-- -----------------------------------------------------------------------------
 INSERT INTO craft_materials (craft_id, material_id) VALUES
-(1, 1), (1, 2), (1, 5), -- Bình gốm: Đất sét, Men lam, Vàng quỳ
-(2, 4),                 -- Đỉnh đồng: Đồng đỏ
-(3, 1), (3, 3),         -- Thạp gốm: Đất sét, Men rạn
-(4, 7), (4, 6),         -- Khăn lụa: Tơ sen, Tơ tằm
-(5, 9), (5, 6),         -- Quạt nan: Tre gai, Lụa tơ tằm
-(6, 8),                 -- Chiếu cói: Cói Nga Sơn
-(7, 10);                -- Hộp sơn mài: Sơn ta & vỏ trứng
+(1, 1), (1, 2),          -- Bình gốm: Đất sét cao lanh, Men rạn tam thái
+(2, 6),                  -- Khăn sa: Tơ tằm tự nhiên
+(3, 5),                  -- Hộp bạc: Bạc ta nguyên chất
+(4, 3),                  -- Chum sành: Đất sét xanh
+(5, 4),                  -- Tượng đá: Đá cẩm thạch
+(6, 7),                  -- Thổ cẩm: Sợi bông nhuộm chàm
+(7, 9),                  -- Đỉnh đồng: Đồng đỏ
+(8, 8), (8, 6);          -- Quạt nan: Tre già, Tơ tằm
 
--- 10. QUAN HỆ N-N: SẢN PHẨM ↔ KỸ THUẬT (craft_techniques)
+-- -----------------------------------------------------------------------------
+-- 12. THIẾT LẬP QUAN HỆ N-N: SẢN PHẨM ↔ KỸ THUẬT (craft_techniques)
+-- -----------------------------------------------------------------------------
 INSERT INTO craft_techniques (craft_id, technique_id) VALUES
-(1, 1), (1, 2), (1, 4), -- Bình gốm: Vuốt tay, Vẽ men lam, Dát vàng
-(2, 3),                 -- Đỉnh đồng: Đúc khuôn sáp
-(3, 1), (3, 3),         -- Thạp gốm: Vuốt tay, Men rạn
-(4, 5),                 -- Khăn lụa: Rút tơ sen
-(5, 6),                 -- Quạt nan: Nan xiên mây tre
-(6, 7),                 -- Chiếu cói: Dệt chiếu cói
-(7, 8);                 -- Hộp sơn mài: Mài sơn nhiều lớp
+(1, 1), (1, 2), (1, 3),  -- Bình gốm: Chuốt xoay, Nung củi lò bầu, Họa men lam
+(2, 5),                  -- Khăn sa: Dệt sa lụa
+(3, 4),                  -- Hộp bạc: Chạm trổ bạc lộng kênh bong
+(4, 7),                  -- Chum sành: Gốm sành nung lộ thiên
+(5, 8),                  -- Tượng đá: Chạm khắc đá khối
+(6, 6),                  -- Thổ cẩm: Dệt Ikat
+(7, 2),                  -- Đỉnh đồng: Nung đồng nhiệt độ cao
+(8, 9);                  -- Quạt mây tre: Đan nan mắt cáo
 
--- 11. THƯ VIỆN ẢNH CHI TIẾT SẢN PHẨM (craft_images)
+-- -----------------------------------------------------------------------------
+-- 13. NẠP CRAFT_IMAGES (Thư viện ảnh chi tiết tương tác Lightbox)
+-- -----------------------------------------------------------------------------
 INSERT INTO craft_images (craft_id, url, alt_text, caption, display_order) VALUES
-(1, 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=1200&q=80', 'Bình hút lộc men lam góc nhìn chính diện', 'Dáng bình phong thủy miệng loe hút vượng khí', 1),
-(1, 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=1200&q=80', 'Cận cảnh nét vẽ men lam và lá vàng quỳ', 'Sự tương phản sang trọng giữa men lam trầm và vàng lá 24K', 2),
-(2, 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1200&q=80', 'Chi tiết nắp đỉnh đồng nghê vờn cầu', 'Linh vật nghê phong thủy xua đuổi tà khí', 1),
-(4, 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1200&q=80', 'Tấm lụa tơ sen nhẹ như làn gió', 'Chất liệu tơ sen tự nhiên siêu nhẹ và thoáng khí', 1),
-(5, 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=1200&q=80', 'Cận cảnh nan quạt tre uốn dẻo', 'Nan tre già được chuốt đều tăm tắp tạo luồng gió êm', 1),
-(6, 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80', 'Mặt chiếu cói Nga Sơn đan sợi mịn', 'Sợi cói thiên nhiên giữ mát lưng ngày nóng', 1);
+(1, 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=1200&q=80', 'Toàn cảnh Bình Gốm Men Rạn Cổ Dáng Tỳ Bà', 'Góc nhìn chính diện thân bình dáng tỳ bà thanh thoát', 1),
+(1, 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=1200&q=80', 'Cận cảnh vân rạn tam thái trên cổ bình', 'Đường vân rạn men tự nhiên hình mai rùa độc bản', 2),
+(1, 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=1200&q=80', 'Miệng bình loe tròn đều chuốt tay bàn xoay', 'Tỷ lệ vàng phong thủy thu hút vượng khí cát tường', 3),
 
--- 12. BỘ SƯU TẬP CHUYÊN ĐỀ THÔNG THƯỜNG (collections & collection_crafts)
+(2, 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1200&q=80', 'Tấm Khăn Sa Lụa Cung Đình Vạn Phúc', 'Sợi tơ sa mỏng nhẹ bay bổng trong nắng hè', 1),
+(3, 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1200&q=80', 'Hộp Bạc Chạm Trổ Bách Thú Đồng Xâm', 'Nét chạm lộng 3 tầng kênh bong sắc sảo', 1),
+(8, 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=1200&q=80', 'Quạt Nan Tre và Khay Trà Phú Vinh', 'Nan tre uốn lượn thoáng khí giải nhiệt mùa hạ', 1);
+
+SELECT setval('craft_images_id_seq', (SELECT MAX(id) FROM craft_images));
+
+-- -----------------------------------------------------------------------------
+-- 14. NẠP COLLECTIONS & SEASONAL_COLLECTIONS (Bộ Sưu Tập Mùa Hạ 2026)
+-- -----------------------------------------------------------------------------
 INSERT INTO collections (id, title, slug, description, banner_url, is_featured) VALUES
-(1, 'Tinh Hoa Di Sản Kinh Kỳ Thăng Long', 'tinh-hoa-di-san-kinh-ky-thang-long', 'Hành trình ngược dòng lịch sử khám phá các tác phẩm đại diện cho đỉnh cao mỹ nghệ đất kinh kỳ ngàn năm văn hiến.', 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1200&q=80', TRUE);
+(1, 'Bảo Vật Hoàng Cung Thăng Long', 'bao-vat-hoang-cung-thang-long', 'Tuyển chọn các tác phẩm phục dựng chuẩn mực triều đình Lý - Trần - Lê từ gốm sứ và kim hoàn.', 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1200&q=80', TRUE),
+(2, 'Sợi Nắng Bản Địa Tây Nguyên', 'soi-nang-ban-dia-tay-nguyen', 'Bộ sưu tập thổ cẩm và điêu khắc mang hơi thở đại ngàn hùng vĩ.', 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80', FALSE);
 
 SELECT setval('collections_id_seq', (SELECT MAX(id) FROM collections));
 
 INSERT INTO collection_crafts (collection_id, craft_id, display_order) VALUES
-(1, 1, 1),
-(1, 2, 2),
-(1, 4, 3);
+(1, 1, 1), (1, 3), (1, 7),
+(2, 6, 1), (2, 5, 2);
 
--- =============================================================================
--- 13. BỘ SƯU TẬP THEO MÙA: BỘ MÙA HÈ ⭐ (seasonal_collections & seasonal_collection_crafts)
--- =============================================================================
-INSERT INTO seasonal_collections (id, title, slug, season_code, year, theme_concept, banner_url, color_tone, start_date, end_date, is_active) VALUES
-(1, 'Sắc Lam Mát Lành – Bộ Sưu Tập Mùa Hè 2026', 'mua-he-2026-mat-lanh', 'summer', 2026, 'Tuyển tập các tuyệt phẩm thủ công từ chất liệu mát tự nhiên: Tre nứa tản nhiệt, chiếu cói thoáng khí, lụa tơ sen nhẹ tênh và gốm men lam làm dịu mát tâm hồn giữa những ngày hè oi ả.', 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80', '#0284c7', '2026-05-01', '2026-08-31', TRUE),
-(2, 'Ấm Áp Sắc Xuân – Bộ Sưu Tập Tết 2026', 'am-ap-sac-xuan-tet-2026', 'spring', 2026, 'Sắc vàng ánh đồng và men gốm rực rỡ nghênh đón tài lộc cho năm mới sum vầy.', 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=1200&q=80', '#dc2626', '2026-01-01', '2026-03-15', FALSE);
+-- BỘ SƯU TẬP THEO MÙA: MÙA HẠ 2026 (CR-ARCH-SUMMER-26)
+INSERT INTO seasonal_collections (
+    id, title, slug, season_code, year, theme_concept, philosophy_quote, quote_source,
+    metrics, process_steps, archive_code, banner_url, color_tone, start_date, end_date, is_active
+) VALUES (
+    1,
+    'Bộ Sưu Tập Mùa Hạ 2026: Sợi Tự Nhiên & Đất Nung Giải Nhiệt',
+    'mua-ha-2026-soi-tu-nhien-dat-nung',
+    'summer', 2026,
+    'Khám phá không gian văn hóa giải nhiệt truyền thống Việt Nam qua chất gốm men mát, lụa sa tơ tằm thanh thoát và mây tre đan đón gió tự nhiên.',
+    'Đưa chất mộc của đất nung và sự nhẹ nhàng của sợi tre vào nhịp sống hiện đại chính là liệu pháp giải nhiệt tâm hồn hiệu quả nhất ngày hè.',
+    'Giám tuyển Văn hóa Trần Đình Bảo',
+    '[
+        {"label": "Tác phẩm tuyển chọn", "value": "12 Kiệt tác"},
+        {"label": "Chất liệu chủ đạo", "value": "Gốm men tro • Tơ tằm • Tre già"},
+        {"label": "Làng nghề tham gia", "value": "4 Làng di sản"}
+    ]'::jsonb,
+    '[
+        {"title": "Gốm men tro dịu mát", "desc": "Bài men tro sông xua tan sắc nóng thị giác"},
+        {"title": "Lụa sa thoáng khí", "desc": "Thấm hút mồ hôi và lưu thông làn gió nhẹ"},
+        {"title": "Mây tre đan mắt cáo", "desc": "Cấu trúc nan đan tạo khe lưu thông không khí"}
+    ]'::jsonb,
+    'CR-ARCH-SUMMER-26',
+    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80',
+    '#0ea5e9',
+    '2026-05-01', '2026-08-31', TRUE
+);
 
 SELECT setval('seasonal_collections_id_seq', (SELECT MAX(id) FROM seasonal_collections));
 
--- Gán các sản phẩm làm mát đặc trưng ngày hè vào Bộ Mùa Hè:
+-- Gán tác phẩm vào Bộ Sưu Tập Mùa Hạ
 INSERT INTO seasonal_collection_crafts (seasonal_collection_id, craft_id, curator_note, highlight_badge, is_hero, display_order) VALUES
--- Sản phẩm 5 (Quạt nan tre Chàng Sơn): Tác phẩm biểu tượng giải nhiệt
-(1, 5, 'Nan tre uốn cong thanh thoát tạo làn gió mát lành tự nhiên giữa những buổi trưa hè oi ả, gợi nhớ nếp nhà thanh tịnh làng quê.', 'Giải nhiệt mùa hạ', TRUE, 1),
+(1, 1, 'Màu men rạn tro sò mát lạnh kết hợp dáng tỳ bà mang lại cảm giác dịu mát thanh tĩnh tuyệt đối cho phòng khách ngày hè.', 'KIỆT TÁC SPOTLIGHT', TRUE, 1),
+(1, 2, 'Lụa sa Nam Đàn mỏng nhẹ như cánh ve, giải nhiệt cơ thể hoàn hảo trong những ngày hè oi ả.', 'THANH MÁT NGÀY HÈ', FALSE, 2),
+(1, 8, 'Nan tre già dẻo dai đón gió mát tự nhiên, gợi nhớ trưa hè thanh bình nơi nếp nhà xưa.', 'GIẢI NHIỆT DÂN GIAN', FALSE, 3),
+(1, 4, 'Chất sành Hương Canh giữ nước giếng khơi mát lạnh nguyên vị suốt ngày dài nắng gắt.', 'MỘC MẠC THANH KHIẾT', FALSE, 4);
 
--- Sản phẩm 6 (Chiếu cói Nga Sơn): Nâng niu giấc ngủ thanh mát
-(1, 6, 'Sợi cói thiên nhiên tản nhiệt và thấm hút mồ hôi cực nhanh, đem lại giấc ngủ thanh dịu không bí bách trong những đêm hè nóng ẩm.', 'Thanh mát tự nhiên', FALSE, 2),
+-- -----------------------------------------------------------------------------
+-- 15. NẠP FAVOURITES (Dữ liệu yêu thích mẫu của người dùng đã đăng nhập)
+-- -----------------------------------------------------------------------------
+INSERT INTO favourites (user_id, craft_id, created_at) VALUES
+(2, 1, NOW() - INTERVAL '3 days'),
+(2, 2, NOW() - INTERVAL '2 days'),
+(2, 8, NOW() - INTERVAL '1 day'),
+(4, 1, NOW() - INTERVAL '5 days'),
+(4, 3, NOW() - INTERVAL '4 days'),
+(4, 5, NOW() - INTERVAL '2 days');
 
--- Sản phẩm 4 (Khăn lụa tơ sen): Thoáng khí cao cấp
-(1, 4, 'Chất lụa từ tơ sen siêu nhẹ, thoáng khí và lưu giữ hương sen dịu ngọt thanh lọc cái oi bức mùa hè.', 'Lụa tơ mát hè', FALSE, 3),
+-- -----------------------------------------------------------------------------
+-- 16. NẠP CONTACT_MESSAGES (Tin nhắn liên hệ mẫu theo chuyên đề)
+-- -----------------------------------------------------------------------------
+INSERT INTO contact_messages (user_id, full_name, email, phone, topic, subject, message, status) VALUES
+(4, 'Hoàng Minh Nam', 'nam.hoang@gmail.com', '0912345678', 'artisan_verification', 'Yêu cầu thẩm định hồ sơ nghệ nhân điêu khắc đá', 'Chào ban quản trị, văn phòng kiến trúc chúng tôi muốn đối soát hồ sơ di sản của nghệ nhân Võ Văn Cường để phối hợp dự án công viên văn hóa.', 'unread'),
+(2, 'Nguyễn Văn An', 'user@craftroots.test', '0987654321', 'workshop_booking', 'Tư vấn đặt lịch trải nghiệm chuốt gốm tại Bát Tràng', 'Tôi muốn đăng ký đoàn 6 người đến trải nghiệm trực tiếp vuốt gốm tại xưởng Nghệ nhân Nguyễn Văn Bình vào cuối tuần sau.', 'read'),
+(NULL, 'Lê Thị Thu Cúc', 'thucuc.le@baochi.vn', '0903112233', 'press_media', 'Đề nghị phỏng vấn nghệ nhân cho chuyên đề Di Sản Việt', 'Ban biên tập Tạp chí Văn hóa mong muốn thực hiện bài phỏng vấn chuyên sâu với Nghệ nhân Nhân dân Nguyễn Văn Bình.', 'unread');
 
--- Sản phẩm 1 (Bình men lam): Thị giác xanh mát
-(1, 1, 'Màu men lam tro trấu cổ mang sắc mát mẻ của dòng sông mát rượi, xua tan không khí nồng bức trong phòng khách.', 'Dịu mát thị giác', FALSE, 4);
+-- -----------------------------------------------------------------------------
+-- 17. NẠP VISIT_BOOKINGS (Phiếu đăng ký hẹn thăm xưởng thủ công)
+-- -----------------------------------------------------------------------------
+INSERT INTO visit_bookings (artisan_id, user_id, full_name, phone, email, visit_date, time_slot, purpose, note, status) VALUES
+(1, 4, 'Hoàng Minh Nam', '0912345678', 'nam.hoang@gmail.com', CURRENT_DATE + INTERVAL '3 days', 'morning', 'Khảo sát chất liệu gốm men rạn cho công trình bảo tàng tư nhân', 'Đoàn 4 kiến trúc sư muốn trực tiếp xem quy trình nung củi lò bầu.', 'confirmed'),
+(1, 2, 'Nguyễn Văn An', '0987654321', 'user@craftroots.test', CURRENT_DATE + INTERVAL '5 days', 'afternoon', 'Trải nghiệm văn hóa gia đình', 'Đoàn có 2 trẻ em muốn trải nghiệm vuốt đất trên bàn xoay.', 'pending'),
+(2, 3, 'Trần Thu Hà', '0944556677', 'editor@craftroots.vn', CURRENT_DATE + INTERVAL '4 days', 'morning', 'Nghiên cứu kỹ thuật dệt sa lụa cổ phục', 'Mong muốn nghệ nhân chia sẻ về kỹ thuật gài go hoa văn chìm.', 'pending');
 
--- 14. DANH SÁCH YÊU THÍCH MẪU (favourites)
-INSERT INTO favourites (user_id, craft_id) VALUES
-(2, 1),
-(2, 4),
-(2, 5);
+-- -----------------------------------------------------------------------------
+-- 18. NẠP NEWSLETTER_SUBSCRIBERS (Bản tin di sản hàng tuần)
+-- -----------------------------------------------------------------------------
+INSERT INTO newsletter_subscribers (email) VALUES
+('docgia.disan@craftroots.vn'),
+('nam.hoang@gmail.com'),
+('leminh.arch@studio.vn'),
+('huongsen.heritage@gmail.com'),
+('khachhang.mynghe@yahoo.com')
+ON CONFLICT DO NOTHING;
 
--- 15. TIN NHẮN TỪ BIỂU MẪU LIÊN HỆ (contact_messages)
-INSERT INTO contact_messages (id, full_name, email, phone, subject, message, status) VALUES
-(1, 'Lê Hoàng Nam', 'nam.le@heritage.vn', '0912345678', 'Đặt hàng bình gốm men lam dát vàng làm quà đối ngoại', 'Xin chào CraftRoots, tôi muốn đặt 2 tác phẩm Bình Hút Lộc do chính tay Nghệ nhân Trần Độ chế tác để làm quà tặng đối tác nước ngoài. Xin tư vấn thêm về thời gian hoàn thiện.', 'unread'),
-(2, 'Vũ Mai Linh', 'mailinh.vu@design.com', '0987654321', 'Đề xuất hợp tác truyền thông Bộ Sưu Tập Mùa Hè', 'Tôi đại diện tạp chí Kiến Trúc & Đời Sống rất ấn tượng với Bộ sưu tập Mùa Hè của CraftRoots. Chúng tôi muốn viết bài chuyên đề về sản phẩm quạt nan và chiếu cói Nga Sơn.', 'read');
+-- -----------------------------------------------------------------------------
+-- 19. NẠP FIELD_NOTES (Ký họa điền dã di sản làng nghề)
+-- -----------------------------------------------------------------------------
+INSERT INTO field_notes (title, body, image_url, caption, coordinates, metrics, sort_order, is_published) VALUES
+(
+    'Bí quyết giữ lửa lò bầu Bát Tràng suốt 72 giờ liên tục',
+    'Đêm thứ hai bên vách lò bầu rực lửa, nhiệt độ ngoài trời mùa hạ hầm hập nhưng không sánh được với sức nóng 1.300°C từ ngọn lửa củi gỗ nghiến. Nghệ nhân Nguyễn Văn Bình chỉ cần nhìn qua lỗ dòm lửa đã đoán chính xác màu lửa đang chuyển từ đỏ cam sang trắng ngọc – dấu hiệu men rạn đang bắt đầu tan chảy và bám chắc vào cốt đất cao lanh.',
+    'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=1000&q=80',
+    'Nghệ nhân Nguyễn Văn Bình kiểm tra màu lửa qua lỗ dòm thành lò',
+    '20.9781° N, 105.9183° E (Bát Tràng, Gia Lâm, Hà Nội)',
+    '[
+        {"label": "Nhiệt độ đỉnh lò", "value": "1.300°C"},
+        {"label": "Thời gian đốt liên tục", "value": "72 giờ"},
+        {"label": "Lượng củi tiêu thụ", "value": "18 tấn gỗ nghiến"}
+    ]'::jsonb,
+    1, TRUE
+),
+(
+    'Nghệ thuật nhuộm chàm và tiếng thoi reo Làng Teng',
+    'Dưới bóng râm nhà sàn Ba Tơ, nghệ nhân Y Krang Ksor thoăn thoắt nhúng từng bó sợi bông rẫy vào thùng nước chàm sủi bọt tím ngắt. Khác với dệt công nghiệp, sợi thổ cẩm Ikat phải được thắt nút bằng dây chuối trước khi nhuộm để giữ lại những mảng màu trắng tinh nguyên sơ, tạo nên đồ án thần Sấm kỳ ảo khi dệt.',
+    'https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?auto=format&fit=crop&w=1000&q=80',
+    'Kỹ thuật nhuộm chàm thảo mộc tự nhiên tại buôn làng',
+    '14.7562° N, 108.7189° E (Ba Tơ, Quảng Ngãi)',
+    '[
+        {"label": "Thời gian ngâm chàm", "value": "21 ngày"},
+        {"label": "Số lần nhúng sợi", "value": "15 lần phơi"}
+    ]'::jsonb,
+    2, TRUE
+),
+(
+    'Âm vang tiếng đục đá ngũ hành Non Nước',
+    'Tiếng đục chan chát vang vọng vào vách núi Ngũ Hành Sơn từ tờ mờ sáng. Dưới bàn tay chai sần của nghệ nhân Võ Văn Cường, từng mảnh đá cẩm thạch trắng rơi rụng để lộ dần khuôn mặt từ bi của pho tượng Phật. Ở đây, đá không phải là vật chất vô tri, mà là sự kiên nhẫn tích tụ của đất trời qua hàng vạn năm.',
+    'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1000&q=80',
+    'Chạm trổ diện tượng Phật từ đá cẩm thạch nguyên khối',
+    '16.0042° N, 108.2631° E (Ngũ Hành Sơn, Đà Nẵng)',
+    '[
+        {"label": "Độ cứng đá", "value": "3.5 - 4 Mohs"},
+        {"label": "Thời gian tạc tượng", "value": "90 ngày liên tục"}
+    ]'::jsonb,
+    3, TRUE
+);
 
-SELECT setval('contact_messages_id_seq', (SELECT MAX(id) FROM contact_messages));
+SELECT setval('field_notes_id_seq', (SELECT MAX(id) FROM field_notes));
+
+-- =============================================================================
+-- HOÀN TẤT NẠP DỮ LIỆU SEED CHO TOÀN BỘ 22 BẢNG CRAFTROOTS v1.1.0!
+-- =============================================================================

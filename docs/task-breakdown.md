@@ -189,6 +189,19 @@ gantt
 
 ---
 
+### Phase 9: Phân hệ Quản trị Dữ liệu Di sản cho Editor/Admin (Tuỳ chọn Mục 6.3 - Chưa có giao diện)
+*Điều kiện kích hoạt:* **Chỉ thực hiện sau khi giai đoạn 1–6 hoàn tất và toàn bộ kiểm thử đạt test xanh 100%.** Backend REST API phục vụ quản trị nội bộ qua Postman/cURL, không yêu cầu giao diện client.
+
+| Task ID | Giai đoạn | Tiêu đề & Nội dung công việc | Người thực hiện | Ước lượng | Phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) |
+|---|---|---|---|---|---|---|
+| **TSK-OPT-01** | Phase 9 | Xây dựng CRUD API quản lý tác phẩm (`POST /api/crafts`, `PUT /api/crafts/:id`, `DELETE /api/crafts/:id`). | BACKEND-DEV | 3 SP (11h) | Phase 6 & Phase 7 test xanh | Chỉ vai trò `editor`/`admin` được phép thao tác (`authorize('editor', 'admin')`). Thao tác DELETE giới hạn nghiêm ngặt cho `admin`. |
+| **TSK-OPT-02** | Phase 9 | Xây dựng CRUD API quản lý nghệ nhân (`POST /api/artisans`, `PUT /api/artisans/:id`, `DELETE /api/artisans/:id`). | BACKEND-DEV | 3 SP (11h) | TSK-OPT-01 | Tuân thủ BR-05: xóa nghệ nhân không xóa cascade tác phẩm liên kết. |
+| **TSK-OPT-03** | Phase 9 | Xây dựng CRUD API bộ sưu tập mùa (`POST /api/seasonal-collections`, `PUT /api/seasonal-collections/:id`, `DELETE /api/seasonal-collections/:id`). | BACKEND-DEV | 2 SP (8h) | TSK-OPT-01 | Gán và cập nhật danh sách tác phẩm liên kết kèm chỉ định tác phẩm Hero (`is_hero`). |
+| **TSK-OPT-04** | Phase 9 | Xây dựng API tra cứu tin nhắn liên hệ (`GET /api/contact/messages`) và đổi trạng thái (`PATCH /api/contact/messages/:id/status`). | BACKEND-DEV | 2 SP (7h) | TSK-OPT-01 | Lọc theo `topic` và `status` (unread, read, replied), cập nhật ghi chú admin nội bộ. |
+| **TSK-OPT-05** | Phase 9 | Xây dựng API đổi trạng thái phiếu hẹn thăm xưởng (`PATCH /api/visit-bookings/:id/status`) và mở rộng `GET /api/visit-bookings?all=true`. | BACKEND-DEV | 2 SP (7h) | TSK-OPT-01 | Cập nhật trạng thái phiếu hẹn sang `confirmed`, `cancelled`, hoặc `completed`. |
+
+---
+
 ## 5. Đường găng dự án & Quản lý rủi ro (Critical Path & Risk Management)
 
 ### 5.1. Chuỗi công việc trên đường găng (Critical Path v1.1.0)
