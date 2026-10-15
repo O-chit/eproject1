@@ -128,7 +128,7 @@ export default function VillageDrawer({ village, onClose }) {
         {/* Coordinate Stamp */}
         <div className="font-spec-code text-[10px] text-text-secondary/80 flex items-center justify-between pt-1">
           <span>TỌA ĐỘ VỆ TINH:</span>
-          <span className="text-text-primary font-mono">
+          <span className="text-text-primary font-spec-code font-semibold">
             {village.coordinates ? `${village.coordinates[1]}° N, ${village.coordinates[0]}° E` : ''}
           </span>
         </div>

@@ -51,26 +51,26 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
         <div className="h-1.5 w-full shrink-0" style={{ backgroundColor: region.color }} />
 
         {/* HEADER POPUP */}
-        <div className="p-5 sm:p-6 bg-[#FFFFFF] border-b border-[#E6E2DA] flex items-start justify-between gap-4 shrink-0">
+        <div className="p-5 sm:p-6 bg-surface-crisp border-b border-border-neutral flex items-start justify-between gap-4 shrink-0">
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2">
               <span
-                className="px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-white shadow-xs"
+                className="px-2.5 py-0.5 text-[10px] font-spec-code font-bold uppercase tracking-[0.16em] text-white shadow-xs"
                 style={{ backgroundColor: region.color }}
               >
                 {region.id}
               </span>
-              <span className="font-mono text-[11px] font-semibold text-[#B86B35] uppercase tracking-widest">
+              <span className="font-spec-code text-[11px] font-semibold text-accent-terracotta uppercase tracking-widest">
                 DI SẢN LÀNG NGHỀ TRUYỀN THỐNG
               </span>
             </div>
             <h2
               id="region-modal-title"
-              className="text-xl sm:text-2xl md:text-3xl font-bold text-[#1C1B1A] tracking-wide uppercase font-serif"
+              className="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary tracking-wide uppercase font-headline-title font-serif"
             >
               {region.name}
             </h2>
-            <span className="text-xs sm:text-sm text-[#5A5854] font-serif italic">
+            <span className="text-xs sm:text-sm text-text-secondary font-label-signature italic">
               {region.subName}
             </span>
           </div>
@@ -79,7 +79,7 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center bg-[#F4F2EE] hover:bg-[#1C1B1A] text-[#5A5854] hover:text-[#FFFFFF] border border-[#E6E2DA] transition-colors cursor-pointer text-base shrink-0"
+            className="w-9 h-9 flex items-center justify-center bg-surface-subtle hover:bg-text-primary text-text-secondary hover:text-white border border-border-neutral transition-colors cursor-pointer text-base shrink-0"
             title="Đóng trang chi tiết (Esc)"
             aria-label="Đóng"
           >
@@ -88,38 +88,38 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
         </div>
 
         {/* THANH CHỈ SỐ DI SẢN (HERITAGE STATS BAR) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 divide-x divide-[#E6E2DA] border-b border-[#E6E2DA] bg-[#F4F2EE] text-center font-mono shrink-0">
+        <div className="grid grid-cols-2 sm:grid-cols-3 divide-x divide-border-neutral border-b border-border-neutral bg-surface-subtle text-center shrink-0">
           <div className="py-2.5 px-3">
-            <span className="text-[10px] uppercase text-[#867368] block tracking-wider">Tỉnh thành</span>
-            <span className="text-base sm:text-lg font-bold text-[#1C1B1A] font-serif">
+            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Tỉnh thành</span>
+            <span className="text-base sm:text-lg font-bold text-text-primary font-headline-title font-serif">
               {region.provinces ? region.provinces.length : 0} Địa phương
             </span>
           </div>
           <div className="py-2.5 px-3">
-            <span className="text-[10px] uppercase text-[#867368] block tracking-wider">Làng nghề tiêu biểu</span>
-            <span className="text-base sm:text-lg font-bold text-[#B86B35] font-serif">
+            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Làng nghề tiêu biểu</span>
+            <span className="text-base sm:text-lg font-bold text-accent-terracotta font-headline-title font-serif">
               {region.crafts ? region.crafts.length : 0} Làng nghề
             </span>
           </div>
-          <div className="py-2.5 px-3 col-span-2 sm:col-span-1 border-t sm:border-t-0 border-[#E6E2DA]">
-            <span className="text-[10px] uppercase text-[#867368] block tracking-wider">Bản sắc</span>
-            <span className="text-xs sm:text-sm font-semibold text-[#1C1B1A] truncate block font-serif">
+          <div className="py-2.5 px-3 col-span-2 sm:col-span-1 border-t sm:border-t-0 border-border-neutral">
+            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Bản sắc</span>
+            <span className="text-xs sm:text-sm font-semibold text-text-primary truncate block font-title-card font-serif">
               Thủ công tinh hoa
             </span>
           </div>
         </div>
 
         {/* NỘI DUNG CUỘN (SCROLLABLE CONTENT) */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6 scrollbar-thin scrollbar-thumb-[#D9C2B5] scrollbar-track-transparent">
+        <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6 scrollbar-thin scrollbar-thumb-border-neutral scrollbar-track-transparent">
           {/* 1. Đặc trưng văn hóa nghề */}
           <div>
             <div className="flex items-center gap-2 mb-2.5">
               <span className="w-1.5 h-4" style={{ backgroundColor: region.color }} />
-              <h3 className="font-mono text-xs uppercase tracking-widest text-[#1C1B1A] font-bold">
-                Đặc Trưng Văn Hóa Nghề & Không Gian Di Sản
+              <h3 className="font-label-action text-xs uppercase tracking-wider text-text-primary font-bold">
+                Đặc Trưng Văn Hóa Nghề &amp; Không Gian Di Sản
               </h3>
             </div>
-            <p className="text-sm sm:text-[14px] text-[#5A5854] leading-relaxed bg-[#FFFFFF] p-4 sm:p-5 border border-[#E6E2DA] shadow-xs">
+            <p className="text-sm sm:text-[14px] text-text-secondary font-body-spec leading-relaxed bg-surface-crisp p-4 sm:p-5 border border-border-neutral shadow-xs">
               {region.description}
             </p>
           </div>
@@ -129,11 +129,11 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-4" style={{ backgroundColor: region.color }} />
-                <h3 className="font-mono text-xs uppercase tracking-widest text-[#1C1B1A] font-bold">
+                <h3 className="font-label-action text-xs uppercase tracking-wider text-text-primary font-bold">
                   Làng Nghề Truyền Thống Tiêu Biểu ({region.crafts ? region.crafts.length : 0})
                 </h3>
               </div>
-              <span className="text-[11px] font-mono text-[#867368]">
+              <span className="text-[11px] font-spec-code text-text-secondary">
                 Gìn giữ kỹ pháp cổ truyền
               </span>
             </div>
@@ -143,29 +143,29 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
                 region.crafts.map((craft) => (
                   <div
                     key={craft.id}
-                    className="p-4 bg-[#FFFFFF] border border-[#E6E2DA] hover:border-[#B86B35] transition-all flex flex-col justify-between group shadow-xs"
+                    className="p-4 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-all flex flex-col justify-between group shadow-xs"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2 mb-1.5">
-                        <h4 className="font-bold text-sm sm:text-base text-[#1C1B1A] font-serif group-hover:text-[#B86B35] transition-colors">
+                        <h4 className="font-bold text-sm sm:text-base text-text-primary font-title-card font-serif group-hover:text-accent-terracotta transition-colors">
                           {craft.name}
                         </h4>
                         <span
-                          className="text-[10px] font-mono px-2 py-0.5 shrink-0 border border-[#E6E2DA] bg-[#F9F8F6] text-[#5A5854]"
+                          className="text-[10px] font-spec-code px-2 py-0.5 shrink-0 border border-border-neutral bg-canvas-linen text-text-secondary"
                         >
                           {craft.province}
                         </span>
                       </div>
-                      <p className="text-xs text-[#5A5854] leading-relaxed mb-3 line-clamp-3">
+                      <p className="text-xs font-body-spec text-text-secondary leading-relaxed mb-3 line-clamp-3">
                         {craft.description}
                       </p>
                     </div>
 
-                    <div className="pt-2.5 border-t border-[#F4F2EE] flex items-center justify-between text-[11px] font-mono">
-                      <span className="text-[#867368]">Kỹ nghệ thủ công</span>
+                    <div className="pt-2.5 border-t border-border-neutral/60 flex items-center justify-between text-[11px] font-spec-code">
+                      <span className="text-text-secondary">Kỹ nghệ thủ công</span>
                       <Link
                         to={`/crafts?q=${encodeURIComponent(craft.name)}`}
-                        className="text-[#B86B35] hover:text-[#8E4A16] font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                        className="text-accent-terracotta hover:text-primary font-bold font-label-action flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                       >
                         <span>Xem tác phẩm</span>
                         <span>→</span>
@@ -180,16 +180,16 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
           <div>
             <div className="flex items-center gap-2 mb-2.5">
               <span className="w-1.5 h-4" style={{ backgroundColor: region.color }} />
-              <h3 className="font-mono text-xs uppercase tracking-widest text-[#1C1B1A] font-bold">
+              <h3 className="font-label-action text-xs uppercase tracking-wider text-text-primary font-bold">
                 Địa Giới {region.provinces ? region.provinces.length : 0} Tỉnh Thành Trực Thuộc
               </h3>
             </div>
-            <div className="flex flex-wrap gap-1.5 bg-[#FFFFFF] p-3.5 border border-[#E6E2DA] shadow-xs">
+            <div className="flex flex-wrap gap-1.5 bg-surface-crisp p-3.5 border border-border-neutral shadow-xs">
               {region.provinces &&
                 region.provinces.map((prov) => (
                   <span
                     key={prov}
-                    className="px-2.5 py-1 bg-[#F9F8F6] border border-[#E6E2DA] text-[#5A5854] hover:text-[#1C1B1A] hover:border-[#B86B35] text-xs font-mono transition-colors"
+                    className="px-2.5 py-1 bg-canvas-linen border border-border-neutral text-text-secondary hover:text-text-primary hover:border-accent-terracotta text-xs font-body-spec font-medium transition-colors"
                   >
                     {prov}
                   </span>
@@ -199,23 +199,23 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
         </div>
 
         {/* FOOTER HÀNH ĐỘNG */}
-        <div className="p-4 sm:p-5 border-t border-[#E6E2DA] bg-[#FFFFFF] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
-          <div className="text-xs text-[#867368] font-mono text-center sm:text-left">
+        <div className="p-4 sm:p-5 border-t border-border-neutral bg-surface-crisp flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+          <div className="text-xs text-text-secondary font-spec-code text-center sm:text-left">
             <span>Đang xem chi tiết di sản: </span>
-            <span className="text-[#1C1B1A] font-bold">{region.name}</span>
+            <span className="text-text-primary font-bold">{region.name}</span>
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto">
             <Link
               to={`/crafts?q=${encodeURIComponent(region.name)}`}
-              className="flex-1 sm:flex-none py-2.5 px-5 bg-[#B86B35] hover:bg-[#8E4A16] text-[#FFFFFF] font-mono text-xs uppercase tracking-wider font-bold transition-colors text-center shadow-xs"
+              className="flex-1 sm:flex-none py-2.5 px-5 bg-accent-terracotta hover:bg-primary text-white font-label-action text-xs uppercase tracking-wider font-semibold transition-colors text-center shadow-xs"
             >
               Khám Phá Toàn Bộ Di Sản Vùng
             </Link>
             <button
               type="button"
               onClick={onClose}
-              className="py-2.5 px-4 bg-[#F4F2EE] hover:bg-[#E6E2DA] text-[#1C1B1A] border border-[#E6E2DA] font-mono text-xs uppercase tracking-wider transition-colors text-center cursor-pointer"
+              className="py-2.5 px-4 bg-surface-subtle hover:bg-border-neutral text-text-primary border border-border-neutral font-label-action text-xs uppercase tracking-wider transition-colors text-center cursor-pointer"
             >
               Quay Lại Bản Đồ
             </button>

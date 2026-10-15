@@ -490,3 +490,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .animate-scaleUp {
   animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ==========================================================================
+   VIETNAMESE TYPOGRAPHY PRESERVATION & POPUP FONT STYLES
+   Bảo đảm toàn bộ phông chữ popup, tooltip và nhãn bản đồ hiển thị tròn trịa,
+   không bị lỗi biến dạng dấu tiếng Việt (tránh fallback xấu của Consolas/Times).
+   ========================================================================== */
+.font-serif {
+  font-family: var(--font-serif) !important;
+}
+
+.font-mono {
+  font-family: var(--font-body) !important;
+  letter-spacing: 0.03em;
+}
+
+/* MapLibre Tooltip & Popup Typography */
+.maplibregl-popup,
+.maplibregl-popup-content {
+  font-family: var(--font-body) !important;
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sharp);
+}
+
