@@ -1,0 +1,22 @@
+/**
+ * CRAFTROOTS DESIGN SYSTEM - VARIABLES & TOKENS
+ * Gam màu Linen, Terracotta, Sharp Linework chuẩn di sản
+ */
+:root {
+  --color-canvas-linen: #F9F8F6;
+  --color-surface-crisp: #FFFFFF;
+  --color-surface-subtle: #F4F2EE;
+  --color-border-neutral: #E6E2DA;
+  --color-text-primary: #1C1B1A;
+  --color-text-secondary: #5A5854;
+  --color-text-tertiary: #867368;
+  --color-accent-terracotta: #B86B35;
+  --color-accent-terracotta-hover: #8E4A16;
+
+  --color-map-ocean: #EAF2F4;
+  --color-map-border-outer: #FFFFFF;
+  --color-map-border-inner: #1C1B1A;
+
+  --radius-sharp: 0px;
+  --radius-subtle: 2px;
+}

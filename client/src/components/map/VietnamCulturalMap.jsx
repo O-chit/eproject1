@@ -13,7 +13,7 @@ import {
   CULTURAL_REGIONS,
   getRegionBoundingBox,
   SOVEREIGNTY_DATA
-} from '../../data/regionsConfig';
+} from './regionsConfig';
 import RegionDetailModal from './RegionDetailModal';
 
 // CẤU HÌNH BẢN ĐỒ DI SẢN CRAFTROOTS
