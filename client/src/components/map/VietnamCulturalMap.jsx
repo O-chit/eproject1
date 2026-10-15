@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Map, Marker } from 'maplibre-gl';
+import { Map, Marker, setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
+// Cấu hình web worker nội bộ từ public folder để Vite & browser luôn load mượt mà 100%
+if (typeof window !== 'undefined' && typeof setWorkerUrl === 'function') {
+  setWorkerUrl('/maplibre-gl-worker.mjs');
+}
 
 import {
   CULTURAL_REGIONS,
@@ -16,6 +20,7 @@ import {
 const BLANK_DARK_MAP_STYLE = {
   version: 8,
   sources: {},
+  glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
   layers: [
     {
       id: 'blank-dark-background',
@@ -76,18 +81,24 @@ export default function VietnamCulturalMap({
   // Thông tin vùng văn hóa đang được chọn
   const activeRegion = selectedRegionId ? CULTURAL_REGIONS[selectedRegionId] : null;
 
-  // Tính toán vùng đệm (padding) tự động để bản đồ luôn căn giữa hoàn hảo
+  // Tính toán vùng đệm (padding) tự động, an toàn tuyệt đối với mọi kích thước màn hình
   const getDynamicPadding = useCallback(
     (isDetailedRegion = false) => {
-      const isLg = typeof window !== 'undefined' && window.innerWidth >= 1024;
-      const rightPanelWidth = isLg && !isPanelCollapsed ? 440 : 40;
+      const containerWidth = mapContainerRef.current?.clientWidth || (typeof window !== 'undefined' ? window.innerWidth : 1200);
+      const isLg = containerWidth >= 1024;
+      
+      // Đảm bảo padding không bao giờ vượt quá chiều rộng container (tránh lỗi zoom = NaN)
+      let rightPad = 40;
+      if (isLg && !isPanelCollapsed) {
+        rightPad = Math.max(40, Math.min(440, containerWidth - 320));
+      }
 
       if (isDetailedRegion) {
         return {
           top: 70,
           bottom: 70,
-          left: 60,
-          right: rightPanelWidth
+          left: 50,
+          right: rightPad
         };
       }
 
@@ -95,7 +106,7 @@ export default function VietnamCulturalMap({
         top: 60,
         bottom: 40,
         left: 40,
-        right: rightPanelWidth
+        right: rightPad
       };
     },
     [isPanelCollapsed]
@@ -107,10 +118,18 @@ export default function VietnamCulturalMap({
       const map = mapInstanceRef.current;
       if (!map) return;
 
-      map.fitBounds(VIETNAM_BOUNDS, {
-        padding: getDynamicPadding(false),
-        duration: animate ? 1000 : 0
-      });
+      const containerWidth = mapContainerRef.current?.clientWidth || 0;
+      const containerHeight = mapContainerRef.current?.clientHeight || 0;
+      if (containerWidth <= 0 || containerHeight <= 0) return;
+
+      try {
+        map.fitBounds(VIETNAM_BOUNDS, {
+          padding: getDynamicPadding(false),
+          duration: animate ? 1000 : 0
+        });
+      } catch (e) {
+        console.warn('[VietnamCulturalMap] fitBounds error:', e);
+      }
     },
     [getDynamicPadding]
   );
@@ -127,11 +146,15 @@ export default function VietnamCulturalMap({
       }
 
       const bbox = getRegionBoundingBox(regionsGeoJson.features, regionId);
-      map.fitBounds(bbox, {
-        padding: getDynamicPadding(true),
-        duration: 1100,
-        maxZoom: 8.5
-      });
+      try {
+        map.fitBounds(bbox, {
+          padding: getDynamicPadding(true),
+          duration: 1100,
+          maxZoom: 8.5
+        });
+      } catch (e) {
+        console.warn('[VietnamCulturalMap] zoomToRegion error:', e);
+      }
     },
     [regionsGeoJson, fitToVietnamOverview, getDynamicPadding]
   );
@@ -171,29 +194,48 @@ export default function VietnamCulturalMap({
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
-    const map = new Map({
-      container: mapContainerRef.current,
-      style: BLANK_DARK_MAP_STYLE,
-      center: [108.5, 15.5],
-      zoom: 4.8,
-      minZoom: 3.2, // Tăng cường dải zoom nhỏ để toàn bộ Việt Nam nằm gọn trong màn hình
-      maxZoom: 11.0,
-      pitch: 0,
-      bearing: 0,
-      maxPitch: 0,
-      dragRotate: false,
-      touchPitch: false,
-      maxBounds: [
-        [94.0, 3.5],
-        [126.0, 26.5]
-      ],
-      attributionControl: false
-    });
+    let map = null;
+    try {
+      map = new Map({
+        container: mapContainerRef.current,
+        style: BLANK_DARK_MAP_STYLE,
+        center: [108.5, 15.5],
+        zoom: 4.8,
+        minZoom: 3.2,
+        maxZoom: 11.0,
+        pitch: 0,
+        bearing: 0,
+        maxPitch: 0,
+        dragRotate: false,
+        touchPitch: false,
+        maxBounds: [
+          [88.0, 2.0],
+          [132.0, 28.0]
+        ],
+        attributionControl: false
+      });
+    } catch (err) {
+      console.error('[VietnamCulturalMap] Khởi tạo map thất bại:', err);
+      return;
+    }
 
     const handleResize = () => {
-      map.resize();
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.resize();
+      }
     };
     window.addEventListener('resize', handleResize);
+
+    // Dùng ResizeObserver để bảo đảm canvas luôn có kích thước chuẩn xác
+    let resizeObserver = null;
+    if (window.ResizeObserver && mapContainerRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.resize();
+        }
+      });
+      resizeObserver.observe(mapContainerRef.current);
+    }
 
     map.on('zoom', () => {
       setCurrentZoom(map.getZoom());
@@ -202,153 +244,154 @@ export default function VietnamCulturalMap({
     map.on('load', () => {
       map.resize();
       setMapLoaded(true);
-      const isLg = window.innerWidth >= 1024;
-      map.fitBounds(VIETNAM_BOUNDS, {
-        padding: {
-          top: 60,
-          bottom: 40,
-          left: 40,
-          right: isLg ? 440 : 40
-        },
-        duration: 0
-      });
+      setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.resize();
+          fitToVietnamOverview(false);
+        }
+      }, 100);
     });
 
     mapInstanceRef.current = map;
+    if (typeof window !== 'undefined') {
+      window.__map = map;
+    }
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
       sovereigntyMarkersRef.current.forEach((m) => m.remove());
       sovereigntyMarkersRef.current = [];
-      map.remove();
-      mapInstanceRef.current = null;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
     };
-  }, []);
+  }, [fitToVietnamOverview]);
 
   // 5. Nạp Layers GeoJSON 7 VÙNG VĂN HÓA (Đã loại bỏ hoàn toàn ranh giới tỉnh)
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !mapLoaded || !regionsGeoJson) return;
 
-    // --- A. SOURCE & LAYERS 7 VÙNG VĂN HÓA ---
-    if (map.getSource('vn-regions-source')) {
-      map.getSource('vn-regions-source').setData(regionsGeoJson);
-    } else {
-      map.addSource('vn-regions-source', {
-        type: 'geojson',
-        data: regionsGeoJson
+    if (!map.isStyleLoaded()) {
+      map.once('styledata', () => {
+        setupLayers();
       });
-
-      // 1. Layer Fill tô màu 7 vùng
-      map.addLayer({
-        id: 'regions-fill',
-        type: 'fill',
-        source: 'vn-regions-source',
-        paint: {
-          'fill-color': ['get', 'regionColor'],
-          'fill-opacity': 0.88,
-          'fill-antialias': true
-        }
-      });
-
-      // 2. Layer ranh giới CHỈ GIỮ LẠI giữa 7 vùng (và bờ biển ngoài)
-      map.addLayer({
-        id: 'regions-boundary',
-        type: 'line',
-        source: 'vn-regions-source',
-        paint: {
-          'line-color': 'rgba(255, 255, 255, 0.65)',
-          'line-width': [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            3.2, 0.8,
-            6.0, 1.5,
-            9.0, 2.5
-          ]
-        }
-      });
-
-      // 3. Layer viền sáng khi hover vào vùng
-      map.addLayer({
-        id: 'region-hover-stroke',
-        type: 'line',
-        source: 'vn-regions-source',
-        paint: {
-          'line-color': '#38BDF8', // Cyan rực rỡ
-          'line-width': 2.8,
-          'line-opacity': 0
-        }
-      });
-
-      // 4. Layer viền nổi bật cho vùng đang được chọn
-      map.addLayer({
-        id: 'region-highlight-line',
-        type: 'line',
-        source: 'vn-regions-source',
-        paint: {
-          'line-color': '#FEF08A', // Vàng sáng tương phản cao
-          'line-width': 3.5,
-          'line-opacity': 0
-        }
-      });
+      return;
     }
 
-    // --- B. SOURCE & LAYERS CHỦ QUYỀN BIỂN ĐẢO (HOÀNG SA & TRƯỜNG SA) ---
-    if (map.getSource('vn-sovereignty-source')) {
-      map.getSource('vn-sovereignty-source').setData(SOVEREIGNTY_DATA);
-    } else {
-      map.addSource('vn-sovereignty-source', {
-        type: 'geojson',
-        data: SOVEREIGNTY_DATA
-      });
+    setupLayers();
 
-      // Chấm sáng đại diện các thực thể đảo
-      map.addLayer({
-        id: 'islands-glow',
-        type: 'circle',
-        source: 'vn-sovereignty-source',
-        filter: ['==', 'type', 'island'],
-        paint: {
-          'circle-radius': 7,
-          'circle-color': '#38BDF8',
-          'circle-opacity': 0.35
+    function setupLayers() {
+      try {
+        // --- A. SOURCE & LAYERS 7 VÙNG VĂN HÓA ---
+        if (map.getSource('vn-regions-source')) {
+          map.getSource('vn-regions-source').setData(regionsGeoJson);
+        } else {
+          map.addSource('vn-regions-source', {
+            type: 'geojson',
+            data: regionsGeoJson
+          });
+
+          // 1. Layer Fill tô màu 7 vùng
+          map.addLayer({
+            id: 'regions-fill',
+            type: 'fill',
+            source: 'vn-regions-source',
+            paint: {
+              'fill-color': ['get', 'regionColor'],
+              'fill-opacity': 0.88,
+              'fill-antialias': true
+            }
+          });
+
+          // 2. Layer ranh giới CHỈ GIỮ LẠI giữa 7 vùng (và bờ biển ngoài)
+          map.addLayer({
+            id: 'regions-boundary',
+            type: 'line',
+            source: 'vn-regions-source',
+            paint: {
+              'line-color': 'rgba(255, 255, 255, 0.65)',
+              'line-width': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                3.2, 0.8,
+                6.0, 1.5,
+                9.0, 2.5
+              ]
+            }
+          });
+
+          // 3. Layer viền sáng khi hover vào vùng
+          map.addLayer({
+            id: 'region-hover-stroke',
+            type: 'line',
+            source: 'vn-regions-source',
+            paint: {
+              'line-color': '#38BDF8',
+              'line-width': 2.8,
+              'line-opacity': 0
+            }
+          });
+
+          // 4. Layer viền nổi bật cho vùng đang được chọn
+          map.addLayer({
+            id: 'region-highlight-line',
+            type: 'line',
+            source: 'vn-regions-source',
+            paint: {
+              'line-color': '#FEF08A',
+              'line-width': 3.5,
+              'line-opacity': 0
+            }
+          });
         }
-      });
 
-      map.addLayer({
-        id: 'islands-point',
-        type: 'circle',
-        source: 'vn-sovereignty-source',
-        filter: ['==', 'type', 'island'],
-        paint: {
-          'circle-radius': 3.5,
-          'circle-color': '#38BDF8',
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#F8FAFC'
+        // --- B. SOURCE & LAYERS CHỦ QUYỀN BIỂN ĐẢO (HOÀNG SA & TRƯỜNG SA) ---
+        if (map.getSource('vn-sovereignty-source')) {
+          map.getSource('vn-sovereignty-source').setData(SOVEREIGNTY_DATA);
+        } else {
+          map.addSource('vn-sovereignty-source', {
+            type: 'geojson',
+            data: SOVEREIGNTY_DATA
+          });
+
+          // Chấm sáng đại diện các thực thể đảo
+          map.addLayer({
+            id: 'islands-glow',
+            type: 'circle',
+            source: 'vn-sovereignty-source',
+            filter: ['==', 'type', 'island'],
+            paint: {
+              'circle-radius': 7,
+              'circle-color': '#38BDF8',
+              'circle-opacity': 0.35
+            }
+          });
+
+          map.addLayer({
+            id: 'islands-point',
+            type: 'circle',
+            source: 'vn-sovereignty-source',
+            filter: ['==', 'type', 'island'],
+            paint: {
+              'circle-radius': 3.5,
+              'circle-color': '#38BDF8',
+              'circle-stroke-width': 1.5,
+              'circle-stroke-color': '#F8FAFC'
+            }
+          });
         }
-      });
 
-      // Nhãn chữ Biển Đông
-      map.addLayer({
-        id: 'sea-label',
-        type: 'symbol',
-        source: 'vn-sovereignty-source',
-        filter: ['==', 'type', 'sea-label'],
-        layout: {
-          'text-field': ['get', 'name'],
-          'text-size': 12,
-          'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
-          'text-letter-spacing': 0.25,
-          'text-transform': 'uppercase'
-        },
-        paint: {
-          'text-color': '#94A3B8',
-          'text-opacity': 0.65
-        }
-      });
-
-      addSovereigntyHtmlBadges(map);
+        // Marker HTML chủ quyền cho Hoàng Sa & Trường Sa
+        addSovereigntyHtmlBadges(map);
+      } catch (err) {
+        console.error('[VietnamCulturalMap] Lỗi khi tạo layers:', err);
+      }
     }
 
     // --- C. SỰ KIỆN TƯƠNG TÁC CHUỘT TRÊN 7 VÙNG ---
@@ -370,7 +413,7 @@ export default function VietnamCulturalMap({
         });
 
         if (map.getLayer('region-hover-stroke')) {
-          map.setFilter('region-hover-stroke', ['==', ['get', 'regionId'], props.regionId]);
+          map.setFilter('region-hover-stroke', ['==', 'regionId', props.regionId]);
           map.setPaintProperty('region-hover-stroke', 'line-opacity', 1.0);
         }
       } else {
@@ -403,9 +446,11 @@ export default function VietnamCulturalMap({
     map.on('click', 'regions-fill', onClick);
 
     return () => {
-      map.off('mousemove', 'regions-fill', onMouseMove);
-      map.off('mouseleave', 'regions-fill', onMouseLeave);
-      map.off('click', 'regions-fill', onClick);
+      if (map.getLayer('regions-fill')) {
+        map.off('mousemove', 'regions-fill', onMouseMove);
+        map.off('mouseleave', 'regions-fill', onMouseLeave);
+        map.off('click', 'regions-fill', onClick);
+      }
     };
   }, [mapLoaded, regionsGeoJson, handleSelectRegion]);
 
@@ -414,27 +459,28 @@ export default function VietnamCulturalMap({
     const map = mapInstanceRef.current;
     if (!map || !mapLoaded || !map.getLayer('regions-fill')) return;
 
-    if (selectedRegionId) {
-      // Vùng được chọn giữ 1.0, các vùng khác giảm xuống 0.35
-      map.setPaintProperty('regions-fill', 'fill-opacity', [
-        'case',
-        ['==', ['get', 'regionId'], selectedRegionId],
-        1.0,
-        0.35
-      ]);
+    try {
+      if (selectedRegionId) {
+        map.setPaintProperty('regions-fill', 'fill-opacity', [
+          'case',
+          ['==', ['get', 'regionId'], selectedRegionId],
+          1.0,
+          0.35
+        ]);
 
-      // Bật sáng đường viền cho vùng được chọn
-      if (map.getLayer('region-highlight-line')) {
-        map.setFilter('region-highlight-line', ['==', ['get', 'regionId'], selectedRegionId]);
-        map.setPaintProperty('region-highlight-line', 'line-opacity', 1.0);
-      }
-    } else {
-      // Trạng thái mặc định: Toàn bộ 7 vùng hiển thị 0.88
-      map.setPaintProperty('regions-fill', 'fill-opacity', 0.88);
+        if (map.getLayer('region-highlight-line')) {
+          map.setFilter('region-highlight-line', ['==', 'regionId', selectedRegionId]);
+          map.setPaintProperty('region-highlight-line', 'line-opacity', 1.0);
+        }
+      } else {
+        map.setPaintProperty('regions-fill', 'fill-opacity', 0.88);
 
-      if (map.getLayer('region-highlight-line')) {
-        map.setPaintProperty('region-highlight-line', 'line-opacity', 0);
+        if (map.getLayer('region-highlight-line')) {
+          map.setPaintProperty('region-highlight-line', 'line-opacity', 0);
+        }
       }
+    } catch (e) {
+      console.warn('[VietnamCulturalMap] update highlight error:', e);
     }
   }, [selectedRegionId, mapLoaded]);
 
@@ -542,6 +588,7 @@ export default function VietnamCulturalMap({
         <div
           ref={mapContainerRef}
           className="w-full h-full cursor-grab active:cursor-grabbing"
+          style={{ minHeight: '450px', width: '100%', height: '100%' }}
         />
 
         {/* Loading Spinner */}
