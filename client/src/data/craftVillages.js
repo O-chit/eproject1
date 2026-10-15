@@ -442,3 +442,56 @@ export const getVillagesGeoJSON = () => {
     }))
   };
 };
+
+export const CRAFT_REGIONS = [
+  {
+    id: 1,
+    code: 'dong-bang-bac-bo',
+    name: 'Đồng Bằng Bắc Bộ',
+    description: 'Cái nôi văn minh lúa nước sông Hồng, nơi hội tụ các làng nghề trứ danh: Gốm Bát Tràng, Lụa Vạn Phúc, Tranh Đông Hồ, Gốm Chu Đậu.',
+    imageUrl: 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 2,
+    code: 'tay-bac',
+    name: 'Tây Bắc',
+    description: 'Vùng rẻo cao Tây Bắc hùng vĩ, cái nôi thổ cẩm Mông, Thái, Dao cùng kỹ nghệ rèn đúc và chế tác trang sức bạc cổ truyền.',
+    imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 3,
+    code: 'dong-bac',
+    name: 'Đông Bắc',
+    description: 'Vùng non nước Đông Bắc với nghề làm nón lá bản địa, rèn Phúc Sen, đan lát mây tre và nhuộm chàm truyền đời.',
+    imageUrl: 'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 4,
+    code: 'bac-trung-bo',
+    name: 'Bắc Trung Bộ',
+    description: 'Dải đất di sản miền Trung nổi bật với nghề kim hoàn Kế Môn, hoa giấy Thanh Tiên, mộc mỹ nghệ Mỹ Xuyên và gốm Phước Tích.',
+    imageUrl: 'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 5,
+    code: 'duyen-hai-nam-trung-bo',
+    name: 'Duyên Hải Nam Trung Bộ',
+    description: 'Miền cát trắng và biển cả, trứ danh với làng gốm Chăm Bàu Trúc (Di sản UNESCO), dệt thổ cẩm Mỹ Nghiệp, đá non nước Ngũ Hành Sơn.',
+    imageUrl: 'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 6,
+    code: 'tay-nguyen',
+    name: 'Tây Nguyên',
+    description: 'Không gian văn hóa Cồng chiêng Tây Nguyên, nổi bật với nghề tạc tượng gỗ dân gian, dệt thổ cẩm Tây Nguyên và đan gùi hoa văn.',
+    imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 7,
+    code: 'nam-bo',
+    name: 'Nam Bộ',
+    description: 'Miền sông nước phương Nam trù phú với nghề gốm men xanh Lái Thiêu - Biên Hòa, lụa lãnh Mỹ A Tân Châu, đan lục bình và chiếu Định Yên.',
+    imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80'
+  }
+];
+
