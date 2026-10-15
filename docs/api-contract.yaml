@@ -47,6 +47,11 @@ tags:
     description: Quản lý danh sách sản phẩm yêu thích và cơ chế đồng bộ lưỡng thể (Hybrid Sync)
   - name: Contact
     description: Tiếp nhận ý kiến đóng góp, đề xuất hợp tác giám tuyển từ khách truy cập
+  - name: Admin Management (Optional)
+    description: >-
+      [Mục 6.3 Tuỳ chọn - Làm sau cùng, chưa có giao diện]
+      Hệ thống API CRUD quản trị dữ liệu di sản dành riêng cho vai trò editor và admin qua middleware authorize('editor', 'admin').
+      Chỉ triển khai sau khi hoàn tất giai đoạn 1–6 và toàn bộ kiểm thử test xanh.
 
 paths:
   # ==========================================
@@ -345,6 +350,45 @@ paths:
                   pagination:
                     $ref: '#/components/schemas/PaginationMeta'
 
+    post:
+      tags:
+        - Crafts
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Tạo mới tác phẩm thủ công"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Tạo mới tác phẩm trong CSDL, thiết lập liên kết chất liệu, kỹ pháp và nghệ nhân đồng chế tác (N-N).
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`. Chỉ thực hiện sau khi giai đoạn 1–6 xong và test xanh.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCraftRequest'
+      responses:
+        '201':
+          description: Tạo tác phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Tạo mới tác phẩm thủ công thành công
+                  data:
+                    $ref: '#/components/schemas/CraftDetail'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+
   /crafts/{id}:
     get:
       tags:
@@ -355,7 +399,7 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID số, slug hoặc mã REF của sản phẩm (Ví dụ: 1 hoặc CR-BT-2025-08MR)
+          description: "ID số, slug hoặc mã REF của sản phẩm (Ví dụ: 1 hoặc CR-BT-2025-08MR)"
           schema:
             type: string
             example: CR-BT-2025-08MR
@@ -372,6 +416,87 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/CraftDetail'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+    put:
+      tags:
+        - Crafts
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Cập nhật thông tin tác phẩm thủ công"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Cập nhật thuộc tính tác phẩm, giá VND, quy trình chế tác và thông số kỹ thuật.
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID số hoặc mã SKU của tác phẩm
+          schema:
+            type: string
+            example: '1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCraftRequest'
+      responses:
+        '200':
+          description: Cập nhật tác phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Cập nhật tác phẩm thành công
+                  data:
+                    $ref: '#/components/schemas/CraftDetail'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+    delete:
+      tags:
+        - Crafts
+        - Admin Management (Optional)
+      summary: "[Admin Only] Xóa tác phẩm thủ công"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Xóa tác phẩm khỏi hệ thống.
+        Chỉ dành cho vai trò `admin`.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID số của tác phẩm cần xóa
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Xóa thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
         '404':
           $ref: '#/components/responses/404Error'
 
@@ -471,6 +596,45 @@ paths:
                   pagination:
                     $ref: '#/components/schemas/PaginationMeta'
 
+    post:
+      tags:
+        - Artisans
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Thêm mới hồ sơ nghệ nhân"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Thêm mới hồ sơ nghệ nhân, niên biểu, quy chuẩn đón tiếp và xưởng chế tác.
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateArtisanRequest'
+      responses:
+        '201':
+          description: Thêm mới nghệ nhân thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Thêm hồ sơ nghệ nhân thành công
+                  data:
+                    $ref: '#/components/schemas/ArtisanDetail'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+
   /artisans/{id}:
     get:
       tags:
@@ -481,7 +645,7 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID số, slug hoặc mã REF của nghệ nhân (Ví dụ: 1 hoặc ART-BT-001)
+          description: "ID số, slug hoặc mã REF của nghệ nhân (Ví dụ: 1 hoặc ART-BT-001)"
           schema:
             type: string
             example: ART-BT-001
@@ -497,6 +661,87 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/ArtisanDetail'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+    put:
+      tags:
+        - Artisans
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Cập nhật hồ sơ nghệ nhân"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Cập nhật thông tin nghệ nhân, tiểu sử, thông số kỹ thuật, thời gian đặt trước và giờ mở xưởng.
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID số hoặc mã REF của nghệ nhân
+          schema:
+            type: string
+            example: '1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateArtisanRequest'
+      responses:
+        '200':
+          description: Cập nhật thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Cập nhật hồ sơ nghệ nhân thành công
+                  data:
+                    $ref: '#/components/schemas/ArtisanDetail'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+    delete:
+      tags:
+        - Artisans
+        - Admin Management (Optional)
+      summary: "[Admin Only] Xóa hồ sơ nghệ nhân"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Xóa hồ sơ nghệ nhân khỏi hệ thống.
+        Chỉ dành cho vai trò `admin`. Theo quy tắc BR-05, các tác phẩm liên kết N-N vẫn được bảo toàn.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID số của nghệ nhân cần xóa
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Xóa nghệ nhân thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
         '404':
           $ref: '#/components/responses/404Error'
 
@@ -532,7 +777,7 @@ paths:
         - name: idOrCode
           in: path
           required: true
-          description: ID số hoặc mã slug vùng miền (Ví dụ: 1 hoặc dong-bang-bac-bo)
+          description: "ID số hoặc mã slug vùng miền (Ví dụ: 1 hoặc dong-bang-bac-bo)"
           schema:
             type: string
             example: dong-bang-bac-bo
@@ -685,6 +930,45 @@ paths:
                     items:
                       $ref: '#/components/schemas/SeasonalCollectionSummary'
 
+    post:
+      tags:
+        - Seasonal Collections
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Tạo mới bộ sưu tập theo mùa"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Tạo mới bộ sưu tập theo mùa, thiết lập thời gian diễn ra, triết lý giám tuyển, banner và danh sách sản phẩm liên kết kèm chỉ định tác phẩm Hero.
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`. Chỉ thực hiện sau khi giai đoạn 1–6 xong và test xanh.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSeasonalCollectionRequest'
+      responses:
+        '201':
+          description: Tạo bộ sưu tập mùa thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Tạo mới bộ sưu tập mùa thành công
+                  data:
+                    $ref: '#/components/schemas/SeasonalCollectionDetail'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+
   /seasonal-collections/latest:
     get:
       tags:
@@ -729,6 +1013,87 @@ paths:
                     example: true
                   data:
                     $ref: '#/components/schemas/SeasonalCollectionDetail'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+    put:
+      tags:
+        - Seasonal Collections
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Cập nhật bộ sưu tập theo mùa"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Cập nhật tiêu đề, mô tả, triết lý giám tuyển, banner, ngày bắt đầu/kết thúc và danh sách tác phẩm liên kết của bộ sưu tập mùa.
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID số hoặc slug của bộ sưu tập mùa
+          schema:
+            type: string
+            example: '1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSeasonalCollectionRequest'
+      responses:
+        '200':
+          description: Cập nhật bộ sưu tập mùa thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Cập nhật bộ sưu tập mùa thành công
+                  data:
+                    $ref: '#/components/schemas/SeasonalCollectionDetail'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+
+    delete:
+      tags:
+        - Seasonal Collections
+        - Admin Management (Optional)
+      summary: "[Admin Only] Xóa bộ sưu tập theo mùa"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Xóa bộ sưu tập theo mùa khỏi hệ thống.
+        Chỉ dành cho vai trò `admin`. Các tác phẩm thuộc bộ sưu tập vẫn được giữ nguyên trong hệ thống.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID số của bộ sưu tập mùa cần xóa
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Xóa bộ sưu tập thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
         '404':
           $ref: '#/components/responses/404Error'
 
@@ -951,9 +1316,42 @@ paths:
     get:
       tags:
         - Bookings
-      summary: Lấy danh sách phiếu hẹn của người dùng hiện tại
+      summary: Lấy danh sách phiếu hẹn thăm xưởng
+      description: >-
+        Lấy danh sách phiếu hẹn thăm xưởng. Đối với người dùng thông thường (`user`), chỉ trả về các phiếu hẹn do tài khoản đó tạo.
+        Đối với `editor` hoặc `admin`, có thể xem toàn bộ phiếu hẹn trên toàn hệ thống khi truyền tham số `all=true`, kèm bộ lọc theo nghệ nhân và trạng thái.
       security:
         - BearerAuth: []
+      parameters:
+        - name: all
+          in: query
+          description: "[Admin/Editor] Xem tất cả phiếu hẹn toàn hệ thống (mặc định false - chỉ xem của mình)"
+          schema:
+            type: boolean
+            default: false
+        - name: artisanId
+          in: query
+          description: "[Admin/Editor] Lọc theo ID nghệ nhân"
+          schema:
+            type: integer
+            example: 1
+        - name: status
+          in: query
+          description: Lọc theo trạng thái phiếu hẹn
+          schema:
+            type: string
+            enum: [all, pending, confirmed, cancelled, completed]
+            default: all
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
       responses:
         '200':
           content:
@@ -968,8 +1366,62 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/VisitBookingItem'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
         '401':
           $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+
+  /visit-bookings/{id}/status:
+    patch:
+      tags:
+        - Bookings
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Cập nhật trạng thái phiếu hẹn thăm xưởng"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Cho phép editor hoặc admin xác nhận (`confirmed`), hủy (`cancelled`) hoặc hoàn tất (`completed`) phiếu hẹn thăm xưởng của khách.
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`. Chỉ thực hiện sau khi giai đoạn 1–6 xong và test xanh.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID của phiếu hẹn thăm xưởng
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookingStatusRequest'
+      responses:
+        '200':
+          description: Cập nhật trạng thái phiếu hẹn thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Đã cập nhật trạng thái phiếu hẹn sang confirmed
+                  data:
+                    $ref: '#/components/schemas/VisitBookingItem'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
 
   # ==========================================
   # NEWSLETTER ENDPOINTS
@@ -1026,6 +1478,104 @@ paths:
         '400':
           $ref: '#/components/responses/400Error'
 
+  /contact/messages:
+    get:
+      tags:
+        - Contact
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Lấy danh sách tin nhắn liên hệ từ khách truy cập"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Cho phép editor và admin tra cứu, phân trang và lọc tin nhắn liên hệ của khách theo chủ đề (`topic`) và trạng thái (`status`: unread, read, replied).
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`. Chỉ thực hiện sau khi giai đoạn 1–6 xong và test xanh.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          description: Lọc theo trạng thái tin nhắn
+          schema:
+            type: string
+            enum: [all, unread, read, replied]
+            default: all
+        - name: topic
+          in: query
+          description: Lọc theo chủ đề tin nhắn
+          schema:
+            type: string
+            enum: [all, curation, visit, heritage, other]
+            default: all
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Lấy danh sách tin nhắn liên hệ thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminContactMessagesResponse'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+
+  /contact/messages/{id}/status:
+    patch:
+      tags:
+        - Contact
+        - Admin Management (Optional)
+      summary: "[Admin/Editor] Đổi trạng thái tin nhắn liên hệ"
+      description: >-
+        > ⚠️ **Mục 6.3 Tuỳ chọn (chưa có giao diện, làm sau cùng):** Cập nhật trạng thái xử lý tin nhắn liên hệ (`unread`, `read`, `replied`) kèm ghi chú xử lý nội bộ.
+        Yêu cầu Bearer Token với vai trò `editor` hoặc `admin`.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID của tin nhắn liên hệ
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContactMessageStatusRequest'
+      responses:
+        '200':
+          description: Đổi trạng thái tin nhắn thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Cập nhật trạng thái tin nhắn thành công
+                  data:
+                    $ref: '#/components/schemas/AdminContactMessageItem'
+        '400':
+          $ref: '#/components/responses/400Error'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404Error'
+
 # ==========================================
 # COMPONENTS (SCHEMAS & RESPONSES)
 # ==========================================
@@ -1046,6 +1596,12 @@ components:
             $ref: '#/components/schemas/ApiErrorResponse'
     401Error:
       description: Chưa xác thực hoặc Token đã hết hạn
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
+    403Error:
+      description: Quyền truy cập bị từ chối (yêu cầu vai trò editor hoặc admin)
       content:
         application/json:
           schema:
@@ -2032,3 +2588,571 @@ components:
           type: string
           minLength: 10
           example: Tôi muốn liên hệ để tham quan và đặt làm sản phẩm riêng.
+
+    # ==========================================
+    # ADMIN / EDITOR MANAGEMENT SCHEMAS (SEC 6.3)
+    # ==========================================
+    CreateCraftRequest:
+      type: object
+      required:
+        - sku
+        - name
+        - categoryId
+        - villageId
+        - regionId
+        - priceVnd
+        - coverImage
+      properties:
+        sku:
+          type: string
+          example: CR-BT-2026-09MR
+        name:
+          type: string
+          example: Bình Gốm Men Rạn Tam Thái Độc Bản
+        slug:
+          type: string
+          example: binh-gom-men-ran-tam-thai-doc-ban
+        categoryId:
+          type: integer
+          example: 1
+        villageId:
+          type: integer
+          example: 1
+        regionId:
+          type: integer
+          example: 3
+        priceVnd:
+          type: integer
+          example: 38000000
+        coverImage:
+          type: string
+          example: /images/crafts/binh-men-ran-01.webp
+        gallery:
+          type: array
+          items:
+            type: string
+          example: ["/images/crafts/binh-men-ran-01.webp", "/images/crafts/binh-men-ran-02.webp"]
+        culturalContext:
+          type: string
+          example: Phục dựng từ họa tiết thời Hậu Lê thế kỷ XVII với men rạn tam thái độc bản.
+        summary:
+          type: string
+          example: Tuyệt tác vuốt tay thủ công từ cốt đất sét trắng phù sa sông Hồng.
+        techniqueSpecs:
+          type: object
+          properties:
+            dimensions:
+              type: string
+              example: Cao 42cm × Đường kính 28cm
+            weight:
+              type: string
+              example: 4.8kg
+            firingTemp:
+              type: string
+              example: 1250°C nung củi lò bầu
+            glazeType:
+              type: string
+              example: Men rạn tro trấu cổ truyền
+            materialOrigin:
+              type: string
+              example: Đất sét trắng phù sa sông Hồng
+        processStages:
+          type: array
+          items:
+            type: object
+            required:
+              - stageNumber
+              - stageName
+              - description
+            properties:
+              stageNumber:
+                type: integer
+                example: 1
+              stageName:
+                type: string
+                example: Luyện đất phù sa & Chuốt gốm bàn xoay
+              description:
+                type: string
+                example: Đất sét được ủ men tự nhiên trong 6 tháng, lọc tạp chất và chuốt tay trên mâm xoay gỗ.
+              durationDays:
+                type: integer
+                example: 7
+              imageUrl:
+                type: string
+                example: /images/process/luyen-dat.webp
+        materialIds:
+          type: array
+          items:
+            type: integer
+          example: [1, 2]
+        techniqueIds:
+          type: array
+          items:
+            type: integer
+          example: [1, 3]
+        artisans:
+          type: array
+          items:
+            type: object
+            required:
+              - artisanId
+            properties:
+              artisanId:
+                type: integer
+                example: 1
+              roleTitle:
+                type: string
+                example: Nghệ nhân chủ trì vuốt cốt & phủ men
+              isLead:
+                type: boolean
+                default: true
+              displayOrder:
+                type: integer
+                default: 1
+        isSpotlight:
+          type: boolean
+          default: false
+        status:
+          type: string
+          enum: [draft, published, archived]
+          default: published
+
+    UpdateCraftRequest:
+      type: object
+      properties:
+        sku:
+          type: string
+          example: CR-BT-2026-09MR
+        name:
+          type: string
+          example: Bình Gốm Men Rạn Tam Thái Độc Bản
+        slug:
+          type: string
+          example: binh-gom-men-ran-tam-thai-doc-ban
+        categoryId:
+          type: integer
+          example: 1
+        villageId:
+          type: integer
+          example: 1
+        regionId:
+          type: integer
+          example: 3
+        priceVnd:
+          type: integer
+          example: 42000000
+        coverImage:
+          type: string
+          example: /images/crafts/binh-men-ran-01.webp
+        gallery:
+          type: array
+          items:
+            type: string
+          example: ["/images/crafts/binh-men-ran-01.webp", "/images/crafts/binh-men-ran-02.webp"]
+        culturalContext:
+          type: string
+          example: Phục dựng từ họa tiết thời Hậu Lê thế kỷ XVII với men rạn tam thái độc bản.
+        summary:
+          type: string
+          example: Tuyệt tác vuốt tay thủ công từ cốt đất sét trắng phù sa sông Hồng.
+        techniqueSpecs:
+          type: object
+        processStages:
+          type: array
+          items:
+            type: object
+            properties:
+              stageNumber:
+                type: integer
+              stageName:
+                type: string
+              description:
+                type: string
+              durationDays:
+                type: integer
+              imageUrl:
+                type: string
+        materialIds:
+          type: array
+          items:
+            type: integer
+        techniqueIds:
+          type: array
+          items:
+            type: integer
+        artisans:
+          type: array
+          items:
+            type: object
+            properties:
+              artisanId:
+                type: integer
+              roleTitle:
+                type: string
+              isLead:
+                type: boolean
+              displayOrder:
+                type: integer
+        isSpotlight:
+          type: boolean
+        status:
+          type: string
+          enum: [draft, published, archived]
+
+    CreateArtisanRequest:
+      type: object
+      required:
+        - refCode
+        - fullName
+        - avatar
+        - villageId
+      properties:
+        refCode:
+          type: string
+          example: ART-BT-007
+        fullName:
+          type: string
+          example: Trần Quốc Thắng
+        slug:
+          type: string
+          example: tran-quoc-thang
+        avatar:
+          type: string
+          example: /images/artisans/art-bt-007.webp
+        bio:
+          type: string
+          example: Hơn 35 năm gắn bó với nghệ thuật gốm men hỏa biến và phục dựng men lam cổ.
+        philosophy:
+          type: string
+          example: Đất sinh ra từ lòng mẹ thiên nhiên, lửa cho gốm linh hồn bất tử.
+        birthYear:
+          type: integer
+          example: 1968
+        yearsOfExperience:
+          type: integer
+          example: 38
+        generation:
+          type: integer
+          example: 4
+        roleTitle:
+          type: string
+          example: Nghệ nhân Ưu tú Gốm Men Hỏa Biến
+        villageId:
+          type: integer
+          example: 1
+        workshopAddress:
+          type: string
+          example: Xóm 3, Thôn Bát Tràng, Gia Lâm, Hà Nội
+        isNationalHeritage:
+          type: boolean
+          default: true
+        visitOpenDays:
+          type: array
+          items:
+            type: string
+          example: ["tue", "thu", "sat", "sun"]
+        visitMaxGuests:
+          type: integer
+          default: 6
+          example: 6
+        visitLeadTimeHours:
+          type: integer
+          default: 48
+          example: 24
+        visitTeaTalk:
+          type: boolean
+          default: true
+        milestones:
+          type: array
+          items:
+            type: object
+            required:
+              - year
+              - title
+            properties:
+              year:
+                type: integer
+                example: 2012
+              title:
+                type: string
+                example: Đón nhận danh hiệu Nghệ nhân Ưu tú cấp Quốc gia
+              description:
+                type: string
+                example: Ghi nhận công trình phục chế men ngọc thế kỷ XV.
+        specs:
+          type: object
+          properties:
+            kilnType:
+              type: string
+              example: Lò củi truyền thống 1300°C
+            signatureGlaze:
+              type: string
+              example: Men hỏa biến ngũ sắc độc bản
+            craftingStyle:
+              type: string
+              example: Vuốt tay tự do kết hợp chạm lộng
+
+    UpdateArtisanRequest:
+      type: object
+      properties:
+        refCode:
+          type: string
+          example: ART-BT-007
+        fullName:
+          type: string
+          example: Trần Quốc Thắng
+        slug:
+          type: string
+          example: tran-quoc-thang
+        avatar:
+          type: string
+          example: /images/artisans/art-bt-007.webp
+        bio:
+          type: string
+        philosophy:
+          type: string
+        birthYear:
+          type: integer
+        yearsOfExperience:
+          type: integer
+        generation:
+          type: integer
+        roleTitle:
+          type: string
+        villageId:
+          type: integer
+        workshopAddress:
+          type: string
+        isNationalHeritage:
+          type: boolean
+        visitOpenDays:
+          type: array
+          items:
+            type: string
+        visitMaxGuests:
+          type: integer
+        visitLeadTimeHours:
+          type: integer
+        visitTeaTalk:
+          type: boolean
+        milestones:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: integer
+              title:
+                type: string
+              description:
+                type: string
+        specs:
+          type: object
+
+    CreateSeasonalCollectionRequest:
+      type: object
+      required:
+        - code
+        - title
+        - seasonCode
+        - year
+        - bannerImage
+      properties:
+        code:
+          type: string
+          example: CR-ARCH-AUTUMN-26
+        title:
+          type: string
+          example: Ký Họa Mùa Thu 2026 – Hương Thu Thăng Long
+        slug:
+          type: string
+          example: ky-hoa-mua-thu-2026
+        seasonCode:
+          type: string
+          enum: [spring, summer, autumn, winter]
+          example: autumn
+        year:
+          type: integer
+          example: 2026
+        description:
+          type: string
+          example: Tuyển tập các chế tác men rạn gốm cổ và lụa tơ tằm vàng óng đón gió heo may.
+        curatorPhilosophy:
+          type: string
+          example: Vẻ đẹp trầm mặc của mùa thu phản chiếu qua từng nếp men nứt tự nhiên và sắc lụa dệt tay.
+        curatorName:
+          type: string
+          example: Ban Giám Tuyển CraftRoots
+        bannerImage:
+          type: string
+          example: /images/collections/autumn-2026-hero.webp
+        heroCraftId:
+          type: integer
+          example: 1
+        startDate:
+          type: string
+          format: date
+          example: 2026-08-01
+        endDate:
+          type: string
+          format: date
+          example: 2026-10-31
+        isActive:
+          type: boolean
+          default: true
+        crafts:
+          type: array
+          items:
+            type: object
+            required:
+              - craftId
+            properties:
+              craftId:
+                type: integer
+                example: 1
+              displayOrder:
+                type: integer
+                default: 1
+              isHero:
+                type: boolean
+                default: false
+
+    UpdateSeasonalCollectionRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          example: CR-ARCH-AUTUMN-26
+        title:
+          type: string
+          example: Ký Họa Mùa Thu 2026 – Hương Thu Thăng Long
+        slug:
+          type: string
+          example: ky-hoa-mua-thu-2026
+        seasonCode:
+          type: string
+          enum: [spring, summer, autumn, winter]
+        year:
+          type: integer
+        description:
+          type: string
+        curatorPhilosophy:
+          type: string
+        curatorName:
+          type: string
+        bannerImage:
+          type: string
+        heroCraftId:
+          type: integer
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        isActive:
+          type: boolean
+        crafts:
+          type: array
+          items:
+            type: object
+            properties:
+              craftId:
+                type: integer
+              displayOrder:
+                type: integer
+              isHero:
+                type: boolean
+
+    UpdateContactMessageStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [unread, read, replied]
+          example: replied
+        adminNotes:
+          type: string
+          example: Đã gọi điện tư vấn trực tiếp và gửi hồ sơ giám tuyển qua email lúc 14h30.
+
+    AdminContactMessageItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        fullName:
+          type: string
+          example: Lê Hoàng Nam
+        email:
+          type: string
+          format: email
+          example: nam.le@example.com
+        phone:
+          type: string
+          example: '0912345678'
+        topic:
+          type: string
+          example: curation
+        subject:
+          type: string
+          example: Hợp tác giám tuyển bộ sưu tập Gốm Việt
+        message:
+          type: string
+          example: Chúng tôi muốn liên hệ đặt bộ quà tặng ngoại giao men rạn độc bản.
+        status:
+          type: string
+          enum: [unread, read, replied]
+          example: unread
+        adminNotes:
+          type: string
+          example: Đang chờ giám tuyển trưởng phản hồi danh mục mẫu
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    AdminContactMessagesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminContactMessageItem'
+        summary:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 48
+            unreadCount:
+              type: integer
+              example: 12
+            readCount:
+              type: integer
+              example: 20
+            repliedCount:
+              type: integer
+              example: 16
+        pagination:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    UpdateBookingStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [confirmed, cancelled, completed]
+          example: confirmed
+        adminNote:
+          type: string
+          example: Đã xác nhận qua điện thoại với khách lúc 10:15 ngày 20/10, nghệ nhân sẵn sàng tiếp đón.

@@ -24,6 +24,7 @@
    - 3.10. [Biểu mẫu liên hệ & Xác thực di sản (Contact & Verification)](#310-biểu-mẫu-liên-hệ--xác-thực-di-sản-contact--verification)
    - 3.11. [Đăng ký bản tin di sản & Đặt lịch thăm xưởng (Newsletter & Visit Bookings)](#311-đăng-ký-bản-tin-di-sản--đặt-lịch-thăm-xưởng-newsletter--visit-bookings)
    - 3.12. [Xác thực người dùng & Quản lý hồ sơ (Authentication & Profile)](#312-xác-thực-người-dùng--quản-lý-hồ-sơ-authentication--profile)
+   - 3.13. [Phân hệ Quản trị Dữ liệu Di sản (Admin & Editor - Mục 6.3 Tuỳ chọn)](#313-phân-hệ-quản-trị-dữ-liệu-di-sản-admin--editor---mục-63-tuỳ-chọn---chưa-có-giao-diện)
 4. [Sơ đồ luồng người dùng (User Flows)](#4-sơ-đồ-luồng-người-dùng-user-flows)
    - Flow 1: Khám phá sản phẩm & Thư viện ảnh tương tác Lightbox
    - Flow 2: Tìm kiếm & Lọc đa tiêu chí kết hợp Debounce
@@ -223,6 +224,29 @@ Nghề thủ công truyền thống đại diện cho linh hồn, bản sắc v�
 - **Cập nhật Hồ sơ cá nhân (`PUT /api/auth/profile`):** Cho phép người dùng cập nhật Họ tên (`fullName`), Ảnh đại diện (`avatarUrl`), Số điện thoại (`phone`).
 - **Đổi mật khẩu:** Yêu cầu mật khẩu cũ và xác thực mật khẩu mới tối thiểu 8 ký tự.
 
+### 3.13. Phân hệ Quản trị Dữ liệu Di sản (Admin & Editor - Mục 6.3 Tuỳ chọn - Chưa có giao diện)
+> ⚠️ **Quy định triển khai:** Phân hệ này là tuỳ chọn mở rộng backend API, chưa có giao diện client (UI), **chỉ thực hiện sau khi giai đoạn 1–6 hoàn tất và toàn bộ hệ thống test xanh 100%**.
+
+Toàn bộ các endpoint trong phân hệ được bảo vệ nghiêm ngặt bằng JWT Authentication và middleware phân quyền vai trò `authorize('editor', 'admin')`:
+1. **Quản lý Tác phẩm Thủ công (`crafts`):**
+   - `POST /api/crafts`: Tạo mới tác phẩm, gán thông số kích thước, 4 bước chế tác độc bản (`process_stages`), chất liệu, kỹ thuật và nghệ nhân đồng sáng tạo (N-N).
+   - `PUT /api/crafts/:id`: Cập nhật thông tin tác phẩm, giá VND, quy trình và thông số kỹ thuật.
+   - `DELETE /api/crafts/:id`: Xóa tác phẩm khỏi hệ thống (Chỉ dành cho vai trò `admin`).
+2. **Quản lý Hồ sơ Nghệ nhân (`artisans`):**
+   - `POST /api/artisans`: Thêm mới hồ sơ nghệ nhân, niên biểu cống hiến (`artisan_milestones`), thông số kỹ nghệ (`specs`) và quy chuẩn tiếp đón thăm xưởng (`visit_open_days`, `visit_lead_time_hours`).
+   - `PUT /api/artisans/:id`: Cập nhật tiểu sử, danh hiệu, giờ tiếp đón, số lượng khách tiếp nhận.
+   - `DELETE /api/artisans/:id`: Xóa hồ sơ nghệ nhân (Chỉ dành cho vai trò `admin`; tuân thủ BR-05 bảo toàn tác phẩm liên kết).
+3. **Quản lý Bộ sưu tập theo mùa (`seasonal-collections`):**
+   - `POST /api/seasonal-collections`: Tạo mới bộ sưu tập theo mùa, thiết lập triết lý giám tuyển, banner, chỉ định tác phẩm tiêu điểm (`is_hero = true`) và danh mục tác phẩm liên kết.
+   - `PUT /api/seasonal-collections/:id`: Cập nhật nội dung, banner, thời gian hiệu lực và danh sách tác phẩm tuyển chọn.
+   - `DELETE /api/seasonal-collections/:id`: Xóa bộ sưu tập mùa (Chỉ dành cho vai trò `admin`).
+4. **Quản lý Danh sách Tin nhắn Liên hệ (`contact/messages`):**
+   - `GET /api/contact/messages`: Tra cứu, phân trang và lọc tin nhắn theo chủ đề (`topic`) và trạng thái (`status`: `unread`, `read`, `replied`).
+   - `PATCH /api/contact/messages/:id/status`: Đổi trạng thái tin nhắn liên hệ (`unread`, `read`, `replied`) kèm ghi chú xử lý nội bộ của ban biên tập/giám tuyển.
+5. **Quản lý Phiếu Hẹn Thăm Xưởng (`visit_bookings`):**
+   - `GET /api/visit-bookings?all=true`: Cho phép Editor/Admin xem toàn bộ phiếu hẹn trên toàn hệ thống kèm bộ lọc theo nghệ nhân và trạng thái (`pending`, `confirmed`, `cancelled`, `completed`).
+   - `PATCH /api/visit-bookings/:id/status`: Cập nhật trạng thái phiếu hẹn thăm xưởng sang `confirmed`, `cancelled`, hoặc `completed` kèm ghi chú quản trị.
+
 ---
 
 ## 4. Sơ đồ luồng người dùng (User Flows)
@@ -368,6 +392,7 @@ sequenceDiagram
 | **BR-13** | Quy chuẩn đặt lịch thăm xưởng (`visit_bookings`) | Phiếu hẹn phải đặt trước tối thiểu theo thuộc tính `lead_time_hours` của nghệ nhân (Mặc định 48h; riêng Nghệ nhân Nguyễn Văn Bình tiếp nhận trước 24h). Ngày hẹn phải nằm trong danh sách ngày mở cửa (`open_days`). Số khách không được vượt quá `max_guests_per_slot`. Trạng thái khởi tạo luôn là `pending`. |
 | **BR-14** | Đăng ký bản tin di sản (`newsletter_subscribers`) | Email phải tuân thủ chuẩn RFC 5322, được chuẩn hóa về chữ thường trước khi lưu. Nếu email đã tồn tại nhưng có trạng thái `is_active = false`, cập nhật lại `is_active = true` và thời gian đăng ký mới thay vì báo lỗi. |
 | **BR-15** | Chuẩn hóa nội dung Anti-AI (Di sản chuẩn xác) | Tuyệt đối không sử dụng văn phong dịch máy hoặc thuật ngữ tự chế. Bắt buộc dùng đúng thuật ngữ nghề truyền thống Việt Nam: "men rạn tam thái", "nung củi lò bầu", "chuốt gốm bàn xoay", "sa Nam Đàn", "ikat dệt thắt sợi", "cẩn xà cừ". Mọi thông tin chưa được thẩm định từ bảo tàng hoặc tài liệu làng nghề phải đánh dấu rõ `[CẦN XÁC MINH: nguồn đối soát]`. |
+| **BR-16** | Phân quyền Quản trị (RBAC) | Các API thuộc phân hệ Quản trị Dữ liệu Di sản (Mục 6.3 Tuỳ chọn) bắt buộc xác thực qua middleware `authorize('editor', 'admin')`. Chỉ vai trò `admin` mới có quyền thực hiện các thao tác huỷ/xoá vĩnh viễn (`DELETE crafts`, `DELETE artisans`, `DELETE seasonal-collections`). `editor` và `admin` có quyền thêm mới (`POST`), cập nhật (`PUT`/`PATCH`). Phân hệ này chỉ thực hiện sau khi giai đoạn 1–6 hoàn tất và bộ test xanh 100%. |
 
 ---
 
