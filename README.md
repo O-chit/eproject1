@@ -20,7 +20,8 @@ eproject1/
 │   │   ├── components/          # Linh kiện giao diện tái sử dụng
 │   │   │   ├── common/          # Breadcrumbs, CraftCardSkeleton, PrivateRoute, Toast...
 │   │   │   ├── layout/          # Navbar (sticky header, search, favs badge), Footer, Layout
-│   │   │   └── modals/          # ArtisanDetailPopup, VisitBookingModal, LightboxModal, SearchModal
+│   │   │   ├── modals/          # ArtisanDetailPopup, VisitBookingModal, LightboxModal, SearchModal
+│   │   │   └── map/             # Gom toàn bộ bản đồ di sản: VietnamCulturalMap, RegionDetailModal, MapControls, MapLegend, VillageDrawer, regionsConfig, craftVillages...
 │   │   ├── context/             # Quản lý trạng thái toàn cục (AuthContext, FavouritesContext)
 │   │   ├── hooks/               # Custom hooks: useDebounce, useLocalStorage, useModal...
 │   │   ├── pages/               # 9 trang giao diện chính theo Stitch + trang bổ trợ

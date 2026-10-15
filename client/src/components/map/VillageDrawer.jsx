@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CRAFT_CATEGORIES } from '../../data/craftVillages';
+import { CRAFT_CATEGORIES } from './craftVillages';
 
 export default function VillageDrawer({ village, onClose }) {
   if (!village) return null;

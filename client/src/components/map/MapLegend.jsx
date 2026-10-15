@@ -1,5 +1,5 @@
 import React from 'react';
-import { CRAFT_CATEGORIES } from '../../data/craftVillages';
+import { CRAFT_CATEGORIES } from './craftVillages';
 
 export default function MapLegend({
   selectedCategory,
