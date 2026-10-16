@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
+const env = require('../config/env');
 
-const SALT_ROUNDS = 10;
+const SALT_ROUNDS = env.bcryptRounds || 10;
 
 /**
  * Băm mật khẩu bằng thuật toán bcrypt

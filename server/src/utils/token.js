@@ -3,14 +3,21 @@ const env = require('../config/env');
 
 /**
  * Ký tạo JWT token từ thông tin người dùng
- * @param {object} payload - Thông tin người dùng { id, email, role }
- * @returns {string} Token
+ * @param {object} payload - Dữ liệu đưa vào JWT { id/sub, email, role, ... }
+ * @returns {string} Token JWT
  */
 const generateToken = (payload) => {
-  return jwt.sign(payload, env.jwt.secret, {
+  const tokenPayload = {
+    ...payload,
+    id: payload.id !== undefined ? payload.id : payload.sub,
+    sub: payload.sub !== undefined ? payload.sub : payload.id,
+  };
+  return jwt.sign(tokenPayload, env.jwt.secret, {
     expiresIn: env.jwt.expiresIn,
   });
 };
+
+const signToken = generateToken;
 
 /**
  * Xác thực và giải mã JWT token
@@ -23,5 +30,6 @@ const verifyToken = (token) => {
 
 module.exports = {
   generateToken,
+  signToken,
   verifyToken,
 };

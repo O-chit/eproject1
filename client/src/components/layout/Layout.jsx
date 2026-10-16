@@ -7,6 +7,7 @@ import Breadcrumbs from '../common/Breadcrumbs';
 export default function Layout() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const location = useLocation();
+  const isMapPage = location.pathname === '/regions';
 
   // Tự động cuộn lên đầu trang khi chuyển Route
   useEffect(() => {
@@ -27,18 +28,26 @@ export default function Layout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-canvas-linen text-text-primary font-body-default antialiased">
+    <div
+      className={`min-h-screen flex flex-col bg-canvas-linen text-text-primary font-body-default antialiased ${
+        isMapPage ? 'h-screen overflow-hidden' : ''
+      }`}
+    >
       <Navbar />
-      <Breadcrumbs />
+      {!isMapPage && <Breadcrumbs />}
 
-      <main className="w-full flex-1">
+      <main
+        className={`w-full ${
+          isMapPage ? 'flex-1 h-[calc(100vh-80px)] overflow-hidden flex flex-col' : 'flex-1'
+        }`}
+      >
         <Outlet />
       </main>
 
-      <Footer />
+      {!isMapPage && <Footer />}
 
       {/* Nút Back to Top chuẩn Linework */}
-      {showBackToTop && (
+      {!isMapPage && showBackToTop && (
         <button
           type="button"
           onClick={scrollToTop}

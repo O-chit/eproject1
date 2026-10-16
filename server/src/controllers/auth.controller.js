@@ -1,6 +1,6 @@
-const bcrypt = require('bcrypt');
 const db = require('../config/db');
-const { generateToken } = require('../utils/jwt');
+const { hashPassword, comparePassword } = require('../utils/password');
+const { generateToken } = require('../utils/token');
 const { success, error } = require('../utils/response');
 
 /**
@@ -36,8 +36,7 @@ const register = async (req, res, next) => {
     }
 
     // Băm mật khẩu bằng bcrypt (salt rounds = 10)
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+    const passwordHash = await hashPassword(password);
 
     // Lưu vào CSDL
     const insertQuery = `
@@ -104,7 +103,7 @@ const login = async (req, res, next) => {
     }
 
     // So sánh mật khẩu bằng bcrypt
-    const isMatch = await bcrypt.compare(password, user.password_hash);
+    const isMatch = await comparePassword(password, user.password_hash);
     if (!isMatch) {
       return error(res, 401, 'INVALID_CREDENTIALS', 'Email hoặc mật khẩu không chính xác');
     }
@@ -164,13 +163,13 @@ const changePassword = async (req, res, next) => {
     }
 
     const currentHash = result.rows[0].password_hash;
-    const isMatch = await bcrypt.compare(currentPassword, currentHash);
+    const isMatch = await comparePassword(currentPassword, currentHash);
     if (!isMatch) {
       return error(res, 400, 'INVALID_PASSWORD', 'Mật khẩu hiện tại không chính xác');
     }
 
     // Băm mật khẩu mới và cập nhật
-    const newHash = await bcrypt.hash(newPassword, 10);
+    const newHash = await hashPassword(newPassword);
     await db.query('UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2', [
       newHash,
       req.user.id,

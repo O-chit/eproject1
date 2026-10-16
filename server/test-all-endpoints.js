@@ -4,7 +4,7 @@
  */
 const http = require('http');
 const app = require('./src/app');
-const { signToken } = require('./src/utils/token.util');
+const { signToken } = require('./src/utils/token');
 
 const server = http.createServer(app);
 

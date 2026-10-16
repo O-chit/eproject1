@@ -1,0 +1,20 @@
+/**
+ * CRAFTROOTS DESIGN SYSTEM - TYPOGRAPHY SPEC
+ */
+.font-headline-title {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-label-signature {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+}
+
+.font-spec-code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+.font-body-default,
+.font-body-spec {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
