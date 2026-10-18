@@ -48,6 +48,9 @@ export const api = {
   },
   getCraftById: (id) => request(`/crafts/${id}`),
   getRelatedCrafts: (id) => request(`/crafts/${id}/related`),
+  createCraft: (payload) => request('/crafts', { method: 'POST', body: JSON.stringify(payload) }),
+  updateCraft: (id, payload) => request(`/crafts/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
+  deleteCraft: (id) => request(`/crafts/${id}`, { method: 'DELETE' }),
 
   // Danh mục & Siêu dữ liệu
   getCategories: () => request('/categories'),
@@ -55,8 +58,20 @@ export const api = {
   getTechniques: () => request('/techniques'),
 
   // Nghệ nhân
-  getArtisans: () => request('/artisans'),
+  getArtisans: (params = {}) => {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== '') {
+        query.append(k, v);
+      }
+    });
+    const qs = query.toString();
+    return request(`/artisans${qs ? `?${qs}` : ''}`);
+  },
   getArtisanById: (id) => request(`/artisans/${id}`),
+  createArtisan: (payload) => request('/artisans', { method: 'POST', body: JSON.stringify(payload) }),
+  updateArtisan: (id, payload) => request(`/artisans/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
+  deleteArtisan: (id) => request(`/artisans/${id}`, { method: 'DELETE' }),
 
   // Vùng miền
   getRegions: () => request('/regions'),

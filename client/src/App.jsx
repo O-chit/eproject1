@@ -20,6 +20,14 @@ import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 
+// Phân hệ Quản trị & Biên tập Di sản (SEC 6.3 RBAC)
+import AdminRoute from './components/common/AdminRoute';
+import AdminLayout from './components/layout/AdminLayout';
+import AdminCraftsPage from './pages/admin/AdminCraftsPage';
+import AdminCraftEditPage from './pages/admin/AdminCraftEditPage';
+import AdminArtisansPage from './pages/admin/AdminArtisansPage';
+import AdminArtisanEditPage from './pages/admin/AdminArtisanEditPage';
+
 export default function App() {
   return (
     <AuthProvider>
@@ -66,6 +74,24 @@ export default function App() {
               <Route path="*" element={<NotFoundPage />} />
             </Route>
 
+            {/* 3. Phân hệ Quản trị Di sản (Admin & Editor CMS Portal - SEC 6.3 RBAC) */}
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<Navigate to="/admin/crafts" replace />} />
+              <Route path="crafts" element={<AdminCraftsPage />} />
+              <Route path="crafts/new" element={<AdminCraftEditPage />} />
+              <Route path="crafts/:id/edit" element={<AdminCraftEditPage />} />
+              <Route path="artisans" element={<AdminArtisansPage />} />
+              <Route path="artisans/new" element={<AdminArtisanEditPage />} />
+              <Route path="artisans/:id/edit" element={<AdminArtisanEditPage />} />
+            </Route>
+
             {/* Catch-all fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
@@ -74,3 +100,4 @@ export default function App() {
     </AuthProvider>
   );
 }
+

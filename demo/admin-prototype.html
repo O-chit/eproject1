@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CraftRoots Admin Portal - Bản Mẫu Giao Diện Quản Trị CRUD</title>
+  
+  <!-- Google Fonts: Montserrat, Playfair Display, JetBrains Mono, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+  
+  <!-- Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            linen: '#F9F8F6',
+            crisp: '#FFFFFF',
+            subtle: '#F4F2EE',
+            dim: '#ECE7E3',
+            ink: '#1C1B1A',
+            inkSecondary: '#5A5854',
+            inkMuted: '#867368',
+            terracotta: '#B86B35',
+            terracottaDark: '#8E4A16',
+            terracottaLight: '#FDF1E8',
+            tealHeritage: '#006670',
+            tealLight: '#E6F4F6',
+            borderLine: '#E6E2DA',
+            borderDark: '#2C2B29'
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Sharp Linework Custom Styling */
+    .linework-border { border-color: #E6E2DA; }
+    .material-symbols-outlined { font-size: 20px; vertical-align: middle; }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #F4F2EE; }
+    ::-webkit-scrollbar-thumb { background: #D9D3CA; }
+    ::-webkit-scrollbar-thumb:hover { background: #B86B35; }
+
+    /* Tab Active Underline */
+    .tab-btn.active {
+      border-bottom: 2px solid #B86B35;
+      color: #B86B35;
+      background-color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    /* Pulse effect on live badge */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .pulse-dot { animation: pulse-subtle 2s infinite; }
+  </style>
+</head>
+<body class="bg-linen text-ink font-sans antialiased min-h-screen flex flex-col selection:bg-terracottaLight selection:text-terracottaDark">
+
+  <!-- ========================================================================= -->
+  <!-- TOP BANNER HƯỚNG DẪN BẢN MẪU PROTOTYPE -->
+  <!-- ========================================================================= -->
+  <div class="bg-ink text-linen py-2 px-4 border-b border-borderDark flex items-center justify-between text-[11px] font-mono tracking-wider">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-terracotta text-white font-semibold uppercase text-[10px]">
+        <span class="w-1.5 h-1.5 rounded-full bg-white pulse-dot"></span> PROTOTYPE CHUẨN
+      </span>
+      <span class="hidden sm:inline text-white/80">Bản Mẫu Tương Tác Giao Diện Quản Trị CRUD CraftRoots (Sản Phẩm & Nghệ Nhân)</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-white/60">Tài khoản: <strong class="text-terracotta">admin@craftroots.vn</strong> (Toàn quyền)</span>
+      <a href="/" target="_blank" class="text-terracotta hover:underline flex items-center gap-1 font-semibold">
+        <span>← Về Website Chính</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- KHUNG CHÍNH (SIDEBAR + MAIN CONTENT) -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- 1. SIDEBAR QUẢN TRỊ (LEFT NAVIGATION) -->
+    <aside class="w-64 bg-crisp border-r border-borderLine flex flex-col shrink-0 select-none">
+      
+      <!-- Logo Thương Hiệu -->
+      <div class="p-5 border-b border-borderLine flex items-center gap-3">
+        <div class="w-10 h-10 border border-terracotta bg-linen text-terracotta flex items-center justify-center font-serif font-bold text-base tracking-widest shadow-xs">
+          CR
+        </div>
+        <div class="flex flex-col">
+          <span class="font-heading text-[13px] uppercase tracking-[0.25em] font-bold text-ink leading-tight">
+            CraftRoots
+          </span>
+          <span class="font-mono text-[9px] uppercase tracking-[0.18em] text-terracotta font-semibold mt-0.5">
+            Admin CMS Portal
+          </span>
+        </div>
+      </div>
+
+      <!-- User Badge -->
+      <div class="p-3.5 mx-3 mt-3 bg-subtle border border-borderLine flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-full bg-terracotta text-white flex items-center justify-center text-xs font-bold shrink-0">
+          AD
+        </div>
+        <div class="flex flex-col min-w-0 flex-1">
+          <span class="font-heading text-[11px] font-semibold text-ink truncate">Ban Quản Trị Di Sản</span>
+          <span class="font-mono text-[9px] text-tealHeritage font-medium uppercase tracking-wider">Vai trò: Administrator</span>
+        </div>
+      </div>
+
+      <!-- Menu Điều Hướng Chính -->
+      <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <div class="px-3 pb-2 text-[10px] font-mono uppercase tracking-[0.2em] text-inkMuted font-semibold">
+          Phân Hệ Quản Lý Di Sản
+        </div>
+
+        <!-- Mục 1: Quản lý Sản Phẩm -->
+        <button id="nav-crafts-list" onclick="switchMainView('crafts-list')" class="nav-item w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-heading font-medium text-ink hover:text-terracotta hover:bg-subtle border-l-2 border-transparent transition-all cursor-pointer">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-[19px]">inventory_2</span>
+            <span>Sản Phẩm Di Sản</span>
+          </span>
+          <span class="font-mono text-[10px] bg-subtle px-1.5 py-0.5 border border-borderLine text-inkSecondary font-semibold">120</span>
+        </button>
+
+        <!-- Mục 2: Thêm mới Sản phẩm -->
+        <button id="nav-crafts-create" onclick="switchMainView('crafts-form-new')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 text-[12px] font-heading text-inkSecondary hover:text-terracotta hover:bg-subtle pl-9 border-l-2 border-transparent transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">add_circle</span>
+          <span>+ Thêm Tác Phẩm Mới</span>
+        </button>
+
+        <!-- Mục 3: Quản lý Nghệ Nhân -->
+        <button id="nav-artisans-list" onclick="switchMainView('artisans-list')" class="nav-item w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-heading font-medium text-ink hover:text-terracotta hover:bg-subtle border-l-2 border-transparent transition-all cursor-pointer">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-[19px]">person_celebrate</span>
+            <span>Hồ Sơ Nghệ Nhân</span>
+          </span>
+          <span class="font-mono text-[10px] bg-subtle px-1.5 py-0.5 border border-borderLine text-inkSecondary font-semibold">6</span>
+        </button>
+
+        <!-- Mục 4: Thêm mới Nghệ Nhân -->
+        <button id="nav-artisans-create" onclick="switchMainView('artisans-form-new')" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 text-[12px] font-heading text-inkSecondary hover:text-terracotta hover:bg-subtle pl-9 border-l-2 border-transparent transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">person_add</span>
+          <span>+ Thêm Bậc Thầy Mới</span>
+        </button>
+
+        <div class="pt-4 px-3 pb-2 text-[10px] font-mono uppercase tracking-[0.2em] text-inkMuted font-semibold">
+          Dữ Liệu Nền Tảng (Metadata)
+        </div>
+
+        <a href="#regions" onclick="showToast('Chức năng danh mục vùng miền đang mở rộng.')" class="w-full flex items-center justify-between px-3 py-2 text-[12px] font-heading text-inkSecondary hover:text-terracotta hover:bg-subtle">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-[18px]">map</span>
+            <span>6 Vùng Di Sản</span>
+          </span>
+          <span class="font-mono text-[10px] text-inkMuted">6</span>
+        </a>
+
+        <a href="#categories" onclick="showToast('Chức năng danh mục ngành nghề đang mở rộng.')" class="w-full flex items-center justify-between px-3 py-2 text-[12px] font-heading text-inkSecondary hover:text-terracotta hover:bg-subtle">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-[18px]">category</span>
+            <span>Ngành Nghề Thủ Công</span>
+          </span>
+          <span class="font-mono text-[10px] text-inkMuted">6</span>
+        </a>
+
+        <a href="#bookings" onclick="showToast('Đang chuyển tới Quản lý Đặt Lịch Ghé Thăm Làng Nghề.')" class="w-full flex items-center justify-between px-3 py-2 text-[12px] font-heading text-inkSecondary hover:text-terracotta hover:bg-subtle">
+          <span class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+            <span>Phiếu Hẹn Thăm Xưởng</span>
+          </span>
+          <span class="font-mono text-[10px] bg-terracottaLight text-terracottaDark px-1.5 py-0.5 border border-terracotta/30 font-semibold">4 Mới</span>
+        </a>
+      </nav>
+
+      <!-- Footer Sidebar -->
+      <div class="p-3 border-t border-borderLine bg-subtle/50 text-[11px] font-mono text-inkSecondary flex items-center justify-between">
+        <span>Phiên bản: <strong class="text-ink">v1.2.0-RBAC</strong></span>
+        <button onclick="showToast('Hệ thống đang hoạt động ổn định với PostgreSQL.')" class="hover:text-terracotta">
+          <span class="material-symbols-outlined text-[16px]">info</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN WORKSPACE AREA -->
+    <main class="flex-1 flex flex-col bg-linen overflow-y-auto">
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 1: DANH SÁCH QUẢN TRỊ SẢN PHẨM (CRAFTS LIST) -->
+      <!-- ===================================================================== -->
+      <section id="view-crafts-list" class="main-view p-6 sm:p-8 max-w-7xl w-full mx-auto space-y-6">
+        
+        <!-- Header & Action Row -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-borderLine">
+          <div>
+            <div class="flex items-center gap-2 text-terracotta font-mono text-[11px] uppercase tracking-widest font-semibold mb-1">
+              <span>HỆ THỐNG QUẢN LÝ NỘI DUNG</span>
+              <span>/</span>
+              <span>SEC 6.3 RESTFUL API</span>
+            </div>
+            <h1 class="font-serif text-2xl sm:text-3xl font-bold text-ink">
+              Quản Trị Tác Phẩm Thủ Công Di Sản
+            </h1>
+            <p class="font-sans text-[13px] text-inkSecondary mt-1">
+              Kiểm soát danh mục 120 tác phẩm di sản phi vật thể, quy trình nung đúc, thông số kỹ thuật và nghệ nhân liên kết.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="switchMainView('crafts-form-new')" class="px-4 py-2.5 bg-terracotta hover:bg-terracottaDark text-white font-heading text-[11px] uppercase tracking-[0.18em] font-semibold flex items-center gap-2 shadow-xs cursor-pointer transition-colors">
+              <span class="material-symbols-outlined text-[18px]">add</span>
+              <span>Thêm Tác Phẩm Mới</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Khối Chỉ Số Nhanh (Metric Cards) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-crisp border border-borderLine p-4 flex flex-col">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">Tổng Tác Phẩm</span>
+            <div class="flex items-baseline justify-between mt-1">
+              <span class="font-serif text-2xl font-bold text-ink" id="stat-total-crafts">120</span>
+              <span class="font-mono text-[10px] text-tealHeritage">100% CSDL</span>
+            </div>
+          </div>
+          <div class="bg-crisp border border-borderLine p-4 flex flex-col">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">Đã Xuất Bản (Public)</span>
+            <div class="flex items-baseline justify-between mt-1">
+              <span class="font-serif text-2xl font-bold text-tealHeritage">108</span>
+              <span class="font-mono text-[10px] text-tealHeritage">Hiển thị website</span>
+            </div>
+          </div>
+          <div class="bg-crisp border border-borderLine p-4 flex flex-col">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">Bản Nháp (Drafts)</span>
+            <div class="flex items-baseline justify-between mt-1">
+              <span class="font-serif text-2xl font-bold text-inkSecondary">12</span>
+              <span class="font-mono text-[10px] text-terracotta">Cần kiểm duyệt</span>
+            </div>
+          </div>
+          <div class="bg-crisp border border-borderLine p-4 flex flex-col">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">Tiêu Biểu (Spotlight)</span>
+            <div class="flex items-baseline justify-between mt-1">
+              <span class="font-serif text-2xl font-bold text-terracotta">6</span>
+              <span class="font-mono text-[10px] text-terracotta">Trang chủ CraftRoots</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thanh Tìm Kiếm & Bộ Lọc Đa Diện -->
+        <div class="bg-crisp border border-borderLine p-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+          
+          <!-- Ô Tìm Kiếm -->
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-inkMuted text-[18px]">search</span>
+            <input 
+              id="craft-search-input" 
+              type="text" 
+              oninput="filterCraftTable()"
+              placeholder="Tìm theo tên tác phẩm, mã SKU, làng nghề hoặc chất liệu..." 
+              class="w-full pl-9 pr-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta transition-colors"
+            />
+          </div>
+
+          <!-- Bộ Lọc Dropdown -->
+          <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+            <select id="craft-filter-region" onchange="filterCraftTable()" class="h-9 px-2.5 bg-subtle/50 border border-borderLine font-mono text-[11px] text-ink focus:outline-none focus:border-terracotta cursor-pointer">
+              <option value="">Tất cả Vùng Miền (6 Vùng)</option>
+              <option value="dong-bang-bac-bo">Đồng Bằng Bắc Bộ</option>
+              <option value="tay-bac">Tây Bắc Đại Ngàn</option>
+              <option value="dong-bac">Đông Bắc Hùng Vĩ</option>
+              <option value="bac-trung-bo">Bắc Trung Bộ</option>
+              <option value="nam-trung-bo-tay-nguyen">Nam Trung Bộ & Tây Nguyên</option>
+              <option value="nam-bo">Nam Bộ Phù Sa</option>
+            </select>
+
+            <select id="craft-filter-cat" onchange="filterCraftTable()" class="h-9 px-2.5 bg-subtle/50 border border-borderLine font-mono text-[11px] text-ink focus:outline-none focus:border-terracotta cursor-pointer">
+              <option value="">Tất cả Ngành Nghề</option>
+              <option value="gom">Gốm Sứ Truyền Thống</option>
+              <option value="det">Dệt May & Thổ Cẩm</option>
+              <option value="dong">Đúc Đồng & Kim Hoàn</option>
+              <option value="da">Điêu Khắc Đá</option>
+              <option value="tre">Mây Tre Đan</option>
+            </select>
+
+            <select id="craft-filter-status" onchange="filterCraftTable()" class="h-9 px-2.5 bg-subtle/50 border border-borderLine font-mono text-[11px] text-ink focus:outline-none focus:border-terracotta cursor-pointer">
+              <option value="">Tất cả Trạng Thái</option>
+              <option value="published">Đã Xuất Bản</option>
+              <option value="draft">Bản Nháp</option>
+              <option value="spotlight">Spotlight (Tiêu biểu)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Thanh Thao Tác Hàng Loạt (Batch Actions - xuất hiện khi chọn checkbox) -->
+        <div id="batch-action-bar" class="hidden bg-ink text-white p-3 border border-borderDark flex items-center justify-between text-[12px] font-mono">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-terracotta">check_box</span>
+            <span>Đã chọn <strong id="selected-count" class="text-terracotta">0</strong> mục di sản</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="batchAction('publish')" class="px-3 py-1 bg-tealHeritage hover:bg-[#007f8c] text-white font-semibold cursor-pointer">
+              ✓ Xuất Bản
+            </button>
+            <button onclick="batchAction('draft')" class="px-3 py-1 bg-subtle/20 hover:bg-subtle/30 text-white cursor-pointer">
+              Đưa về Nháp
+            </button>
+            <button onclick="batchAction('delete')" class="px-3 py-1 bg-red-700 hover:bg-red-800 text-white font-semibold cursor-pointer">
+              🗑️ Xóa Vĩnh Viễn
+            </button>
+          </div>
+        </div>
+
+        <!-- BẢNG DỮ LIỆU SẢN PHẨM (SHARP LINEWORK DATA TABLE) -->
+        <div class="bg-crisp border border-borderLine overflow-x-auto shadow-xs">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-subtle border-b border-borderLine font-mono text-[10px] uppercase tracking-wider text-inkSecondary">
+                <th class="p-3 w-10 text-center">
+                  <input type="checkbox" id="check-all-crafts" onchange="toggleSelectAllCrafts(this)" class="accent-terracotta cursor-pointer">
+                </th>
+                <th class="p-3 w-16">Ảnh</th>
+                <th class="p-3">Tác Phẩm & Mã SKU</th>
+                <th class="p-3">Phân Loại & Làng Nghề</th>
+                <th class="p-3">Nghệ Nhân Chủ Trì</th>
+                <th class="p-3 text-right">Giá Tham Chiếu</th>
+                <th class="p-3 text-center">Trạng Thái</th>
+                <th class="p-3 text-center w-28">Hành Động</th>
+              </tr>
+            </thead>
+            <tbody id="crafts-table-body" class="divide-y divide-borderLine font-sans text-[13px]">
+              
+              <!-- Dòng 1: Bình Gốm Men Rạn -->
+              <tr class="hover:bg-subtle/40 transition-colors craft-row" data-name="Bình Gốm Men Rạn Cổ Hoa Sen" data-sku="CR-BATTRANG-001" data-region="dong-bang-bac-bo" data-cat="gom" data-status="published" data-spotlight="true">
+                <td class="p-3 text-center">
+                  <input type="checkbox" class="craft-check accent-terracotta cursor-pointer" onchange="updateBatchBar()">
+                </td>
+                <td class="p-3">
+                  <div class="w-12 h-12 border border-borderLine overflow-hidden bg-subtle">
+                    <img src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=150&q=80" alt="Bình Gốm" class="w-full h-full object-cover">
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="font-heading font-semibold text-ink hover:text-terracotta cursor-pointer" onclick="openCraftEdit(1)">
+                    Bình Gốm Men Rạn Cổ Hoa Sen
+                  </div>
+                  <div class="font-mono text-[11px] text-inkMuted mt-0.5 flex items-center gap-2">
+                    <span>SKU: CR-BATTRANG-001</span>
+                    <span class="w-1 h-1 rounded-full bg-borderLine"></span>
+                    <span class="text-terracotta font-medium">⭐ Spotlight</span>
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="text-ink font-medium">Gốm Sứ Truyền Thống</div>
+                  <div class="text-[11px] text-inkSecondary">Làng Gốm Bát Tràng (Hà Nội)</div>
+                </td>
+                <td class="p-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-terracotta text-white flex items-center justify-center text-[10px] font-bold">TĐ</span>
+                    <div>
+                      <div class="font-medium text-ink">NNND. Trần Độ</div>
+                      <div class="text-[10px] text-inkMuted font-mono">Đời thứ 18</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-3 text-right font-mono font-semibold text-ink">
+                  12.500.000 đ
+                </td>
+                <td class="p-3 text-center">
+                  <span class="inline-flex items-center px-2 py-0.5 bg-tealLight border border-tealHeritage/30 text-tealHeritage font-mono text-[10px] uppercase tracking-wider font-semibold">
+                    Published
+                  </span>
+                </td>
+                <td class="p-3 text-center">
+                  <div class="flex items-center justify-center gap-1">
+                    <button onclick="previewCraftDrawer(1)" title="Xem trước trang khách" class="p-1 hover:text-terracotta hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">visibility</span>
+                    </button>
+                    <button onclick="openCraftEdit(1)" title="Chỉnh sửa chi tiết" class="p-1 hover:text-terracotta hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">edit_note</span>
+                    </button>
+                    <button onclick="confirmDelete('craft', 1, 'Bình Gốm Men Rạn Cổ Hoa Sen')" title="Xóa tác phẩm" class="p-1 hover:text-red-700 hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Dòng 2: Khăn Lụa Vạn Phúc -->
+              <tr class="hover:bg-subtle/40 transition-colors craft-row" data-name="Khăn Lụa Sa Tơ Tằm Cung Đình" data-sku="CR-VANPHUC-004" data-region="dong-bang-bac-bo" data-cat="det" data-status="published" data-spotlight="false">
+                <td class="p-3 text-center">
+                  <input type="checkbox" class="craft-check accent-terracotta cursor-pointer" onchange="updateBatchBar()">
+                </td>
+                <td class="p-3">
+                  <div class="w-12 h-12 border border-borderLine overflow-hidden bg-subtle">
+                    <img src="https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?auto=format&fit=crop&w=150&q=80" alt="Khăn Lụa" class="w-full h-full object-cover">
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="font-heading font-semibold text-ink hover:text-terracotta cursor-pointer" onclick="openCraftEdit(2)">
+                    Khăn Lụa Sa Tơ Tằm Cung Đình
+                  </div>
+                  <div class="font-mono text-[11px] text-inkMuted mt-0.5">
+                    SKU: CR-VANPHUC-004
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="text-ink font-medium">Dệt May & Thổ Cẩm</div>
+                  <div class="text-[11px] text-inkSecondary">Làng Lụa Vạn Phúc (Hà Đông)</div>
+                </td>
+                <td class="p-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-inkSecondary text-white flex items-center justify-center text-[10px] font-bold">TM</span>
+                    <div>
+                      <div class="font-medium text-ink">NNƯT. Triệu Văn Mão</div>
+                      <div class="text-[10px] text-inkMuted font-mono">Đời thứ 4</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-3 text-right font-mono font-semibold text-ink">
+                  2.800.000 đ
+                </td>
+                <td class="p-3 text-center">
+                  <span class="inline-flex items-center px-2 py-0.5 bg-tealLight border border-tealHeritage/30 text-tealHeritage font-mono text-[10px] uppercase tracking-wider font-semibold">
+                    Published
+                  </span>
+                </td>
+                <td class="p-3 text-center">
+                  <div class="flex items-center justify-center gap-1">
+                    <button onclick="previewCraftDrawer(2)" title="Xem trước trang khách" class="p-1 hover:text-terracotta hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">visibility</span>
+                    </button>
+                    <button onclick="openCraftEdit(2)" title="Chỉnh sửa chi tiết" class="p-1 hover:text-terracotta hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">edit_note</span>
+                    </button>
+                    <button onclick="confirmDelete('craft', 2, 'Khăn Lụa Sa Tơ Tằm Cung Đình')" title="Xóa tác phẩm" class="p-1 hover:text-red-700 hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Dòng 3: Mâm Bạc Đồng Xâm -->
+              <tr class="hover:bg-subtle/40 transition-colors craft-row" data-name="Đĩa Bạc Mỹ Nghệ Chạm Tứ Linh" data-sku="CR-DONGXAM-002" data-region="dong-bang-bac-bo" data-cat="dong" data-status="draft" data-spotlight="false">
+                <td class="p-3 text-center">
+                  <input type="checkbox" class="craft-check accent-terracotta cursor-pointer" onchange="updateBatchBar()">
+                </td>
+                <td class="p-3">
+                  <div class="w-12 h-12 border border-borderLine overflow-hidden bg-subtle">
+                    <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=150&q=80" alt="Đĩa Bạc" class="w-full h-full object-cover">
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="font-heading font-semibold text-ink hover:text-terracotta cursor-pointer" onclick="openCraftEdit(3)">
+                    Đĩa Bạc Mỹ Nghệ Chạm Tứ Linh
+                  </div>
+                  <div class="font-mono text-[11px] text-inkMuted mt-0.5">
+                    SKU: CR-DONGXAM-002
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="text-ink font-medium">Đúc Đồng & Kim Hoàn</div>
+                  <div class="text-[11px] text-inkSecondary">Làng Chạm Bạc Đồng Xâm</div>
+                </td>
+                <td class="p-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-terracotta text-white flex items-center justify-center text-[10px] font-bold">QH</span>
+                    <div>
+                      <div class="font-medium text-ink">NN. Quách Văn Hiểu</div>
+                      <div class="text-[10px] text-inkMuted font-mono">Đời thứ 3</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-3 text-right font-mono font-semibold text-ink">
+                  18.000.000 đ
+                </td>
+                <td class="p-3 text-center">
+                  <span class="inline-flex items-center px-2 py-0.5 bg-subtle border border-borderLine text-inkSecondary font-mono text-[10px] uppercase tracking-wider font-semibold">
+                    Draft
+                  </span>
+                </td>
+                <td class="p-3 text-center">
+                  <div class="flex items-center justify-center gap-1">
+                    <button onclick="previewCraftDrawer(3)" title="Xem trước trang khách" class="p-1 hover:text-terracotta hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">visibility</span>
+                    </button>
+                    <button onclick="openCraftEdit(3)" title="Chỉnh sửa chi tiết" class="p-1 hover:text-terracotta hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">edit_note</span>
+                    </button>
+                    <button onclick="confirmDelete('craft', 3, 'Đĩa Bạc Mỹ Nghệ Chạm Tứ Linh')" title="Xóa tác phẩm" class="p-1 hover:text-red-700 hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Phân Trang & Thông Tin Hiển Thị -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-[12px] font-mono text-inkSecondary">
+          <div>
+            Hiển thị <strong>1 - 3</strong> trong tổng số <strong>120</strong> tác phẩm di sản
+          </div>
+          <div class="flex items-center gap-1">
+            <button class="px-3 py-1.5 border border-borderLine bg-crisp text-inkMuted cursor-not-allowed">Trước</button>
+            <button class="px-3 py-1.5 border border-terracotta bg-terracotta text-white font-semibold">1</button>
+            <button class="px-3 py-1.5 border border-borderLine bg-crisp hover:bg-subtle cursor-pointer">2</button>
+            <button class="px-3 py-1.5 border border-borderLine bg-crisp hover:bg-subtle cursor-pointer">3</button>
+            <button class="px-3 py-1.5 border border-borderLine bg-crisp hover:bg-subtle cursor-pointer">...</button>
+            <button class="px-3 py-1.5 border border-borderLine bg-crisp hover:bg-subtle cursor-pointer">12</button>
+            <button class="px-3 py-1.5 border border-borderLine bg-crisp hover:bg-subtle cursor-pointer">Sau</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 2: CHI TIẾT & FORM THÊM / SỬA SẢN PHẨM (CRAFT EDIT / CREATE) -->
+      <!-- ===================================================================== -->
+      <section id="view-crafts-form" class="main-view hidden p-6 sm:p-8 max-w-7xl w-full mx-auto space-y-6">
+        
+        <!-- Header Thanh Tác Vụ -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-borderLine">
+          <div class="flex items-center gap-3">
+            <button onclick="switchMainView('crafts-list')" class="w-9 h-9 border border-borderLine bg-crisp flex items-center justify-center hover:border-terracotta hover:text-terracotta cursor-pointer transition-colors" title="Quay lại danh sách">
+              <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            </button>
+            <div>
+              <div class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">
+                <span id="form-craft-sku-breadcrumb">CR-BATTRANG-001</span> · Chế tác thủ công
+              </div>
+              <h2 id="form-craft-title" class="font-serif text-xl sm:text-2xl font-bold text-ink">
+                Chỉnh Sửa Tác Phẩm: Bình Gốm Men Rạn Cổ Hoa Sen
+              </h2>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="previewCraftDrawer(1)" class="px-3.5 py-2 border border-borderLine bg-crisp hover:bg-subtle font-heading text-[11px] uppercase tracking-wider font-semibold cursor-pointer flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[17px]">visibility</span>
+              <span>Xem Trước</span>
+            </button>
+            <button type="button" onclick="switchMainView('crafts-list')" class="px-3.5 py-2 border border-borderLine bg-crisp hover:bg-subtle font-heading text-[11px] uppercase tracking-wider text-inkSecondary cursor-pointer">
+              Hủy Bỏ
+            </button>
+            <button type="button" onclick="saveCraftForm()" class="px-5 py-2 bg-terracotta hover:bg-terracottaDark text-white font-heading text-[11px] uppercase tracking-[0.18em] font-semibold cursor-pointer shadow-xs flex items-center gap-1.5 transition-colors">
+              <span class="material-symbols-outlined text-[17px]">save</span>
+              <span>Lưu Tác Phẩm</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- BỐ CỤC 2 CỘT: CỘT TRÁI FORM NỘI DUNG (70%) - CỘT PHẢI CÀI ĐẶT (30%) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <!-- CỘT CHÍNH (8 CỘT) -->
+          <div class="lg:col-span-8 space-y-6">
+
+            <!-- Tabs Phân Nhóm Form -->
+            <div class="flex border-b border-borderLine bg-crisp px-4 pt-3 gap-2">
+              <button onclick="switchCraftTab('tab-general')" class="tab-btn craft-tab-btn active px-4 py-2 font-mono text-[11px] uppercase tracking-wider border-b-2 border-transparent transition-all cursor-pointer">
+                1. Thông Tin & Văn Hóa
+              </button>
+              <button onclick="switchCraftTab('tab-specs')" class="tab-btn craft-tab-btn px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-inkSecondary hover:text-terracotta border-b-2 border-transparent transition-all cursor-pointer">
+                2. Kỹ Pháp & Thông Số
+              </button>
+              <button onclick="switchCraftTab('tab-media')" class="tab-btn craft-tab-btn px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-inkSecondary hover:text-terracotta border-b-2 border-transparent transition-all cursor-pointer">
+                3. Thư Viện Ảnh & Quy Trình
+              </button>
+            </div>
+
+            <!-- TAB 1: THÔNG TIN & VĂN HÓA -->
+            <div id="craft-tab-general" class="craft-tab-content bg-crisp border border-borderLine p-6 space-y-5">
+              
+              <div>
+                <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                  Tên Tác Phẩm Di Sản <span class="text-red-600">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="craft-input-name"
+                  value="Bình Gốm Men Rạn Cổ Hoa Sen" 
+                  class="w-full px-3.5 py-2.5 bg-subtle/50 border border-borderLine font-serif text-[16px] text-ink focus:outline-none focus:border-terracotta"
+                />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Mã SKU Quản Trị <span class="text-red-600">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="craft-input-sku"
+                    value="CR-BATTRANG-001" 
+                    class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-mono text-[12px] text-ink focus:outline-none focus:border-terracotta"
+                  />
+                </div>
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Đường Dẫn Tĩnh (Slug URL) <span class="text-red-600">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="craft-input-slug"
+                    value="binh-gom-men-ran-co-hoa-sen" 
+                    class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-mono text-[12px] text-inkSecondary focus:outline-none focus:border-terracotta"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Ngành Nghề Thủ Công <span class="text-red-600">*</span>
+                  </label>
+                  <select class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta cursor-pointer">
+                    <option value="1" selected>Gốm Sứ Truyền Thống</option>
+                    <option value="2">Đúc Đồng & Kim Hoàn</option>
+                    <option value="3">Dệt May & Thổ Cẩm</option>
+                    <option value="4">Mây Tre Đan</option>
+                    <option value="5">Sơn Mài & Khảm Trai</option>
+                    <option value="6">Điêu Khắc Đá</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Vùng Di Sản <span class="text-red-600">*</span>
+                  </label>
+                  <select class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta cursor-pointer">
+                    <option value="1" selected>Đồng Bằng Bắc Bộ</option>
+                    <option value="2">Tây Bắc Đại Ngàn</option>
+                    <option value="3">Đông Bắc Hùng Vĩ</option>
+                    <option value="4">Bắc Trung Bộ Trầm Tích</option>
+                    <option value="5">Nam Trung Bộ & Tây Nguyên</option>
+                    <option value="6">Nam Bộ Phù Sa</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Làng Nghề Gắn Liền
+                  </label>
+                  <select class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta cursor-pointer">
+                    <option value="1" selected>Làng Gốm Bát Tràng (Hà Nội)</option>
+                    <option value="2">Làng Lụa Vạn Phúc (Hà Nội)</option>
+                    <option value="3">Làng Chạm Bạc Đồng Xâm (Thái Bình)</option>
+                    <option value="4">Làng Gốm Sành Hương Canh (Vĩnh Phúc)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                  Tóm Tắt Ngắn (Lead Summary)
+                </label>
+                <textarea rows="2" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta">Tác phẩm tái hiện kỹ pháp nung men rạn thế kỷ XVI với cốt đất sét sông Hồng dẻo mịn kết hợp bài men tam thái quý hiếm.</textarea>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                  Bối Cảnh Lịch Sử & Ý Nghĩa Văn Hóa (Cultural Context)
+                </label>
+                <textarea rows="4" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta">Men rạn là niềm tự hào độc bản của gốm Bát Tràng thế kỷ XVI. Hoa sen chạm khắc nổi trên thân bình biểu trưng cho cốt cách thanh bạch và sự trường tồn của văn hóa Đại Việt qua các triều đại phong kiến.</textarea>
+              </div>
+            </div>
+
+            <!-- TAB 2: KỸ PHÁP & THÔNG SỐ (ẨN MẶC ĐỊNH) -->
+            <div id="craft-tab-specs" class="craft-tab-content hidden bg-crisp border border-borderLine p-6 space-y-5">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Kích Thước (D x R x C cm)
+                  </label>
+                  <input type="text" value="28 x 28 x 45 cm" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-mono text-[12px] text-ink focus:outline-none focus:border-terracotta">
+                </div>
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Trọng Lượng (kg)
+                  </label>
+                  <input type="text" value="4.8 kg" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-mono text-[12px] text-ink focus:outline-none focus:border-terracotta">
+                </div>
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Giá Tham Chiếu (VNĐ)
+                  </label>
+                  <input type="number" value="12500000" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-mono text-[12px] text-ink focus:outline-none focus:border-terracotta">
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                  Chất Liệu Chế Tác (Materials Multi-Tags)
+                </label>
+                <div class="flex flex-wrap gap-2 p-2 bg-subtle/50 border border-borderLine">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-crisp border border-borderLine font-mono text-[11px] text-ink">
+                    Đất sét cao lanh <button class="hover:text-red-700">×</button>
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-crisp border border-borderLine font-mono text-[11px] text-ink">
+                    Men tro trấu cổ <button class="hover:text-red-700">×</button>
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-crisp border border-borderLine font-mono text-[11px] text-ink">
+                    Khoáng oxit cô-ban <button class="hover:text-red-700">×</button>
+                  </span>
+                  <button class="px-2 py-0.5 border border-dashed border-terracotta text-terracotta font-mono text-[11px] hover:bg-terracotta hover:text-white transition-colors">
+                    + Thêm chất liệu
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                  Kỹ Pháp Bí Truyền (Techniques Multi-Tags)
+                </label>
+                <div class="flex flex-wrap gap-2 p-2 bg-subtle/50 border border-borderLine">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-crisp border border-borderLine font-mono text-[11px] text-ink">
+                    Vuốt tay bàn xoay <button class="hover:text-red-700">×</button>
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-crisp border border-borderLine font-mono text-[11px] text-ink">
+                    Nung củi lò bầu 1.280°C <button class="hover:text-red-700">×</button>
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-crisp border border-borderLine font-mono text-[11px] text-ink">
+                    Rạn men hạt vừng <button class="hover:text-red-700">×</button>
+                  </span>
+                  <button class="px-2 py-0.5 border border-dashed border-terracotta text-terracotta font-mono text-[11px] hover:bg-terracotta hover:text-white transition-colors">
+                    + Thêm kỹ thuật
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 3: MEDIA & QUY TRÌNH (ẨN MẶC ĐỊNH) -->
+            <div id="craft-tab-media" class="craft-tab-content hidden bg-crisp border border-borderLine p-6 space-y-6">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="font-mono text-[11px] uppercase tracking-wider text-inkSecondary">
+                    Thư Viện Ảnh Chi Tiết (Gallery Images)
+                  </label>
+                  <button class="text-terracotta font-mono text-[11px] hover:underline font-semibold">
+                    + Thêm ảnh URL / Tải lên
+                  </button>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div class="relative border border-terracotta p-1 group">
+                    <img src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=300&q=80" class="w-full h-24 object-cover">
+                    <span class="absolute top-2 left-2 bg-terracotta text-white font-mono text-[9px] px-1 font-semibold">Ảnh Bìa</span>
+                  </div>
+                  <div class="relative border border-borderLine p-1 group">
+                    <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=300&q=80" class="w-full h-24 object-cover">
+                    <button class="absolute top-2 right-2 bg-ink/70 text-white w-5 h-5 flex items-center justify-center hover:bg-red-700">×</button>
+                  </div>
+                  <div class="relative border border-borderLine p-1 group">
+                    <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=300&q=80" class="w-full h-24 object-cover">
+                    <button class="absolute top-2 right-2 bg-ink/70 text-white w-5 h-5 flex items-center justify-center hover:bg-red-700">×</button>
+                  </div>
+                  <div class="border border-dashed border-borderLine flex flex-col items-center justify-center h-26 text-inkMuted hover:border-terracotta hover:text-terracotta cursor-pointer transition-colors">
+                    <span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
+                    <span class="text-[10px] font-mono uppercase tracking-wider mt-1">+ Thêm ảnh</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quy trình chế tác (Stages Repeater) -->
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <label class="font-mono text-[11px] uppercase tracking-wider text-inkSecondary">
+                    Quy Trình Chế Tác Thủ Công (Stages Repeater)
+                  </label>
+                  <button class="text-terracotta font-mono text-[11px] hover:underline font-semibold">
+                    + Thêm công đoạn
+                  </button>
+                </div>
+                <div class="space-y-3">
+                  <div class="p-3 bg-subtle/60 border border-borderLine flex items-start justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                      <span class="w-6 h-6 bg-terracotta text-white font-mono text-xs flex items-center justify-center font-bold">1</span>
+                      <div>
+                        <div class="font-heading font-semibold text-ink text-[13px]">Luyện Đất Sa Mộc (3 Ngày)</div>
+                        <div class="text-[12px] text-inkSecondary">Lọc đất sét cao lanh qua 4 bể lọc để loại bỏ hoàn toàn tạp chất hữu cơ.</div>
+                      </div>
+                    </div>
+                    <button class="text-inkMuted hover:text-red-700">×</button>
+                  </div>
+                  <div class="p-3 bg-subtle/60 border border-borderLine flex items-start justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                      <span class="w-6 h-6 bg-terracotta text-white font-mono text-xs flex items-center justify-center font-bold">2</span>
+                      <div>
+                        <div class="font-heading font-semibold text-ink text-[13px]">Vuốt Tạo Dáng Bàn Xoay (1 Ngày)</div>
+                        <div class="text-[12px] text-inkSecondary">Nghệ nhân dùng lực tay vuốt dáng củ tỏi cân xứng theo ni thước cổ.</div>
+                      </div>
+                    </div>
+                    <button class="text-inkMuted hover:text-red-700">×</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- CỘT PHỤ (4 CỘT - CÀI ĐẶT & XUẤT BẢN) -->
+          <div class="lg:col-span-4 space-y-6">
+
+            <!-- Card 1: Trạng thái & Tiêu điểm -->
+            <div class="bg-crisp border border-borderLine p-5 space-y-4">
+              <h3 class="font-heading text-[12px] uppercase tracking-wider text-ink font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-terracotta text-[18px]">toggle_on</span>
+                <span>Trạng Thái Xuất Bản</span>
+              </h3>
+
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="craft-status" value="published" checked class="accent-terracotta">
+                  <span class="font-sans text-[13px] font-semibold text-tealHeritage">Công Khai (Published)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="craft-status" value="draft" class="accent-terracotta">
+                  <span class="font-sans text-[13px] text-inkSecondary">Lưu Nháp (Draft)</span>
+                </label>
+              </div>
+
+              <div class="pt-3 border-t border-borderLine">
+                <label class="flex items-start gap-2.5 cursor-pointer">
+                  <input type="checkbox" checked class="mt-0.5 accent-terracotta">
+                  <div>
+                    <span class="font-sans text-[13px] font-semibold text-ink">Đưa vào Tiêu Biểu (Spotlight)</span>
+                    <p class="font-sans text-[11px] text-inkSecondary">Hiển thị nổi bật tại trang chủ CraftRoots và bản đồ di sản tương tác.</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Card 2: Liên kết Nghệ Nhân -->
+            <div class="bg-crisp border border-borderLine p-5 space-y-4">
+              <h3 class="font-heading text-[12px] uppercase tracking-wider text-ink font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-terracotta text-[18px]">person</span>
+                <span>Nghệ Nhân Chế Tác</span>
+              </h3>
+
+              <div>
+                <label class="block font-mono text-[10px] uppercase tracking-wider text-inkSecondary mb-1">
+                  Nghệ Nhân Chủ Trì
+                </label>
+                <select class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta cursor-pointer">
+                  <option value="1" selected>NNND. Trần Độ (Bát Tràng)</option>
+                  <option value="2">NNƯT. Triệu Văn Mão (Vạn Phúc)</option>
+                  <option value="3">NN. Quách Văn Hiểu (Đồng Xâm)</option>
+                  <option value="4">NN. Nguyễn Bá Châu (Đông Sơn)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[10px] uppercase tracking-wider text-inkSecondary mb-1">
+                  Vai Trò Trong Tác Phẩm
+                </label>
+                <input type="text" value="Nghệ nhân chủ trì phục dựng men rạn" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[12px] text-ink focus:outline-none focus:border-terracotta">
+              </div>
+            </div>
+
+            <!-- Card 3: Ảnh Bìa Đại Diện (Cover Image) -->
+            <div class="bg-crisp border border-borderLine p-5 space-y-3">
+              <h3 class="font-heading text-[12px] uppercase tracking-wider text-ink font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-terracotta text-[18px]">image</span>
+                <span>Ảnh Bìa Đại Diện</span>
+              </h3>
+
+              <div class="border border-borderLine overflow-hidden bg-subtle h-44 flex items-center justify-center">
+                <img id="craft-cover-preview" src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80" alt="Preview" class="w-full h-full object-cover">
+              </div>
+
+              <div>
+                <label class="block font-mono text-[10px] uppercase tracking-wider text-inkSecondary mb-1">
+                  URL Hình Ảnh
+                </label>
+                <input 
+                  type="text" 
+                  id="craft-input-cover"
+                  onchange="updateImagePreview(this.value, 'craft-cover-preview')"
+                  value="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80" 
+                  class="w-full px-2.5 py-1.5 bg-subtle/50 border border-borderLine font-mono text-[11px] text-inkSecondary focus:outline-none focus:border-terracotta"
+                >
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 3: DANH SÁCH QUẢN TRỊ NGHỆ NHÂN (ARTISANS LIST) -->
+      <!-- ===================================================================== -->
+      <section id="view-artisans-list" class="main-view hidden p-6 sm:p-8 max-w-7xl w-full mx-auto space-y-6">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-borderLine">
+          <div>
+            <div class="flex items-center gap-2 text-terracotta font-mono text-[11px] uppercase tracking-widest font-semibold mb-1">
+              <span>HỒ SƠ BẬC THẦY DI SẢN</span>
+              <span>/</span>
+              <span>LƯU TRỮ VĂN HÓA SỐ</span>
+            </div>
+            <h1 class="font-serif text-2xl sm:text-3xl font-bold text-ink">
+              Quản Trị Hồ Sơ Bậc Thầy Nghệ Nhân
+            </h1>
+            <p class="font-sans text-[13px] text-inkSecondary mt-1">
+              Danh bạ các nghệ nhân gìn giữ bí truyền văn hóa, thế hệ truyền thừa và lịch đón tiếp khách ghé thăm xưởng.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="switchMainView('artisans-form-new')" class="px-4 py-2.5 bg-terracotta hover:bg-terracottaDark text-white font-heading text-[11px] uppercase tracking-[0.18em] font-semibold flex items-center gap-2 shadow-xs cursor-pointer transition-colors">
+              <span class="material-symbols-outlined text-[18px]">person_add</span>
+              <span>Thêm Bậc Thầy Mới</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Cards Nghệ Nhân -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-crisp border border-borderLine p-4">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">Tổng Nghệ Nhân</span>
+            <div class="font-serif text-2xl font-bold text-ink mt-1">6 Bậc Thầy</div>
+          </div>
+          <div class="bg-crisp border border-borderLine p-4">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">Nghệ Nhân Nhân Dân</span>
+            <div class="font-serif text-2xl font-bold text-terracotta mt-1">2 Vị</div>
+          </div>
+          <div class="bg-crisp border border-borderLine p-4">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">Nghệ Nhân Ưu Tú</span>
+            <div class="font-serif text-2xl font-bold text-tealHeritage mt-1">3 Vị</div>
+          </div>
+          <div class="bg-crisp border border-borderLine p-4">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">Đón Khách Thăm Xưởng</span>
+            <div class="font-serif text-2xl font-bold text-ink mt-1">5 Đang Nhận</div>
+          </div>
+        </div>
+
+        <!-- BẢNG DỮ LIỆU NGHỆ NHÂN -->
+        <div class="bg-crisp border border-borderLine overflow-x-auto shadow-xs">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-subtle border-b border-borderLine font-mono text-[10px] uppercase tracking-wider text-inkSecondary">
+                <th class="p-3 w-16 text-center">Chân Dung</th>
+                <th class="p-3">Họ Tên & Mã Số</th>
+                <th class="p-3">Danh Hiệu & Làng Nghề</th>
+                <th class="p-3">Truyền Thừa / Kinh Nghiệm</th>
+                <th class="p-3 text-center">Đón Khách</th>
+                <th class="p-3 text-center w-28">Hành Động</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-borderLine font-sans text-[13px]">
+              
+              <!-- Nghệ nhân 1 -->
+              <tr class="hover:bg-subtle/40 transition-colors">
+                <td class="p-3 text-center">
+                  <div class="w-12 h-12 rounded-full border-2 border-terracotta overflow-hidden mx-auto bg-subtle">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Trần Độ" class="w-full h-full object-cover">
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="font-heading font-semibold text-ink hover:text-terracotta cursor-pointer" onclick="openArtisanEdit(1)">
+                    Trần Độ
+                  </div>
+                  <div class="font-mono text-[11px] text-inkMuted mt-0.5">
+                    MÃ: ART-BATTRANG-01
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="font-semibold text-terracotta">Nghệ nhân Nhân dân Bát Tràng</div>
+                  <div class="text-[11px] text-inkSecondary">Làng Gốm Bát Tràng · Hà Nội</div>
+                </td>
+                <td class="p-3 font-mono text-[12px]">
+                  <div>Thế hệ thứ <strong>18</strong></div>
+                  <div class="text-inkSecondary">45 năm cống hiến</div>
+                </td>
+                <td class="p-3 text-center">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 border border-green-300 text-green-800 font-mono text-[10px] uppercase font-semibold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Đang Nhận (T7, CN)
+                  </span>
+                </td>
+                <td class="p-3 text-center">
+                  <div class="flex items-center justify-center gap-1">
+                    <button onclick="openArtisanEdit(1)" title="Chỉnh sửa hồ sơ" class="p-1 hover:text-terracotta hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">edit_note</span>
+                    </button>
+                    <button onclick="confirmDelete('artisan', 1, 'Nghệ nhân Nhân dân Trần Độ')" title="Xóa hồ sơ" class="p-1 hover:text-red-700 hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Nghệ nhân 2 -->
+              <tr class="hover:bg-subtle/40 transition-colors">
+                <td class="p-3 text-center">
+                  <div class="w-12 h-12 rounded-full border-2 border-borderLine overflow-hidden mx-auto bg-subtle">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" alt="Triệu Văn Mão" class="w-full h-full object-cover">
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="font-heading font-semibold text-ink hover:text-terracotta cursor-pointer" onclick="openArtisanEdit(2)">
+                    Triệu Văn Mão (Cố Nghệ Nhân)
+                  </div>
+                  <div class="font-mono text-[11px] text-inkMuted mt-0.5">
+                    MÃ: ART-VANPHUC-02
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="font-semibold text-tealHeritage">Nghệ nhân Ưu tú Dệt Lụa</div>
+                  <div class="text-[11px] text-inkSecondary">Làng Lụa Vạn Phúc · Hà Đông</div>
+                </td>
+                <td class="p-3 font-mono text-[12px]">
+                  <div>Thế hệ thứ <strong>4</strong></div>
+                  <div class="text-inkSecondary">Hơn 50 năm truyền dạy</div>
+                </td>
+                <td class="p-3 text-center">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-subtle border border-borderLine text-inkSecondary font-mono text-[10px] uppercase font-semibold">
+                    Tạm Ngừng
+                  </span>
+                </td>
+                <td class="p-3 text-center">
+                  <div class="flex items-center justify-center gap-1">
+                    <button onclick="openArtisanEdit(2)" title="Chỉnh sửa hồ sơ" class="p-1 hover:text-terracotta hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">edit_note</span>
+                    </button>
+                    <button onclick="confirmDelete('artisan', 2, 'Cố Nghệ nhân Ưu tú Triệu Văn Mão')" title="Xóa hồ sơ" class="p-1 hover:text-red-700 hover:bg-subtle cursor-pointer">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- VIEW 4: CHI TIẾT & SỬA HỒ SƠ NGHỆ NHÂN (ARTISAN EDIT / CREATE) -->
+      <!-- ===================================================================== -->
+      <section id="view-artisans-form" class="main-view hidden p-6 sm:p-8 max-w-7xl w-full mx-auto space-y-6">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-borderLine">
+          <div class="flex items-center gap-3">
+            <button onclick="switchMainView('artisans-list')" class="w-9 h-9 border border-borderLine bg-crisp flex items-center justify-center hover:border-terracotta hover:text-terracotta cursor-pointer transition-colors" title="Quay lại danh sách">
+              <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            </button>
+            <div>
+              <div class="font-mono text-[10px] uppercase tracking-wider text-inkMuted">
+                <span id="form-artisan-code-breadcrumb">ART-BATTRANG-01</span> · Hồ sơ bảo tồn
+              </div>
+              <h2 id="form-artisan-title" class="font-serif text-xl sm:text-2xl font-bold text-ink">
+                Hồ Sơ Nghệ Nhân: Trần Độ
+              </h2>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="switchMainView('artisans-list')" class="px-3.5 py-2 border border-borderLine bg-crisp hover:bg-subtle font-heading text-[11px] uppercase tracking-wider text-inkSecondary cursor-pointer">
+              Hủy Bỏ
+            </button>
+            <button type="button" onclick="saveArtisanForm()" class="px-5 py-2 bg-terracotta hover:bg-terracottaDark text-white font-heading text-[11px] uppercase tracking-[0.18em] font-semibold cursor-pointer shadow-xs flex items-center gap-1.5 transition-colors">
+              <span class="material-symbols-outlined text-[17px]">save</span>
+              <span>Lưu Hồ Sơ</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2 CỘT FORM NGHỆ NHÂN -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Cột Trái: Thông tin tư liệu (8 cột) -->
+          <div class="lg:col-span-8 space-y-6">
+            <div class="bg-crisp border border-borderLine p-6 space-y-5">
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Họ Và Tên Bậc Thầy <span class="text-red-600">*</span>
+                  </label>
+                  <input type="text" id="artisan-input-name" value="Trần Độ" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-serif text-[16px] text-ink focus:outline-none focus:border-terracotta">
+                </div>
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Mã Nghệ Nhân (Ref Code) <span class="text-red-600">*</span>
+                  </label>
+                  <input type="text" id="artisan-input-code" value="ART-BATTRANG-01" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-mono text-[12px] text-ink focus:outline-none focus:border-terracotta">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Danh Hiệu Nhà Nước
+                  </label>
+                  <input type="text" value="Nghệ nhân Nhân dân Bát Tràng" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta">
+                </div>
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Thế Hệ Kế Thừa (Đời thứ)
+                  </label>
+                  <input type="number" value="18" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-mono text-[12px] text-ink focus:outline-none focus:border-terracotta">
+                </div>
+                <div>
+                  <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                    Số Năm Làm Nghề
+                  </label>
+                  <input type="number" value="45" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-mono text-[12px] text-ink focus:outline-none focus:border-terracotta">
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                  Tuyên Ngôn Triết Lý Nghề (Philosophy Quote)
+                </label>
+                <textarea rows="2" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-serif italic text-[14px] text-ink focus:outline-none focus:border-terracotta">"Đất có linh hồn của đất, men có hơi thở của men; nung gốm là cuộc đối thoại thầm lặng với lửa đất ngàn xưa."</textarea>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] uppercase tracking-wider text-inkSecondary mb-1.5">
+                  Tiểu Sử & Đóng Góp Di Sản (Biography)
+                </label>
+                <textarea rows="4" class="w-full px-3 py-2 bg-subtle/50 border border-borderLine font-sans text-[13px] text-ink focus:outline-none focus:border-terracotta">Sinh ra trong dòng họ gốm truyền đời 18 thế hệ tại Bát Tràng. Ông đã dành nửa đời người nghiên cứu phục dựng thành công các bài men cổ triều Lý, Trần, Lê tưởng chừng đã thất truyền.</textarea>
+              </div>
+
+              <!-- Niên biểu sự nghiệp (Milestones Repeater) -->
+              <div class="pt-2 border-t border-borderLine">
+                <div class="flex items-center justify-between mb-2">
+                  <label class="font-mono text-[11px] uppercase tracking-wider text-inkSecondary">
+                    Mốc Son Niên Biểu (Career Milestones)
+                  </label>
+                  <button class="text-terracotta font-mono text-[11px] hover:underline font-semibold">+ Thêm mốc son</button>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <input type="text" value="1999" class="w-24 px-2 py-1 bg-subtle/50 border border-borderLine font-mono text-[11px]">
+                    <input type="text" value="Phục chế thành công 70 mẫu hiện vật gốm hoàng cung thời Lê" class="flex-1 px-3 py-1 bg-subtle/50 border border-borderLine font-sans text-[12px]">
+                    <button class="text-inkMuted hover:text-red-700">×</button>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <input type="text" value="2010" class="w-24 px-2 py-1 bg-subtle/50 border border-borderLine font-mono text-[11px]">
+                    <input type="text" value="Được Chủ tịch nước phong tặng danh hiệu Nghệ nhân Nhân dân" class="flex-1 px-3 py-1 bg-subtle/50 border border-borderLine font-sans text-[12px]">
+                    <button class="text-inkMuted hover:text-red-700">×</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Cột Phải: Ảnh Chân Dung & Đón Khách (4 cột) -->
+          <div class="lg:col-span-4 space-y-6">
+            
+            <!-- Ảnh Chân Dung -->
+            <div class="bg-crisp border border-borderLine p-5 space-y-3">
+              <h3 class="font-heading text-[12px] uppercase tracking-wider text-ink font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-terracotta text-[18px]">portrait</span>
+                <span>Ảnh Chân Dung Khổ Dọc</span>
+              </h3>
+
+              <div class="border border-borderLine overflow-hidden bg-subtle h-60 flex items-center justify-center">
+                <img id="artisan-avatar-preview" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="Chân dung" class="w-full h-full object-cover">
+              </div>
+
+              <div>
+                <label class="block font-mono text-[10px] uppercase tracking-wider text-inkSecondary mb-1">
+                  URL Hình Ảnh
+                </label>
+                <input 
+                  type="text" 
+                  value="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
+                  onchange="updateImagePreview(this.value, 'artisan-avatar-preview')" 
+                  class="w-full px-2 py-1.5 bg-subtle/50 border border-borderLine font-mono text-[11px]"
+                >
+              </div>
+            </div>
+
+            <!-- Cấu hình Đón Khách Thăm Xưởng -->
+            <div class="bg-crisp border border-borderLine p-5 space-y-4">
+              <h3 class="font-heading text-[12px] uppercase tracking-wider text-ink font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-terracotta text-[18px]">event_available</span>
+                <span>Tiếp Đón Khách Thăm Xưởng</span>
+              </h3>
+
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked class="accent-terracotta">
+                <span class="font-sans text-[13px] font-semibold text-green-800">Mở Nhận Khách Đặt Lịch Ghé Thăm</span>
+              </label>
+
+              <div>
+                <label class="block font-mono text-[10px] uppercase tracking-wider text-inkSecondary mb-1">
+                  Số Khách Tối Đa / Lượt
+                </label>
+                <input type="number" value="15" class="w-full px-3 py-1.5 bg-subtle/50 border border-borderLine font-mono text-[12px]">
+              </div>
+
+              <div>
+                <label class="block font-mono text-[10px] uppercase tracking-wider text-inkSecondary mb-1">
+                  Địa Chỉ Nhà Xưởng Trưng Bày
+                </label>
+                <input type="text" value="Xóm 1, Làng Cổ Bát Tràng, Gia Lâm, Hà Nội" class="w-full px-3 py-1.5 bg-subtle/50 border border-borderLine font-sans text-[12px]">
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE-OVER DRAWER (XEM TRƯỚC TÁC PHẨM NHANH NHƯ KHÁCH XEM) -->
+  <!-- ========================================================================= -->
+  <div id="quick-preview-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <!-- Backdrop -->
+    <div onclick="closePreviewDrawer()" class="absolute inset-0 bg-ink/60 backdrop-blur-xs transition-opacity"></div>
+    
+    <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-crisp border-l border-borderLine shadow-2xl flex flex-col">
+        
+        <!-- Drawer Header -->
+        <div class="p-4 bg-subtle border-b border-borderLine flex items-center justify-between">
+          <div class="flex items-center gap-2 font-mono text-[11px] text-terracotta font-semibold uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[18px]">visibility</span>
+            <span>Xem Nhanh Bản Khách Xem</span>
+          </div>
+          <button onclick="closePreviewDrawer()" class="w-8 h-8 flex items-center justify-center hover:bg-crisp border border-transparent hover:border-borderLine cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+
+        <!-- Drawer Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4">
+          <div class="border border-borderLine overflow-hidden h-56 bg-subtle">
+            <img id="drawer-image" src="" class="w-full h-full object-cover">
+          </div>
+
+          <div>
+            <div class="font-mono text-[11px] text-terracotta font-semibold" id="drawer-sku">CR-BATTRANG-001</div>
+            <h3 class="font-serif text-xl font-bold text-ink mt-1" id="drawer-title">Tên tác phẩm</h3>
+            <div class="text-[12px] text-inkSecondary mt-0.5" id="drawer-subtitle">Làng nghề</div>
+          </div>
+
+          <div class="p-3 bg-subtle border border-borderLine">
+            <div class="font-mono text-[10px] uppercase text-inkMuted">Giá tham chiếu nghệ nhân</div>
+            <div class="font-serif text-xl font-bold text-terracotta mt-0.5" id="drawer-price">12.500.000 đ</div>
+          </div>
+
+          <div>
+            <div class="font-mono text-[10px] uppercase tracking-wider text-inkSecondary mb-1">Mô tả tóm lược:</div>
+            <p class="font-sans text-[13px] text-inkSecondary leading-relaxed" id="drawer-summary">
+              Nội dung tóm lược tác phẩm di sản...
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-borderLine flex items-center gap-2">
+            <button onclick="closePreviewDrawer(); openCraftEdit(1);" class="flex-1 py-2.5 bg-terracotta hover:bg-terracottaDark text-white font-heading text-[11px] uppercase tracking-wider font-semibold cursor-pointer">
+              ✏️ Mở Form Sửa Đầy Đủ
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL XÁC NHẬN XÓA (SAFE CONFIRMATION DIALOG) -->
+  <!-- ========================================================================= -->
+  <div id="delete-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <div onclick="closeDeleteModal()" class="absolute inset-0 bg-ink/60 backdrop-blur-xs"></div>
+    <div class="relative bg-crisp border border-borderLine max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 text-red-700">
+        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">warning</span>
+        </div>
+        <div>
+          <h3 class="font-serif text-lg font-bold text-ink">Xác Nhận Xóa Dữ Liệu Di Sản</h3>
+          <p class="font-mono text-[10px] text-inkMuted uppercase">Thao tác dành riêng cho Quản trị viên</p>
+        </div>
+      </div>
+
+      <p class="font-sans text-[13px] text-inkSecondary">
+        Bạn có chắc chắn muốn xóa mục <strong id="delete-item-name" class="text-ink">...</strong> không? Thao tác này sẽ xóa vĩnh viễn khỏi hệ thống CSDL và không thể hoàn tác.
+      </p>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-borderLine">
+        <button onclick="closeDeleteModal()" class="px-4 py-2 border border-borderLine bg-crisp hover:bg-subtle font-heading text-[11px] uppercase tracking-wider text-ink cursor-pointer">
+          Hủy Bỏ
+        </button>
+        <button onclick="executeDelete()" class="px-4 py-2 bg-red-700 hover:bg-red-800 text-white font-heading text-[11px] uppercase tracking-wider font-semibold cursor-pointer">
+          Xác Nhận Xóa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TOAST THÔNG BÁO TỔNG QUAN -->
+  <!-- ========================================================================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-ink text-white px-4 py-3 border-l-4 border-terracotta shadow-xl flex items-center gap-3 text-[13px] font-sans transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <span class="material-symbols-outlined text-terracotta text-[20px]">check_circle</span>
+    <span id="toast-message">Thông báo thành công</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CLIENT JAVASCRIPT ĐIỀU KHIỂN TƯƠNG TÁC PROTOTYPE -->
+  <!-- ========================================================================= -->
+  <script>
+    // 1. Chuyển đổi giữa các màn hình chính (Views)
+    function switchMainView(viewId) {
+      document.querySelectorAll('.main-view').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('bg-subtle', 'text-terracotta', 'border-terracotta');
+        el.classList.add('border-transparent');
+      });
+
+      if (viewId === 'crafts-list') {
+        document.getElementById('view-crafts-list').classList.remove('hidden');
+        const nav = document.getElementById('nav-crafts-list');
+        nav.classList.add('bg-subtle', 'text-terracotta', 'border-terracotta');
+        nav.classList.remove('border-transparent');
+      } else if (viewId === 'crafts-form-new') {
+        document.getElementById('view-crafts-form').classList.remove('hidden');
+        document.getElementById('form-craft-title').innerText = 'Thêm Tác Phẩm Di Sản Mới';
+        document.getElementById('form-craft-sku-breadcrumb').innerText = 'CR-NEW';
+        document.getElementById('craft-input-name').value = '';
+        document.getElementById('craft-input-sku').value = 'CR-AUTO-' + Math.floor(100 + Math.random() * 900);
+        document.getElementById('craft-input-slug').value = '';
+        const nav = document.getElementById('nav-crafts-create');
+        nav.classList.add('bg-subtle', 'text-terracotta', 'border-terracotta');
+        nav.classList.remove('border-transparent');
+      } else if (viewId === 'artisans-list') {
+        document.getElementById('view-artisans-list').classList.remove('hidden');
+        const nav = document.getElementById('nav-artisans-list');
+        nav.classList.add('bg-subtle', 'text-terracotta', 'border-terracotta');
+        nav.classList.remove('border-transparent');
+      } else if (viewId === 'artisans-form-new') {
+        document.getElementById('view-artisans-form').classList.remove('hidden');
+        document.getElementById('form-artisan-title').innerText = 'Thêm Hồ Sơ Bậc Thầy Mới';
+        document.getElementById('form-artisan-code-breadcrumb').innerText = 'ART-NEW';
+        document.getElementById('artisan-input-name').value = '';
+        document.getElementById('artisan-input-code').value = 'ART-AUTO-' + Math.floor(10 + Math.random() * 90);
+        const nav = document.getElementById('nav-artisans-create');
+        nav.classList.add('bg-subtle', 'text-terracotta', 'border-terracotta');
+        nav.classList.remove('border-transparent');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 2. Mở form chỉnh sửa sản phẩm cụ thể
+    function openCraftEdit(craftId) {
+      document.querySelectorAll('.main-view').forEach(el => el.classList.add('hidden'));
+      document.getElementById('view-crafts-form').classList.remove('hidden');
+      
+      if (craftId === 1) {
+        document.getElementById('form-craft-title').innerText = 'Chỉnh Sửa: Bình Gốm Men Rạn Cổ Hoa Sen';
+        document.getElementById('form-craft-sku-breadcrumb').innerText = 'CR-BATTRANG-001';
+        document.getElementById('craft-input-name').value = 'Bình Gốm Men Rạn Cổ Hoa Sen';
+        document.getElementById('craft-input-sku').value = 'CR-BATTRANG-001';
+        document.getElementById('craft-input-slug').value = 'binh-gom-men-ran-co-hoa-sen';
+      } else if (craftId === 2) {
+        document.getElementById('form-craft-title').innerText = 'Chỉnh Sửa: Khăn Lụa Sa Tơ Tằm Cung Đình';
+        document.getElementById('form-craft-sku-breadcrumb').innerText = 'CR-VANPHUC-004';
+        document.getElementById('craft-input-name').value = 'Khăn Lụa Sa Tơ Tằm Cung Đình';
+        document.getElementById('craft-input-sku').value = 'CR-VANPHUC-004';
+        document.getElementById('craft-input-slug').value = 'khan-lua-sa-to-tam-cung-dinh';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 3. Mở form chỉnh sửa nghệ nhân
+    function openArtisanEdit(artisanId) {
+      document.querySelectorAll('.main-view').forEach(el => el.classList.add('hidden'));
+      document.getElementById('view-artisans-form').classList.remove('hidden');
+      
+      if (artisanId === 1) {
+        document.getElementById('form-artisan-title').innerText = 'Hồ Sơ Nghệ Nhân: Trần Độ';
+        document.getElementById('form-artisan-code-breadcrumb').innerText = 'ART-BATTRANG-01';
+        document.getElementById('artisan-input-name').value = 'Trần Độ';
+        document.getElementById('artisan-input-code').value = 'ART-BATTRANG-01';
+      } else {
+        document.getElementById('form-artisan-title').innerText = 'Hồ Sơ Nghệ Nhân: Triệu Văn Mão';
+        document.getElementById('form-artisan-code-breadcrumb').innerText = 'ART-VANPHUC-02';
+        document.getElementById('artisan-input-name').value = 'Triệu Văn Mão';
+        document.getElementById('artisan-input-code').value = 'ART-VANPHUC-02';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 4. Tab nội bộ của Form Sản phẩm
+    function switchCraftTab(tabId) {
+      document.querySelectorAll('.craft-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.craft-tab-content').forEach(c => c.classList.add('hidden'));
+
+      if (tabId === 'tab-general') {
+        document.getElementById('craft-tab-general').classList.remove('hidden');
+        event.target.classList.add('active');
+      } else if (tabId === 'tab-specs') {
+        document.getElementById('craft-tab-specs').classList.remove('hidden');
+        event.target.classList.add('active');
+      } else if (tabId === 'tab-media') {
+        document.getElementById('craft-tab-media').classList.remove('hidden');
+        event.target.classList.add('active');
+      }
+    }
+
+    // 5. Drawer Xem Trước Nhanh (Preview Slide-Over)
+    function previewCraftDrawer(craftId) {
+      const drawer = document.getElementById('quick-preview-drawer');
+      const img = document.getElementById('drawer-image');
+      const title = document.getElementById('drawer-title');
+      const sku = document.getElementById('drawer-sku');
+      const subtitle = document.getElementById('drawer-subtitle');
+      const price = document.getElementById('drawer-price');
+      const summary = document.getElementById('drawer-summary');
+
+      if (craftId === 1) {
+        img.src = 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80';
+        title.innerText = 'Bình Gốm Men Rạn Cổ Hoa Sen';
+        sku.innerText = 'CR-BATTRANG-001';
+        subtitle.innerText = 'Gốm Sứ Truyền Thống · Làng Gốm Bát Tràng (Hà Nội)';
+        price.innerText = '12.500.000 đ';
+        summary.innerText = 'Tác phẩm tái hiện kỹ pháp nung men rạn thế kỷ XVI với cốt đất sét sông Hồng dẻo mịn kết hợp bài men tam thái quý hiếm.';
+      } else if (craftId === 2) {
+        img.src = 'https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?auto=format&fit=crop&w=600&q=80';
+        title.innerText = 'Khăn Lụa Sa Tơ Tằm Cung Đình';
+        sku.innerText = 'CR-VANPHUC-004';
+        subtitle.innerText = 'Dệt May & Thổ Cẩm · Làng Lụa Vạn Phúc (Hà Đông)';
+        price.innerText = '2.800.000 đ';
+        summary.innerText = 'Chắt lọc từ những nong tằm kén vàng truyền thống, dệt thủ công tạo hoa văn vân mây bồng bềnh.';
+      } else {
+        img.src = 'https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=600&q=80';
+        title.innerText = 'Đĩa Bạc Mỹ Nghệ Chạm Tứ Linh';
+        sku.innerText = 'CR-DONGXAM-002';
+        subtitle.innerText = 'Đúc Đồng & Kim Hoàn · Làng Chạm Bạc Đồng Xâm';
+        price.innerText = '18.000.000 đ';
+        summary.innerText = 'Kỹ thuật thúc nổi thủ công hàng vạn nhát búa trên tấm bạc nguyên khối tạo hình Long Lân Quy Phụng.';
+      }
+
+      drawer.classList.remove('hidden');
+    }
+
+    function closePreviewDrawer() {
+      document.getElementById('quick-preview-drawer').classList.add('hidden');
+    }
+
+    // 6. Lọc và Tìm kiếm Realtime trên bảng
+    function filterCraftTable() {
+      const q = document.getElementById('craft-search-input').value.toLowerCase().trim();
+      const region = document.getElementById('craft-filter-region').value;
+      const cat = document.getElementById('craft-filter-cat').value;
+      const status = document.getElementById('craft-filter-status').value;
+
+      const rows = document.querySelectorAll('.craft-row');
+      rows.forEach(row => {
+        const name = (row.dataset.name || '').toLowerCase();
+        const sku = (row.dataset.sku || '').toLowerCase();
+        const rowRegion = row.dataset.region || '';
+        const rowCat = row.dataset.cat || '';
+        const rowStatus = row.dataset.status || '';
+        const rowSpotlight = row.dataset.spotlight === 'true';
+
+        const matchQ = !q || name.includes(q) || sku.includes(q);
+        const matchRegion = !region || rowRegion === region;
+        const matchCat = !cat || rowCat === cat;
+        let matchStatus = true;
+        if (status === 'spotlight') matchStatus = rowSpotlight;
+        else if (status) matchStatus = (rowStatus === status);
+
+        if (matchQ && matchRegion && matchCat && matchStatus) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // 7. Checkbox hàng loạt (Batch Selection)
+    function toggleSelectAllCrafts(master) {
+      document.querySelectorAll('.craft-check').forEach(ck => {
+        ck.checked = master.checked;
+      });
+      updateBatchBar();
+    }
+
+    function updateBatchBar() {
+      const selected = document.querySelectorAll('.craft-check:checked').length;
+      const bar = document.getElementById('batch-action-bar');
+      const countEl = document.getElementById('selected-count');
+      countEl.innerText = selected;
+      if (selected > 0) {
+        bar.classList.remove('hidden');
+      } else {
+        bar.classList.add('hidden');
+      }
+    }
+
+    function batchAction(actionType) {
+      const selected = document.querySelectorAll('.craft-check:checked').length;
+      if (actionType === 'publish') {
+        showToast(`✅ Đã xuất bản công khai ${selected} mục tác phẩm.`);
+      } else if (actionType === 'draft') {
+        showToast(`📝 Đã chuyển ${selected} mục tác phẩm về trạng thái nháp.`);
+      } else if (actionType === 'delete') {
+        showToast(`🗑️ Đã xóa an toàn ${selected} mục di sản khỏi CSDL.`);
+      }
+      document.getElementById('check-all-crafts').checked = false;
+      toggleSelectAllCrafts({ checked: false });
+    }
+
+    // 8. Modal Xác Nhận Xóa
+    let currentDeleteTarget = null;
+    function confirmDelete(type, id, name) {
+      currentDeleteTarget = { type, id, name };
+      document.getElementById('delete-item-name').innerText = `"${name}"`;
+      document.getElementById('delete-modal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.add('hidden');
+      currentDeleteTarget = null;
+    }
+
+    function executeDelete() {
+      if (currentDeleteTarget) {
+        showToast(`🗑️ Đã xóa thành công ${currentDeleteTarget.name}!`);
+        closeDeleteModal();
+      }
+    }
+
+    // 9. Lưu dữ liệu form mẫu
+    function saveCraftForm() {
+      const name = document.getElementById('craft-input-name').value;
+      showToast(`💾 Đã lưu tác phẩm di sản: "${name || 'Mới'}" thành công!`);
+      setTimeout(() => switchMainView('crafts-list'), 700);
+    }
+
+    function saveArtisanForm() {
+      const name = document.getElementById('artisan-input-name').value;
+      showToast(`💾 Đã lưu hồ sơ bậc thầy: "${name || 'Mới'}" thành công!`);
+      setTimeout(() => switchMainView('artisans-list'), 700);
+    }
+
+    // 10. Toast Feedback
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3000);
+    }
+
+    // 11. Cập nhật preview ảnh URL
+    function updateImagePreview(url, previewImgId) {
+      if (url) {
+        document.getElementById(previewImgId).src = url;
+      }
+    }
+
+    // Khởi tạo mặc định
+    document.addEventListener('DOMContentLoaded', () => {
+      switchMainView('crafts-list');
+    });
+  </script>
+</body>
+</html>

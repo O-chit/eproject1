@@ -202,4 +202,21 @@ Vui lòng tham khảo thư viện tài liệu tại thư mục [`docs/`](file://
    - Bản đồ GIS 2D nghiêm ngặt MapLibre GL cô lập lãnh thổ Việt Nam trên nền tối sâu (`#0B0F19`), không hiển thị nước khác, bảo đảm chủ quyền toàn vẹn đất liền và hai quần đảo Hoàng Sa, Trường Sa.
    - Dữ liệu 7 phân vùng văn hóa làng nghề được hợp nhất (dissolved) ranh giới tỉnh, chỉ hiển thị ranh giới 7 vùng văn hóa với màu sắc nhận diện trực quan.
    - **Popup Trang Chi Tiết Vùng (`RegionDetailModal.jsx`)**: Thay thế side panel cố định, giúp bản đồ hiển thị 100% full-screen căn giữa cân đối. Khi người dùng bấm vào một vùng bất kỳ trên bản đồ, popup modal sẽ hiện ra với dải màu nhận diện vùng, chỉ số di sản (số tỉnh thành, số làng nghề tiêu biểu, bản sắc thủ công), danh sách làng nghề truyền thống có kỹ pháp và link xem tác phẩm, thẻ badge tất cả các tỉnh thành trực thuộc, cùng các nút điều hướng khám phá toàn bộ di sản vùng. Hỗ trợ đóng nhanh bằng phím `Escape` hoặc click backdrop.
+7. **Phân hệ Quản trị & Biên tập Di sản CMS (`/admin` - SEC 6.3 RBAC):**
+   - Không gian quản trị riêng biệt dành cho `admin` (Toàn quyền) và `editor` (Biên tập viên di sản), bảo vệ nghiêm ngặt qua `AdminRoute`.
+   - **Quản lý Sản phẩm Di sản (`/admin/crafts`)**: Bảng Sharp Linework, tìm kiếm realtime, bộ lọc đa diện (6 Vùng, Ngành nghề, Trạng thái), thao tác hàng loạt (Batch Publish/Draft/Delete), form thêm/sửa 2 cột với 3 tabs chuyên sâu (Thông tin & Bối cảnh, Kỹ pháp & Thông số, Thư viện ảnh & Quy trình nung đúc).
+   - **Quản lý Nghệ nhân Bậc thầy (`/admin/artisans`)**: Danh bạ bậc thầy, thống kê danh hiệu quốc gia, quản lý niên biểu sự nghiệp (milestones repeater), triết lý làm nghề, cấu hình đón khách thăm xưởng.
+   - **Phân quyền RBAC**: `admin` có quyền xoá vĩnh viễn (DELETE); `editor` chỉ có quyền xem, tạo mới và chỉnh sửa nội dung, nút xoá tự động ẩn.
+   - **Bản mẫu HTML Prototype**: Có sẵn tại `http://localhost:5173/admin-prototype.html` để kiểm thử tương tác nhanh.
+
+---
+
+## 7. Tài khoản thử nghiệm hệ thống (Test Credentials)
+
+| Vai trò | Email đăng nhập | Mật khẩu chung | Quyền hạn hệ thống |
+|---|---|---|---|
+| 👑 **Administrator** | `admin@craftroots.vn` | `Craft@1234` | Toàn quyền quản trị, thêm/sửa/xoá sản phẩm & nghệ nhân, duyệt xuất bản |
+| ✍️ **Editor** | `editor@craftroots.vn` | `Craft@1234` | Biên tập viên: Thêm mới, chỉnh sửa nội dung, cập nhật thông số (không được xoá) |
+| 👤 **User** | `user@craftroots.test` | `Craft@1234` | Người dùng khám phá: Đọc bài, lưu mục yêu thích, đặt lịch hẹn thăm xưởng |
+
 
