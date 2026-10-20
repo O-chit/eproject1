@@ -490,7 +490,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .animate-scaleUp {
   animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-
 /* ==========================================================================
    VIETNAMESE TYPOGRAPHY PRESERVATION & POPUP FONT STYLES
    Bảo đảm toàn bộ phông chữ popup, tooltip và nhãn bản đồ hiển thị tròn trịa,

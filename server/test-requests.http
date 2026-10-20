@@ -1,0 +1,172 @@
+### ==============================================================================
+### CRAFTROOTS RESTFUL API TEST REQUESTS (VS Code REST Client / Thunder Client)
+### Base URL: http://localhost:5000/api
+### ==============================================================================
+
+@baseUrl = http://localhost:5000/api
+
+### 1. HEALTH CHECK
+GET {{baseUrl}}/health
+Accept: application/json
+
+### ==============================================================================
+### 2. AUTHENTICATION (XÁC THỰC)
+### ==============================================================================
+
+### 2.1. Đăng ký tài khoản mới (POST /auth/register)
+# @name registerUser
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Nguyễn Văn An",
+  "email": "an.nguyen.test@example.com",
+  "password": "CraftRoots@2026"
+}
+
+### 2.2. Đăng nhập (POST /auth/login)
+# @name loginUser
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "an.nguyen.test@example.com",
+  "password": "CraftRoots@2026"
+}
+
+### Lưu token từ response đăng nhập vào biến (nếu dùng REST Client)
+@authToken = {{loginUser.response.body.token}}
+
+### 2.3. Lấy hồ sơ tài khoản hiện tại (GET /auth/me)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{authToken}}
+
+### 2.4. Đổi mật khẩu tài khoản (PUT /auth/change-password)
+PUT {{baseUrl}}/auth/change-password
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "CraftRoots@2026",
+  "newPassword": "CraftRoots@New2027"
+}
+
+### ==============================================================================
+### 3. CRAFTS (SẢN PHẨM THỦ CÔNG & BỘ LỌC ĐA CHIỀU)
+### ==============================================================================
+
+### 3.1. Danh sách sản phẩm (Có phân trang & sắp xếp)
+GET {{baseUrl}}/crafts?page=1&limit=6&sort=latest
+
+### 3.2. Tìm kiếm Full-Text Search sản phẩm
+GET {{baseUrl}}/crafts?q=Bát Tràng
+
+### 3.3. Lọc theo vùng miền & danh mục
+GET {{baseUrl}}/crafts?region=bac-bo&category=gom-su
+
+### 3.4. Xem chi tiết sản phẩm theo ID
+GET {{baseUrl}}/crafts/1
+
+### 3.5. Xem chi tiết sản phẩm theo Slug
+GET {{baseUrl}}/crafts/binh-gom-men-lam-bat-trang
+
+### 3.6. Lấy sản phẩm liên quan
+GET {{baseUrl}}/crafts/1/related
+
+### ==============================================================================
+### 4. ARTISANS (HỒ SƠ NGHỆ NHÂN N-N)
+### ==============================================================================
+
+### 4.1. Danh sách tất cả nghệ nhân
+GET {{baseUrl}}/artisans
+
+### 4.2. Chi tiết nghệ nhân kèm tác phẩm đồng chế tác (N-N)
+GET {{baseUrl}}/artisans/1
+
+### ==============================================================================
+### 5. REGIONS (VÙNG MIỀN & BẢN ĐỒ VĂN HÓA)
+### ==============================================================================
+
+### 5.1. Danh sách các vùng miền
+GET {{baseUrl}}/regions
+
+### 5.2. Danh sách sản phẩm theo vùng miền
+GET {{baseUrl}}/regions/1/crafts
+
+### ==============================================================================
+### 6. METADATA (DANH MỤC, CHẤT LIỆU, KỸ THUẬT CHO FILTER)
+### ==============================================================================
+
+### 6.1. Danh sách danh mục nghề
+GET {{baseUrl}}/categories
+
+### 6.2. Danh sách chất liệu chế tác
+GET {{baseUrl}}/materials
+
+### 6.3. Danh sách kỹ thuật chế tác
+GET {{baseUrl}}/techniques
+
+### ==============================================================================
+### 7. COLLECTIONS (BỘ SƯU TẬP CHUYÊN ĐỀ)
+### ==============================================================================
+
+### 7.1. Danh sách bộ sưu tập chuyên đề
+GET {{baseUrl}}/collections
+
+### ==============================================================================
+### 8. SEASONAL COLLECTIONS (BỘ SƯU TẬP 4 MÙA)
+### ==============================================================================
+
+### 8.1. Danh sách BST theo 4 mùa
+GET {{baseUrl}}/seasonal-collections
+
+### 8.2. Chi tiết BST mùa kèm tác phẩm Hero & Curated
+GET {{baseUrl}}/seasonal-collections/1
+
+### ==============================================================================
+### 9. GALLERY (THƯ VIỆN ẢNH LIGHTBOX)
+### ==============================================================================
+
+### 9.1. Lấy ảnh thư viện Lightbox (Phân trang)
+GET {{baseUrl}}/gallery?page=1&limit=12
+
+### ==============================================================================
+### 10. FAVOURITES (YÊU THÍCH & HYBRID SYNC)
+### ==============================================================================
+
+### 10.1. Lấy danh sách sản phẩm yêu thích của user
+GET {{baseUrl}}/favourites
+Authorization: Bearer {{authToken}}
+
+### 10.2. Thêm 1 sản phẩm vào yêu thích
+POST {{baseUrl}}/favourites/1
+Authorization: Bearer {{authToken}}
+
+### 10.3. Xóa 1 sản phẩm khỏi yêu thích
+DELETE {{baseUrl}}/favourites/1
+Authorization: Bearer {{authToken}}
+
+### 10.4. Đồng bộ mảng sản phẩm từ LocalStorage sau khi đăng nhập (Hybrid Sync)
+POST {{baseUrl}}/favourites/sync
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "craftIds": [1, 2, 3]
+}
+
+### ==============================================================================
+### 11. CONTACT (BIỂU MẪU LIÊN HỆ & GÓP Ý)
+### ==============================================================================
+
+### 11.1. Gửi tin nhắn liên hệ
+POST {{baseUrl}}/contact
+Content-Type: application/json
+
+{
+  "fullName": "Lê Hoàng Nam",
+  "email": "nam.le@example.com",
+  "phone": "0912345678",
+  "subject": "Tìm hiểu về làng gốm Bát Tràng",
+  "message": "Tôi muốn liên hệ để tham quan và đặt làm sản phẩm riêng cho sự kiện."
+}

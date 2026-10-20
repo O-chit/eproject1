@@ -99,7 +99,6 @@ export const api = {
   register: (payload) => request('/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
   getMe: () => request('/auth/me'),
   changePassword: (payload) => request('/auth/change-password', { method: 'PUT', body: JSON.stringify(payload) }),
-
   // Phân hệ AI Chatbot (Ollama Local)
   chatAi: (payload) => request('/ai/chat', { method: 'POST', body: JSON.stringify(payload) }),
   getAiHistory: (sessionId) => request(`/ai/sessions/${sessionId}/history`),

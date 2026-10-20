@@ -12,7 +12,8 @@
     "server:start": "node server/src/server.js",
     "api:test": "node server/src/test-api.js",
     "db:test": "node server/src/test-db.js",
-    "db:setup": "node server/src/scripts/setup-db.js",
+    "db:setup": "node server/src/db-init.js",
+    "db:setup:script": "node server/src/scripts/setup-db.js",
     "db:init": "psql -U postgres -d craftroots -f db/schema.sql",
     "db:seed": "psql -U postgres -d craftroots -f db/seed.sql"
   },

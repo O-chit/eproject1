@@ -13,6 +13,8 @@ const favouriteRoutes = require('./favourite.routes');
 const contactRoutes = require('./contact.routes');
 const bookingRoutes = require('./booking.routes');
 const newsletterRoutes = require('./newsletter.routes');
+const homeRoutes = require('./home.routes');
+const searchRoutes = require('./search.routes');
 const aiRoutes = require('./ai.routes');
 const homeController = require('../controllers/home.controller');
 
@@ -27,9 +29,9 @@ router.get('/health', (req, res) => {
 });
 
 // Home, Stats & Search Endpoints
-router.get('/home', homeController.getHome);
+router.use('/home', homeRoutes);
 router.get('/stats', homeController.getStats);
-router.get('/search', homeController.search);
+router.use('/search', searchRoutes);
 
 // Gắn các phân hệ routes theo OpenAPI 3.0.3 Contract
 router.use('/auth', authRoutes);

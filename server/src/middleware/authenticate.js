@@ -1,4 +1,4 @@
-const { verifyToken } = require('../utils/jwt');
+const { verifyToken } = require('../utils/token');
 const { error } = require('../utils/response');
 const db = require('../config/db');
 
@@ -18,9 +18,10 @@ const authenticate = async (req, res, next) => {
     const decoded = verifyToken(token);
     
     // Kiểm tra xem người dùng có còn tồn tại và active trong DB không
+    const userId = decoded.id || decoded.sub;
     const userResult = await db.query(
       'SELECT id, full_name, email, role, avatar_url, is_active FROM users WHERE id = $1',
-      [decoded.id]
+      [userId]
     );
 
     if (userResult.rowCount === 0 || !userResult.rows[0].is_active) {

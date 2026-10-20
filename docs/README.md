@@ -5,17 +5,16 @@ CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thôn
 > Dự án thuộc chương trình **eProject – Aptech Computer Education**, xây dựng dưới dạng ứng dụng một trang (SPA) responsive bám sát 9 mẫu thiết kế trực quan Stitch, có hỗ trợ xác thực người dùng an toàn.
 >
 > 📚 **Bộ tài liệu đặc tả kỹ thuật chi tiết:**
-> - [DECISIONS.md](file:///e:/eproject1/docs/DECISIONS.md): Nhật ký quyết định kiến trúc & đối soát 9 trang Stitch.
-> - [DESIGN.md](file:///e:/eproject1/docs/DESIGN.md): Hệ thống thiết kế CraftRoots & đặc tả component **Artisan Detail Popup Modal**.
-> - [feature-spec.md](file:///e:/eproject1/docs/feature-spec.md): Mô tả nghiệp vụ v1.1.0, user flows, business rules (BR-01 đến BR-15).
-> - [architecture.md](file:///e:/eproject1/docs/architecture.md): Các module và cách chúng giao tiếp, sơ đồ tuần tự v1.1.0.
-> - [database-schema.md](file:///e:/eproject1/docs/database-schema.md): 22 bảng, quan hệ N-N và kịch bản migration.
-> - [data.md](file:///e:/eproject1/docs/data.md): Từ điển dữ liệu toàn diện 22 bảng & DDL.
-> - [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml): OpenAPI 3.0.3 v1.1.0 đặc tả đầy đủ request/response.
-> - [task-breakdown.md](file:///c:/Users/admin/OneDrive/Desktop/aptech/eproject/eproject1/docs/task-breakdown.md): WBS theo Phases 0 – 8, phân công, phụ thuộc và acceptance criteria.
-> - [test-plan.md](file:///c:/Users/admin/OneDrive/Desktop/aptech/eproject/eproject1/docs/test-plan.md): Kế hoạch và 10 luồng kiểm thử chi tiết v1.1.0.
-> - [ai-chatbot.md](file:///c:/Users/admin/OneDrive/Desktop/aptech/eproject/eproject1/docs/ai-chatbot.md): Đặc tả phân hệ Trợ lý Di sản AI (CraftRoots AI Heritage Concierge), kiến trúc Tool Calling & hướng dẫn tích hợp.
-> - [api-testing-cheatsheet.md](file:///c:/Users/admin/OneDrive/Desktop/aptech/eproject/eproject1/docs/api-testing-cheatsheet.md): Sổ tay tổng hợp & lệnh kiểm thử nhanh toàn bộ 42 REST API Endpoints.
+> - [DOCUMENTATION_GUIDE.md](./DOCUMENTATION_GUIDE.md): **Sổ tay hướng dẫn xây dựng & vận hành thư mục docs cho mọi dự án.**
+> - [DECISIONS.md](./DECISIONS.md): Nhật ký quyết định kiến trúc & đối soát 9 trang Stitch.
+> - [DESIGN.md](./DESIGN.md): Hệ thống thiết kế CraftRoots & đặc tả component **Artisan Detail Popup Modal**.
+> - [feature-spec.md](./feature-spec.md): Mô tả nghiệp vụ v1.1.0, user flows, business rules (BR-01 đến BR-15).
+> - [architecture.md](./architecture.md): Các module và cách chúng giao tiếp, sơ đồ tuần tự v1.1.0.
+> - [database-schema.md](./database-schema.md): 22 bảng, quan hệ N-N và kịch bản migration.
+> - [data.md](./data.md): Từ điển dữ liệu toàn diện 22 bảng & DDL.
+> - [api-contract.yaml](./api-contract.yaml): OpenAPI 3.0.3 v1.1.0 đặc tả đầy đủ request/response.
+> - [task-breakdown.md](./task-breakdown.md): WBS theo Phases 0 – 8, phân công, phụ thuộc và acceptance criteria.
+> - [test-plan.md](./test-plan.md): Kế hoạch và 10 luồng kiểm thử chi tiết v1.1.0.
 
 ---
 
