@@ -147,6 +147,20 @@ export default function Navbar() {
 
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
+<<<<<<< HEAD
+=======
+                {(user?.role === 'admin' || user?.role === 'editor') && (
+                  <Link
+                    to="/admin/crafts"
+                    id="navbar-admin-cms-btn"
+                    className="h-9 px-2.5 border border-accent-terracotta bg-surface-crisp hover:bg-accent-terracotta hover:text-white text-accent-terracotta transition-all flex items-center gap-1.5 text-[11px] font-spec-code uppercase tracking-wider font-semibold cursor-pointer shadow-xs"
+                    title="Truy cập Hệ thống Quản trị & Biên tập Di sản (CMS)"
+                  >
+                    <span className="material-symbols-outlined text-[17px]">admin_panel_settings</span>
+                    <span className="hidden md:inline">{user?.role === 'admin' ? 'Quản Trị CMS' : 'Biên Tập CMS'}</span>
+                  </Link>
+                )}
+>>>>>>> main
                 <Link
                   to="/profile"
                   id="navbar-user-profile-btn"
@@ -260,7 +274,32 @@ export default function Navbar() {
 
             {/* Khối Hồ sơ người dùng trong thanh dọc */}
             {isAuthenticated ? (
+<<<<<<< HEAD
               <div className="mb-5 p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between gap-3">
+=======
+              <div className="space-y-2 mb-5">
+                {(user?.role === 'admin' || user?.role === 'editor') && (
+                  <div className="p-3 bg-surface-crisp border border-accent-terracotta flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[20px] text-accent-terracotta">admin_panel_settings</span>
+                      <div>
+                        <div className="font-['Montserrat'] font-semibold text-[12px] text-text-primary">
+                          {user?.role === 'admin' ? 'Quản Trị Hệ Thống' : 'Biên Tập Di Sản'}
+                        </div>
+                        <div className="font-spec-code text-[10px] text-accent-terracotta">SEC 6.3 Admin CMS Portal</div>
+                      </div>
+                    </div>
+                    <Link
+                      to="/admin/crafts"
+                      onClick={closeMenu}
+                      className="px-2.5 py-1 bg-accent-terracotta text-white font-spec-code text-[10px] uppercase font-semibold hover:bg-[#8E4A16] transition-colors"
+                    >
+                      Vào CMS →
+                    </Link>
+                  </div>
+                )}
+                <div className="p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between gap-3">
+>>>>>>> main
                 <Link
                   to="/profile"
                   onClick={closeMenu}
@@ -292,6 +331,10 @@ export default function Navbar() {
                   <span className="material-symbols-outlined text-[16px]">logout</span>
                 </button>
               </div>
+<<<<<<< HEAD
+=======
+            </div>
+>>>>>>> main
             ) : (
               <div className="mb-5 p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between">
                 <div className="flex flex-col">
