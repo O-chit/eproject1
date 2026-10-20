@@ -13,6 +13,7 @@ const favouriteRoutes = require('./favourite.routes');
 const contactRoutes = require('./contact.routes');
 const bookingRoutes = require('./booking.routes');
 const newsletterRoutes = require('./newsletter.routes');
+const aiRoutes = require('./ai.routes');
 const homeController = require('../controllers/home.controller');
 
 // Health check endpoint
@@ -43,5 +44,6 @@ router.use('/favourites', favouriteRoutes);
 router.use('/visit-bookings', bookingRoutes);
 router.use('/newsletter', newsletterRoutes);
 router.use('/contact', contactRoutes);
+router.use('/ai', aiRoutes);
 
 module.exports = router;

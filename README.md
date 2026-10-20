@@ -80,6 +80,8 @@ eproject1/
 │   ├── api-contract.yaml        # Đặc tả OpenAPI 3.0.3 v1.1.0 (REST API)
 │   ├── task-breakdown.md        # Phân rã công việc WBS Phases 0 – 8
 │   ├── test-plan.md             # Kế hoạch & 10 kịch bản kiểm thử chi tiết v1.1.0
+│   ├── ai-chatbot.md            # Đặc tả & hướng dẫn tích hợp AI Chatbot (Heritage Concierge)
+│   ├── api-testing-cheatsheet.md # Sổ tay tổng hợp & lệnh kiểm thử nhanh toàn bộ 42 REST API
 │   └── design/                  # 9 bản thiết kế HTML / Stitch tham chiếu
 │
 ├── package.json                 # Quản lý scripts khởi chạy & dependencies chung tại root
