@@ -12,8 +12,10 @@ CraftRoots là cổng thông tin số (craft discovery portal) tập hợp thôn
 > - [database-schema.md](file:///e:/eproject1/docs/database-schema.md): 22 bảng, quan hệ N-N và kịch bản migration.
 > - [data.md](file:///e:/eproject1/docs/data.md): Từ điển dữ liệu toàn diện 22 bảng & DDL.
 > - [api-contract.yaml](file:///e:/eproject1/docs/api-contract.yaml): OpenAPI 3.0.3 v1.1.0 đặc tả đầy đủ request/response.
-> - [task-breakdown.md](file:///e:/eproject1/docs/task-breakdown.md): WBS theo Phases 0 – 8, phân công, phụ thuộc và acceptance criteria.
-> - [test-plan.md](file:///e:/eproject1/docs/test-plan.md): Kế hoạch và 10 luồng kiểm thử chi tiết v1.1.0.
+> - [task-breakdown.md](file:///c:/Users/admin/OneDrive/Desktop/aptech/eproject/eproject1/docs/task-breakdown.md): WBS theo Phases 0 – 8, phân công, phụ thuộc và acceptance criteria.
+> - [test-plan.md](file:///c:/Users/admin/OneDrive/Desktop/aptech/eproject/eproject1/docs/test-plan.md): Kế hoạch và 10 luồng kiểm thử chi tiết v1.1.0.
+> - [ai-chatbot.md](file:///c:/Users/admin/OneDrive/Desktop/aptech/eproject/eproject1/docs/ai-chatbot.md): Đặc tả phân hệ Trợ lý Di sản AI (CraftRoots AI Heritage Concierge), kiến trúc Tool Calling & hướng dẫn tích hợp.
+> - [api-testing-cheatsheet.md](file:///c:/Users/admin/OneDrive/Desktop/aptech/eproject/eproject1/docs/api-testing-cheatsheet.md): Sổ tay tổng hợp & lệnh kiểm thử nhanh toàn bộ 42 REST API Endpoints.
 
 ---
 

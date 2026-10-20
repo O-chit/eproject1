@@ -296,7 +296,9 @@ CREATE TABLE contact_messages (
     subject    VARCHAR(200),
     message    TEXT NOT NULL,
     status     VARCHAR(30) NOT NULL DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'replied')),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    admin_notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- 20. Bảng VISIT_BOOKINGS (Phiếu đăng ký hẹn thăm xưởng)
