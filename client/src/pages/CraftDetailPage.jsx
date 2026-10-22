@@ -351,8 +351,8 @@ export default function CraftDetailPage() {
 
       {/* Related Works Section: Tác Phẩm Cùng Nghệ Nhân */}
       <section className="w-full bg-surface-container-low py-space-xl">
-        <div className="max-w-7xl mx-auto px-margin">
-          <div className="flex flex-col md:flex-row md:items-end justify-between pb-space-lg border-b border-border-neutral mb-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-margin">
+          <div className="flex flex-col md:flex-row md:items-end justify-between pb-4 md:pb-space-lg border-b border-border-neutral mb-6 md:mb-8 gap-2">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-4 h-[1px] bg-accent-terracotta"></span>
@@ -360,7 +360,7 @@ export default function CraftDetailPage() {
                   Tuyển Tập Tác Phẩm
                 </span>
               </div>
-              <h3 className="font-headline-title text-[24px] sm:text-[26px] text-text-primary tracking-tight font-medium uppercase">
+              <h3 className="font-headline-title text-[20px] sm:text-[24px] md:text-[26px] text-text-primary tracking-tight font-medium uppercase">
                 Tác Phẩm Cùng Nghệ Nhân {leadArtisan.name} <span className="opacity-35 select-none font-light">|</span> {craft?.region?.name || 'Di sản làng nghề'}
               </h3>
             </div>
@@ -374,42 +374,44 @@ export default function CraftDetailPage() {
               Đang tổng hợp các tác phẩm liên quan từ cùng nghệ nhân...
             </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-gutter">
               {relatedList.map((work) => (
-                <article key={work.id} className="bg-surface-crisp border border-border-neutral transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-md flex flex-col group">
-                  <div className="relative w-full aspect-[4/5] bg-surface-subtle overflow-hidden">
+                <article key={work.id} className="bg-surface-crisp border border-border-neutral transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-md flex flex-col justify-between group">
+                  <div className="relative w-full aspect-square md:aspect-[4/5] bg-surface-subtle overflow-hidden">
                     <img
                       src={work.thumbnailUrl || work.image || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80'}
                       alt={work.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
                     />
-                    <span className="absolute top-3 left-3 bg-text-primary text-surface-crisp px-2.5 py-0.5 font-spec-code text-[10px] uppercase tracking-[0.15em]">
+                    {/* Ẩn mã sản phẩm trên mobile để tối ưu khung hình */}
+                    <span className="hidden md:inline-block absolute top-3 left-3 bg-text-primary text-surface-crisp px-2.5 py-0.5 font-spec-code text-[10px] uppercase tracking-[0.15em]">
                       Mã: {work.slug || `CR-0${work.id}`}
                     </span>
                   </div>
-                  <div className="p-space-lg flex-1 flex flex-col justify-between">
+                  <div className="p-3 sm:p-4 md:p-space-lg flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.1em] mb-1">
-                        <span>{work.category || 'Thủ công'}</span>
-                        <span className="mx-2 opacity-35">|</span>
-                        <span>{work.region || 'Việt Nam'}</span>
+                      {/* Nhãn xuất xứ đơn giản hóa, không lặp */}
+                      <div className="flex items-center font-spec-code text-[10px] md:text-spec-code text-accent-terracotta uppercase tracking-[0.1em] mb-1 truncate">
+                        <span className="truncate">{work.region || work.category || 'Di sản làng nghề'}</span>
                       </div>
-                      <h4 className="font-title-card text-title-card text-text-primary font-semibold mb-2 group-hover:text-accent-terracotta transition-colors">
-                        {work.name}
+                      <h4 className="font-title-card text-[15px] sm:text-[16px] md:text-title-card text-text-primary font-semibold mb-1 md:mb-2 group-hover:text-accent-terracotta transition-colors line-clamp-2 leading-snug">
+                        <Link to={`/crafts/${work.id}`}>{work.name}</Link>
                       </h4>
-                      <p className="font-body-spec text-body-spec text-text-secondary line-clamp-2 leading-relaxed">
+                      {/* Ẩn mô tả dài trên màn hình di động */}
+                      <p className="hidden md:block font-body-spec text-body-spec text-text-secondary line-clamp-2 leading-relaxed mb-2">
                         {work.shortDescription || work.description || 'Tác phẩm chế tác thủ công tinh xảo.'}
                       </p>
                     </div>
-                    <div className="pt-space-md mt-space-sm border-t border-border-neutral flex items-center justify-between">
-                      <span className="font-headline-title text-[18px] text-text-primary font-semibold">
+                    <div className="pt-2 md:pt-space-md mt-1 md:mt-space-sm border-t border-border-neutral flex items-center justify-between gap-1">
+                      <span className="font-headline-title text-[13px] sm:text-[14px] md:text-[18px] text-text-primary font-semibold truncate">
                         {work.price || 'Giá liên hệ'}
                       </span>
                       <Link
                         to={`/crafts/${work.id}`}
-                        className="font-label-action text-label-action uppercase tracking-[0.15em] text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold"
+                        className="font-label-action text-[9px] sm:text-[10px] md:text-label-action uppercase tracking-[0.1em] md:tracking-[0.15em] text-accent-terracotta hover:underline inline-flex items-center gap-0.5 font-semibold shrink-0"
                       >
-                        XEM CHI TIẾT →
+                        <span className="hidden sm:inline">XEM </span>CHI TIẾT →
                       </Link>
                     </div>
                   </div>

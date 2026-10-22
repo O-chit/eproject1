@@ -147,8 +147,6 @@ export default function Navbar() {
 
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
-<<<<<<< HEAD
-=======
                 {(user?.role === 'admin' || user?.role === 'editor') && (
                   <Link
                     to="/admin/crafts"
@@ -160,7 +158,6 @@ export default function Navbar() {
                     <span className="hidden md:inline">{user?.role === 'admin' ? 'Quản Trị CMS' : 'Biên Tập CMS'}</span>
                   </Link>
                 )}
->>>>>>> main
                 <Link
                   to="/profile"
                   id="navbar-user-profile-btn"
@@ -177,7 +174,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={logout}
-                  className="w-9 h-9 border border-border-neutral bg-surface-crisp flex items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors cursor-pointer"
+                  className="hidden md:flex w-9 h-9 border border-border-neutral bg-surface-crisp items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors cursor-pointer"
                   title="Đăng xuất"
                 >
                   <span className="material-symbols-outlined text-[18px]">logout</span>
@@ -197,8 +194,8 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Thanh tìm kiếm thu nhỏ cho màn hình di động */}
-        <div className="md:hidden px-margin pb-3 pt-1 border-t border-border-neutral/60 bg-canvas-linen">
+        {/* Thanh tìm kiếm thu nhỏ cho màn hình di động đồng bộ lề 16px (px-4) */}
+        <div className="md:hidden px-4 pb-3 pt-1 border-t border-border-neutral/60 bg-canvas-linen">
           <form onSubmit={handleSearchSubmit} className="relative flex items-center">
             <span className="material-symbols-outlined absolute left-3 text-text-secondary text-[18px]">
               search
@@ -274,9 +271,6 @@ export default function Navbar() {
 
             {/* Khối Hồ sơ người dùng trong thanh dọc */}
             {isAuthenticated ? (
-<<<<<<< HEAD
-              <div className="mb-5 p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between gap-3">
-=======
               <div className="space-y-2 mb-5">
                 {(user?.role === 'admin' || user?.role === 'editor') && (
                   <div className="p-3 bg-surface-crisp border border-accent-terracotta flex items-center justify-between">
@@ -299,7 +293,6 @@ export default function Navbar() {
                   </div>
                 )}
                 <div className="p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between gap-3">
->>>>>>> main
                 <Link
                   to="/profile"
                   onClick={closeMenu}
@@ -331,10 +324,7 @@ export default function Navbar() {
                   <span className="material-symbols-outlined text-[16px]">logout</span>
                 </button>
               </div>
-<<<<<<< HEAD
-=======
-            </div>
->>>>>>> main
+              </div>
             ) : (
               <div className="mb-5 p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between">
                 <div className="flex flex-col">
@@ -574,6 +564,27 @@ export default function Navbar() {
                     Cá Nhân
                   </span>
                 </NavLink>
+
+                {isAuthenticated && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      closeMenu();
+                    }}
+                    className="w-full text-left px-3 py-2 text-text-secondary hover:text-error hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 border-transparent cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <span className="material-symbols-outlined text-[18px] text-error">
+                        logout
+                      </span>
+                      <span>Đăng Xuất Tài Khoản</span>
+                    </span>
+                    <span className="font-spec-code text-[10px] text-text-muted uppercase">
+                      Thoát
+                    </span>
+                  </button>
+                )}
               </nav>
             </div>
 

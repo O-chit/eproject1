@@ -227,9 +227,9 @@ export default function SeasonalPage() {
         </div>
       </section>
 
-      {/* Curated 3-Column Sharp Grid */}
-      <section className="w-full max-w-7xl mx-auto px-margin pb-space-xl" id="tuyen-tap">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-space-lg pb-space-sm">
+      {/* Curated 3-Column / 2-Column Mobile Sharp Grid */}
+      <section className="w-full max-w-7xl mx-auto px-4 md:px-margin pb-space-xl" id="tuyen-tap">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-space-lg pb-space-sm gap-2">
           <div>
             <div className="flex items-center gap-2 mb-space-xs">
               <span className="h-2 w-2 bg-accent-terracotta"></span>
@@ -237,7 +237,7 @@ export default function SeasonalPage() {
                 Danh Mục Giám Tuyển
               </span>
             </div>
-            <h2 className="font-headline-title text-headline-title text-text-primary font-semibold tracking-tight uppercase">
+            <h2 className="font-headline-title text-[20px] sm:text-[24px] md:text-headline-title text-text-primary font-semibold tracking-tight uppercase">
               {collection?.title || 'Tác Phẩm Mùa Thu'}
             </h2>
           </div>
@@ -248,53 +248,53 @@ export default function SeasonalPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-gutter">
           {displayedItems.map((item) => {
             const isSaved = savedItems.some((s) => s.id === item.id);
             return (
               <article
                 key={item.id}
-                className="group bg-surface-crisp flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border border-border-neutral/60"
+                className="group bg-surface-crisp flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border border-border-neutral/60 overflow-hidden"
               >
-                <div className="relative w-full aspect-[4/5] overflow-hidden bg-surface-container">
+                <div className="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-surface-container">
                   <img
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
                   />
-                  <div className="absolute top-3 left-3 bg-text-primary text-surface-crisp font-spec-code text-[10px] tracking-[0.15em] uppercase px-2.5 py-1">
+                  <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-text-primary text-surface-crisp font-spec-code text-[10px] tracking-[0.08em] md:tracking-[0.15em] uppercase px-[6px] py-[4px] md:px-2.5 md:py-1">
                     {item.tag}
                   </div>
-                  <div className="absolute bottom-3 right-3 bg-canvas-linen/90 backdrop-blur-sm text-text-primary font-spec-code text-spec-code px-2 py-0.5 shadow-sm">
+                  <div className="hidden md:block absolute bottom-3 right-3 bg-canvas-linen/90 backdrop-blur-sm text-text-primary font-spec-code text-spec-code px-2 py-0.5 shadow-sm">
                     {item.ref}
                   </div>
                 </div>
 
-                <div className="p-space-lg flex flex-col flex-1 justify-between bg-surface-crisp">
+                <div className="p-3 sm:p-4 md:p-space-lg flex flex-col flex-1 justify-between bg-surface-crisp">
                   <div>
-                    <div className="flex items-center font-spec-code text-spec-code text-text-secondary tracking-[0.1em] uppercase mb-space-xs">
-                      <span>{item.region}</span>
-                      <span className="mx-2 text-border-neutral opacity-60">|</span>
-                      <span>{item.artisan}</span>
+                    <div className="flex items-center font-spec-code text-[10px] md:text-spec-code text-accent-terracotta tracking-[0.1em] uppercase mb-1 truncate">
+                      <span className="truncate">{item.region || item.artisan || 'Việt Nam'}</span>
                     </div>
                     <Link to={`/crafts/${item.craftId}`}>
-                      <h3 className="font-title-card text-title-card text-text-primary font-medium tracking-tight mb-space-xs group-hover:text-accent-terracotta transition-colors">
+                      <h3 className="font-title-card text-[15px] sm:text-[16px] md:text-title-card text-text-primary font-medium tracking-tight mb-1 md:mb-space-xs group-hover:text-accent-terracotta transition-colors line-clamp-2 leading-snug">
                         {item.title}
                       </h3>
                     </Link>
-                    <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md line-clamp-3">
+                    {/* Ẩn đoạn mô tả dài trên mobile để thẻ luôn gọn */}
+                    <p className="hidden md:block font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md line-clamp-3">
                       {item.description}
                     </p>
                   </div>
 
-                  <div className="pt-space-md bg-surface-subtle/40 -mx-space-lg -mb-space-lg p-space-lg flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <span className="font-spec-code text-[11px] uppercase tracking-[0.12em] text-text-secondary">
+                  <div className="mt-2 md:mt-0 pt-2 md:pt-space-md bg-surface-subtle/40 -mx-3 -mb-3 md:-mx-space-lg md:-mb-space-lg p-2.5 md:p-space-lg flex items-center justify-between border-t border-border-neutral/60 gap-1">
+                    <div className="flex flex-col min-w-0">
+                      <span className="hidden sm:block font-spec-code text-[9px] md:text-[11px] uppercase tracking-[0.12em] text-text-secondary truncate">
                         Định Giá Lưu Trữ
                       </span>
-                      <span className="font-headline-title text-headline-title text-text-primary font-semibold">
+                      <span className="font-headline-title text-[13px] sm:text-[14px] md:text-headline-title text-text-primary font-semibold truncate">
                         {item.price}{' '}
-                        <span className="text-body-spec font-normal text-text-secondary">
+                        <span className="text-[11px] md:text-body-spec font-normal text-text-secondary">
                           {item.unit}
                         </span>
                       </span>
@@ -302,14 +302,14 @@ export default function SeasonalPage() {
                     <button
                       type="button"
                       onClick={() => toggleSave(item)}
-                      className={`w-10 h-10 flex items-center justify-center transition-colors cursor-pointer ${
+                      className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 flex items-center justify-center transition-colors cursor-pointer shrink-0 ${
                         isSaved
                           ? 'bg-accent-terracotta text-surface-crisp'
                           : 'bg-text-primary hover:bg-accent-terracotta text-surface-crisp'
                       }`}
                       title={isSaved ? 'Đã lưu trong tuyển tập' : 'Thêm vào tuyển tập'}
                     >
-                      <span className="material-symbols-outlined text-[18px]">
+                      <span className="material-symbols-outlined text-[15px] md:text-[18px]">
                         {isSaved ? 'bookmark_added' : 'bookmark_add'}
                       </span>
                     </button>

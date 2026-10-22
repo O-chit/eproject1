@@ -378,8 +378,8 @@ export default function ArtisansPage() {
             </div>
           </div>
 
-          {/* 2-Dimensional Full-Width Architectural Grid Matrix */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {/* 2-Dimensional Full-Width Architectural Grid Matrix: 2 cột trên mobile, 3 cột trên desktop */}
+          <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
             {filteredArtisans.map((artisan, index) => (
               <article
                 key={artisan.id}
@@ -392,89 +392,86 @@ export default function ArtisansPage() {
                     handleOpenArtisanPopup(artisan);
                   }
                 }}
-                className="relative z-0 hover:z-10 flex flex-col group transition-all duration-300 ease-out border border-border-neutral hover:-translate-y-1.5 hover:border-accent-terracotta hover:shadow-[0_16px_36px_rgba(28,27,26,0.12)] cursor-pointer bg-surface-crisp overflow-hidden"
+                className="relative z-0 hover:z-10 flex flex-col justify-between group transition-all duration-300 ease-out border border-border-neutral hover:-translate-y-1.5 hover:border-accent-terracotta hover:shadow-[0_16px_36px_rgba(28,27,26,0.12)] cursor-pointer bg-surface-crisp overflow-hidden"
                 aria-label={`Xem hồ sơ nghệ nhân: ${artisan.name}`}
               >
-                {/* 1. Phần Ảnh Nghệ Nhân (Độc lập ở phía trên, không bị văn bản đè lên) */}
-                <div className="relative w-full aspect-[4/3] bg-[#1C1B1A] overflow-hidden shrink-0 border-b border-border-neutral">
+                {/* 1. Phần Ảnh Nghệ Nhân: Vuông 1:1 trên mobile, 4:3 trên desktop */}
+                <div className="relative w-full aspect-square md:aspect-[4/3] bg-[#1C1B1A] overflow-hidden shrink-0 border-b border-border-neutral">
                   <img
                     className="w-full h-full object-cover grayscale contrast-[1.05] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                     src={artisan.avatar_url}
                     alt={artisan.name}
                     loading="lazy"
                   />
-                  {/* Lớp gradient nhẹ bảo vệ độ tương phản của nhãn định danh trên cùng */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent pointer-events-none"></div>
 
-                  {/* Nhãn thể loại & REF code đặt gọn gàng ở góc trên */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between font-spec-code text-[10px] uppercase tracking-wider pointer-events-none">
-                    <div className="flex items-center gap-1.5 bg-black/75 backdrop-blur-sm px-2.5 py-1 text-surface-crisp border border-white/20">
+                  {/* Nhãn thể loại gọn gàng ở góc trên */}
+                  <div className="absolute top-2 left-2 right-2 md:top-3 md:left-3 md:right-3 flex items-center justify-between font-spec-code text-[10px] uppercase tracking-wider pointer-events-none">
+                    <div className="flex items-center gap-1 bg-black/75 backdrop-blur-sm px-1.5 py-0.5 md:px-2.5 md:py-1 text-surface-crisp border border-white/20">
                       <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta"></span>
-                      <span className="text-[#ffb689] font-semibold">{artisan.craft_category}</span>
+                      <span className="text-[#ffb689] font-semibold text-[9px] md:text-[10px] truncate max-w-[85px] sm:max-w-none">{artisan.craft_category}</span>
                     </div>
-                    <span className="bg-black/75 backdrop-blur-sm text-surface-crisp/90 px-2.5 py-1 border border-white/20">
+                    <span className="hidden sm:inline-block bg-black/75 backdrop-blur-sm text-surface-crisp/90 px-2 py-0.5 border border-white/20 text-[9px] md:text-[10px]">
                       REF: {artisan.ref}
                     </span>
                   </div>
 
                   {/* Nhãn mã ma trận góc dưới ảnh */}
-                  <div className="absolute bottom-3 right-3 bg-black/75 backdrop-blur-sm text-surface-crisp/90 px-2 py-0.5 border border-white/20 font-spec-code text-[10px] uppercase font-semibold pointer-events-none">
+                  <div className="hidden md:block absolute bottom-3 right-3 bg-black/75 backdrop-blur-sm text-surface-crisp/90 px-2 py-0.5 border border-white/20 font-spec-code text-[10px] uppercase font-semibold pointer-events-none">
                     {artisan.matrix_index}
                   </div>
                 </div>
 
-                {/* 2. Phần Mô Tả Thông Tin Nghệ Nhân (Tách biệt hoàn toàn ở phía dưới) */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between bg-surface-crisp space-y-4">
-                  <div className="space-y-3">
-                    {/* Hàng nhãn vị trí & thế hệ */}
-                    <div className="flex items-center justify-between font-spec-code text-[11px]">
-                      <div className="flex items-center gap-2 text-accent-terracotta uppercase tracking-[0.16em] font-medium">
-                        <span>{artisan.village}</span>
-                        <span className="text-border-neutral opacity-60">|</span>
-                        <span>{artisan.province}</span>
+                {/* 2. Phần Mô Tả Thông Tin Nghệ Nhân */}
+                <div className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col justify-between bg-surface-crisp space-y-2 md:space-y-4">
+                  <div className="space-y-1.5 md:space-y-3">
+                    {/* Hàng nhãn vị trí */}
+                    <div className="flex items-center justify-between font-spec-code text-[10px] md:text-[11px] gap-1">
+                      <div className="flex items-center gap-1.5 text-accent-terracotta uppercase tracking-wider font-medium truncate">
+                        <span className="truncate">{artisan.village || artisan.province || 'Làng Nghề'}</span>
                       </div>
-                      <span className="text-text-secondary text-[10px] uppercase bg-surface-subtle border border-border-neutral px-2 py-0.5 font-medium">
+                      <span className="hidden sm:inline-block text-text-secondary text-[9px] md:text-[10px] uppercase bg-surface-subtle border border-border-neutral px-1.5 py-0.5 font-medium shrink-0">
                         {artisan.generation}
                       </span>
                     </div>
 
-                    {/* Tên & Danh xưng & Số năm nghề */}
+                    {/* Tên & Danh xưng */}
                     <div>
-                      <h3 className="font-headline-title text-[20px] sm:text-[22px] font-semibold text-text-primary group-hover:text-accent-terracotta transition-colors leading-snug">
+                      <h3 className="font-headline-title text-[15px] sm:text-[17px] md:text-[22px] font-semibold text-text-primary group-hover:text-accent-terracotta transition-colors leading-snug line-clamp-2">
                         {artisan.name}
                       </h3>
-                      <p className="font-spec-code text-[12px] text-text-secondary mt-1">
-                        {artisan.title} • {artisan.age} tuổi • <span className="text-accent-terracotta font-medium">{artisan.years_of_experience} Năm Nghề</span>
+                      <p className="font-spec-code text-[11px] md:text-[12px] text-text-secondary mt-0.5 truncate">
+                        {artisan.title} • <span className="text-accent-terracotta font-medium">{artisan.years_of_experience} Năm Nghề</span>
                       </p>
-                      <p className="font-body-default text-[12px] text-text-secondary/80 mt-1 line-clamp-1">
+                      <p className="hidden md:block font-body-default text-[12px] text-text-secondary/80 mt-1 line-clamp-1">
                         {artisan.description}
                       </p>
                     </div>
 
-                    {/* Trích dẫn triết lý nghề */}
-                    <blockquote className="font-label-signature italic text-[13px] text-text-primary/90 leading-relaxed border-l-2 border-accent-terracotta pl-3.5 py-2 bg-surface-subtle my-2">
+                    {/* Trích dẫn triết lý nghề - Ẩn trên mobile để thẻ gọn gàng */}
+                    <blockquote className="hidden md:block font-label-signature italic text-[13px] text-text-primary/90 leading-relaxed border-l-2 border-accent-terracotta pl-3.5 py-2 bg-surface-subtle my-2">
                       “{artisan.quote}”
                     </blockquote>
                   </div>
 
                   {/* Chân thẻ: Tác phẩm tiêu biểu & Điều hướng xem hồ sơ */}
-                  <div className="pt-3 border-t border-border-neutral space-y-3">
-                    <div className="p-3 bg-surface-subtle border border-border-neutral flex items-center justify-between">
-                      <div className="flex flex-col min-w-0 pr-2">
-                        <span className="font-spec-code text-[9px] uppercase tracking-wider text-accent-terracotta font-semibold">
+                  <div className="pt-2 md:pt-3 border-t border-border-neutral space-y-2 md:space-y-3">
+                    <div className="p-2 md:p-3 bg-surface-subtle border border-border-neutral flex items-center justify-between gap-1">
+                      <div className="flex flex-col min-w-0 pr-1">
+                        <span className="font-spec-code text-[8px] md:text-[9px] uppercase tracking-wider text-accent-terracotta font-semibold">
                           Tác Phẩm Tiêu Biểu
                         </span>
-                        <span className="font-body-spec text-[12px] font-medium text-text-primary truncate">
+                        <span className="font-body-spec text-[11px] md:text-[12px] font-medium text-text-primary truncate">
                           {artisan.masterwork_name}
                         </span>
                       </div>
-                      <span className="material-symbols-outlined text-accent-terracotta text-[20px] shrink-0">grain</span>
+                      <span className="material-symbols-outlined text-accent-terracotta text-[16px] md:text-[20px] shrink-0">grain</span>
                     </div>
 
-                    <div className="pt-1 flex items-center justify-between font-spec-code text-[11px]">
-                      <span className="text-text-secondary text-[10px] uppercase">XÁC THỰC: DI SẢN QUỐC GIA</span>
-                      <span className="font-label-action text-[11px] uppercase tracking-[0.15em] text-accent-terracotta group-hover:translate-x-1 flex items-center gap-1 font-semibold transition-transform">
-                        Xem Hồ Sơ <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                    <div className="pt-0.5 md:pt-1 flex items-center justify-between font-spec-code text-[10px] md:text-[11px]">
+                      <span className="hidden sm:inline text-text-secondary text-[10px] uppercase">DI SẢN QUỐC GIA</span>
+                      <span className="font-label-action text-[10px] md:text-[11px] uppercase tracking-[0.1em] md:tracking-[0.15em] text-accent-terracotta group-hover:translate-x-1 flex items-center gap-0.5 md:gap-1 font-semibold transition-transform">
+                        Xem Hồ Sơ <span className="material-symbols-outlined text-[13px] md:text-[15px]">arrow_forward</span>
                       </span>
                     </div>
                   </div>

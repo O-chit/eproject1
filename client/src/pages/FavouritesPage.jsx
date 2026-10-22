@@ -234,7 +234,7 @@ export default function FavouritesPage() {
 
       {/* Main Grid of Bookmarked Artifacts */}
       <section className="w-full bg-canvas-linen pb-16">
-        <div className="max-w-7xl mx-auto px-margin">
+        <div className="max-w-7xl mx-auto px-4 md:px-margin">
           {/* Notification banner if modified */}
           {notification && (
             <div className="mb-6 p-4 bg-surface-crisp border border-border-neutral shadow-sm text-text-primary flex items-center justify-between">
@@ -278,11 +278,11 @@ export default function FavouritesPage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-gutter">
               {items.map((item) => (
                 <article
                   key={item.id}
-                  className="craft-card flex flex-col bg-surface-crisp shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg border border-border-neutral/60"
+                  className="craft-card flex flex-col justify-between bg-surface-crisp shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg border border-border-neutral/60 overflow-hidden"
                 >
                   {/* 1:1 Aspect Image with Sharp Remove Button */}
                   <div className="relative w-full aspect-square bg-surface-subtle overflow-hidden">
@@ -290,37 +290,39 @@ export default function FavouritesPage() {
                       src={item.image}
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      loading="lazy"
                     />
-                    <div className="absolute top-3 right-3 z-10">
+                    <div className="absolute top-2 right-2 md:top-3 md:right-3 z-10">
                       <button
                         type="button"
                         onClick={() => handleRemove(item.id, item.title, item.craftId)}
-                        className="btn-remove-item px-3 py-1.5 bg-surface-crisp/95 text-text-primary hover:text-accent-terracotta hover:bg-surface-crisp font-label-action text-[10px] tracking-[0.18em] uppercase shadow-sm transition-colors flex items-center gap-1 cursor-pointer"
+                        className="btn-remove-item px-2 py-1 md:px-3 md:py-1.5 bg-surface-crisp/95 text-text-primary hover:text-accent-terracotta hover:bg-surface-crisp font-label-action text-[9px] md:text-[10px] tracking-[0.1em] md:tracking-[0.18em] uppercase shadow-sm transition-colors flex items-center gap-1 cursor-pointer"
+                        title="Gỡ khỏi danh sách lưu"
                       >
                         <span>✕</span>
-                        <span>GỠ LƯU</span>
+                        <span className="hidden sm:inline">GỠ LƯU</span>
                       </button>
                     </div>
-                    <div className="absolute bottom-3 left-3">
-                      <span className="px-2.5 py-1 bg-text-primary/85 text-surface-crisp font-spec-code text-[11px] tracking-wider uppercase backdrop-blur-sm">
+                    <div className="absolute bottom-2 left-2 md:bottom-3 md:left-3">
+                      <span className="px-1.5 py-0.5 md:px-2.5 md:py-1 bg-text-primary/85 text-surface-crisp font-spec-code text-[9px] md:text-[11px] tracking-wider uppercase backdrop-blur-sm">
                         {item.tag}
                       </span>
                     </div>
                   </div>
 
                   {/* Content Metadata Block */}
-                  <div className="p-space-lg flex flex-col flex-1 justify-between bg-surface-crisp">
-                    <div className="space-y-3">
-                      <div className="flex items-center text-text-secondary font-spec-code text-spec-code uppercase tracking-wider">
-                        <span>{item.village}</span>
-                        <span className="mx-2 text-border-neutral opacity-60 font-light select-none">|</span>
-                        <span className="text-accent-terracotta">{item.category}</span>
+                  <div className="p-3 sm:p-4 md:p-space-lg flex flex-col flex-1 justify-between bg-surface-crisp">
+                    <div>
+                      <div className="flex items-center text-accent-terracotta font-spec-code text-[10px] md:text-spec-code uppercase tracking-wider mb-1 truncate">
+                        <span className="truncate">{item.village || item.category || 'Di sản làng nghề'}</span>
                       </div>
-                      <h2 className="font-title-card text-title-card text-text-primary leading-snug">
-                        {item.title}
+                      <h2 className="font-title-card text-[15px] sm:text-[16px] md:text-title-card text-text-primary leading-snug line-clamp-2 mb-2">
+                        <Link to={`/crafts/${item.craftId}`} className="hover:text-accent-terracotta transition-colors">
+                          {item.title}
+                        </Link>
                       </h2>
-                      {/* Specs Detail Grid */}
-                      <div className="bg-surface-subtle p-3 space-y-1.5 font-spec-code text-[12px] text-text-secondary">
+                      {/* Specs Detail Grid - Ẩn trên mobile để tối ưu diện tích */}
+                      <div className="hidden md:block bg-surface-subtle p-3 space-y-1.5 font-spec-code text-[12px] text-text-secondary mb-3">
                         <div className="flex justify-between items-center">
                           <span className="uppercase tracking-wider">Mã Hồ Sơ:</span>
                           <span className="text-text-primary font-medium">{item.recordCode}</span>
@@ -337,21 +339,21 @@ export default function FavouritesPage() {
                     </div>
 
                     {/* Price & Action Trigger */}
-                    <div className="mt-6 pt-4 flex items-center justify-between bg-canvas-linen/40 -mx-space-lg -mb-space-lg px-space-lg py-4 border-t border-border-neutral/60">
-                      <div>
-                        <span className="block font-spec-code text-[10px] uppercase tracking-wider text-text-secondary">
+                    <div className="mt-3 md:mt-6 pt-2 md:pt-4 flex items-center justify-between bg-canvas-linen/40 -mx-3 -mb-3 px-3 py-2.5 md:-mx-space-lg md:-mb-space-lg md:px-space-lg md:py-4 border-t border-border-neutral/60 gap-1">
+                      <div className="min-w-0">
+                        <span className="hidden sm:block font-spec-code text-[9px] md:text-[10px] uppercase tracking-wider text-text-secondary truncate">
                           Ước lượng thẩm định
                         </span>
-                        <span className="font-headline-title text-[18px] text-text-primary font-semibold tracking-tight">
+                        <span className="font-headline-title text-[13px] sm:text-[14px] md:text-[18px] text-text-primary font-semibold tracking-tight truncate block">
                           {item.price}
                         </span>
                       </div>
                       <Link
                         to={`/crafts/${item.craftId}`}
-                        className="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary hover:text-accent-terracotta flex items-center gap-1 font-semibold transition-colors"
+                        className="font-label-action text-[9px] sm:text-[10px] md:text-label-action uppercase tracking-[0.1em] md:tracking-[0.18em] text-text-primary hover:text-accent-terracotta flex items-center gap-0.5 md:gap-1 font-semibold transition-colors shrink-0"
                       >
-                        <span>XEM CHI TIẾT</span>
-                        <span className="text-[14px]">→</span>
+                        <span><span className="hidden sm:inline">XEM </span>CHI TIẾT</span>
+                        <span className="text-[12px] md:text-[14px]">→</span>
                       </Link>
                     </div>
                   </div>

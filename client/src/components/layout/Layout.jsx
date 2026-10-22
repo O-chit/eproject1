@@ -14,11 +14,12 @@ export default function Layout() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname]);
 
-  // Lắng nghe vị trí cuộn để hiện nút BackToTop
+  // Lắng nghe vị trí cuộn để hiện nút BackToTop khi scrollY > 300px
   useEffect(() => {
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
+      setShowBackToTop(window.scrollY > 300);
     };
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
