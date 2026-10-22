@@ -199,8 +199,8 @@ export default function DirectoryPage() {
       </section>
 
       {/* Pipe-delimited Categorical Tab Navigation */}
-      <section className="w-full bg-surface-crisp border-b border-border-neutral sticky top-20 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto px-margin overflow-x-auto no-scrollbar">
+      <section className="w-full bg-surface-crisp border-b border-border-neutral sticky top-[134px] md:top-20 z-30 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 md:px-margin overflow-x-auto no-scrollbar">
           <div className="flex items-center py-4 font-label-action text-label-action tracking-[0.15em] uppercase whitespace-nowrap">
             {tabs.map((tab, idx) => (
               <React.Fragment key={tab.id}>

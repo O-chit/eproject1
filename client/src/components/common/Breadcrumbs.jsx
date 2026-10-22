@@ -39,18 +39,18 @@ export default function Breadcrumbs({ customCrumbs }) {
   }
 
   return (
-    <section aria-label="Breadcrumb" className="w-full bg-canvas-linen py-space-sm border-b border-border-neutral">
-      <div className="max-w-7xl mx-auto px-margin">
-        <ol className="flex items-center flex-wrap gap-2 font-spec-code text-spec-code tracking-[0.16em] uppercase text-text-secondary">
+    <section aria-label="Breadcrumb" className="w-full bg-canvas-linen py-2 md:py-space-sm border-b border-border-neutral">
+      <div className="max-w-7xl mx-auto px-4 md:px-margin">
+        <ol className="flex items-center flex-wrap gap-1.5 md:gap-2 font-spec-code text-[11px] md:text-spec-code tracking-[0.1em] md:tracking-[0.16em] uppercase text-text-secondary">
           {crumbs.map((crumb, idx) => {
             const isLast = idx === crumbs.length - 1;
             return (
-              <li key={crumb.path || idx} className="flex items-center gap-2">
+              <li key={crumb.path || idx} className="flex items-center gap-1.5 md:gap-2">
                 {idx > 0 && (
                   <span className="text-border-neutral opacity-60 select-none">/</span>
                 )}
                 {isLast ? (
-                  <span className="text-accent-terracotta font-medium truncate max-w-[240px] sm:max-w-md" aria-current="page">
+                  <span className="text-accent-terracotta font-medium truncate max-w-[200px] sm:max-w-md" aria-current="page">
                     {crumb.label}
                   </span>
                 ) : (

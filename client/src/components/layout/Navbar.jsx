@@ -211,8 +211,8 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Khoảng đệm cho Header cố định */}
-      <div className="h-20"></div>
+      {/* Khoảng đệm cho Header cố định (134px trên mobile bao gồm thanh tìm kiếm, 80px trên desktop) */}
+      <div className="h-[134px] md:h-20"></div>
 
       {/* THANH NAVBAR DỌC CHỈ HIỂN THỊ KHI BẤM NÚT 3 GẠCH VÀ PHỦ TOÀN BỘ CHIỀU DỌC MÀN HÌNH (100VH) */}
       <div
