@@ -7,6 +7,8 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -117,28 +119,60 @@ export default function RegisterPage() {
             <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
               Mật khẩu (Tối thiểu 8 ký tự) *
             </label>
-            <input
-              type="password"
-              required
-              className="w-full h-11 px-3.5 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                autoComplete="new-password"
+                className="w-full h-11 pl-3.5 pr-11 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
+                aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                title={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              >
+                <span className="material-symbols-outlined text-[20px] select-none">
+                  {showPassword ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
           </div>
 
           <div>
             <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
               Xác nhận mật khẩu *
             </label>
-            <input
-              type="password"
-              required
-              className="w-full h-11 px-3.5 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                required
+                autoComplete="new-password"
+                className="w-full h-11 pl-3.5 pr-11 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
+                aria-label={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                title={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              >
+                <span className="material-symbols-outlined text-[20px] select-none">
+                  {showConfirmPassword ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
           </div>
 
           <button

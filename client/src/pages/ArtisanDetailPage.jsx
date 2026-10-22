@@ -92,8 +92,8 @@ export default function ArtisanDetailPage() {
   ];
 
   return (
-    <div className="w-full bg-canvas-linen py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-10">
+    <div className="w-full bg-canvas-linen py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin space-y-10">
         {/* Breadcrumb có pipe delimiter */}
         <div className="font-spec-code text-[11px] uppercase tracking-widest text-text-secondary flex items-center gap-2">
           <Link to="/" className="hover:text-accent-terracotta">Trang Chủ</Link>
@@ -105,7 +105,7 @@ export default function ArtisanDetailPage() {
 
         {/* Hero Section */}
         <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-10 shadow-sm flex flex-col md:flex-row gap-8 items-stretch">
-          <div className="w-full md:w-5/12 min-h-[380px] relative bg-black overflow-hidden border border-border-neutral shrink-0">
+          <div className="w-full md:w-5/12 aspect-video md:aspect-auto md:min-h-[380px] relative bg-black overflow-hidden border border-border-neutral shrink-0">
             <img
               src={artisan.avatar_url || artisan.avatarUrl || artisan.image_url || 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=900&q=80'}
               alt={artisan.name}

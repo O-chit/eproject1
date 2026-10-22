@@ -325,7 +325,7 @@ export default function HomePage() {
             {/* Panel Trái: Kỹ Thuật Men Rạn */}
             <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-10 flex flex-col justify-between">
               <div>
-                <div className="relative w-full aspect-[16/10] overflow-hidden bg-surface-subtle border border-border-neutral mb-6">
+                <div className="relative w-full aspect-video sm:aspect-[16/10] overflow-hidden bg-surface-subtle border border-border-neutral mb-6">
                   <img
                     className="w-full h-full object-cover"
                     data-alt="Extreme macro shot of antique celadon crackle glaze pottery, fine fissure network in ceramic surface, subtle iron oxide rim, natural light grazing the uneven glaze texture, muted earthy ivory and soft moss hues, serene contemplative museum mood."
@@ -367,7 +367,7 @@ export default function HomePage() {
             {/* Panel Phải: Nghệ Nhân Dệt Khung Gỗ Cổ */}
             <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-10 flex flex-col justify-between">
               <div>
-                <div className="relative w-full aspect-[16/10] overflow-hidden bg-surface-subtle border border-border-neutral mb-6">
+                <div className="relative w-full aspect-video sm:aspect-[16/10] overflow-hidden bg-surface-subtle border border-border-neutral mb-6">
                   <img
                     className="w-full h-full object-cover"
                     data-alt="Weathered, wrinkled hands of an elderly artisan weaver maneuvering an ancient dark hardwood loom, threading vibrant indigo cotton yarns with absolute precision, shaft of warm morning light slicing through the wooden workshop, poignant heritage portrait."

@@ -7,6 +7,8 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('info');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [passwordMsg, setPasswordMsg] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [submittingPassword, setSubmittingPassword] = useState(false);
@@ -147,25 +149,57 @@ export default function ProfilePage() {
                   <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
                     Mật khẩu hiện tại *
                   </label>
-                  <input
-                    type="password"
-                    required
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    className="w-full h-11 px-3 bg-surface-subtle/50 border border-border-neutral font-body-spec text-sm focus:outline-none focus:border-accent-terracotta"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      required
+                      autoComplete="current-password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="w-full h-11 pl-3 pr-10 bg-surface-subtle/50 border border-border-neutral font-body-spec text-sm focus:outline-none focus:border-accent-terracotta"
+                    />
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => setShowCurrentPassword((prev) => !prev)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
+                      aria-label={showCurrentPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                      title={showCurrentPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                    >
+                      <span className="material-symbols-outlined text-[20px] select-none">
+                        {showCurrentPassword ? 'visibility_off' : 'visibility'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
                     Mật khẩu mới (Tối thiểu 8 ký tự) *
                   </label>
-                  <input
-                    type="password"
-                    required
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full h-11 px-3 bg-surface-subtle/50 border border-border-neutral font-body-spec text-sm focus:outline-none focus:border-accent-terracotta"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      required
+                      autoComplete="new-password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full h-11 pl-3 pr-10 bg-surface-subtle/50 border border-border-neutral font-body-spec text-sm focus:outline-none focus:border-accent-terracotta"
+                    />
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => setShowNewPassword((prev) => !prev)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
+                      aria-label={showNewPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                      title={showNewPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                    >
+                      <span className="material-symbols-outlined text-[20px] select-none">
+                        {showNewPassword ? 'visibility_off' : 'visibility'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
                 <button
                   type="submit"

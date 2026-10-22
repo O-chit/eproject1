@@ -135,7 +135,7 @@ export default function CraftDetailPage() {
             {/* Left Photography Column (55% -> 7 cols) */}
             <div className="lg:col-span-7 flex flex-col space-y-space-md">
               {/* Main Hero Image Frame */}
-              <div className="relative w-full aspect-[4/3] bg-surface-subtle overflow-hidden group shadow-sm border border-border-neutral">
+              <div className="relative w-full aspect-video sm:aspect-[4/3] bg-surface-subtle overflow-hidden group shadow-sm border border-border-neutral">
                 <img
                   id="craft-main-display"
                   src={currentPhoto.url}
@@ -159,7 +159,7 @@ export default function CraftDetailPage() {
                     key={idx}
                     type="button"
                     onClick={() => setActivePhotoIndex(idx)}
-                    className={`gallery-thumb aspect-[4/3] p-1 transition-all focus:outline-none shadow-sm cursor-pointer border ${
+                    className={`gallery-thumb aspect-video sm:aspect-[4/3] p-1 transition-all focus:outline-none shadow-sm cursor-pointer border ${
                       activePhotoIndex === idx
                         ? 'bg-surface-crisp ring-1 ring-accent-terracotta border-accent-terracotta'
                         : 'bg-surface-subtle hover:bg-surface-crisp border-border-neutral'

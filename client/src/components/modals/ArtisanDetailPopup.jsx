@@ -79,66 +79,63 @@ export default function ArtisanDetailPopup({
           <span className="material-symbols-outlined text-[20px]">close</span>
         </button>
 
-        {/* CỘT TRÁI (~5/12 - 41.67%): Ảnh chân dung full height & Thông số định danh */}
-        <div className="md:w-5/12 relative bg-[#1C1B1A] min-h-[300px] md:min-h-full flex flex-col justify-between p-6 sm:p-7 overflow-hidden shrink-0">
+        {/* CỘT TRÁI (~5/12 - 41.67%): Ảnh chân dung độc lập, không bị văn bản đè */}
+        <div className="w-full md:w-5/12 aspect-video md:aspect-auto min-h-0 md:min-h-full relative bg-[#1C1B1A] flex flex-col justify-between p-4 sm:p-6 overflow-hidden shrink-0">
           <img
             src={artisan.avatar_url || artisan.avatarUrl || artisan.image_url || artisan.image || 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=900&q=80'}
             alt={artisan.name}
             className="absolute inset-0 w-full h-full object-cover grayscale contrast-[1.05] hover:grayscale-0 hover:scale-105 transition-all duration-700 ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30 pointer-events-none"></div>
+          {/* Lớp gradient nhẹ bảo vệ nhãn góc, không che phủ khuôn mặt */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30 pointer-events-none"></div>
 
           {/* Dải nhãn trên ảnh */}
-          <div className="relative z-10 flex items-center justify-between pb-3 border-b border-surface-crisp/20 font-spec-code text-[10px] uppercase tracking-wider text-surface-crisp/90">
-            <span className="bg-black/60 px-2 py-0.5 border border-white/20 text-[#ffb689] font-semibold">
+          <div className="relative z-10 flex items-center justify-between pb-2 font-spec-code text-[10px] uppercase tracking-wider text-surface-crisp/90">
+            <span className="bg-black/70 backdrop-blur-sm px-2.5 py-1 border border-white/20 text-[#ffb689] font-semibold">
               {artisan.craft_category || artisan.specialty || 'Di Sản Thủ Công'}
             </span>
-            <span className="text-white/80">REF: {refCode}</span>
+            <span className="bg-black/70 backdrop-blur-sm text-white/90 px-2 py-1 border border-white/20">
+              REF: {refCode}
+            </span>
           </div>
 
-          {/* Cụm thông tin dưới ảnh */}
-          <div className="relative z-10 text-white mt-auto pt-6 space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="bg-accent-terracotta text-surface-crisp font-spec-code text-[10px] uppercase px-2.5 py-0.5 tracking-wider font-medium">
+          {/* Dải nhãn dưới ảnh: Chỉ chứa năm nghề & số thứ tự */}
+          <div className="relative z-10 flex items-center justify-between mt-auto pt-4 font-spec-code text-[10px] uppercase">
+            <div className="flex items-center gap-1.5">
+              <span className="bg-accent-terracotta text-surface-crisp px-2.5 py-1 font-medium shadow-sm">
                 {artisan.years_of_experience || artisan.yearsOfExperience || 40} Năm Nghề
               </span>
-              <span className="bg-surface-crisp/20 backdrop-blur-sm text-surface-crisp border border-surface-crisp/30 font-spec-code text-[10px] uppercase px-2 py-0.5 tracking-wider font-semibold">
+              <span className="bg-black/70 backdrop-blur-sm text-surface-crisp border border-white/20 px-2 py-1 font-semibold">
                 {artisan.generation || 'Đời Thứ 5'}
               </span>
-              <span className="font-spec-code text-[11px] text-surface-crisp/90 bg-black/40 border border-surface-crisp/20 px-2 py-0.5 tracking-widest uppercase font-semibold ml-auto">
-                #{String(currentIndex + 1).padStart(2, '0')}
-              </span>
             </div>
-
-            <div className="font-spec-code text-[11px] text-[#ffdbc7] uppercase tracking-[0.2em] font-medium pt-1">
-              <span>{artisan.village || artisan.regionName || 'Làng Nghề Truyền Thống'}</span>
-              <span className="text-surface-crisp/40 font-light mx-2">|</span>
-              <span>{artisan.province || 'Việt Nam'}</span>
-            </div>
-
-            <h3
-              id="artisan-popup-title"
-              className="font-headline-title text-[24px] sm:text-[28px] font-semibold text-white leading-tight pt-0.5"
-            >
-              {artisan.name}
-            </h3>
-
-            <p id="artisan-popup-desc" className="font-spec-code text-[12px] text-gray-300">
-              {artisan.title || 'Nghệ Nhân Ưu Tú'} • {artisan.age || 68} tuổi
-            </p>
+            <span className="font-spec-code text-[11px] text-surface-crisp/90 bg-black/70 backdrop-blur-sm border border-white/20 px-2 py-0.5 tracking-widest uppercase font-semibold">
+              #{String(currentIndex + 1).padStart(2, '0')}
+            </span>
           </div>
         </div>
 
         {/* CỘT PHẢI (~7/12 - 58.33%): Khối nội dung hồ sơ chuyên sâu cuộn độc lập */}
         <div className="md:w-7/12 p-6 md:p-8 overflow-y-auto max-h-[85vh] space-y-6 bg-surface-crisp flex flex-col justify-between">
           <div className="space-y-6">
-            {/* a. Breadcrumb có pipe delimiter */}
-            <div className="font-spec-code text-[11px] uppercase tracking-[0.18em] text-text-secondary flex flex-wrap items-center gap-1.5 pb-2 border-b border-border-neutral">
-              <span className="text-accent-terracotta font-semibold">Nghệ Nhân Ưu Tú</span>
-              <span className="text-border-neutral select-none opacity-60">|</span>
-              <span>{artisan.craft_category || artisan.specialty || 'Nghề Thủ Công'}</span>
-              <span className="text-border-neutral select-none opacity-60">|</span>
-              <span>{artisan.village || artisan.province || 'Việt Nam'}</span>
+            {/* Header thông tin nghệ nhân (Tên, danh hiệu, vị trí) */}
+            <div className="space-y-2 pb-4 border-b border-border-neutral">
+              <div className="font-spec-code text-[11px] uppercase tracking-[0.18em] text-text-secondary flex flex-wrap items-center gap-1.5">
+                <span className="text-accent-terracotta font-semibold">Nghệ Nhân Ưu Tú</span>
+                <span className="text-border-neutral select-none opacity-60">|</span>
+                <span>{artisan.craft_category || artisan.specialty || 'Nghề Thủ Công'}</span>
+                <span className="text-border-neutral select-none opacity-60">|</span>
+                <span>{artisan.village || artisan.regionName || 'Làng Nghề Truyền Thống'}, {artisan.province || 'Việt Nam'}</span>
+              </div>
+              <h2
+                id="artisan-popup-title"
+                className="font-headline-title text-[26px] sm:text-[30px] font-semibold text-text-primary leading-tight"
+              >
+                {artisan.name}
+              </h2>
+              <p id="artisan-popup-desc" className="font-spec-code text-[12px] sm:text-[13px] text-text-secondary">
+                {artisan.title || 'Nghệ Nhân Ưu Tú'} • {artisan.age || 68} tuổi • <span className="text-accent-terracotta font-semibold">{artisan.years_of_experience || artisan.yearsOfExperience || 40} Năm Nghề</span> ({artisan.generation || 'Đời Thứ 5'})
+              </p>
             </div>
 
             {/* d. Lời trích dẫn triết lý nghề */}

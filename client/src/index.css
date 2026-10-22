@@ -513,3 +513,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   border-radius: var(--radius-sharp);
 }
 
+/* ==========================================================================
+   PASSWORD INPUT & AUTOFILL ENHANCEMENTS
+   Ẩn con mắt mặc định của Microsoft Edge / Windows để tránh bị mất biểu tượng
+   hoặc xung đột với con mắt tuỳ chỉnh của CraftRoots khi người dùng chọn điền sẵn.
+   ========================================================================== */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+}
+
+/* Đồng bộ giao diện khi trình duyệt tự động điền sẵn (autofill) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text-primary);
+  -webkit-box-shadow: 0 0 0px 1000px #F4F2EE inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+

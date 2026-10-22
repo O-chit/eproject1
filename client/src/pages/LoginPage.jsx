@@ -8,6 +8,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -105,11 +107,10 @@ export default function LoginPage() {
               setIsRegister(false);
               setErrorMsg('');
             }}
-            className={`flex-1 py-3 font-spec-code text-[12px] uppercase tracking-[0.16em] font-semibold transition-colors cursor-pointer text-center ${
-              !isRegister
+            className={`flex-1 py-3 font-spec-code text-[12px] uppercase tracking-[0.16em] font-semibold transition-colors cursor-pointer text-center ${!isRegister
                 ? 'border-b-2 border-accent-terracotta text-accent-terracotta'
                 : 'text-text-secondary hover:text-text-primary'
-            }`}
+              }`}
           >
             Đăng Nhập
           </button>
@@ -119,11 +120,10 @@ export default function LoginPage() {
               setIsRegister(true);
               setErrorMsg('');
             }}
-            className={`flex-1 py-3 font-spec-code text-[12px] uppercase tracking-[0.16em] font-semibold transition-colors cursor-pointer text-center ${
-              isRegister
+            className={`flex-1 py-3 font-spec-code text-[12px] uppercase tracking-[0.16em] font-semibold transition-colors cursor-pointer text-center ${isRegister
                 ? 'border-b-2 border-accent-terracotta text-accent-terracotta'
                 : 'text-text-secondary hover:text-text-primary'
-            }`}
+              }`}
           >
             Đăng Ký
           </button>
@@ -185,14 +185,30 @@ export default function LoginPage() {
             <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
               Mật khẩu {isRegister ? '(Tối thiểu 8 ký tự)' : ''} *
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Nhập mật khẩu..."
-              className="w-full h-11 px-3.5 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete={isRegister ? 'new-password' : 'current-password'}
+                placeholder="Nhập mật khẩu..."
+                className="w-full h-11 pl-3.5 pr-11 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
+                aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                title={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              >
+                <span className="material-symbols-outlined text-[20px] select-none">
+                  {showPassword ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
           </div>
 
           {isRegister && (
@@ -200,14 +216,30 @@ export default function LoginPage() {
               <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
                 Xác nhận mật khẩu *
               </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                placeholder="Nhập lại mật khẩu..."
-                className="w-full h-11 px-3.5 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
-              />
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                  placeholder="Nhập lại mật khẩu..."
+                  className="w-full h-11 pl-3.5 pr-11 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
+                  aria-label={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                  title={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                >
+                  <span className="material-symbols-outlined text-[20px] select-none">
+                    {showConfirmPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
+              </div>
             </div>
           )}
 
