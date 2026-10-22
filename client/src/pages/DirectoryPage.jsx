@@ -137,61 +137,61 @@ export default function DirectoryPage() {
   return (
     <div className="w-full bg-canvas-linen">
       {/* Top Archival Header */}
-      <section className="w-full border-b border-border-neutral bg-canvas-linen py-space-xl">
-        <div className="max-w-7xl mx-auto px-margin">
+      <section className="w-full border-b border-border-neutral bg-canvas-linen py-6 sm:py-8 md:py-space-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
           {/* Metadata tracker */}
-          <div className="flex items-center gap-space-sm mb-space-sm">
-            <span className="font-spec-code text-spec-code uppercase tracking-[0.2em] text-accent-terracotta">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-space-sm mb-2 sm:mb-space-sm font-spec-code text-[10px] sm:text-spec-code">
+            <span className="uppercase tracking-[0.15em] sm:tracking-[0.2em] text-accent-terracotta font-medium">
               Hồ sơ tư liệu hóa
             </span>
             <span className="text-border-neutral opacity-60">|</span>
-            <span className="font-spec-code text-spec-code text-text-secondary tracking-[0.08em]">
-              Mã danh mục: CAT-VN-2024
+            <span className="text-text-secondary tracking-[0.06em] sm:tracking-[0.08em]">
+              Mã: CAT-VN-2024
             </span>
-            <span className="text-border-neutral opacity-60">|</span>
-            <span className="font-spec-code text-spec-code text-text-secondary">
+            <span className="text-border-neutral opacity-60 hidden sm:inline">|</span>
+            <span className="text-text-secondary hidden sm:inline">
               Cập nhật: Quý IV/2024
             </span>
           </div>
 
           {/* Main Headline */}
-          <h1 className="font-display-hero text-display-hero text-text-primary uppercase tracking-[0.3em] font-light leading-tight mb-space-sm">
+          <h1 className="font-display-hero text-[20px] sm:text-[28px] md:text-[38px] lg:text-display-hero text-text-primary uppercase tracking-[0.1em] sm:tracking-[0.18em] md:tracking-[0.3em] font-light leading-tight mb-2 sm:mb-space-sm">
             DANH MỤC DI SẢN THỦ CÔNG
           </h1>
-          <p className="font-body-default text-body-default text-text-secondary max-w-3xl leading-relaxed">
+          <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary max-w-3xl leading-relaxed">
             Kho lưu trữ hơn 240 tác phẩm thủ công nguyên bản từ các làng nghề truyền thống Việt Nam. Mỗi hiện vật được định danh độc bản cùng chứng thư nguồn gốc địa dư và kỹ pháp chế tác nguyên bản.
           </p>
 
           {/* Search & Quantitative Filters Bar */}
-          <div className="mt-space-lg flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+          <div className="mt-4 sm:mt-space-lg flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-space-md">
             {/* Pill Search */}
             <div className="relative flex-1 max-w-xl">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[20px]">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[18px] sm:text-[20px]">
                 search
               </span>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Tìm kiếm theo tên tác phẩm, làng nghề hoặc chất liệu..."
-                className="w-full h-12 pl-12 pr-6 rounded-[50px] bg-surface-crisp border border-border-neutral text-body-spec font-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-accent-terracotta transition-colors shadow-sm"
+                placeholder="Tìm kiếm tác phẩm, làng nghề, chất liệu..."
+                className="w-full h-10 sm:h-12 pl-11 sm:pl-12 pr-4 sm:pr-6 rounded-[50px] bg-surface-crisp border border-border-neutral text-[12.5px] sm:text-body-spec font-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-accent-terracotta transition-colors shadow-sm"
               />
             </div>
 
             {/* Density Counter & Quick View Mode */}
-            <div className="flex items-center gap-space-md self-end md:self-center font-spec-code text-spec-code text-text-secondary">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-space-md self-start md:self-center font-spec-code text-[10px] sm:text-spec-code text-text-secondary">
               <span className="text-text-primary font-semibold">
-                {displayItems.length} HIỆN VẬT KHẢ DỤNG
+                {displayItems.length} HIỆN VẬT
               </span>
               <span className="text-border-neutral opacity-60">|</span>
-              <span className="flex items-center gap-1.5 cursor-pointer hover:text-accent-terracotta transition-colors">
-                <span className="material-symbols-outlined text-[16px]">tune</span>
+              <span className="flex items-center gap-1 cursor-pointer hover:text-accent-terracotta transition-colors">
+                <span className="material-symbols-outlined text-[15px]">tune</span>
                 LỌC KỸ PHÁP
               </span>
               <span className="text-border-neutral opacity-60">|</span>
-              <span className="flex items-center gap-1.5 cursor-pointer hover:text-accent-terracotta transition-colors">
-                <span className="material-symbols-outlined text-[16px]">swap_vert</span>
-                SẮP XẾP: THỨ HẠNG LỊCH SỬ
+              <span className="flex items-center gap-1 cursor-pointer hover:text-accent-terracotta transition-colors">
+                <span className="material-symbols-outlined text-[15px]">swap_vert</span>
+                THỨ HẠNG
               </span>
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function DirectoryPage() {
       {/* Pipe-delimited Categorical Tab Navigation */}
       <section className="w-full bg-surface-crisp border-b border-border-neutral sticky top-[134px] md:top-20 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 md:px-margin overflow-x-auto no-scrollbar">
-          <div className="flex items-center py-4 font-label-action text-label-action tracking-[0.15em] uppercase whitespace-nowrap">
+          <div className="flex items-center py-2.5 sm:py-4 font-label-action text-[10.5px] sm:text-label-action tracking-[0.12em] sm:tracking-[0.15em] uppercase whitespace-nowrap">
             {tabs.map((tab, idx) => (
               <React.Fragment key={tab.id}>
                 {idx > 0 && <span className="mx-4 text-border-neutral opacity-60 select-none">|</span>}
@@ -223,7 +223,7 @@ export default function DirectoryPage() {
       </section>
 
       {/* 3-Column / 2-Column Mobile Grid: Artisanal Catalog */}
-      <section className="w-full bg-canvas-linen py-space-xl">
+      <section className="w-full bg-canvas-linen py-8 sm:py-12 md:py-space-xl">
         <div className="max-w-7xl mx-auto px-4 md:px-margin">
           {loading ? (
             <div className="py-24 text-center">

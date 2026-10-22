@@ -49,16 +49,16 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-canvas-linen flex flex-col justify-between py-10 px-4 sm:px-6 lg:px-8">
       {/* Header Logo */}
-      <div className="flex flex-col items-center justify-center pt-4">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 rounded-full border border-accent-terracotta flex items-center justify-center bg-surface-crisp text-accent-terracotta font-serif font-bold text-lg tracking-widest shrink-0 shadow-sm">
+      <div className="flex flex-col items-center justify-center pt-2 sm:pt-4">
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-accent-terracotta flex items-center justify-center bg-surface-crisp text-accent-terracotta font-serif font-bold text-base sm:text-lg tracking-widest shrink-0 shadow-sm">
             CR
           </div>
           <div className="flex flex-col text-left">
-            <span className="font-['Montserrat'] text-[18px] uppercase tracking-[0.25em] text-text-primary font-semibold group-hover:text-accent-terracotta transition-colors leading-tight">
+            <span className="font-['Montserrat'] text-[15px] sm:text-[18px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-text-primary font-semibold group-hover:text-accent-terracotta transition-colors leading-tight">
               CraftRoots
             </span>
-            <span className="font-['Inter'] text-[10px] uppercase tracking-[0.2em] text-text-secondary leading-none mt-1">
+            <span className="font-['Inter'] text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.2em] text-text-secondary leading-none mt-1">
               Di Sản &amp; Làng Nghề Thủ Công
             </span>
           </div>
@@ -66,12 +66,12 @@ export default function RegisterPage() {
       </div>
 
       {/* Container Đăng Ký */}
-      <div className="max-w-md w-full mx-auto my-6 bg-surface-crisp border border-border-neutral shadow-lg p-7 sm:p-9">
-        <div className="text-center mb-6">
-          <span className="font-spec-code text-[11px] uppercase tracking-widest text-accent-terracotta font-semibold">
+      <div className="max-w-md w-full mx-auto my-4 sm:my-6 bg-surface-crisp border border-border-neutral shadow-lg p-5 sm:p-9">
+        <div className="text-center mb-5 sm:mb-6">
+          <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-widest text-accent-terracotta font-semibold">
             GIA NHẬP CỘNG ĐỒNG DI SẢN
           </span>
-          <h2 className="font-headline-title text-[24px] font-semibold text-text-primary mt-1">
+          <h2 className="font-headline-title text-[20px] sm:text-[24px] font-semibold text-text-primary mt-1">
             Đăng Ký Tài Khoản
           </h2>
           <p className="font-body-spec text-[12px] text-text-secondary mt-1">

@@ -66,7 +66,7 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
             </div>
             <h2
               id="region-modal-title"
-              className="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary tracking-wide uppercase font-headline-title font-serif"
+              className="text-lg sm:text-2xl md:text-3xl font-bold text-text-primary tracking-wide uppercase font-headline-title font-serif"
             >
               {region.name}
             </h2>

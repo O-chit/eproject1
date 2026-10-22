@@ -43,6 +43,7 @@ const getHome = async (req, res, next) => {
         (SELECT COUNT(*)::int FROM artisans) AS "artisansCount",
         (SELECT COUNT(*)::int FROM craft_villages) AS "villagesCount",
         (SELECT COUNT(*)::int FROM regions) AS "regionsCount",
+        (SELECT COUNT(*)::int FROM craft_categories) AS "categoriesCount",
         (SELECT COUNT(*)::int FROM artisans WHERE is_national_heritage = true) AS "nationalHeritageCount"
     `;
     const statsRes = await db.query(statsSql);
@@ -148,6 +149,7 @@ const getStats = async (req, res, next) => {
         (SELECT COUNT(*)::int FROM artisans) AS artisans,
         (SELECT COUNT(*)::int FROM craft_villages) AS villages,
         (SELECT COUNT(*)::int FROM regions) AS regions,
+        (SELECT COUNT(*)::int FROM craft_categories) AS categories,
         (SELECT COUNT(*)::int FROM artisans WHERE is_national_heritage = true) AS "nationalHeritages"
     `;
     const statsRes = await db.query(statsSql);

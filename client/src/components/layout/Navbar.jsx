@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useFavourites } from '../../context/FavouritesContext';
+import api from '../../services/api';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
+  const { totalFavourites } = useFavourites();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [savedCount, setSavedCount] = useState(0);
+  const [stats, setStats] = useState({ crafts: 0, artisans: 0, regions: 0, categories: 0 });
   const navigate = useNavigate();
 
-  // Đọc số lượng mục yêu thích từ localStorage
+  // Nạp thống kê số lượng thực tế từ backend
   useEffect(() => {
-    const updateSavedCount = () => {
-      try {
-        const stored = localStorage.getItem('craftroots_favourites');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed)) {
-            setSavedCount(parsed.length);
-          }
+    api.getStats()
+      .then((data) => {
+        if (data && typeof data.crafts === 'number') {
+          setStats({
+            crafts: data.crafts,
+            artisans: data.artisans,
+            regions: data.regions,
+            categories: data.categories || 0,
+          });
         }
-      } catch {
-        // Giữ mặc định 4 nếu có lỗi
-      }
-    };
-
-    updateSavedCount();
-    window.addEventListener('storage', updateSavedCount);
-    return () => window.removeEventListener('storage', updateSavedCount);
+      })
+      .catch(() => {}); // Giữ nguyên giá trị mặc định nếu backend chưa sẵn sàng
   }, []);
+
+
 
   // Đóng Drawer khi nhấn phím Escape
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function Navbar() {
     <>
       {/* HEADER CỐ ĐỊNH PHÍA TRÊN */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-canvas-linen/95 backdrop-blur-md border-b border-border-neutral">
-        <div className="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between gap-6 relative">
+        <div className="h-20 max-w-7xl mx-auto px-4 sm:px-6 md:px-margin flex items-center justify-between gap-4 sm:gap-6 relative">
           
           {/* Cụm Trái: Nút Menu 3 gạch & Logo Thương hiệu */}
           <div className="flex items-center gap-4 shrink-0">
@@ -138,7 +138,7 @@ export default function Navbar() {
               <span className="material-symbols-outlined text-[16px] text-accent-terracotta">
                 bookmark
               </span>
-              <span className="hidden sm:inline">Đã Lưu ({savedCount})</span>
+              <span className="hidden sm:inline">Đã Lưu ({totalFavourites})</span>
             </Link>
 
             <span className="text-border-neutral opacity-60 font-light select-none hidden sm:inline">
@@ -407,7 +407,7 @@ export default function Navbar() {
                     Danh Mục Di Sản Thủ Công
                   </span>
                   <span className="font-spec-code text-[10px] text-text-secondary uppercase">
-                    120 Mục
+                    {stats.crafts} Mục
                   </span>
                 </NavLink>
 
@@ -451,7 +451,7 @@ export default function Navbar() {
                     Hồ Sơ Nghệ Nhân Ưu Tú
                   </span>
                   <span className="font-spec-code text-[10px] text-accent-terracotta uppercase tracking-wider">
-                    48 Cụ
+                    {stats.artisans} Cụ
                   </span>
                 </NavLink>
 
@@ -473,7 +473,7 @@ export default function Navbar() {
                     Bản Đồ Văn Hóa Làng Nghề
                   </span>
                   <span className="font-spec-code text-[10px] text-text-secondary uppercase">
-                    54 Vùng
+                    {stats.regions} Vùng
                   </span>
                 </NavLink>
 
@@ -517,7 +517,7 @@ export default function Navbar() {
                     Tác Phẩm Đã Lưu &amp; Yêu Thích
                   </span>
                   <span className="font-spec-code text-[11px] text-accent-terracotta font-semibold">
-                    {String(savedCount).padStart(2, '0')}
+                    {String(totalFavourites).padStart(2, '0')}
                   </span>
                 </NavLink>
 
@@ -669,7 +669,7 @@ export default function Navbar() {
               </span>
             </div>
             <p className="font-body-spec text-[12px] text-text-secondary leading-relaxed mb-4">
-              Lưu trữ số 54 vùng văn hóa bản địa và các phương thức chế tác thủ công Việt Nam.
+              Lưu trữ {stats.regions > 0 ? stats.regions : '—'} vùng văn hóa bản địa và các phương thức chế tác thủ công Việt Nam.
             </p>
             <div className="pt-3 border-t border-border-neutral space-y-1.5 font-spec-code text-[11px] text-text-secondary">
               <div className="flex items-center justify-between">
