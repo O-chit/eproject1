@@ -222,9 +222,9 @@ export default function DirectoryPage() {
         </div>
       </section>
 
-      {/* 3-Column Sharp Grid: Artisanal Catalog */}
+      {/* 3-Column / 2-Column Mobile Grid: Artisanal Catalog */}
       <section className="w-full bg-canvas-linen py-space-xl">
-        <div className="max-w-7xl mx-auto px-margin">
+        <div className="max-w-7xl mx-auto px-4 md:px-margin">
           {loading ? (
             <div className="py-24 text-center">
               <div className="w-10 h-10 border-2 border-[#B86B35] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -250,7 +250,7 @@ export default function DirectoryPage() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-gutter">
               {displayItems.map((item) => (
                 <article
                   key={item.id}
@@ -263,9 +263,9 @@ export default function DirectoryPage() {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
                     />
-                    <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-canvas-linen/90 backdrop-blur-sm border border-border-neutral px-2.5 py-1">
+                    <div className="absolute top-2 left-2 md:top-3 md:left-3 flex items-center gap-1.5 bg-canvas-linen/90 backdrop-blur-sm border border-border-neutral px-[6px] py-[4px] md:px-2.5 md:py-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta"></span>
-                      <span className="font-spec-code text-[10px] tracking-[0.12em] uppercase text-text-primary">
+                      <span className="font-spec-code text-[10px] tracking-[0.08em] md:tracking-[0.12em] uppercase text-text-primary">
                         {item.edition}
                       </span>
                     </div>
@@ -273,41 +273,42 @@ export default function DirectoryPage() {
                       type="button"
                       onClick={() => toggleSave(item)}
                       aria-label="Lưu tác phẩm"
-                      className="absolute top-3 right-3 w-8 h-8 rounded-none bg-surface-crisp/90 backdrop-blur-sm border border-border-neutral flex items-center justify-center text-text-secondary hover:text-accent-terracotta hover:bg-surface-crisp transition-colors cursor-pointer"
+                      className="absolute top-2 right-2 md:top-3 md:right-3 w-7 h-7 md:w-8 md:h-8 rounded-none bg-surface-crisp/90 backdrop-blur-sm border border-border-neutral flex items-center justify-center text-text-secondary hover:text-accent-terracotta hover:bg-surface-crisp transition-colors cursor-pointer"
                     >
-                      <span className={`material-symbols-outlined text-[18px] ${savedIds.has(item.id) ? 'text-accent-terracotta filled' : ''}`}>
+                      <span className={`material-symbols-outlined text-[16px] md:text-[18px] ${savedIds.has(item.id) ? 'text-accent-terracotta filled' : ''}`}>
                         bookmark
                       </span>
                     </button>
                   </div>
 
-                  <div className="p-space-lg flex flex-col flex-1 justify-between">
+                  <div className="p-3 sm:p-4 md:p-space-lg flex flex-col flex-1 justify-between">
                     <div>
-                      <div className="flex items-center gap-2 mb-space-xs">
-                        <span className="font-spec-code text-[11px] uppercase tracking-[0.14em] text-accent-terracotta">
+                      <div className="flex items-center gap-2 mb-1 md:mb-space-xs truncate">
+                        <span className="font-spec-code text-[10px] md:text-[11px] uppercase tracking-[0.12em] text-accent-terracotta truncate">
                           {item.origin}
                         </span>
                       </div>
-                      <h3 className="font-headline-title text-headline-title text-text-primary tracking-tight mb-space-xs group-hover:text-accent-terracotta transition-colors">
+                      <h3 className="font-headline-title text-[15px] sm:text-[16px] md:text-headline-title text-text-primary tracking-tight mb-1 md:mb-space-xs group-hover:text-accent-terracotta transition-colors line-clamp-2 leading-snug">
                         <Link to={`/crafts/${item.id}`}>{item.name}</Link>
                       </h3>
-                      <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">
+                      {/* Ẩn đoạn mô tả dài trên màn hình di động */}
+                      <p className="hidden md:block font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">
                         {item.description}
                       </p>
                     </div>
 
-                    <div className="pt-space-md border-t border-border-neutral flex items-center justify-between font-spec-code text-spec-code">
-                      <div className="flex flex-col">
-                        <span className="text-[11px] text-text-secondary tracking-[0.08em] uppercase">
+                    <div className="pt-2 md:pt-space-md border-t border-border-neutral flex items-center justify-between font-spec-code text-spec-code gap-1">
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-[10px] md:text-[11px] text-text-secondary tracking-[0.08em] uppercase truncate">
                           Ref: {item.refCode}
                         </span>
-                        <span className="text-[14px] font-semibold text-text-primary mt-0.5">
+                        <span className="text-[13px] sm:text-[14px] font-semibold text-text-primary mt-0.5 truncate">
                           {item.price}
                         </span>
                       </div>
                       <Link
                         to={`/crafts/${item.id}`}
-                        className="font-label-action text-label-action tracking-[0.15em] uppercase text-text-primary border-b border-text-primary pb-0.5 hover:text-accent-terracotta hover:border-accent-terracotta transition-colors"
+                        className="font-label-action text-[10px] md:text-label-action tracking-[0.1em] md:tracking-[0.15em] uppercase text-text-primary border-b border-text-primary pb-0.5 hover:text-accent-terracotta hover:border-accent-terracotta transition-colors shrink-0"
                       >
                         Chi tiết →
                       </Link>

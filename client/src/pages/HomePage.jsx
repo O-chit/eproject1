@@ -141,11 +141,11 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 3. 3-COLUMN CRAFT HIGHLIGHTS GRID */}
-      <section className="w-full py-space-xl bg-canvas-linen">
-        <div className="max-w-7xl mx-auto px-margin">
+      {/* 3. 3-COLUMN / 2-COLUMN MOBILE CRAFT HIGHLIGHTS GRID */}
+      <section className="w-full py-12 md:py-space-xl bg-canvas-linen">
+        <div className="max-w-7xl mx-auto px-4 md:px-margin">
           {/* Header nhóm tác phẩm */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-6 border-b border-border-neutral gap-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 pb-4 md:pb-6 border-b border-border-neutral gap-4">
             <div>
               <span className="font-display-hero text-[11px] tracking-[0.3em] uppercase text-accent-terracotta font-medium block mb-2">
                 TUYỂN CHỌN ĐỊNH KỲ
@@ -159,17 +159,18 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Lưới 3 thẻ sắc nét */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+          {/* Lưới sản phẩm: 2 cột trên mobile (gap: 12px), 3 cột trên desktop */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-gutter">
             {loading ? (
               <CraftCardSkeleton count={3} />
             ) : (
               crafts.slice(0, 3).map((item) => (
                 <article
                   key={item.id}
-                  className="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col"
+                  className="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col justify-between"
                 >
-                  <div className="relative w-full aspect-[4/5] overflow-hidden bg-surface-subtle">
+                  {/* Khung ảnh tỷ lệ vuông 1:1, object-cover */}
+                  <div className="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-surface-subtle">
                     <img
                       src={item.image || item.thumbnailUrl || item.thumbnail_url}
                       alt={item.name}
@@ -177,54 +178,64 @@ export default function HomePage() {
                       className="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
-                    <div className="absolute top-4 left-4 bg-surface-crisp/95 backdrop-blur-xs px-3 py-1 border border-border-neutral">
-                      <span className="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-primary">
-                        MÃ: {item.code || item.slug || `CR-0${item.id}`}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-4 right-4 bg-text-primary text-surface-crisp px-2.5 py-0.5">
-                      <span className="font-spec-code text-[10px] uppercase tracking-[0.15em]">
+                    {/* Đã ẩn hoàn toàn nhãn MÃ: KHAN-SA-LUA... đè lên ảnh theo yêu cầu */}
+
+                    {/* Thu nhỏ nhãn ĐẶC SẮC TUYỂN CHỌN (font-size: 10px, padding: 4px 6px) */}
+                    <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-text-primary text-surface-crisp px-[6px] py-[4px] leading-none shadow-xs">
+                      <span className="font-spec-code text-[10px] uppercase tracking-[0.08em] md:tracking-[0.15em] block">
                         {item.badge || (item.isFeatured ? 'ĐẶC SẮC TUYỂN CHỌN' : 'THỦ CÔNG TRUYỀN ĐỜI')}
                       </span>
                     </div>
                   </div>
 
-                  <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center justify-between text-text-secondary font-spec-code text-[11px] uppercase tracking-wider mb-2">
-                        <span>{item.village || item.region?.name || item.region || 'Làng Nghề Truyền Thống'}</span>
-                        <span>{item.province || (typeof item.region === 'string' ? item.region : 'Việt Nam')}</span>
+                      {/* Chỉ giữ lại 1 nhãn vùng miền duy nhất, loại bỏ nhãn bị lặp thứ 2 */}
+                      <div className="flex items-center text-accent-terracotta font-spec-code text-[10px] md:text-[11px] uppercase tracking-wider mb-1 md:mb-2 truncate">
+                        <span className="truncate">
+                          {item.region?.name || (typeof item.region === 'string' ? item.region : '') || item.village?.name || item.village || 'ĐỒNG BẰNG BẮC BỘ'}
+                        </span>
                       </div>
-                      <h3 className="font-title-card text-title-card text-text-primary font-medium mb-3">
-                        {item.name}
+
+                      {/* Tiêu đề sản phẩm giảm cỡ chữ xuống 15px - 16px, giới hạn tối đa 2 dòng */}
+                      <h3 className="font-title-card text-[15px] sm:text-[16px] md:text-title-card text-text-primary font-medium mb-1.5 md:mb-3 line-clamp-2 leading-snug">
+                        <Link to={`/crafts/${item.id}`} className="hover:text-accent-terracotta transition-colors">
+                          {item.name}
+                        </Link>
                       </h3>
-                      <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4">
+
+                      {/* Ẩn đoạn mô tả dài trên thẻ danh sách để giao diện gọn gàng */}
+                      <p className="hidden md:block font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4">
                         {item.description || item.shortDescription || item.short_description}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-border-neutral space-y-2">
-                      <div className="flex items-center justify-between font-spec-code text-[11px]">
-                        <span className="text-text-secondary">Chất liệu:</span>
-                        <span className="text-text-primary font-medium">
-                          {Array.isArray(item.materials) ? item.materials.join(', ') : (item.material || 'Nguyên liệu tự nhiên')}
-                        </span>
+                    <div className="pt-2 md:pt-4 border-t border-border-neutral">
+                      {/* Ẩn bảng thông số chất liệu và kích thước trên thẻ danh sách */}
+                      <div className="hidden md:block space-y-2 mb-3">
+                        <div className="flex items-center justify-between font-spec-code text-[11px]">
+                          <span className="text-text-secondary">Chất liệu:</span>
+                          <span className="text-text-primary font-medium truncate max-w-[140px]">
+                            {Array.isArray(item.materials) ? item.materials.map(m => m.name || m).join(', ') : (item.material || 'Nguyên liệu tự nhiên')}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between font-spec-code text-[11px]">
+                          <span className="text-text-secondary">Kích thước:</span>
+                          <span className="text-text-primary font-medium">
+                            {item.dimension || 'Quy chuẩn truyền thống'}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between font-spec-code text-[11px]">
-                        <span className="text-text-secondary">Kích thước:</span>
-                        <span className="text-text-primary font-medium">
-                          {item.dimension || 'Quy chuẩn truyền thống'}
-                        </span>
-                      </div>
-                      <div className="pt-3 flex items-center justify-between">
-                        <span className="font-headline-title text-[16px] text-text-primary font-semibold">
-                          {item.price || '1.850.000 ₫'}
+
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="font-headline-title text-[13px] sm:text-[14px] md:text-[16px] text-text-primary font-semibold truncate">
+                          {typeof item.price === 'number' ? `${item.price.toLocaleString('vi-VN')} ₫` : (item.price || '1.850.000 ₫')}
                         </span>
                         <Link
                           to={`/crafts/${item.id}`}
-                          className="font-label-action text-[10px] uppercase tracking-[0.18em] text-accent-terracotta hover:underline inline-flex items-center gap-1 cursor-pointer"
+                          className="font-label-action text-[9px] sm:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.18em] text-accent-terracotta hover:underline inline-flex items-center gap-0.5 shrink-0 cursor-pointer"
                         >
-                          XEM CHI TIẾT →
+                          <span className="hidden sm:inline">XEM </span>CHI TIẾT →
                         </Link>
                       </div>
                     </div>
