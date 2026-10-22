@@ -199,33 +199,33 @@ export default function CraftDetailPage() {
               </div>
 
               {/* Primary Title */}
-              <h1 className="font-display-hero text-[28px] sm:text-[32px] leading-[38px] tracking-[0.1em] font-light text-text-primary uppercase mb-space-xs">
+              <h1 className="font-display-hero text-[20px] sm:text-[26px] md:text-[32px] leading-[28px] sm:leading-[34px] md:leading-[38px] tracking-[0.04em] sm:tracking-[0.1em] font-light text-text-primary uppercase mb-space-xs">
                 {craft?.name || 'Tác Phẩm Thủ Công Truyền Thống'}
               </h1>
-              <p className="font-title-card text-title-card italic text-text-secondary mb-space-md">
+              <p className="font-title-card text-[14px] sm:text-title-card italic text-text-secondary mb-space-md">
                 {craft?.shortDescription || 'Tuyệt tác tạo hình thuần thủ công từ đôi bàn tay các bậc thầy nghệ nhân Việt Nam.'}
               </p>
 
               {/* Artisan Endorsement Ribbon */}
-              <div className="p-space-md bg-surface-subtle border border-border-neutral mb-space-lg flex items-center justify-between shadow-sm">
+              <div className="p-3 sm:p-space-md bg-surface-subtle border border-border-neutral mb-4 sm:mb-space-lg flex items-center justify-between shadow-sm">
                 <div className="flex flex-col">
-                  <span className="font-spec-code text-[11px] text-text-secondary uppercase tracking-[0.14em]">Chế tác bởi nghệ nhân</span>
-                  <Link to={`/artisans/${leadArtisan.id || 1}`} className="font-label-signature text-[22px] leading-tight text-text-primary font-normal hover:text-accent-terracotta transition-colors">
+                  <span className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary uppercase tracking-[0.12em] sm:tracking-[0.14em]">Chế tác bởi nghệ nhân</span>
+                  <Link to={`/artisans/${leadArtisan.id || 1}`} className="font-label-signature text-[18px] sm:text-[22px] leading-tight text-text-primary font-normal hover:text-accent-terracotta transition-colors">
                     {leadArtisan.name}
                   </Link>
                 </div>
                 <div className="text-right">
-                  <span className="inline-block px-2.5 py-1 bg-surface-crisp text-accent-terracotta font-spec-code text-[10px] tracking-[0.15em] uppercase font-semibold border border-border-neutral">
+                  <span className="inline-block px-2 sm:px-2.5 py-0.5 sm:py-1 bg-surface-crisp text-accent-terracotta font-spec-code text-[9px] sm:text-[10px] tracking-[0.12em] sm:tracking-[0.15em] uppercase font-semibold border border-border-neutral">
                     {leadArtisan.title || 'Nghệ Nhân Ưu Tú'}
                   </span>
-                  <p className="font-spec-code text-[11px] text-text-secondary mt-1">{leadArtisan.roleTitle || 'Chủ trì chế tác'}</p>
+                  <p className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary mt-0.5 sm:mt-1">{leadArtisan.roleTitle || 'Chủ trì chế tác'}</p>
                 </div>
               </div>
 
               {/* Technical Spec Matrix Table */}
-              <div className="bg-surface-crisp border border-border-neutral p-space-md shadow-sm mb-space-lg space-y-space-sm">
+              <div className="bg-surface-crisp border border-border-neutral p-3 sm:p-space-md shadow-sm mb-4 sm:mb-space-lg space-y-2 sm:space-y-space-sm">
                 <div className="pb-space-xs border-b border-border-neutral">
-                  <span className="font-label-action text-label-action uppercase tracking-[0.2em] text-text-primary font-semibold">
+                  <span className="font-label-action text-[10px] sm:text-label-action uppercase tracking-[0.15em] sm:tracking-[0.2em] text-text-primary font-semibold">
                     Thông Số Kỹ Thuật Di Sản
                   </span>
                 </div>
@@ -262,14 +262,14 @@ export default function CraftDetailPage() {
               </div>
 
               {/* Valuation & Action Zone */}
-              <div className="p-space-lg bg-surface-subtle border border-border-neutral shadow-sm flex flex-col space-y-space-md">
+              <div className="p-4 sm:p-space-lg bg-surface-subtle border border-border-neutral shadow-sm flex flex-col space-y-3 sm:space-y-space-md">
                 <div>
-                  <span className="font-spec-code text-[11px] text-text-secondary uppercase tracking-[0.15em] block mb-1">
+                  <span className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary uppercase tracking-[0.12em] sm:tracking-[0.15em] block mb-1">
                     Định mức chuyển nhượng di sản
                   </span>
-                  <div className="flex items-baseline gap-space-sm">
-                    <span className="font-headline-title text-[32px] text-text-primary font-bold tracking-tight">Giá giám tuyển</span>
-                    <span className="font-spec-code text-spec-code text-accent-terracotta tracking-[0.05em] uppercase font-medium">Chế tác thủ công theo mẻ</span>
+                  <div className="flex flex-wrap items-baseline gap-2 sm:gap-space-sm">
+                    <span className="font-headline-title text-[22px] sm:text-[28px] md:text-[32px] text-text-primary font-bold tracking-tight">Giá giám tuyển</span>
+                    <span className="font-spec-code text-[11px] sm:text-spec-code text-accent-terracotta tracking-[0.05em] uppercase font-medium">Chế tác theo mẻ</span>
                   </div>
                   <p className="font-body-spec text-[12px] text-text-secondary mt-1">
                     * Mỗi mẻ chỉ nung thành công 12 bộ đạt chuẩn tỷ lệ vết rạn tự nhiên cấp độ A+.

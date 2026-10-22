@@ -59,7 +59,7 @@ export default function VillageDrawer({ village, onClose }) {
 
         {/* Title & Location */}
         <div>
-          <h3 className="font-display-hero text-[20px] font-semibold text-text-primary uppercase tracking-[2px] leading-tight mb-1.5">
+          <h3 className="font-display-hero text-[17px] sm:text-[20px] font-semibold text-text-primary uppercase tracking-[1px] sm:tracking-[2px] leading-tight mb-1.5">
             {village.name}
           </h3>
           <div className="flex items-center gap-1.5 text-text-secondary text-[12px] font-spec-code">

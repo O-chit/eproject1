@@ -70,35 +70,35 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-canvas-linen flex flex-col justify-between py-10 px-4 sm:px-6 lg:px-8">
       {/* 1. Header Thương hiệu Di sản */}
-      <div className="flex flex-col items-center justify-center pt-4">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 rounded-full border border-accent-terracotta flex items-center justify-center bg-surface-crisp text-accent-terracotta font-serif font-bold text-lg tracking-widest shrink-0 shadow-sm">
+      <div className="flex flex-col items-center justify-center pt-2 sm:pt-4">
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-accent-terracotta flex items-center justify-center bg-surface-crisp text-accent-terracotta font-serif font-bold text-base sm:text-lg tracking-widest shrink-0 shadow-sm">
             CR
           </div>
           <div className="flex flex-col text-left">
-            <span className="font-['Montserrat'] text-[18px] uppercase tracking-[0.25em] text-text-primary font-semibold group-hover:text-accent-terracotta transition-colors leading-tight">
+            <span className="font-['Montserrat'] text-[15px] sm:text-[18px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-text-primary font-semibold group-hover:text-accent-terracotta transition-colors leading-tight">
               CraftRoots
             </span>
-            <span className="font-['Inter'] text-[10px] uppercase tracking-[0.2em] text-text-secondary leading-none mt-1">
+            <span className="font-['Inter'] text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.2em] text-text-secondary leading-none mt-1">
               Di Sản &amp; Làng Nghề Thủ Công
             </span>
           </div>
         </Link>
 
         {/* Thông báo yêu cầu đăng nhập trước khi xem */}
-        <div className="mt-5 max-w-md text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-subtle border border-border-neutral text-accent-terracotta font-spec-code text-[11px] uppercase tracking-wider font-semibold">
+        <div className="mt-4 sm:mt-5 max-w-md text-center">
+          <div className="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1 bg-surface-subtle border border-border-neutral text-accent-terracotta font-spec-code text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold">
             <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta"></span>
             CỔNG XÁC THỰC THÀNH VIÊN DI SẢN
           </div>
-          <p className="font-body-default text-[13px] text-text-secondary mt-2 leading-relaxed">
+          <p className="font-body-default text-[12px] sm:text-[13px] text-text-secondary mt-1.5 sm:mt-2 leading-relaxed">
             Vui lòng đăng nhập hoặc đăng ký tài khoản để tiếp tục khám phá kho tư liệu, bản đồ tương tác và hồ sơ các bậc thầy nghệ nhân Việt Nam.
           </p>
         </div>
       </div>
 
       {/* 2. Hộp thoại Đăng Nhập / Đăng Ký (Sharp Linework Container) */}
-      <div className="max-w-md w-full mx-auto my-6 bg-surface-crisp border border-border-neutral shadow-lg p-7 sm:p-9">
+      <div className="max-w-md w-full mx-auto my-4 sm:my-6 bg-surface-crisp border border-border-neutral shadow-lg p-5 sm:p-9">
         {/* Tab Chuyển đổi Đăng Nhập / Đăng Ký */}
         <div className="flex border-b border-border-neutral mb-6">
           <button

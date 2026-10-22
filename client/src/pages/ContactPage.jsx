@@ -72,21 +72,21 @@ export default function ContactPage() {
       </div>
 
       {/* Primary Workspace Layout */}
-      <section className="w-full py-12 md:py-16">
+      <section className="w-full py-8 sm:py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start">
             
             {/* LEFT COLUMN: Studio & Artisan Workshop Directory (5 cols lg) */}
-            <div className="lg:col-span-5 flex flex-col space-y-8">
+            <div className="lg:col-span-5 flex flex-col space-y-6 sm:space-y-8">
               {/* Editorial Title Block */}
               <div>
-                <span className="font-spec-code text-spec-code uppercase tracking-[0.25em] text-accent-terracotta block mb-2 font-medium">
+                <span className="font-spec-code text-[10px] sm:text-spec-code uppercase tracking-[0.15em] sm:tracking-[0.25em] text-accent-terracotta block mb-1.5 sm:mb-2 font-medium">
                   Điểm Hẹn Trực Tiếp // Bảo Tồn Nguyên Bản
                 </span>
-                <h1 className="font-display-hero text-[32px] md:text-[40px] leading-[44px] md:leading-[50px] font-light text-text-primary tracking-[0.18em] uppercase">
+                <h1 className="font-display-hero text-[22px] sm:text-[30px] md:text-[40px] leading-[30px] sm:leading-[40px] md:leading-[50px] font-light text-text-primary tracking-[0.08em] sm:tracking-[0.14em] md:tracking-[0.18em] uppercase">
                   Gặp Gỡ &amp; Kết Nối
                 </h1>
-                <p className="font-body-default text-body-default text-text-secondary mt-3 leading-relaxed">
+                <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary mt-2 sm:mt-3 leading-relaxed">
                   Mọi lời nhắn đều được gửi trực tiếp đến đội ngũ giám tuyển bảo tồn và các nghệ nhân xưởng bản địa.
                 </p>
               </div>

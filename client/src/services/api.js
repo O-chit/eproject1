@@ -52,7 +52,9 @@ export const api = {
   updateCraft: (id, payload) => request(`/crafts/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
   deleteCraft: (id) => request(`/crafts/${id}`, { method: 'DELETE' }),
 
-  // Danh mục & Siêu dữ liệu
+  // Danh mục, Thống kê & Siêu dữ liệu
+  getStats: () => request('/stats'),
+  getHome: () => request('/home'),
   getCategories: () => request('/categories'),
   getMaterials: () => request('/materials'),
   getTechniques: () => request('/techniques'),

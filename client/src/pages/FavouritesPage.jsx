@@ -154,49 +154,49 @@ export default function FavouritesPage() {
   return (
     <div className="flex flex-col w-full bg-canvas-linen">
       {/* Top Breadcrumb & Archive Meta Row */}
-      <section className="w-full bg-canvas-linen pt-8 pb-4">
-        <div className="max-w-7xl mx-auto px-margin">
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-border-neutral">
+      <section className="w-full bg-canvas-linen pt-4 sm:pt-8 pb-3 sm:pb-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
+          <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-border-neutral">
             {/* Structural Breadcrumb with delimiter styling */}
-            <nav aria-label="Đường dẫn lưu trữ" className="flex items-center text-text-secondary font-label-action text-label-action uppercase tracking-[0.2em]">
+            <nav aria-label="Đường dẫn lưu trữ" className="flex items-center text-text-secondary font-label-action text-[10px] sm:text-label-action uppercase tracking-[0.14em] sm:tracking-[0.2em]">
               <Link to="/" className="hover:text-accent-terracotta transition-colors">TRANG CHỦ</Link>
-              <span className="mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
+              <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
               <span className="text-text-secondary">HỒ SƠ CÁ NHÂN</span>
-              <span className="mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
+              <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
               <span className="text-text-primary font-semibold">TÁC PHẨM ĐÃ LƯU</span>
             </nav>
             {/* Live Archive Coordinate Stamp */}
-            <div className="flex items-center gap-2 font-spec-code text-spec-code text-text-secondary uppercase">
+            <div className="flex items-center gap-2 font-spec-code text-[10px] sm:text-spec-code text-text-secondary uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta inline-block animate-pulse"></span>
-              <span>{isFromDb ? 'BẢN GHI ĐỒNG BỘ CSDL' : 'LƯU TRỮ TRÌNH DUYỆT'}: {items.length.toString().padStart(2, '0')} DI SẢN</span>
+              <span>{isFromDb ? 'BẢN GHI CSDL' : 'TRÌNH DUYỆT'}: {items.length.toString().padStart(2, '0')} DI SẢN</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Title & Action Bar Section */}
-      <section className="w-full bg-canvas-linen pb-8">
-        <div className="max-w-7xl mx-auto px-margin">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-4">
-            <div className="flex flex-col space-y-3 max-w-2xl">
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 bg-surface-crisp border border-border-neutral font-spec-code text-spec-code uppercase tracking-[0.15em] text-accent-terracotta shadow-sm">
+      <section className="w-full bg-canvas-linen pb-4 sm:pb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 pb-4">
+            <div className="flex flex-col space-y-2 sm:space-y-3 max-w-2xl">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-surface-crisp border border-border-neutral font-spec-code text-[10px] sm:text-spec-code uppercase tracking-[0.1em] sm:tracking-[0.15em] text-accent-terracotta shadow-sm">
                   {items.length} TÁC PHẨM ĐÃ LƯU
                 </span>
-                <span className="font-spec-code text-[11px] uppercase tracking-[0.1em] text-text-secondary">
-                  MÃ ĐỊNH DANH TỦ ĐỒNG BỘ: CR-ARCHIVE-VN
+                <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.1em] text-text-secondary">
+                  MÃ ĐỊNH DANH: CR-ARCHIVE-VN
                 </span>
               </div>
-              <h1 className="font-headline-statement text-[34px] md:text-[42px] leading-[1.15] uppercase tracking-[6px] font-extralight text-text-primary">
+              <h1 className="font-headline-statement text-[20px] sm:text-[28px] md:text-[36px] lg:text-[42px] leading-[1.2] uppercase tracking-[1.5px] sm:tracking-[3px] md:tracking-[6px] font-extralight text-text-primary">
                 LƯU TRỮ CÁ NHÂN
               </h1>
-              <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed">
+              <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
                 Danh sách được lưu trữ an toàn trực tiếp trên trình duyệt của bạn nhằm bảo vệ quyền riêng tư. Dữ liệu này chỉ khả dụng trên thiết bị hiện thời mà không chia sẻ với bên thứ ba.
               </p>
             </div>
 
             {/* Global Archive Utilities Bar */}
-            <div className="flex flex-wrap items-center gap-y-2 text-[13px] font-label-action uppercase tracking-[2px] text-text-primary pb-2">
+            <div className="flex flex-wrap items-center gap-y-2 text-[11px] sm:text-[13px] font-label-action uppercase tracking-[1px] sm:tracking-[2px] text-text-primary pb-2">
               <button
                 type="button"
                 onClick={handleShare}

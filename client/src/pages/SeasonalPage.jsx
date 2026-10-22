@@ -151,45 +151,45 @@ export default function SeasonalPage() {
       {/* Immersive Editorial Hero */}
       <section className="relative w-full -mt-[134px] md:-mt-20 overflow-hidden bg-surface-container-high">
         <div
-          className="w-full min-h-[580px] lg:min-h-[640px] bg-cover bg-center flex items-center relative"
+          className="w-full min-h-[380px] sm:min-h-[480px] lg:min-h-[640px] bg-cover bg-center flex items-center relative"
           style={{ backgroundImage: `url('${heroBg}')` }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-text-primary/90 via-text-primary/75 to-transparent"></div>
           <div className="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
           
-          <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-margin w-full pt-[140px] md:pt-28 pb-space-xl">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-margin w-full pt-[120px] sm:pt-[130px] md:pt-28 pb-6 sm:pb-space-xl">
             <div className="max-w-2xl text-surface-crisp flex flex-col items-start">
-              <div className="flex items-center gap-space-xs mb-space-sm">
-                <span className="font-spec-code text-spec-code tracking-[0.25em] uppercase text-primary-fixed-dim">
+              <div className="flex items-center gap-space-xs mb-2 sm:mb-space-sm">
+                <span className="font-spec-code text-[10px] sm:text-spec-code tracking-[0.15em] sm:tracking-[0.25em] uppercase text-primary-fixed-dim">
                   Tuyển Tập Giới Hạn
                 </span>
                 <span className="text-surface-variant/40 select-none">|</span>
-                <span className="font-label-signature italic text-label-signature text-secondary-fixed">
+                <span className="font-label-signature italic text-[13px] sm:text-label-signature text-secondary-fixed">
                   {heroSeasonBadge}
                 </span>
               </div>
 
-              <h1 className="font-display-hero text-[32px] sm:text-[44px] lg:text-[52px] uppercase text-surface-crisp font-light tracking-[6px] leading-[1.2] mb-space-md">
+              <h1 className="font-display-hero text-[22px] sm:text-[32px] md:text-[44px] lg:text-[52px] uppercase text-surface-crisp font-light tracking-[1.5px] sm:tracking-[3px] md:tracking-[6px] leading-[1.25] mb-2.5 sm:mb-space-md">
                 {heroTitle}
               </h1>
 
-              <div className="h-0.5 w-16 bg-accent-terracotta mb-space-md"></div>
+              <div className="h-0.5 w-12 sm:w-16 bg-accent-terracotta mb-2.5 sm:mb-space-md"></div>
 
-              <p className="font-body-default text-body-default text-surface-variant font-normal leading-relaxed mb-space-lg max-w-xl">
+              <p className="font-body-default text-[13px] sm:text-body-default text-surface-variant font-normal leading-relaxed mb-4 sm:mb-space-lg max-w-xl">
                 {heroConcept}
               </p>
 
-              <div className="flex flex-wrap items-center gap-space-md">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-space-md">
                 <a
                   href="#tuyen-tap"
-                  className="inline-flex items-center justify-center bg-accent-terracotta hover:bg-primary text-surface-crisp font-label-action text-label-action uppercase tracking-[0.18em] px-7 py-3.5 transition-colors shadow-sm"
+                  className="inline-flex items-center justify-center bg-accent-terracotta hover:bg-primary text-surface-crisp font-label-action text-[11px] sm:text-label-action uppercase tracking-[0.12em] sm:tracking-[0.18em] px-5 py-2.5 sm:px-7 sm:py-3.5 transition-colors shadow-sm"
                 >
                   Khám Phá Bộ Sưu Tập
                 </a>
-                <div className="flex items-center font-spec-code text-spec-code text-surface-variant tracking-[0.12em] uppercase">
+                <div className="flex items-center font-spec-code text-[10px] sm:text-spec-code text-surface-variant tracking-[0.08em] sm:tracking-[0.12em] uppercase">
                   <span>Niên khóa: {collection?.year || '2026'}</span>
-                  <span className="mx-3 text-surface-variant/40">|</span>
-                  <span>{collection ? 'Dữ liệu CSDL trực tiếp' : 'Phiên bản mẫu'}</span>
+                  <span className="mx-2 sm:mx-3 text-surface-variant/40">|</span>
+                  <span>{collection ? 'Dữ liệu CSDL' : 'Bản mẫu'}</span>
                 </div>
               </div>
             </div>
@@ -198,30 +198,32 @@ export default function SeasonalPage() {
       </section>
 
       {/* Narrative Callout Block */}
-      <section className="w-full max-w-7xl mx-auto px-margin py-space-xl">
-        <div className="bg-surface-subtle p-space-lg lg:p-space-xl relative shadow-sm">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-space-lg">
+      <section className="w-full max-w-7xl mx-auto px-4 md:px-margin py-6 sm:py-10 md:py-space-xl">
+        <div className="bg-surface-subtle p-4 sm:p-6 lg:p-space-xl relative shadow-sm">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-space-lg">
             <div className="flex-1 max-w-3xl">
-              <div className="flex items-center gap-space-xs mb-space-sm">
-                <span className="material-symbols-outlined text-accent-terracotta text-[20px]">spa</span>
-                <span className="font-spec-code text-spec-code uppercase tracking-[0.2em] text-text-secondary">
+              <div className="flex items-center gap-space-xs mb-1.5 sm:mb-space-sm">
+                <span className="material-symbols-outlined text-accent-terracotta text-[18px] sm:text-[20px]">spa</span>
+                <span className="font-spec-code text-[10.5px] sm:text-spec-code uppercase tracking-[0.14em] sm:tracking-[0.2em] text-text-secondary">
                   Triết Lý Giám Tuyển Văn Hóa
                 </span>
               </div>
-              <blockquote className="font-headline-title text-headline-title text-text-primary font-normal italic leading-snug tracking-tight mb-space-sm">
+              <blockquote className="font-headline-title text-[15px] sm:text-[18px] md:text-headline-title text-text-primary font-normal italic leading-snug tracking-tight mb-2 sm:mb-space-sm">
                 “{heroConcept}”
               </blockquote>
-              <cite className="font-spec-code text-spec-code uppercase tracking-[0.14em] text-accent-terracotta not-italic block">
+              <cite className="font-spec-code text-[10.5px] sm:text-spec-code uppercase tracking-[0.1em] sm:tracking-[0.14em] text-accent-terracotta not-italic block">
                 — Tuyển tập di sản CraftRoots, Niên vụ {collection?.year || '2026'}
               </cite>
             </div>
             
-            <div className="shrink-0 flex flex-col items-start md:items-end justify-center pl-0 md:pl-space-lg text-text-secondary font-spec-code text-spec-code space-y-1">
-              <div className="text-text-primary font-medium tracking-[0.15em] uppercase">Tác phẩm tuyển chọn</div>
-              <div className="text-[28px] leading-tight font-display-hero font-light text-primary">
+            <div className="shrink-0 flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-border-neutral pl-0 md:pl-space-lg text-text-secondary font-spec-code text-spec-code space-y-0 md:space-y-1">
+              <div>
+                <div className="text-text-primary font-medium tracking-[0.1em] sm:tracking-[0.15em] uppercase text-[10.5px] sm:text-[12px]">Tác phẩm tuyển chọn</div>
+                <div className="text-[10px] sm:text-[11px] tracking-[0.08em] sm:tracking-[0.1em] text-text-secondary/80">Xác thực nguyên bản</div>
+              </div>
+              <div className="text-[22px] sm:text-[28px] leading-tight font-display-hero font-light text-primary">
                 {displayedItems.length.toString().padStart(2, '0')}
               </div>
-              <div className="text-[11px] tracking-[0.1em] text-text-secondary/80">Xác thực nguyên bản</div>
             </div>
           </div>
         </div>
@@ -340,21 +342,21 @@ export default function SeasonalPage() {
             <div className="bg-surface-crisp p-space-lg flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-shadow">
               <div>
                 <div className="flex items-center justify-between mb-space-md">
-                  <span className="font-display-hero text-[36px] leading-none font-light text-accent-terracotta">
+                  <span className="font-display-hero text-[24px] sm:text-[30px] md:text-[36px] leading-none font-light text-accent-terracotta">
                     01
                   </span>
-                  <span className="font-spec-code text-spec-code uppercase tracking-[0.15em] text-text-secondary">
+                  <span className="font-spec-code text-[11px] sm:text-spec-code uppercase tracking-[0.12em] sm:tracking-[0.15em] text-text-secondary">
                     Giai Đoạn I
                   </span>
                 </div>
-                <h3 className="font-title-card text-title-card text-text-primary font-medium mb-space-xs">
+                <h3 className="font-title-card text-[15px] sm:text-title-card text-text-primary font-medium mb-space-xs">
                   Thu Hái Búp Chè
                 </h3>
-                <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed">
+                <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
                   Những búp chè Shan Tuyết một tôm hai lá phủ lớp nhung trắng được đồng bào Dao đỏ thu hái khi sương sớm còn đọng trên chóp lá, giữ trọn vị chát thanh dịu ngọt hậu của núi rừng.
                 </p>
               </div>
-              <div className="mt-space-lg pt-space-sm flex items-center font-spec-code text-[11px] text-text-secondary uppercase tracking-[0.1em]">
+              <div className="mt-4 sm:mt-space-lg pt-2 sm:pt-space-sm flex items-center font-spec-code text-[10px] sm:text-[11px] text-text-secondary uppercase tracking-[0.08em] sm:tracking-[0.1em]">
                 <span>Độ cao: 1.400m</span>
                 <span className="mx-2 text-border-neutral opacity-60">|</span>
                 <span>Tiết Thu phân</span>
@@ -362,24 +364,24 @@ export default function SeasonalPage() {
             </div>
 
             {/* Step 2 */}
-            <div className="bg-surface-crisp p-space-lg flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-shadow">
+            <div className="bg-surface-crisp p-4 sm:p-space-lg flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-shadow">
               <div>
-                <div className="flex items-center justify-between mb-space-md">
-                  <span className="font-display-hero text-[36px] leading-none font-light text-primary">
+                <div className="flex items-center justify-between mb-3 sm:mb-space-md">
+                  <span className="font-display-hero text-[24px] sm:text-[30px] md:text-[36px] leading-none font-light text-primary">
                     02
                   </span>
-                  <span className="font-spec-code text-spec-code uppercase tracking-[0.15em] text-text-secondary">
+                  <span className="font-spec-code text-[11px] sm:text-spec-code uppercase tracking-[0.12em] sm:tracking-[0.15em] text-text-secondary">
                     Giai Đoạn II
                   </span>
                 </div>
-                <h3 className="font-title-card text-title-card text-text-primary font-medium mb-space-xs">
+                <h3 className="font-title-card text-[15px] sm:text-title-card text-text-primary font-medium mb-space-xs">
                   Ủ Men Tro &amp; Luyện Đất
                 </h3>
-                <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed">
+                <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
                   Đất sa thạch sông Hồng ủ đầm trong hầm sâu qua 3 mùa mưa nắng để đạt độ dẻo mịn tối đa. Men tro rơm nếp cổ truyền được nghiền mịn thủ công, phủ mỏng để tương tác cùng ngọn lửa lò củi.
                 </p>
               </div>
-              <div className="mt-space-lg pt-space-sm flex items-center font-spec-code text-[11px] text-text-secondary uppercase tracking-[0.1em]">
+              <div className="mt-4 sm:mt-space-lg pt-2 sm:pt-space-sm flex items-center font-spec-code text-[10px] sm:text-[11px] text-text-secondary uppercase tracking-[0.08em] sm:tracking-[0.1em]">
                 <span>Men tro tự nhiên</span>
                 <span className="mx-2 text-border-neutral opacity-60">|</span>
                 <span>Khử oxy 1250°C</span>
@@ -387,13 +389,13 @@ export default function SeasonalPage() {
             </div>
 
             {/* Step 3 */}
-            <div className="bg-surface-crisp p-space-lg flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-shadow">
+            <div className="bg-surface-crisp p-4 sm:p-space-lg flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-shadow">
               <div>
-                <div className="flex items-center justify-between mb-space-md">
-                  <span className="font-display-hero text-[36px] leading-none font-light text-accent-terracotta">
+                <div className="flex items-center justify-between mb-3 sm:mb-space-md">
+                  <span className="font-display-hero text-[24px] sm:text-[30px] md:text-[36px] leading-none font-light text-accent-terracotta">
                     03
                   </span>
-                  <span className="font-spec-code text-spec-code uppercase tracking-[0.15em] text-text-secondary">
+                  <span className="font-spec-code text-[11px] sm:text-spec-code uppercase tracking-[0.12em] sm:tracking-[0.15em] text-text-secondary">
                     Giai Đoạn III
                   </span>
                 </div>

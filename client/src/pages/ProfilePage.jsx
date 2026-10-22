@@ -42,19 +42,19 @@ export default function ProfilePage() {
     <div className="w-full min-h-[calc(100vh-180px)] bg-canvas-linen py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header Profile */}
-        <div className="bg-surface-crisp p-6 sm:p-8 border border-border-neutral shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-accent-terracotta text-white flex items-center justify-center font-headline-title text-2xl font-bold">
+        <div className="bg-surface-crisp p-4 sm:p-8 border border-border-neutral shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-accent-terracotta text-white flex items-center justify-center font-headline-title text-xl sm:text-2xl font-bold shrink-0">
               {user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
             </div>
             <div>
-              <span className="font-spec-code text-[11px] uppercase tracking-wider text-accent-terracotta font-semibold">
+              <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-wider text-accent-terracotta font-semibold">
                 THÀNH VIÊN CRAFTROOTS
               </span>
-              <h2 className="font-headline-title text-2xl text-text-primary">
+              <h2 className="font-headline-title text-lg sm:text-2xl text-text-primary">
                 {user?.fullName || 'Người Yêu Di Sản'}
               </h2>
-              <p className="font-body-spec text-[13px] text-text-secondary">{user?.email}</p>
+              <p className="font-body-spec text-[12px] sm:text-[13px] text-text-secondary">{user?.email}</p>
             </div>
           </div>
           <button

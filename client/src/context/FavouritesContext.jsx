@@ -10,54 +10,75 @@ export function FavouritesProvider({ children }) {
   const [favourites, setFavourites] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Đọc danh sách yêu thích ban đầu
-  useEffect(() => {
-    const loadFavourites = async () => {
-      setLoading(true);
-      try {
-        if (isAuthenticated) {
-          // 1. Nếu đã đăng nhập: Kiểm tra xem có yêu thích của khách cần sync không
-          const rawGuestFavs = localStorage.getItem(GUEST_FAVS_KEY);
-          if (rawGuestFavs) {
-            try {
-              const guestIds = JSON.parse(rawGuestFavs);
-              if (Array.isArray(guestIds) && guestIds.length > 0) {
-                await api.syncFavourites(guestIds);
-                localStorage.removeItem(GUEST_FAVS_KEY);
-              }
-            } catch (err) {
-              console.warn('[FavouritesContext] Lỗi đồng bộ yêu thích khách:', err);
-            }
-          }
-
-          // 2. Tải danh sách yêu thích từ máy chủ
+  // Đọc danh sách yêu thích ban đầu hoặc làm mới
+  const refreshFavourites = useCallback(async () => {
+    setLoading(true);
+    try {
+      if (isAuthenticated) {
+        // 1. Nếu đã đăng nhập: Kiểm tra xem có yêu thích của khách cần sync không
+        const rawGuestFavs = localStorage.getItem(GUEST_FAVS_KEY) || localStorage.getItem('craftroots_favourites');
+        if (rawGuestFavs) {
           try {
-            const res = await api.getFavourites();
-            const serverFavs = (Array.isArray(res) ? res : res.data || []).map(
-              (item) => item.craft_id || item.craftId || item.id || item
-            );
-            setFavourites(serverFavs);
+            const guestItems = JSON.parse(rawGuestFavs);
+            if (Array.isArray(guestItems) && guestItems.length > 0) {
+              const guestIds = guestItems.map((item) => Number(item.id || item)).filter(Boolean);
+              if (guestIds.length > 0) {
+                await api.syncFavourites(guestIds);
+              }
+              localStorage.removeItem(GUEST_FAVS_KEY);
+              localStorage.removeItem('craftroots_favourites');
+            }
           } catch (err) {
-            console.warn('[FavouritesContext] Máy chủ chưa sẵn sàng, giữ state hiện tại');
+            console.warn('[FavouritesContext] Lỗi đồng bộ yêu thích khách:', err);
           }
-        } else {
-          // Chưa đăng nhập: Đọc từ localStorage khách
-          const raw = localStorage.getItem(GUEST_FAVS_KEY);
-          if (raw) {
-            setFavourites(JSON.parse(raw));
+        }
+
+        // 2. Tải danh sách yêu thích từ máy chủ
+        try {
+          const res = await api.getFavourites();
+          const serverFavs = (Array.isArray(res) ? res : res.data || []).map(
+            (item) => item.craft_id || item.craftId || item.id || item
+          );
+          setFavourites(serverFavs);
+        } catch (err) {
+          console.warn('[FavouritesContext] Máy chủ chưa sẵn sàng, giữ state hiện tại');
+        }
+      } else {
+        // Chưa đăng nhập: Đọc từ localStorage khách
+        const raw = localStorage.getItem(GUEST_FAVS_KEY) || localStorage.getItem('craftroots_favourites');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            setFavourites(parsed.map((item) => Number(item.id || item)).filter(Boolean));
           } else {
             setFavourites([]);
           }
+        } else {
+          setFavourites([]);
         }
-      } catch (err) {
-        console.error('[FavouritesContext] Lỗi nạp yêu thích:', err);
-      } finally {
-        setLoading(false);
       }
-    };
-
-    loadFavourites();
+    } catch (err) {
+      console.error('[FavouritesContext] Lỗi nạp yêu thích:', err);
+    } finally {
+      setLoading(false);
+    }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    refreshFavourites();
+  }, [refreshFavourites]);
+
+  useEffect(() => {
+    const handleSync = () => {
+      refreshFavourites();
+    };
+    window.addEventListener('storage', handleSync);
+    window.addEventListener('craftroots_favs_updated', handleSync);
+    return () => {
+      window.removeEventListener('storage', handleSync);
+      window.removeEventListener('craftroots_favs_updated', handleSync);
+    };
+  }, [refreshFavourites]);
 
   // Kiểm tra một tác phẩm có trong danh sách yêu thích không
   const isFav = useCallback(
@@ -98,10 +119,12 @@ export function FavouritesProvider({ children }) {
         // Lưu vào localStorage của khách
         try {
           localStorage.setItem(GUEST_FAVS_KEY, JSON.stringify(nextFavs));
+          localStorage.setItem('craftroots_favourites', JSON.stringify(nextFavs));
         } catch (err) {
           console.warn('Không thể lưu yêu thích vào localStorage:', err);
         }
       }
+      window.dispatchEvent(new Event('craftroots_favs_updated'));
     },
     [favourites, isFav, isAuthenticated]
   );
@@ -112,6 +135,7 @@ export function FavouritesProvider({ children }) {
     toggleFav,
     loading,
     totalFavourites: favourites.length,
+    refreshFavourites,
   };
 
   return <FavouritesContext.Provider value={value}>{children}</FavouritesContext.Provider>;

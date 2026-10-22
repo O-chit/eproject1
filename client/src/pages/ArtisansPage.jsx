@@ -153,6 +153,21 @@ export default function ArtisansPage() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [bookingArtisan, setBookingArtisan] = useState(null);
+  const [artisanStats, setArtisanStats] = useState({ total: MASTER_ARTISANS.length, nationalHeritage: 0 });
+
+  // Nạp thống kê số lượng nghệ nhân thực tế từ DB
+  useEffect(() => {
+    api.getStats()
+      .then((data) => {
+        if (data && typeof data.artisans === 'number') {
+          setArtisanStats({
+            total: data.artisans,
+            nationalHeritage: data.nationalHeritages || 0,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // 1. Đồng bộ mở Modal khi truy cập đường link có hash #nghe-nhan/{ref}
   useEffect(() => {
@@ -213,17 +228,17 @@ export default function ArtisansPage() {
 
           {/* Main Headline Block */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-end pt-2 pb-space-sm">
-            <div className="lg:col-span-8 flex flex-col space-y-2">
+            <div className="lg:col-span-8 flex flex-col space-y-1.5 sm:space-y-2">
               <div className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 bg-accent-terracotta"></span>
-                <span className="font-spec-code text-[10px] tracking-[0.25em] uppercase text-accent-terracotta font-semibold">
-                  HỒ SƠ LƯU TRỮ DI SẢN • MA TRẬN NGHỆ NHÂN TOÀN QUỐC • BẢO TỒN NGUYÊN BẢN
+                <span className="inline-block w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent-terracotta"></span>
+                <span className="font-spec-code text-[9px] sm:text-[10px] tracking-[0.14em] sm:tracking-[0.25em] uppercase text-accent-terracotta font-semibold">
+                  HỒ SƠ LƯU TRỮ DI SẢN • MA TRẬN NGHỆ NHÂN • BẢO TỒN NGUYÊN BẢN
                 </span>
               </div>
-              <h1 className="font-headline-title text-[32px] md:text-[40px] leading-[1.15] text-text-primary tracking-tight font-semibold">
+              <h1 className="font-headline-title text-[20px] sm:text-[28px] md:text-[36px] lg:text-[40px] leading-[1.2] text-text-primary tracking-tight font-semibold">
                 Danh Sách Nghệ Nhân &amp; Bậc Thầy Chế Tác
               </h1>
-              <p className="font-body-default text-text-secondary text-[14px] md:text-[15px] max-w-3xl leading-relaxed pt-1">
+              <p className="font-body-default text-text-secondary text-[13px] sm:text-[14px] md:text-[15px] max-w-3xl leading-relaxed pt-1">
                 Kho tư liệu mở trực quan về các bậc thầy di sản phi vật thể Việt Nam. Sơ đồ lưu trữ 2 chiều hệ thống hóa theo vùng nguyên liệu, kỹ pháp độc bản, niên đại truyền thừa và tác phẩm tiêu biểu.
               </p>
             </div>
@@ -243,22 +258,22 @@ export default function ArtisansPage() {
           </div>
 
           {/* Quick Metrics Counter Strip */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter pt-space-md mt-space-sm border-t border-border-neutral font-spec-code">
-            <div className="flex flex-col border-r border-border-neutral last:border-r-0 pr-4">
-              <span className="text-[26px] md:text-[30px] font-headline-title font-semibold text-text-primary leading-tight">84</span>
-              <span className="text-[11px] uppercase tracking-wider text-text-secondary mt-0.5">Nghệ Nhân Phục Dựng</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-gutter pt-3 sm:pt-space-md mt-2 sm:mt-space-sm border-t border-border-neutral font-spec-code">
+            <div className="flex flex-col border-r border-border-neutral last:border-r-0 pr-3 sm:pr-4">
+              <span className="text-[20px] sm:text-[24px] md:text-[30px] font-headline-title font-semibold text-text-primary leading-tight">{artisanStats.total}</span>
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-text-secondary mt-0.5">Nghệ Nhân Lưu Trữ</span>
             </div>
-            <div className="flex flex-col border-r border-border-neutral last:border-r-0 pr-4">
-              <span className="text-[26px] md:text-[30px] font-headline-title font-semibold text-text-primary leading-tight">500+</span>
-              <span className="text-[11px] uppercase tracking-wider text-text-secondary mt-0.5">Năm Gia Truyền Bình Quân</span>
+            <div className="flex flex-col md:border-r border-border-neutral last:border-r-0 pr-3 sm:pr-4">
+              <span className="text-[20px] sm:text-[24px] md:text-[30px] font-headline-title font-semibold text-text-primary leading-tight">500+</span>
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-text-secondary mt-0.5">Năm Gia Truyền</span>
             </div>
-            <div className="flex flex-col border-r border-border-neutral last:border-r-0 pr-4">
-              <span className="text-[26px] md:text-[30px] font-headline-title font-semibold text-text-primary leading-tight">1.200+</span>
-              <span className="text-[11px] uppercase tracking-wider text-text-secondary mt-0.5">Hiện Vật Độc Bản</span>
+            <div className="flex flex-col border-r border-border-neutral last:border-r-0 pr-3 sm:pr-4 pt-2 md:pt-0">
+              <span className="text-[20px] sm:text-[24px] md:text-[30px] font-headline-title font-semibold text-text-primary leading-tight">1.200+</span>
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-text-secondary mt-0.5">Hiện Vật Độc Bản</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[26px] md:text-[30px] font-headline-title font-semibold text-accent-terracotta leading-tight">100%</span>
-              <span className="text-[11px] uppercase tracking-wider text-text-secondary mt-0.5">Chứng Thực Di Sản Phi Vật Thể</span>
+            <div className="flex flex-col last:border-r-0 pr-3 sm:pr-4 pt-2 md:pt-0">
+              <span className="text-[20px] sm:text-[24px] md:text-[30px] font-headline-title font-semibold text-accent-terracotta leading-tight">100%</span>
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-text-secondary mt-0.5">Chứng Thực Di Sản</span>
             </div>
           </div>
         </div>
@@ -277,7 +292,7 @@ export default function ArtisansPage() {
                   : 'text-text-secondary hover:text-accent-terracotta'
               }`}
             >
-              TẤT CẢ (84)
+              TẤT CẢ ({artisanStats.total})
             </button>
             <span className="mx-4 text-border-neutral select-none opacity-40 font-light">|</span>
 

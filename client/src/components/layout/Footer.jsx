@@ -15,21 +15,21 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full bg-canvas-linen border-t border-border-neutral pt-space-xl pb-space-lg mt-auto">
-      <div className="max-w-7xl mx-auto px-margin">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter pb-space-xl border-b border-border-neutral">
+    <footer className="w-full bg-canvas-linen border-t border-border-neutral pt-8 sm:pt-12 md:pt-space-xl pb-6 sm:pb-space-lg mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-gutter pb-8 sm:pb-space-xl border-b border-border-neutral">
           
           {/* Cột 1: Thương hiệu CraftRoots & Lưu Trữ Sống */}
-          <div className="md:col-span-4 flex flex-col pr-space-md">
-            <div className="flex items-center gap-space-sm mb-space-sm">
-              <span className="font-headline-title text-headline-title text-text-primary tracking-tight">
+          <div className="md:col-span-4 flex flex-col pr-0 md:pr-space-md">
+            <div className="flex items-center gap-2 sm:gap-space-sm mb-2 sm:mb-space-sm">
+              <span className="font-headline-title text-[20px] sm:text-headline-title text-text-primary tracking-tight">
                 CraftRoots
               </span>
-              <span className="text-[10px] font-spec-code tracking-[0.2em] uppercase text-accent-terracotta border border-accent-terracotta px-2 py-0.5 rounded-[50px]">
+              <span className="text-[10px] font-spec-code tracking-[0.15em] sm:tracking-[0.2em] uppercase text-accent-terracotta border border-accent-terracotta px-2 py-0.5 rounded-[50px]">
                 Lưu Trữ Sống
               </span>
             </div>
-            <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">
+            <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed mb-3 sm:mb-space-md">
               Bảo tồn cốt cách làng nghề và tôn vinh bàn tay tài hoa của nghệ nhân Việt Nam qua từng đường nét, chất liệu mộc bản và tâm thức văn hóa ngàn năm.
             </p>
             <div className="text-body-spec font-body-spec text-text-primary space-y-1">

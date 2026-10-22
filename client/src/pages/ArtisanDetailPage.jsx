@@ -104,7 +104,7 @@ export default function ArtisanDetailPage() {
         </div>
 
         {/* Hero Section */}
-        <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-10 shadow-sm flex flex-col md:flex-row gap-8 items-stretch">
+        <div className="bg-surface-crisp border border-border-neutral p-4 sm:p-6 md:p-10 shadow-sm flex flex-col md:flex-row gap-6 md:gap-8 items-stretch">
           <div className="w-full md:w-5/12 aspect-video md:aspect-auto md:min-h-[380px] relative bg-black overflow-hidden border border-border-neutral shrink-0">
             <img
               src={artisan.avatar_url || artisan.avatarUrl || artisan.image_url || 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=900&q=80'}
@@ -112,7 +112,7 @@ export default function ArtisanDetailPage() {
               className="w-full h-full object-cover grayscale contrast-[1.05] hover:grayscale-0 transition-all duration-700 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white font-spec-code text-[11px]">
+            <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex items-center justify-between text-white font-spec-code text-[10px] sm:text-[11px]">
               <span className="bg-black/60 px-2 py-0.5 border border-white/20">
                 REF: {artisan.ref || artisan.code || `ART-${artisan.id}`}
               </span>
@@ -122,23 +122,23 @@ export default function ArtisanDetailPage() {
             </div>
           </div>
 
-          <div className="w-full md:w-7/12 flex flex-col justify-between space-y-5">
+          <div className="w-full md:w-7/12 flex flex-col justify-between space-y-4 sm:space-y-5">
             <div>
-              <span className="font-spec-code text-[11px] uppercase tracking-widest text-accent-terracotta font-semibold">
+              <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-widest text-accent-terracotta font-semibold">
                 HỒ SƠ BẬC THẦY DI SẢN • {artisan.village || artisan.regionName || 'Làng Nghề Truyền Thống'}
               </span>
-              <h1 className="font-headline-title text-3xl sm:text-4xl text-text-primary font-bold mt-1">
+              <h1 className="font-headline-title text-2xl sm:text-3xl md:text-4xl text-text-primary font-bold mt-1">
                 {artisan.name}
               </h1>
-              <p className="font-spec-code text-[13px] text-text-secondary mt-1">
+              <p className="font-spec-code text-[12px] sm:text-[13px] text-text-secondary mt-1">
                 {artisan.title || 'Nghệ Nhân Ưu Tú'} • {artisan.age || 70} Tuổi • {artisan.craft_category || artisan.specialty || 'Di Sản'}
               </p>
 
-              <blockquote className="border-l-2 border-accent-terracotta pl-4 py-2.5 my-4 bg-surface-subtle/50 font-label-signature italic text-[14px] text-text-primary leading-relaxed">
+              <blockquote className="border-l-2 border-accent-terracotta pl-3 sm:pl-4 py-2 sm:py-2.5 my-3 sm:my-4 bg-surface-subtle/50 font-label-signature italic text-[13px] sm:text-[14px] text-text-primary leading-relaxed">
                 "{artisan.quote || 'Đất có linh hồn, lửa có tính khí. Người thợ chỉ là chiếc cầu nối giữa tinh hoa trời đất và dáng hình thế gian.'}"
               </blockquote>
 
-              <p className="font-body-default text-[13px] text-text-secondary leading-relaxed">
+              <p className="font-body-default text-[12.5px] sm:text-[13px] text-text-secondary leading-relaxed">
                 {artisan.biography || 'Nghệ nhân dành trọn đời cống hiến cho công cuộc bảo tồn và phục chế các tinh hoa thủ công truyền thống.'}
               </p>
             </div>
