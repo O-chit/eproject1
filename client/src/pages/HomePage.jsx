@@ -77,7 +77,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col w-full">
       {/* 1. HERO SECTION CHUẨN DEMO */}
-      <section className="relative w-full min-h-[640px] lg:min-h-[720px] flex items-center justify-end overflow-hidden -mt-20 pt-20">
+      <section className="relative w-full min-h-[640px] lg:min-h-[720px] flex items-center justify-end overflow-hidden -mt-[134px] pt-[134px] md:-mt-20 md:pt-20">
         <div
           className="absolute inset-0 bg-cover bg-center"
           data-alt="A master Vietnamese ceramic artisan in an earthy, sunlit studio in Bat Trang village, shaping unglazed clay on a rustic kick-wheel. Golden dust motes float through northern afternoon light, illuminating handwoven bamboo drying racks, aged terracotta urns, raw river silt textures, and natural linen workwear. Editorial architectural lighting, authentic documentary aesthetic."

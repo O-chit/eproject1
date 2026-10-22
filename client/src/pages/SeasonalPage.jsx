@@ -149,7 +149,7 @@ export default function SeasonalPage() {
       )}
 
       {/* Immersive Editorial Hero */}
-      <section className="relative w-full -mt-20 overflow-hidden bg-surface-container-high">
+      <section className="relative w-full -mt-[134px] md:-mt-20 overflow-hidden bg-surface-container-high">
         <div
           className="w-full min-h-[580px] lg:min-h-[640px] bg-cover bg-center flex items-center relative"
           style={{ backgroundImage: `url('${heroBg}')` }}
@@ -157,7 +157,7 @@ export default function SeasonalPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-text-primary/90 via-text-primary/75 to-transparent"></div>
           <div className="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
           
-          <div className="relative z-10 max-w-7xl mx-auto px-margin w-full pt-28 pb-space-xl">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-margin w-full pt-[140px] md:pt-28 pb-space-xl">
             <div className="max-w-2xl text-surface-crisp flex flex-col items-start">
               <div className="flex items-center gap-space-xs mb-space-sm">
                 <span className="font-spec-code text-spec-code tracking-[0.25em] uppercase text-primary-fixed-dim">

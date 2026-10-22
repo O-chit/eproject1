@@ -41,7 +41,7 @@ export default function Layout() {
 
       <main
         className={`w-full ${
-          isMapPage ? 'flex-1 h-[calc(100vh-80px)] overflow-hidden flex flex-col' : 'flex-1'
+          isMapPage ? 'flex-1 h-[calc(100vh-134px)] md:h-[calc(100vh-80px)] overflow-hidden flex flex-col' : 'flex-1'
         }`}
       >
         <Outlet />

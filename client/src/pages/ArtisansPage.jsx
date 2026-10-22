@@ -265,7 +265,7 @@ export default function ArtisansPage() {
       </section>
 
       {/* SECTION 2: FILTER STRIP WITH DELIMITERS (STICKY) */}
-      <section className="w-full bg-canvas-linen border-b border-border-neutral sticky top-20 z-40">
+      <section className="w-full bg-canvas-linen border-b border-border-neutral sticky top-[134px] md:top-20 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
           <div className="overflow-x-auto flex items-center py-3 text-[12px] font-label-action uppercase tracking-[0.14em] whitespace-nowrap no-scrollbar">
             <button
