@@ -91,6 +91,7 @@ export const api = {
   getFavourites: () => request('/favourites'),
   addFavourite: (craftId) => request(`/favourites/${craftId}`, { method: 'POST' }),
   removeFavourite: (craftId) => request(`/favourites/${craftId}`, { method: 'DELETE' }),
+  clearFavourites: () => request('/favourites', { method: 'DELETE' }),
   syncFavourites: (craftIds) => request('/favourites/sync', { method: 'POST', body: JSON.stringify({ craftIds }) }),
 
   // Tin nhắn liên hệ

@@ -7,6 +7,11 @@ const craftSummarySelect = `
   c.id,
   c.name,
   c.slug,
+  c.code,
+  c.tag,
+  c.price_vnd AS "priceVnd",
+  c.price_vnd,
+  c.origin_line AS "originLine",
   r.name AS region,
   cat.name AS category,
   cat.slug AS "categorySlug",
@@ -23,7 +28,36 @@ const craftSummarySelect = `
       WHERE cm.craft_id = c.id
     ),
     '[]'::json
-  ) AS materials
+  ) AS materials,
+  COALESCE(
+    (
+      SELECT cv.name
+      FROM craft_villages cv
+      WHERE cv.id = c.village_id
+    ),
+    r.name
+  ) AS village,
+  COALESCE(
+    (
+      SELECT a.name
+      FROM craft_artisans ca
+      JOIN artisans a ON ca.artisan_id = a.id
+      WHERE ca.craft_id = c.id
+      ORDER BY ca.is_lead DESC
+      LIMIT 1
+    ),
+    'Nghệ nhân truyền thống'
+  ) AS artisan,
+  COALESCE(
+    (
+      SELECT t.name
+      FROM craft_techniques ct
+      JOIN techniques t ON ct.technique_id = t.id
+      WHERE ct.craft_id = c.id
+      LIMIT 1
+    ),
+    'Thủ công bản địa'
+  ) AS technique
 `;
 
 const craftSummaryFrom = `

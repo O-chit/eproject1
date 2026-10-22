@@ -25,7 +25,7 @@ export default function Navbar() {
           });
         }
       })
-      .catch(() => {}); // Giữ nguyên giá trị mặc định nếu backend chưa sẵn sàng
+      .catch(() => { }); // Giữ nguyên giá trị mặc định nếu backend chưa sẵn sàng
   }, []);
 
 
@@ -70,7 +70,7 @@ export default function Navbar() {
       {/* HEADER CỐ ĐỊNH PHÍA TRÊN */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-canvas-linen/95 backdrop-blur-md border-b border-border-neutral">
         <div className="h-20 max-w-7xl mx-auto px-4 sm:px-6 md:px-margin flex items-center justify-between gap-4 sm:gap-6 relative">
-          
+
           {/* Cụm Trái: Nút Menu 3 gạch & Logo Thương hiệu */}
           <div className="flex items-center gap-4 shrink-0">
             <button
@@ -217,9 +217,8 @@ export default function Navbar() {
       {/* THANH NAVBAR DỌC CHỈ HIỂN THỊ KHI BẤM NÚT 3 GẠCH VÀ PHỦ TOÀN BỘ CHIỀU DỌC MÀN HÌNH (100VH) */}
       <div
         id="craft-vertical-sidebar-drawer"
-        className={`fixed inset-0 z-50 transition-opacity duration-300 ${
-          drawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-50 transition-opacity duration-300 ${drawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
         style={{ height: '100vh', maxHeight: '100vh', width: '100vw' }}
       >
         {/* Lớp nền mờ Overlay */}
@@ -231,13 +230,12 @@ export default function Navbar() {
 
         {/* Thanh Navbar dọc chiếm trọn 100% chiều dọc màn hình từ trên xuống dưới */}
         <aside
-          className={`relative w-80 md:w-96 max-w-[85vw] h-screen min-h-screen max-h-screen bg-canvas-linen border-r border-border-neutral shadow-2xl z-50 flex flex-col justify-between overflow-y-auto transition-transform duration-300 ease-in-out ${
-            drawerOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+          className={`relative w-80 md:w-96 max-w-[85vw] h-screen min-h-screen max-h-screen bg-canvas-linen border-r border-border-neutral shadow-2xl z-50 flex flex-col justify-between overflow-y-auto transition-transform duration-300 ease-in-out ${drawerOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
           style={{ height: '100vh', minHeight: '100vh', maxHeight: '100vh' }}
         >
           <div className="p-6">
-            
+
             {/* Tiêu đề thanh dọc với Logo & Nút Đóng */}
             <div className="flex items-center justify-between pb-5 border-b border-border-neutral mb-6">
               <Link
@@ -293,42 +291,38 @@ export default function Navbar() {
                   </div>
                 )}
                 <div className="p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between gap-3">
-                <Link
-                  to="/profile"
-                  onClick={closeMenu}
-                  className="flex items-center gap-3 min-w-0 group cursor-pointer"
-                  title="Đi đến trang hồ sơ cá nhân"
-                >
-                  <div className="w-9 h-9 rounded-full bg-accent-terracotta text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-                    {user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-title-card text-[14px] font-semibold text-text-primary group-hover:text-accent-terracotta transition-colors truncate">
-                      {user?.fullName || 'Người Dùng'}
-                    </span>
-                    <span className="font-spec-code text-[10px] text-accent-terracotta flex items-center gap-1">
-                      <span>Xem hồ sơ &amp; đổi mật khẩu</span>
-                      <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-                    </span>
-                  </div>
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    logout();
-                    closeMenu();
-                  }}
-                  className="w-8 h-8 flex items-center justify-center border border-border-neutral bg-surface-crisp text-text-secondary hover:text-error hover:border-error transition-colors cursor-pointer shrink-0"
-                  title="Đăng xuất"
-                >
-                  <span className="material-symbols-outlined text-[16px]">logout</span>
-                </button>
+                  <Link
+                    to="/profile"
+                    onClick={closeMenu}
+                    className="flex items-center gap-3 min-w-0 group cursor-pointer"
+                    title="Đi đến trang hồ sơ cá nhân"
+                  >
+                    <div className="w-9 h-9 rounded-full bg-accent-terracotta text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                      {user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-title-card text-[14px] font-semibold text-text-primary group-hover:text-accent-terracotta transition-colors truncate">
+                        {user?.fullName || 'Người Dùng'}
+                      </span>
+                      <span className="font-spec-code text-[10px] text-accent-terracotta flex items-center gap-1">
+                        <span>Xem hồ sơ &amp; đổi mật khẩu</span>
+                        <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+                      </span>
+                    </div>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      closeMenu();
+                    }}
+                    className="w-8 h-8 flex items-center justify-center border border-border-neutral bg-surface-crisp text-text-secondary hover:text-error hover:border-error transition-colors cursor-pointer shrink-0"
+                    title="Đăng xuất"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">logout</span>
+                  </button>
+                </div>
               </div>
-<<<<<<< HEAD
-            </div>
-=======
-              </div>
->>>>>>> 23cceab (Tối ưu layout ảnh & mô tả SP, nghệ nhân trên mobile)
             ) : (
               <div className="mb-5 p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between">
                 <div className="flex flex-col">
@@ -375,10 +369,9 @@ export default function Navbar() {
                   to="/"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
@@ -397,10 +390,9 @@ export default function Navbar() {
                   to="/crafts"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
@@ -419,10 +411,9 @@ export default function Navbar() {
                   to="/crafts/1"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
@@ -441,10 +432,9 @@ export default function Navbar() {
                   to="/artisans"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
@@ -463,10 +453,9 @@ export default function Navbar() {
                   to="/regions"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
@@ -485,10 +474,9 @@ export default function Navbar() {
                   to="/seasonal"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
@@ -507,10 +495,9 @@ export default function Navbar() {
                   to="/favourites"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
@@ -529,10 +516,9 @@ export default function Navbar() {
                   to="/contact"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
@@ -551,10 +537,9 @@ export default function Navbar() {
                   to="/profile"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${
-                      isActive
-                        ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                        : 'border-transparent'
+                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                      : 'border-transparent'
                     }`
                   }
                 >
