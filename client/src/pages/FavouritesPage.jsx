@@ -1,133 +1,97 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-
-const DEFAULT_FAVOURITES = [
-  {
-    id: 'CR-BT-2025-08MR',
-    craftId: 1,
-    tag: 'ĐỘC BẢN HỎA BIẾN',
-    village: 'Làng Bát Tràng',
-    category: 'Gốm Nung Củi',
-    title: 'Bộ Trà Men Rạn Nung Củi Bát Tràng',
-    recordCode: 'CR-BT-2025-08MR',
-    artisan: 'NNƯT. Trần Độ (Kế thừa)',
-    technique: 'Men tro trấu nung củi 1300°C',
-    price: '4.850.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHLVXL22QpZ-W6fRWVEoakFHIo4ljNfFkspHENrwribuefT4-4_8_qOwtR7-YIqvDSLmeYsIgE19Gr4yu8an_levhuhN9f8Bug5yhL-zHEVT5snKa5Zm62vay5g8pF8mUnDwrAB9BeUuiLAt6MQUdnTfii0gO3JCZF5gwY4Zl9gzhI1vMK7qsnVHHUeWDsUhODFzGXqDxif7MY7Rlw2FgSQd1Og23O9ec8Z9G8LTM'
-  },
-  {
-    id: 'CR-VP-1044',
-    craftId: 2,
-    tag: 'TƠ NGUYÊN BẢN 100%',
-    village: 'Làng Lụa Vạn Phúc',
-    category: 'Lụa Canh Cửi Cổ',
-    title: 'Khăn Lụa Tơ Tằm Vân Mây',
-    recordCode: 'CR-VP-1044',
-    artisan: 'Xưởng dệt Triệu Văn Mão',
-    technique: 'Khung cửi Jacquard gỗ thủ công',
-    price: '1.650.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA_UriqVZgcqu2zxDdCIiXv-VLDo7ORx654YJwnlW8s7lIu7SaLY_B816ZyicgWY_srXXEZDOUhA5XHdh0WHpRvjIs5pxWahCk6TqoAFO_eMrWij_ybMWYlhGRqxxPEXF5SBTktGANn1bKFAgLaeOxZnTl1ttbKMOQJRPhVUnOU6pnuvrMQskHc_jDzj8DOTHNdkfRiWtG914BDBnIOKLC0UMr3SuaF1vlPulzNugg'
-  },
-  {
-    id: 'CR-PV-MT09',
-    craftId: 5,
-    tag: 'NAN VÓT TAY 0.8MM',
-    village: 'Làng Mây Tre Phú Vinh',
-    category: 'Mây Nếp Cảnh',
-    title: 'Khay Trà Mây Nếp Vót Chuốt',
-    recordCode: 'CR-PV-MT09',
-    artisan: 'NNƯT. Nguyễn Văn Trung',
-    technique: 'Đan xương cá vót chuốt thủ công',
-    price: '980.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDe5_KTNdoP-CbEM2Ss1VU8uEr7tUX6ICTYkxXXEIaGKf5lgeBSIqnSr5qSZ-QP4iLArFikRjQQWLbGTE_znh4_uYslxZmdAcDoCrX8kJ1kfg3GD9EgULkBtGkZGjoTQefw_c6tImJSEGYS6MEjNQCR6x0RTCqSMZPNlwig3MRpIVW3foZYvou4poCEU7RNELDgOWIdkuWcrpt7UTPXLbWlXV4VrKGYGGAVdY4xRdI'
-  },
-  {
-    id: 'NVB-2025-09',
-    craftId: 1,
-    tag: 'PHỤC CHẾ HOÀNG GIA',
-    village: 'Làng Bát Tràng',
-    category: 'Gốm Men Lam',
-    title: 'Bình Vôi Men Lam Cổ Dát Bạc',
-    recordCode: 'NVB-2025-09',
-    artisan: 'Hợp Tác Xã Gốm Cổ Họa',
-    technique: 'Chạm bạc thủ công thời Lê',
-    price: '7.200.000 đ',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJ0wnleIE0nuZKXe36QWmLN9jSWkDNjCUlluuUoGvVWZzAMTtNZ1q0YoF9uWVUzPbOCAyUpCUaADWFj_bGIn9ueMh7uuG8PlQkbjbE7Fo51TmwANKIxQAd7DLcuGhGGfUNhFWcAUOsfmiLL49hcEdX2SOWul5sZUcQ4DnSZw_7vT-x9J-iV3ta8aZ5JQqJ-MbvyVS78JUabdWyM6i449CXyKjhXtWNnWtAXOS5s6Q'
-  }
-];
+import { useAuth } from '../context/AuthContext';
+import { useFavourites } from '../context/FavouritesContext';
 
 export default function FavouritesPage() {
-  const [items, setItems] = useState(() => {
-    try {
-      const saved = localStorage.getItem('craftroots_favourites_archive');
-      if (saved) return JSON.parse(saved);
-      return DEFAULT_FAVOURITES;
-    } catch {
-      return DEFAULT_FAVOURITES;
-    }
-  });
-
-  const [isFromDb, setIsFromDb] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const { favourites, toggleFav, clearAll } = useFavourites();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState('');
 
-  // Tải danh sách yêu thích từ Database nếu đã đăng nhập
+  // Tải danh sách yêu thích thực tế (từ Database nếu đã đăng nhập hoặc từ IDs trong context/localStorage)
   useEffect(() => {
     let isMounted = true;
-    const token = localStorage.getItem('craftroots_token');
 
-    if (token) {
-      api.getFavourites()
-        .then((dbFavs) => {
+    async function loadData() {
+      setLoading(true);
+      try {
+        if (isAuthenticated) {
+          const dbFavs = await api.getFavourites();
           if (!isMounted) return;
-          if (Array.isArray(dbFavs) && dbFavs.length > 0) {
-            const mapped = dbFavs.map((c) => ({
-              id: `DB-FAV-${c.id}`,
-              craftId: c.id,
-              tag: c.category || 'DI SẢN TRUYỀN THỐNG',
-              village: c.region || 'Làng Nghề',
-              category: c.category || 'Thủ Công',
-              title: c.name,
-              recordCode: `CR-ARCHIVE-${c.id}`,
-              artisan: 'Nghệ Nhân Làng Nghề',
-              technique: 'Chế tác thủ công bản địa',
-              price: 'Bảo tồn văn hóa',
-              image: c.image || c.thumbnail_url || 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=400&q=80',
-            }));
-            setItems(mapped);
-            setIsFromDb(true);
+          const list = Array.isArray(dbFavs) ? dbFavs : dbFavs?.data || [];
+          const mapped = list.map((c) => ({
+            id: c.id,
+            craftId: c.id,
+            tag: c.tag || c.category || 'DI SẢN TRUYỀN THỐNG',
+            village: c.village || c.region || 'Làng Nghề',
+            category: c.category || 'Thủ Công',
+            title: c.name,
+            recordCode: c.code || `CR-0${c.id}`,
+            artisan: c.artisan || 'Nghệ Nhân Làng Nghề',
+            technique: c.technique || 'Chế tác thủ công bản địa',
+            price: c.price_vnd || c.priceVnd
+              ? `${Number(c.price_vnd || c.priceVnd).toLocaleString('vi-VN')} đ`
+              : 'Ước lượng giám tuyển',
+            image: c.image || c.thumbnailUrl || c.thumbnail_url || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=80',
+          }));
+          setItems(mapped);
+        } else {
+          // Khách chưa đăng nhập: Nếu có danh sách ID trong favourites, nạp chi tiết các tác phẩm đó
+          if (!favourites || favourites.length === 0) {
+            if (isMounted) setItems([]);
+            return;
           }
-        })
-        .catch((err) => {
-          console.warn('Lỗi khi nạp danh sách yêu thích từ CSDL:', err);
-        });
+          const allCraftsRes = await api.getCrafts({ limit: 100 });
+          if (!isMounted) return;
+          const allCrafts = Array.isArray(allCraftsRes)
+            ? allCraftsRes
+            : allCraftsRes?.data || allCraftsRes?.crafts || [];
+          const favIdsSet = new Set(favourites.map((id) => Number(id)));
+          const matching = allCrafts.filter((c) => favIdsSet.has(Number(c.id)));
+          const mapped = matching.map((c) => ({
+            id: c.id,
+            craftId: c.id,
+            tag: c.tag || c.category || 'DI SẢN TRUYỀN THỐNG',
+            village: c.village || c.region || 'Làng Nghề',
+            category: c.category || 'Thủ Công',
+            title: c.name,
+            recordCode: c.code || `CR-0${c.id}`,
+            artisan: c.artisan || 'Nghệ Nhân Làng Nghề',
+            technique: c.technique || 'Chế tác thủ công bản địa',
+            price: c.price_vnd || c.priceVnd
+              ? `${Number(c.price_vnd || c.priceVnd).toLocaleString('vi-VN')} đ`
+              : 'Ước lượng giám tuyển',
+            image: c.image || c.thumbnailUrl || c.thumbnail_url || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=80',
+          }));
+          setItems(mapped);
+        }
+      } catch (err) {
+        console.warn('Lỗi nạp danh sách yêu thích:', err);
+        if (isMounted) setItems([]);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
     }
 
-    return () => { isMounted = false; };
-  }, []);
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [isAuthenticated, favourites]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('craftroots_favourites_archive', JSON.stringify(items));
-    } catch {
-      // ignore
-    }
-  }, [items]);
-
-  const handleRemove = async (id, title, craftId) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-    if (craftId) {
-      api.removeFavourite(craftId).catch(() => {});
-    }
+  const handleRemove = async (craftId, title) => {
+    await toggleFav(craftId);
+    setItems((prev) => prev.filter((item) => Number(item.craftId) !== Number(craftId)));
     setNotification(`Đã gỡ "${title}" khỏi danh sách lưu trữ.`);
     setTimeout(() => setNotification(''), 4000);
   };
 
-  const handleClearAll = () => {
+  const handleClearAll = async () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa toàn bộ tác phẩm đã lưu trong bộ sưu tập?')) {
-      items.forEach((item) => {
-        if (item.craftId) api.removeFavourite(item.craftId).catch(() => {});
-      });
+      await clearAll();
       setItems([]);
       setNotification('Đã xóa toàn bộ tác phẩm khỏi mục lưu trữ.');
       setTimeout(() => setNotification(''), 4000);
@@ -142,13 +106,6 @@ export default function FavouritesPage() {
     } else {
       alert('Đã tạo liên kết chia sẻ bộ sưu tập.');
     }
-  };
-
-  const handleResetDefaults = () => {
-    setItems(DEFAULT_FAVOURITES);
-    setIsFromDb(false);
-    setNotification('Đã khôi phục bộ sưu tập di sản mẫu.');
-    setTimeout(() => setNotification(''), 4000);
   };
 
   return (
@@ -168,7 +125,7 @@ export default function FavouritesPage() {
             {/* Live Archive Coordinate Stamp */}
             <div className="flex items-center gap-2 font-spec-code text-spec-code text-text-secondary uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta inline-block animate-pulse"></span>
-              <span>{isFromDb ? 'BẢN GHI ĐỒNG BỘ CSDL' : 'LƯU TRỮ TRÌNH DUYỆT'}: {items.length.toString().padStart(2, '0')} DI SẢN</span>
+              <span>{isAuthenticated ? 'BẢN GHI ĐỒNG BỘ CSDL' : 'LƯU TRỮ TRÌNH DUYỆT'}: {items.length.toString().padStart(2, '0')} DI SẢN</span>
             </div>
           </div>
         </div>
@@ -191,7 +148,9 @@ export default function FavouritesPage() {
                 LƯU TRỮ CÁ NHÂN
               </h1>
               <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed">
-                Danh sách được lưu trữ an toàn trực tiếp trên trình duyệt của bạn nhằm bảo vệ quyền riêng tư. Dữ liệu này chỉ khả dụng trên thiết bị hiện thời mà không chia sẻ với bên thứ ba.
+                {isAuthenticated
+                  ? 'Danh sách tác phẩm di sản đã được đồng bộ trực tiếp với tài khoản máy chủ và lưu trữ an toàn trong cơ sở dữ liệu.'
+                  : 'Danh sách được lưu trữ an toàn trên thiết bị của bạn. Hãy đăng nhập để đồng bộ vĩnh viễn trên toàn hệ thống.'}
               </p>
             </div>
 
@@ -252,14 +211,21 @@ export default function FavouritesPage() {
             </div>
           )}
 
-          {items.length === 0 ? (
+          {loading ? (
+            <div className="py-24 text-center">
+              <div className="w-10 h-10 border-2 border-accent-terracotta border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="font-spec-code text-[12px] text-text-secondary uppercase tracking-[0.15em]">
+                Đang nạp danh mục tác phẩm lưu trữ...
+              </p>
+            </div>
+          ) : items.length === 0 ? (
             <div className="bg-surface-crisp border border-dashed border-border-neutral p-12 text-center my-8 shadow-sm">
               <span className="material-symbols-outlined text-5xl text-accent-terracotta mb-3">bookmark_border</span>
               <h3 className="font-headline-title text-xl text-text-primary font-semibold mb-2">
                 Chưa Có Tác Phẩm Nào Được Lưu Trữ
               </h3>
               <p className="font-body-spec text-[14px] text-text-secondary max-w-md mx-auto mb-6">
-                Bạn chưa thêm tác phẩm nào vào tủ lưu trữ cá nhân. Hãy duyệt qua danh mục di sản hoặc bấm khôi phục mẫu.
+                Bạn chưa thêm tác phẩm nào vào tủ lưu trữ cá nhân. Hãy duyệt qua danh mục di sản và bấm lưu các kiệt tác bạn yêu thích.
               </p>
               <div className="flex justify-center gap-4">
                 <Link
@@ -268,13 +234,6 @@ export default function FavouritesPage() {
                 >
                   Khám Phá Di Sản
                 </Link>
-                <button
-                  type="button"
-                  onClick={handleResetDefaults}
-                  className="border border-border-neutral hover:border-accent-terracotta text-text-primary hover:text-accent-terracotta px-6 py-3 font-label-action text-label-action uppercase tracking-[0.18em] transition-colors cursor-pointer"
-                >
-                  Nạp Dữ Liệu Mẫu
-                </button>
               </div>
             </div>
           ) : (
@@ -290,12 +249,14 @@ export default function FavouritesPage() {
                       src={item.image}
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      loading="lazy"
                     />
                     <div className="absolute top-3 right-3 z-10">
                       <button
                         type="button"
-                        onClick={() => handleRemove(item.id, item.title, item.craftId)}
+                        onClick={() => handleRemove(item.craftId, item.title)}
                         className="btn-remove-item px-3 py-1.5 bg-surface-crisp/95 text-text-primary hover:text-accent-terracotta hover:bg-surface-crisp font-label-action text-[10px] tracking-[0.18em] uppercase shadow-sm transition-colors flex items-center gap-1 cursor-pointer"
+                        title="Gỡ khỏi danh sách lưu trữ"
                       >
                         <span>✕</span>
                         <span>GỠ LƯU</span>
@@ -340,7 +301,7 @@ export default function FavouritesPage() {
                     <div className="mt-6 pt-4 flex items-center justify-between bg-canvas-linen/40 -mx-space-lg -mb-space-lg px-space-lg py-4 border-t border-border-neutral/60">
                       <div>
                         <span className="block font-spec-code text-[10px] uppercase tracking-wider text-text-secondary">
-                          Ước lượng thẩm định
+                          Ước lượng định giá
                         </span>
                         <span className="font-headline-title text-[18px] text-text-primary font-semibold tracking-tight">
                           {item.price}

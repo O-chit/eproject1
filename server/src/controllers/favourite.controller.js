@@ -145,9 +145,28 @@ const syncFavourites = async (req, res, next) => {
   }
 };
 
+/**
+ * Xóa toàn bộ sản phẩm khỏi danh sách yêu thích
+ * DELETE /api/favourites
+ */
+const clearAllFavourites = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    await db.query('DELETE FROM favourites WHERE user_id = $1', [userId]);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Đã xóa toàn bộ sản phẩm khỏi danh sách yêu thích',
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getFavourites,
   addFavourite,
   removeFavourite,
   syncFavourites,
+  clearAllFavourites,
 };

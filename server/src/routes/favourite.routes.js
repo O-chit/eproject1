@@ -10,5 +10,6 @@ router.get('/', favouriteController.getFavourites);
 router.post('/sync', favouriteController.syncFavourites);
 router.post('/:craftId', favouriteController.addFavourite);
 router.delete('/:craftId', favouriteController.removeFavourite);
+router.delete('/', favouriteController.clearAllFavourites);
 
 module.exports = router;

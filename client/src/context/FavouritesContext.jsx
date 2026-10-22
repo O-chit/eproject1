@@ -106,10 +106,75 @@ export function FavouritesProvider({ children }) {
     [favourites, isFav, isAuthenticated]
   );
 
+  const clearAll = useCallback(async () => {
+    setFavourites([]);
+    if (isAuthenticated) {
+      try {
+        await api.clearFavourites();
+      } catch (err) {
+        console.warn('[FavouritesContext] Không thể xóa tất cả yêu thích trên server:', err);
+      }
+    }
+    try {
+      localStorage.removeItem(GUEST_FAVS_KEY);
+      localStorage.removeItem('craftroots_favourites');
+      localStorage.removeItem('craftroots_favourites_archive');
+      window.dispatchEvent(new Event('storage'));
+    } catch {
+      //
+    }
+  }, [isAuthenticated]);
+
+  const refreshFavourites = useCallback(async () => {
+    if (isAuthenticated) {
+      try {
+        const res = await api.getFavourites();
+        const serverFavs = (Array.isArray(res) ? res : res.data || []).map(
+          (item) => item.craft_id || item.craftId || item.id || item
+        );
+        setFavourites(serverFavs);
+      } catch (err) {
+        console.warn('[FavouritesContext] Lỗi nạp lại yêu thích:', err);
+      }
+    }
+  }, [isAuthenticated]);
+
+  // Hỗ trợ yêu thích nghệ nhân (dành cho ArtisanDetailPopup)
+  const [artisanFavs, setArtisanFavs] = useState(() => {
+    try {
+      const stored = localStorage.getItem('craftroots_artisan_favs');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const isArtisanFavourited = useCallback(
+    (artisanId) => artisanFavs.includes(Number(artisanId)),
+    [artisanFavs]
+  );
+
+  const toggleArtisanFavourite = useCallback((artisanId) => {
+    const idNum = Number(artisanId);
+    setArtisanFavs((prev) => {
+      const next = prev.includes(idNum) ? prev.filter((id) => id !== idNum) : [...prev, idNum];
+      try {
+        localStorage.setItem('craftroots_artisan_favs', JSON.stringify(next));
+      } catch {
+        //
+      }
+      return next;
+    });
+  }, []);
+
   const value = {
     favourites,
     isFav,
     toggleFav,
+    clearAll,
+    refreshFavourites,
+    isArtisanFavourited,
+    toggleArtisanFavourite,
     loading,
     totalFavourites: favourites.length,
   };

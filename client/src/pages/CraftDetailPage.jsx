@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../services/api';
+import { useFavourites } from '../context/FavouritesContext';
 
 const DEFAULT_GALLERY_PHOTOS = [
   {
@@ -13,11 +14,12 @@ const DEFAULT_GALLERY_PHOTOS = [
 export default function CraftDetailPage() {
   const { id } = useParams();
   const craftId = id || 1;
+  const { isFav, toggleFav } = useFavourites();
   const [craft, setCraft] = useState(null);
   const [relatedList, setRelatedList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
-  const [isSaved, setIsSaved] = useState(false);
+  const isSaved = isFav(craftId);
 
   useEffect(() => {
     let isMounted = true;
@@ -44,47 +46,8 @@ export default function CraftDetailPage() {
     return () => { isMounted = false; };
   }, [craftId]);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('craftroots_favourites');
-      if (stored) {
-        const list = JSON.parse(stored);
-        if (list.some((item) => (item.id || item) == craftId)) {
-          setIsSaved(true);
-        }
-      }
-    } catch {
-      //
-    }
-  }, [craftId]);
-
   const toggleSave = () => {
-    setIsSaved((prev) => {
-      const next = !prev;
-      try {
-        const stored = localStorage.getItem('craftroots_favourites');
-        let list = stored ? JSON.parse(stored) : [];
-        const itemObj = {
-          id: craft?.id || craftId,
-          name: craft?.name || 'Tác phẩm thủ công',
-          code: craft?.slug || `CR-0${craftId}`,
-          price: craft?.price || 'Liên hệ',
-          image: craft?.thumbnailUrl || DEFAULT_GALLERY_PHOTOS[0].url,
-        };
-        if (next) {
-          if (!list.some((i) => (i.id || i) == craftId)) {
-            list.push(itemObj);
-          }
-        } else {
-          list = list.filter((i) => (i.id || i) != craftId);
-        }
-        localStorage.setItem('craftroots_favourites', JSON.stringify(list));
-        window.dispatchEvent(new Event('storage'));
-      } catch {
-        //
-      }
-      return next;
-    });
+    toggleFav(craftId);
   };
 
   const photos = (craft?.images && craft.images.length > 0)

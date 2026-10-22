@@ -1,34 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useFavourites } from '../../context/FavouritesContext';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
+  const { totalFavourites } = useFavourites();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [savedCount, setSavedCount] = useState(0);
   const navigate = useNavigate();
-
-  // Đọc số lượng mục yêu thích từ localStorage
-  useEffect(() => {
-    const updateSavedCount = () => {
-      try {
-        const stored = localStorage.getItem('craftroots_favourites');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed)) {
-            setSavedCount(parsed.length);
-          }
-        }
-      } catch {
-        // Giữ mặc định 4 nếu có lỗi
-      }
-    };
-
-    updateSavedCount();
-    window.addEventListener('storage', updateSavedCount);
-    return () => window.removeEventListener('storage', updateSavedCount);
-  }, []);
 
   // Đóng Drawer khi nhấn phím Escape
   useEffect(() => {
@@ -138,7 +118,7 @@ export default function Navbar() {
               <span className="material-symbols-outlined text-[16px] text-accent-terracotta">
                 bookmark
               </span>
-              <span className="hidden sm:inline">Đã Lưu ({savedCount})</span>
+              <span className="hidden sm:inline">Đã Lưu ({totalFavourites})</span>
             </Link>
 
             <span className="text-border-neutral opacity-60 font-light select-none hidden sm:inline">
@@ -517,7 +497,7 @@ export default function Navbar() {
                     Tác Phẩm Đã Lưu &amp; Yêu Thích
                   </span>
                   <span className="font-spec-code text-[11px] text-accent-terracotta font-semibold">
-                    {String(savedCount).padStart(2, '0')}
+                    {String(totalFavourites).padStart(2, '0')}
                   </span>
                 </NavLink>
 

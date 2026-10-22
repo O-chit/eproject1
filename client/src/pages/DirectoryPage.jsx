@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import { useFavourites } from '../context/FavouritesContext';
 
 const DEFAULT_TABS = [
   { id: 'all', label: 'TẤT CẢ (ALL)' },
@@ -12,12 +13,12 @@ const DEFAULT_TABS = [
 ];
 
 export default function DirectoryPage() {
+  const { isFav, toggleFav } = useFavourites();
   const [tabs, setTabs] = useState(DEFAULT_TABS);
   const [selectedTab, setSelectedTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [crafts, setCrafts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [savedIds, setSavedIds] = useState(new Set([1, 3]));
 
   // Nạp danh mục từ DB
   useEffect(() => {
@@ -78,48 +79,7 @@ export default function DirectoryPage() {
     };
   }, [selectedTab, searchQuery]);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('craftroots_favourites');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setSavedIds(new Set(parsed.map((item) => item.id || item)));
-        }
-      }
-    } catch {
-      // Giữ mặc định
-    }
-  }, []);
 
-  const toggleSave = (item) => {
-    setSavedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(item.id)) {
-        next.delete(item.id);
-      } else {
-        next.add(item.id);
-      }
-
-      try {
-        const stored = localStorage.getItem('craftroots_favourites');
-        let list = stored ? JSON.parse(stored) : [];
-        if (next.has(item.id)) {
-          if (!list.find((i) => (i.id || i) === item.id)) {
-            list.push(item);
-          }
-        } else {
-          list = list.filter((i) => (i.id || i) !== item.id);
-        }
-        localStorage.setItem('craftroots_favourites', JSON.stringify(list));
-        window.dispatchEvent(new Event('storage'));
-      } catch {
-        // Fallback
-      }
-
-      return next;
-    });
-  };
 
   const displayItems = crafts.map((item) => ({
     id: item.id,
@@ -271,11 +231,11 @@ export default function DirectoryPage() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => toggleSave(item)}
+                      onClick={() => toggleFav(item.id)}
                       aria-label="Lưu tác phẩm"
                       className="absolute top-3 right-3 w-8 h-8 rounded-none bg-surface-crisp/90 backdrop-blur-sm border border-border-neutral flex items-center justify-center text-text-secondary hover:text-accent-terracotta hover:bg-surface-crisp transition-colors cursor-pointer"
                     >
-                      <span className={`material-symbols-outlined text-[18px] ${savedIds.has(item.id) ? 'text-accent-terracotta filled' : ''}`}>
+                      <span className={`material-symbols-outlined text-[18px] ${isFav(item.id) ? 'text-accent-terracotta filled' : ''}`}>
                         bookmark
                       </span>
                     </button>
