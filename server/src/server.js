@@ -6,12 +6,13 @@ const { pool, testConnection } = require('./config/db');
 const routes = require('./routes');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
+const path = require('path');
 const app = express();
 
 // ==========================================
 // 1. GLOBAL MIDDLEWARES
 // ==========================================
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -27,6 +28,9 @@ app.use(
 );
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve demo assets statically
+app.use('/demo', express.static(path.resolve(__dirname, '../../demo')));
 
 // Logging trong môi trường phát triển
 if (env.nodeEnv === 'development') {

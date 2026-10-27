@@ -80,7 +80,7 @@ async function runDiagnostics() {
   console.log('-'.repeat(75));
 
   // 5. Kiểm chứng Kiệt tác Spotlight CR-BT-2025-08MR & 4 Bước Quy trình
-  console.log('🏆 KIỂM CHỨNG KIỆT TÁC SPOTLIGHT (CR-BT-2025-08MR):');
+  console.log('🏆 KIỂM CHỨNG KIỆT TÁC SPOTLIGHT:');
   const craftRes = await query(`
     SELECT c.id, c.name, c.code, c.price_vnd, c.tag, c.origin_line, c.dimensions,
            jsonb_array_length(c.specs) as spec_count,
@@ -89,8 +89,9 @@ async function runDiagnostics() {
     FROM crafts c
     LEFT JOIN craft_artisans ca ON c.id = ca.craft_id
     LEFT JOIN artisans a ON ca.artisan_id = a.id
-    WHERE c.code = 'CR-BT-2025-08MR'
-    GROUP BY c.id, c.name, c.code, c.price_vnd, c.tag, c.origin_line, c.dimensions, c.specs, c.process_stages;
+    WHERE c.is_spotlight = TRUE
+    GROUP BY c.id, c.name, c.code, c.price_vnd, c.tag, c.origin_line, c.dimensions, c.specs, c.process_stages
+    LIMIT 1;
   `);
   if (craftRes.rows.length > 0) {
     const c = craftRes.rows[0];
