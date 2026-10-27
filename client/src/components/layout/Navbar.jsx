@@ -1,8 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useFavourites } from '../../context/FavouritesContext';
 import api from '../../services/api';
+
+const SEASON_OPTIONS = [
+  {
+    key: 'spring',
+    name: 'Mùa Xuân',
+    icon: '🌸',
+    title: 'Khởi Sắc Đất Trời',
+    subtitle: 'Lụa sa tơ tằm & gốm men rạn khai xuân',
+    tag: 'Xuân Khởi',
+    color: '#059669',
+  },
+  {
+    key: 'summer',
+    name: 'Mùa Hạ',
+    icon: '☀️',
+    title: 'Sợi Tự Nhiên & Đất Nung',
+    subtitle: 'Gốm men tro dịu mát & mây tre đan',
+    tag: 'Hạ Mát',
+    color: '#0284c7',
+  },
+  {
+    key: 'autumn',
+    name: 'Mùa Thu',
+    icon: '🍂',
+    title: 'Thu Trầm & Gốm Mộc',
+    subtitle: 'Đất nung sa thạch & trà ướp hoa sen',
+    tag: 'Thu Trầm',
+    color: '#d97706',
+  },
+  {
+    key: 'winter',
+    name: 'Mùa Đông',
+    icon: '❄️',
+    title: 'Hơi Ấm Men Hỏa',
+    subtitle: 'Đỉnh đồng hun lửa & điêu khắc đá trầm',
+    tag: 'Đông Ấm',
+    color: '#6366f1',
+  },
+];
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -11,6 +50,19 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [stats, setStats] = useState({ crafts: 0, artisans: 0, regions: 0, categories: 0 });
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const currentSeason = searchParams.get('season')?.toLowerCase();
+  const isSeasonalActive = location.pathname === '/seasonal';
+  const [seasonalDropdownOpen, setSeasonalDropdownOpen] = useState(isSeasonalActive);
+
+  // Mở dropdown khi người dùng đang ở trang tuyển tập theo mùa
+  useEffect(() => {
+    if (location.pathname === '/seasonal') {
+      setSeasonalDropdownOpen(true);
+    }
+  }, [location.pathname]);
 
   // Nạp thống kê số lượng thực tế từ backend
   useEffect(() => {
@@ -267,82 +319,32 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Khối Hồ sơ người dùng trong thanh dọc */}
-            {isAuthenticated ? (
-              <div className="space-y-2 mb-5">
-                {(user?.role === 'admin' || user?.role === 'editor') && (
-                  <div className="p-3 bg-surface-crisp border border-accent-terracotta flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[20px] text-accent-terracotta">admin_panel_settings</span>
-                      <div>
-                        <div className="font-['Montserrat'] font-semibold text-[12px] text-text-primary">
-                          {user?.role === 'admin' ? 'Quản Trị Hệ Thống' : 'Biên Tập Di Sản'}
-                        </div>
-                        <div className="font-spec-code text-[10px] text-accent-terracotta">SEC 6.3 Admin CMS Portal</div>
-                      </div>
+            {/* Phân hệ Quản trị Di sản nếu là Admin / Editor */}
+            {isAuthenticated && (user?.role === 'admin' || user?.role === 'editor') && (
+              <div className="mb-6 p-3.5 bg-surface-crisp border border-accent-terracotta flex items-center justify-between shadow-xs">
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[20px] text-accent-terracotta">admin_panel_settings</span>
+                  <div>
+                    <div className="font-['Montserrat'] font-semibold text-[12px] text-text-primary">
+                      {user?.role === 'admin' ? 'Quản Trị Hệ Thống' : 'Biên Tập Di Sản'}
                     </div>
-                    <Link
-                      to="/admin/crafts"
-                      onClick={closeMenu}
-                      className="px-2.5 py-1 bg-accent-terracotta text-white font-spec-code text-[10px] uppercase font-semibold hover:bg-[#8E4A16] transition-colors"
-                    >
-                      Vào CMS →
-                    </Link>
+                    <div className="font-spec-code text-[10px] text-accent-terracotta">SEC 6.3 Admin CMS Portal</div>
                   </div>
-                )}
-                <div className="p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between gap-3">
-                  <Link
-                    to="/profile"
-                    onClick={closeMenu}
-                    className="flex items-center gap-3 min-w-0 group cursor-pointer"
-                    title="Đi đến trang hồ sơ cá nhân"
-                  >
-                    <div className="w-9 h-9 rounded-full bg-accent-terracotta text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-                      {user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
-                    </div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="font-title-card text-[14px] font-semibold text-text-primary group-hover:text-accent-terracotta transition-colors truncate">
-                        {user?.fullName || 'Người Dùng'}
-                      </span>
-                      <span className="font-spec-code text-[10px] text-accent-terracotta flex items-center gap-1">
-                        <span>Xem hồ sơ &amp; đổi mật khẩu</span>
-                        <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-                      </span>
-                    </div>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      logout();
-                      closeMenu();
-                    }}
-                    className="w-8 h-8 flex items-center justify-center border border-border-neutral bg-surface-crisp text-text-secondary hover:text-error hover:border-error transition-colors cursor-pointer shrink-0"
-                    title="Đăng xuất"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">logout</span>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="mb-5 p-3.5 bg-surface-subtle border border-border-neutral flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="font-spec-code text-[10px] uppercase tracking-wider text-text-secondary">Tài khoản</span>
-                  <span className="font-body-spec text-[12px] text-text-primary">Chưa đăng nhập</span>
                 </div>
                 <Link
-                  to="/login"
+                  to="/admin/crafts"
                   onClick={closeMenu}
-                  className="font-spec-code text-[11px] font-semibold text-accent-terracotta hover:underline border border-accent-terracotta/40 px-2.5 py-1 bg-surface-crisp"
+                  className="px-2.5 py-1 bg-accent-terracotta text-white font-spec-code text-[10px] uppercase font-semibold hover:bg-[#8E4A16] transition-colors"
                 >
-                  Đăng nhập →
+                  Vào CMS →
                 </Link>
               </div>
             )}
 
             {/* Ô tìm kiếm nhanh trong thanh dọc */}
-            <div className="mb-6">
+            <div className="mb-8">
               <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-                <span className="material-symbols-outlined absolute left-3 text-text-secondary text-[17px] pointer-events-none">
+                <span className="material-symbols-outlined absolute left-3.5 text-text-secondary text-[18px] pointer-events-none">
                   search
                 </span>
                 <input
@@ -350,38 +352,38 @@ export default function Navbar() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm kiếm di sản, nghệ nhân..."
-                  className="w-full bg-surface-crisp border border-border-neutral focus:border-accent-terracotta pl-9 pr-3 py-2 font-body-spec text-[12px] text-text-primary placeholder:text-text-secondary/60 rounded-none outline-none transition-colors"
+                  className="w-full bg-surface-crisp border border-border-neutral focus:border-accent-terracotta pl-10 pr-3 py-2.5 font-body-spec text-[13px] text-text-primary placeholder:text-text-secondary/60 rounded-none outline-none transition-colors"
                 />
               </form>
             </div>
 
-            {/* Phần 1: HỆ THỐNG ĐIỀU HƯỚNG DI SẢN (8 liên kết chính) */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-spec-code text-[10px] uppercase tracking-[0.2em] text-accent-terracotta font-semibold">
+            {/* HỆ THỐNG ĐIỀU HƯỚNG DI SẢN */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-spec-code text-[11px] uppercase tracking-[0.2em] text-accent-terracotta font-semibold">
                   HỆ THỐNG ĐIỀU HƯỚNG DI SẢN
                 </span>
                 <span className="w-12 h-px bg-border-neutral"></span>
               </div>
 
-              <nav className="flex flex-col space-y-1">
+              <nav className="flex flex-col space-y-3">
                 <NavLink
                   to="/"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                    `px-3.5 py-3 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-all flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/80 text-accent-terracotta font-medium shadow-xs'
                       : 'border-transparent'
                     }`
                   }
                 >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-accent-terracotta">
+                  <span className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[20px] text-accent-terracotta">
                       cottage
                     </span>
                     Trang Chủ (Tổng Quan)
                   </span>
-                  <span className="font-spec-code text-[10px] text-accent-terracotta uppercase">
+                  <span className="font-spec-code text-[11px] text-accent-terracotta uppercase font-medium">
                     01
                   </span>
                 </NavLink>
@@ -390,41 +392,20 @@ export default function Navbar() {
                   to="/crafts"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                    `px-3.5 py-3 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-all flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/80 text-accent-terracotta font-medium shadow-xs'
                       : 'border-transparent'
                     }`
                   }
                 >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-text-secondary">
+                  <span className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[20px] text-text-secondary">
                       inventory_2
                     </span>
                     Danh Mục Di Sản Thủ Công
                   </span>
-                  <span className="font-spec-code text-[10px] text-text-secondary uppercase">
+                  <span className="font-spec-code text-[11px] text-text-secondary uppercase">
                     {stats.crafts} Mục
-                  </span>
-                </NavLink>
-
-                <NavLink
-                  to="/crafts/1"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                      : 'border-transparent'
-                    }`
-                  }
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-text-secondary">
-                      auto_stories
-                    </span>
-                    Chi Tiết Sản Phẩm &amp; Kỹ Pháp
-                  </span>
-                  <span className="material-symbols-outlined text-[16px] text-text-secondary">
-                    chevron_right
                   </span>
                 </NavLink>
 
@@ -432,19 +413,19 @@ export default function Navbar() {
                   to="/artisans"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                    `px-3.5 py-3 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-all flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/80 text-accent-terracotta font-medium shadow-xs'
                       : 'border-transparent'
                     }`
                   }
                 >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-text-secondary">
+                  <span className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[20px] text-text-secondary">
                       badge
                     </span>
                     Hồ Sơ Nghệ Nhân Ưu Tú
                   </span>
-                  <span className="font-spec-code text-[10px] text-accent-terracotta uppercase tracking-wider">
+                  <span className="font-spec-code text-[11px] text-accent-terracotta uppercase tracking-wider">
                     {stats.artisans} Cụ
                   </span>
                 </NavLink>
@@ -453,56 +434,164 @@ export default function Navbar() {
                   to="/regions"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                    `px-3.5 py-3 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-all flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/80 text-accent-terracotta font-medium shadow-xs'
                       : 'border-transparent'
                     }`
                   }
                 >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-text-secondary">
+                  <span className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[20px] text-text-secondary">
                       map
                     </span>
                     Bản Đồ Văn Hóa Làng Nghề
                   </span>
-                  <span className="font-spec-code text-[10px] text-text-secondary uppercase">
+                  <span className="font-spec-code text-[11px] text-text-secondary uppercase">
                     {stats.regions} Vùng
                   </span>
                 </NavLink>
 
-                <NavLink
-                  to="/seasonal"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                      : 'border-transparent'
-                    }`
-                  }
+                {/* THẺ DROPDOWN BỘ SƯU TẬP THEO MÙA (4 MÙA XUÂN - HẠ - THU - ĐÔNG) */}
+                <div
+                  className={`border transition-all duration-200 overflow-hidden ${
+                    seasonalDropdownOpen
+                      ? 'border-accent-terracotta/40 bg-surface-subtle/50 shadow-xs'
+                      : isSeasonalActive
+                        ? 'border-accent-terracotta/50 bg-surface-subtle/60'
+                        : 'border-border-neutral/70 bg-surface-subtle/20 hover:border-border-neutral'
+                  }`}
                 >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-text-secondary">
-                      filter_vintage
+                  {/* Nút bấm chuyển trạng thái mở / đóng dropdown */}
+                  <button
+                    type="button"
+                    onClick={() => setSeasonalDropdownOpen((prev) => !prev)}
+                    className="w-full px-3.5 py-3 text-left flex items-center justify-between group cursor-pointer transition-colors"
+                    aria-expanded={seasonalDropdownOpen}
+                    title="Mở / đóng danh sách bộ sưu tập 4 mùa"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span
+                        className={`material-symbols-outlined text-[20px] transition-colors ${
+                          seasonalDropdownOpen || isSeasonalActive
+                            ? 'text-accent-terracotta'
+                            : 'text-text-secondary group-hover:text-accent-terracotta'
+                        }`}
+                      >
+                        filter_vintage
+                      </span>
+                      <span className="font-title-card text-[15px] text-text-primary group-hover:text-accent-terracotta transition-colors font-medium">
+                        Bộ Sưu Tập Theo Mùa
+                      </span>
                     </span>
-                    Bộ Sưu Tập Theo Mùa
-                  </span>
-                  <span className="font-spec-code text-[10px] uppercase text-accent-terracotta border border-accent-terracotta px-1.5 py-0.5">
-                    MỚI
-                  </span>
-                </NavLink>
+
+                    <div className="flex items-center gap-2">
+                      <span className="font-spec-code text-[10px] uppercase tracking-wider text-accent-terracotta border border-accent-terracotta/60 bg-accent-terracotta/10 px-1.5 py-0.5 font-medium">
+                        4 MÙA
+                      </span>
+                      <span
+                        className={`material-symbols-outlined text-[18px] transition-transform duration-200 ${
+                          seasonalDropdownOpen
+                            ? 'rotate-180 text-accent-terracotta'
+                            : 'text-text-secondary/70 group-hover:text-text-primary'
+                        }`}
+                      >
+                        expand_more
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Danh sách 4 mùa: Xuân, Hạ, Thu, Đông */}
+                  {seasonalDropdownOpen && (
+                    <div className="border-t border-border-neutral/60 bg-surface-crisp px-2.5 py-2.5 space-y-1.5">
+                      <div className="px-1.5 pt-0.5 pb-1 flex items-center justify-between text-[11px] font-spec-code uppercase tracking-wider text-text-secondary/70">
+                        <span>Chọn Tiết Khí &amp; Mùa:</span>
+                        <span className="text-[10px] text-accent-terracotta font-semibold">2026</span>
+                      </div>
+
+                      {SEASON_OPTIONS.map((season) => {
+                        const isSelected =
+                          isSeasonalActive &&
+                          (currentSeason === season.key || (!currentSeason && season.key === 'autumn'));
+
+                        return (
+                          <button
+                            key={season.key}
+                            type="button"
+                            onClick={() => {
+                              navigate(`/seasonal?season=${season.key}`);
+                              closeMenu();
+                            }}
+                            className={`w-full text-left p-2.5 flex items-center justify-between transition-all group/item cursor-pointer border ${
+                              isSelected
+                                ? 'bg-surface-subtle/80 border-accent-terracotta shadow-xs'
+                                : 'border-transparent hover:border-border-neutral hover:bg-surface-subtle/40'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <span
+                                className="w-8 h-8 flex items-center justify-center shrink-0 border text-[15px]"
+                                style={{
+                                  backgroundColor: `${season.color}14`,
+                                  borderColor: `${season.color}35`,
+                                  color: season.color,
+                                }}
+                              >
+                                {season.icon}
+                              </span>
+                              <div className="flex flex-col min-w-0">
+                                <span className="font-title-card text-[14px] font-medium text-text-primary group-hover/item:text-accent-terracotta transition-colors flex items-center gap-1.5 truncate">
+                                  {season.name}
+                                  {isSelected && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta inline-block"></span>
+                                  )}
+                                </span>
+                                <span className="font-spec-code text-[11px] text-text-secondary truncate">
+                                  {season.title}
+                                </span>
+                              </div>
+                            </div>
+
+                            <span
+                              className="font-spec-code text-[10px] uppercase tracking-wider px-1.5 py-0.5 border shrink-0 ml-2"
+                              style={{
+                                color: season.color,
+                                borderColor: `${season.color}40`,
+                                backgroundColor: `${season.color}10`,
+                              }}
+                            >
+                              {season.tag}
+                            </span>
+                          </button>
+                        );
+                      })}
+
+                      {/* Nút Xem Tổng Thể */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigate('/seasonal');
+                          closeMenu();
+                        }}
+                        className="w-full text-center py-2 text-[11px] font-spec-code uppercase tracking-[0.15em] text-accent-terracotta hover:text-primary hover:underline transition-colors block border-t border-border-neutral/30 mt-1 cursor-pointer"
+                      >
+                        Khám Phá Toàn Bộ Tuyển Tập →
+                      </button>
+                    </div>
+                  )}
+                </div>
 
                 <NavLink
                   to="/favourites"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                    `px-3.5 py-3 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-all flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/80 text-accent-terracotta font-medium shadow-xs'
                       : 'border-transparent'
                     }`
                   }
                 >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-accent-terracotta">
+                  <span className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[20px] text-accent-terracotta">
                       bookmark
                     </span>
                     Tác Phẩm Đã Lưu &amp; Yêu Thích
@@ -516,14 +605,14 @@ export default function Navbar() {
                   to="/contact"
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
+                    `px-3.5 py-3 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-all flex items-center justify-between border-l-2 ${isActive
+                      ? 'border-accent-terracotta bg-surface-subtle/80 text-accent-terracotta font-medium shadow-xs'
                       : 'border-transparent'
                     }`
                   }
                 >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-text-secondary">
+                  <span className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[20px] text-text-secondary">
                       calendar_month
                     </span>
                     Liên Hệ &amp; Đặt Lịch Xưởng
@@ -532,120 +621,7 @@ export default function Navbar() {
                     arrow_outward
                   </span>
                 </NavLink>
-
-                <NavLink
-                  to="/profile"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `px-3 py-2 text-text-primary hover:text-accent-terracotta hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 ${isActive
-                      ? 'border-accent-terracotta bg-surface-subtle/60 text-accent-terracotta font-medium'
-                      : 'border-transparent'
-                    }`
-                  }
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[18px] text-accent-terracotta">
-                      account_circle
-                    </span>
-                    Hồ Sơ Cá Nhân &amp; Tài Khoản
-                  </span>
-                  <span className="font-spec-code text-[10px] text-accent-terracotta uppercase">
-                    Cá Nhân
-                  </span>
-                </NavLink>
-
-                {isAuthenticated && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      logout();
-                      closeMenu();
-                    }}
-                    className="w-full text-left px-3 py-2 text-text-secondary hover:text-error hover:bg-surface-subtle font-title-card text-[15px] transition-colors flex items-center justify-between border-l-2 border-transparent cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <span className="material-symbols-outlined text-[18px] text-error">
-                        logout
-                      </span>
-                      <span>Đăng Xuất Tài Khoản</span>
-                    </span>
-                    <span className="font-spec-code text-[10px] text-text-muted uppercase">
-                      Thoát
-                    </span>
-                  </button>
-                )}
               </nav>
-            </div>
-
-            {/* Phần 2: LĨNH VỰC NGHỀ TRUYỀN THỐNG */}
-            <div className="mb-6 pt-5 border-t border-border-neutral">
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-spec-code text-[10px] uppercase tracking-[0.2em] text-accent-terracotta font-semibold">
-                  LĨNH VỰC NGHỀ TRUYỀN THỐNG
-                </span>
-                <span className="w-8 h-px bg-border-neutral"></span>
-              </div>
-              <div className="space-y-1.5 pl-2">
-                <Link
-                  to="/crafts?category=gom-su"
-                  onClick={closeMenu}
-                  className="p-2 flex items-center justify-between hover:bg-surface-subtle text-text-secondary hover:text-accent-terracotta transition-colors group"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-accent-terracotta group-hover:scale-125 transition-transform"></span>
-                    <span className="font-body-spec text-[13px]">Gốm Sứ Sa Thạch &amp; Men Rạn</span>
-                  </div>
-                  <span className="font-spec-code text-[10px] text-text-secondary/60">Bát Tràng</span>
-                </Link>
-
-                <Link
-                  to="/crafts?category=det-tho-cam"
-                  onClick={closeMenu}
-                  className="p-2 flex items-center justify-between hover:bg-surface-subtle text-text-secondary hover:text-accent-terracotta transition-colors group"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-accent-terracotta group-hover:scale-125 transition-transform"></span>
-                    <span className="font-body-spec text-[13px]">Dệt Lụa Cổ Vạn Phúc &amp; Thổ Cẩm</span>
-                  </div>
-                  <span className="font-spec-code text-[10px] text-text-secondary/60">Mỹ Nghiệp</span>
-                </Link>
-
-                <Link
-                  to="/crafts?category=may-tre-dan"
-                  onClick={closeMenu}
-                  className="p-2 flex items-center justify-between hover:bg-surface-subtle text-text-secondary hover:text-accent-terracotta transition-colors group"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-accent-terracotta group-hover:scale-125 transition-transform"></span>
-                    <span className="font-body-spec text-[13px]">Mây Tre Đan Mắt Cáo Phú Vinh</span>
-                  </div>
-                  <span className="font-spec-code text-[10px] text-text-secondary/60">Chương Mỹ</span>
-                </Link>
-
-                <Link
-                  to="/crafts?category=son-mai"
-                  onClick={closeMenu}
-                  className="p-2 flex items-center justify-between hover:bg-surface-subtle text-text-secondary hover:text-accent-terracotta transition-colors group"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-accent-terracotta group-hover:scale-125 transition-transform"></span>
-                    <span className="font-body-spec text-[13px]">Sơn Mài Then &amp; Cẩn Trứng Hạ Thái</span>
-                  </div>
-                  <span className="font-spec-code text-[10px] text-text-secondary/60">Thường Tín</span>
-                </Link>
-
-                <Link
-                  to="/crafts?category=kim-hoan"
-                  onClick={closeMenu}
-                  className="p-2 flex items-center justify-between hover:bg-surface-subtle text-text-secondary hover:text-accent-terracotta transition-colors group"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-accent-terracotta group-hover:scale-125 transition-transform"></span>
-                    <span className="font-body-spec text-[13px]">Kim Hoàn &amp; Chạm Bạc Đồng Xâm</span>
-                  </div>
-                  <span className="font-spec-code text-[10px] text-text-secondary/60">Thái Bình</span>
-                </Link>
-              </div>
             </div>
           </div>
 

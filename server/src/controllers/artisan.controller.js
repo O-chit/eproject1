@@ -168,21 +168,47 @@ const getArtisans = async (req, res, next) => {
         a.name AS "fullName",
         a.name,
         a.code AS "refCode",
+        a.code,
+        a.code AS ref,
         a.slug,
         a.title,
         a.specialty,
+        a.specialty AS "craft_category",
+        a.age,
         a.generation,
         a.years_of_experience AS "yearsOfExperience",
-        r.name AS "regionName",
-        cv.name AS "villageName",
-        a.avatar_url AS "avatarUrl",
-        a.avatar_url AS avatar,
-        a.is_national_heritage AS "isNationalHeritage",
+        a.years_of_experience,
+        a.biography,
+        a.biography AS bio,
+        a.quote,
         a.signature_work AS "signatureWork",
-        a.quote
+        a.signature_work AS "masterwork_name",
+        a.technique_summary AS "techniqueSummary",
+        a.technique_specs AS specs,
+        a.verification_label AS "verificationLabel",
+        a.is_national_heritage AS "isNationalHeritage",
+        a.avatar_url AS "avatarUrl",
+        a.avatar_url,
+        a.avatar_url AS avatar,
+        r.id AS "regionId",
+        r.name AS "regionName",
+        r.name AS province,
+        cv.id AS "villageId",
+        cv.name AS "villageName",
+        cv.name AS village,
+        cc.id AS "categoryId",
+        cc.name AS "categoryName",
+        cc.slug AS "categorySlug",
+        cc.slug AS category,
+        a.visit_address AS "workshopAddress",
+        a.visit_max_guests AS "visitMaxGuests",
+        a.visit_lead_time_hours AS "visitLeadTimeHours",
+        a.visit_open_days AS "visitOpenDays",
+        a.visit_hours AS "visitHours"
       FROM artisans a
       LEFT JOIN regions r ON a.region_id = r.id
       LEFT JOIN craft_villages cv ON a.village_id = cv.id
+      LEFT JOIN craft_categories cc ON cv.category_id = cc.id
       ${whereClause}
       ORDER BY a.sort_order ASC, a.id ASC
       LIMIT $${limitIdx} OFFSET $${offsetIdx}

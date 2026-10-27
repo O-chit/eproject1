@@ -5,55 +5,35 @@
   "private": true,
   "scripts": {
     "dev": "concurrently --kill-others -n \"BACKEND,FRONTEND\" -c \"gray,cyan.bold\" \"npm run server:dev\" \"npm run client:dev\"",
-    "client:dev": "vite client",
-    "client:build": "vite build client",
-    "client:preview": "vite preview client",
+    "client:dev": "npm --prefix client run dev",
+    "client:build": "npm --prefix client run build",
+    "client:preview": "npm --prefix client run preview",
     "server:dev": "nodemon server/src/server.js",
     "server:start": "node server/src/server.js",
-    "api:test": "node server/src/test-api.js",
     "db:test": "node server/src/test-db.js",
-    "db:setup": "node server/src/scripts/setup-db.js",
     "db:init": "psql -U postgres -d craftroots -f db/schema.sql",
-    "db:seed": "psql -U postgres -d craftroots -f db/seed.sql"
+    "db:seed": "psql -U postgres -d craftroots -f db/seed.sql",
+    "api:test": "node server/src/test-api.js"
   },
   "keywords": [
     "craftroots",
     "heritage-crafts",
     "express",
-    "postgresql",
-    "react",
-    "vite"
+    "postgresql"
   ],
   "author": "CraftRoots Team",
   "license": "ISC",
   "dependencies": {
-    "@tailwindcss/container-queries": "^0.1.1",
-    "@tailwindcss/forms": "^0.5.11",
-    "autoprefixer": "^10.6.1",
-    "axios": "^1.20.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
-    "express-rate-limit": "^8.7.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "maplibre-gl": "^6.14.0",
-    "ollama": "^0.6.4",
-    "pg": "^8.23.1",
-    "postcss": "^8.5.30",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.2",
-    "tailwindcss": "^3.4.19",
-    "zod": "^4.6.7"
+    "pg": "^8.23.1"
   },
   "devDependencies": {
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^10.0.6",
-    "nodemon": "^3.1.9",
-    "vite": "^6.2.0"
+    "nodemon": "^3.1.9"
   }
 }

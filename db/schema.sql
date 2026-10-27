@@ -313,8 +313,10 @@ CREATE TABLE visit_bookings (
     time_slot  VARCHAR(20) NOT NULL CHECK (time_slot IN ('morning', 'afternoon')),
     purpose    VARCHAR(200) NOT NULL,
     note       TEXT,
+    admin_note TEXT,
     status     VARCHAR(30) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'cancelled')),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- 21. Bảng NEWSLETTER_SUBSCRIBERS (Bản tin di sản)

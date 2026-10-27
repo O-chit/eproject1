@@ -4,36 +4,6 @@ import api from '../services/api';
 import ArtisanDetailPopup from '../components/modals/ArtisanDetailPopup';
 import VisitBookingModal from '../components/modals/VisitBookingModal';
 
-const FALLBACK_ARTISANS = {
-  1: {
-    id: 1,
-    ref: 'ART-BT-001',
-    code: 'ART-BT-001',
-    name: 'Nguyễn Văn Bình',
-    title: 'Nghệ Nhân Ưu Tú • Bậc Thầy Lò Bầu',
-    age: 72,
-    village: 'Bát Tràng',
-    province: 'Hà Nội',
-    category: 'gom',
-    craft_category: 'Gốm Sa Thạch Men Rạn Cổ',
-    years_of_experience: 50,
-    generation: 'Đời Thứ 6',
-    quote: 'Đất sét phải ủ ba mùa mưa nắng, men tro nung củi gỗ dâu mới ra được đường rạn của thời gian.',
-    masterwork_name: 'Bình vôi men rạn cổ thế kỷ XVIII',
-    material: 'Đất sét cao lanh Trúc Thôn, tro trấu lọc nếp',
-    firing_technique: 'Lò bầu nung củi nhiệt 1280°C liên tục 72 giờ',
-    signature_style: 'Men rạn tam thái vẽ chỉ lam chàm thủy mặc',
-    biography: 'Sinh ra trong gia đình gốm danh gia kế nghiệp 6 đời tại châu thổ sông Hồng. Trải qua hơn nửa thế kỷ gắn bó cùng lò nung củi truyền thống, ông đã phục dựng thành công nhiều kỹ pháp men rạn thất truyền từ thời Hậu Lê.',
-    avatar_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCsI9aPyBln6KwNTduyuzUQsX3URliV1Lme3MJ-LRjuusu4bzRy8Pg1p4qxcQ20-bV982DIaUPJeSYINYU3RqJQr402-Fg4v9teM9X_SOYh5i4sV9_nm-K-QRB0kom3klpQBV5PHVsgpUuay47yNjVhkwP-9zcQ4vxT9Top5WXmRIElWWrk5aYrLmODShqcU1RgRAYGUCWARylylg4Sh4NR0wxLI2f7AFUlG34agHAgtokI1OJFalxJ',
-    milestones: [
-      { year: '1974', event: 'Tiếp quản kíp lò bầu cổ và bắt đầu nghiên cứu phục dựng bài men rạn thời Lê.' },
-      { year: '1989', event: 'Phục chế thành công bài men tro vỏ sò và men tam thái thất truyền.' },
-      { year: '2005', event: 'Được Nhà nước phong tặng danh hiệu Nghệ Nhân Ưu Tú ngành thủ công mỹ nghệ.' },
-      { year: '2024', event: 'Hoàn thành bộ sưu tập 12 bảo vật gốm cung đình cho Bảo tàng Mỹ thuật Việt Nam.' },
-    ],
-  },
-};
-
 export default function ArtisanDetailPage() {
   const { id } = useParams();
   const [artisan, setArtisan] = useState(null);
@@ -42,25 +12,26 @@ export default function ArtisanDetailPage() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     async function loadDetail() {
       try {
         setLoading(true);
-        let data = null;
-        if (/^\d+$/.test(id)) {
-          data = await api.getArtisanById(id);
+        const data = await api.getArtisanById(id);
+        if (isMounted && data) {
+          setArtisan(data);
         }
-        if (!data) {
-          data = FALLBACK_ARTISANS[id] || FALLBACK_ARTISANS[1];
-        }
-        setArtisan(data);
       } catch (err) {
-        console.warn('Lỗi nạp chi tiết nghệ nhân:', err);
-        setArtisan(FALLBACK_ARTISANS[1]);
+        console.warn('Lỗi nạp chi tiết nghệ nhân từ DB:', err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
-    loadDetail();
+    if (id) {
+      loadDetail();
+    }
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   if (loading) {
@@ -77,19 +48,26 @@ export default function ArtisanDetailPage() {
     return (
       <div className="min-h-[500px] flex flex-col items-center justify-center bg-canvas-linen p-6">
         <h3 className="font-headline-title text-xl text-text-primary">Không tìm thấy hồ sơ nghệ nhân</h3>
-        <Link to="/artisans" className="mt-4 px-6 py-2.5 bg-accent-terracotta text-white font-spec-code text-[11px] uppercase">
-          Quay Lại Danh Sách
+        <p className="font-body-default text-text-secondary text-[13px] mt-1">
+          Hồ sơ có thể chưa được lưu trữ hoặc đang trong quá trình số hóa điền dã.
+        </p>
+        <Link to="/artisans" className="mt-4 px-6 py-2.5 bg-accent-terracotta text-white font-spec-code text-[11px] uppercase tracking-wider">
+          Quay Lại Danh Sách Nghệ Nhân
         </Link>
       </div>
     );
   }
 
-  const milestones = artisan.milestones || [
-    { year: '1978', event: 'Bắt đầu học nghề gia truyền từ đời tiền bối.' },
-    { year: '1995', event: 'Phục dựng thành công kỹ pháp độc bản cổ truyền.' },
-    { year: '2010', event: 'Được phong tặng danh hiệu Nghệ Nhân Ưu Tú.' },
-    { year: '2023', event: 'Truyền thụ kỹ nghệ cho thế hệ kế thừa đời tiếp theo.' },
-  ];
+  const milestones = artisan.milestones && artisan.milestones.length > 0
+    ? artisan.milestones
+    : [
+        { year: '1985', event: 'Tiếp quản xưởng thủ công gia truyền từ thế hệ tiền bối.' },
+        { year: '1998', event: 'Phục dựng thành công kỹ pháp độc bản cổ truyền.' },
+        { year: '2012', event: 'Được phong tặng danh hiệu Nghệ Nhân Di Sản Quốc Gia.' },
+        { year: '2024', event: 'Truyền thụ kỹ nghệ cho thế hệ kế thừa đời tiếp theo.' },
+      ];
+
+  const specs = artisan.specs && Array.isArray(artisan.specs) ? artisan.specs : [];
 
   return (
     <div className="w-full bg-canvas-linen py-10">
@@ -100,21 +78,21 @@ export default function ArtisanDetailPage() {
           <span className="opacity-60">|</span>
           <Link to="/artisans" className="hover:text-accent-terracotta">Nghệ Nhân</Link>
           <span className="opacity-60">|</span>
-          <span className="text-accent-terracotta">{artisan.name}</span>
+          <span className="text-accent-terracotta">{artisan.name || artisan.fullName}</span>
         </div>
 
         {/* Hero Section */}
         <div className="bg-surface-crisp border border-border-neutral p-4 sm:p-6 md:p-10 shadow-sm flex flex-col md:flex-row gap-6 md:gap-8 items-stretch">
           <div className="w-full md:w-5/12 aspect-video md:aspect-auto md:min-h-[380px] relative bg-black overflow-hidden border border-border-neutral shrink-0">
             <img
-              src={artisan.avatar_url || artisan.avatarUrl || artisan.image_url || 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=900&q=80'}
-              alt={artisan.name}
+              src={artisan.avatar_url || artisan.avatarUrl || artisan.avatar || 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=900&q=80'}
+              alt={artisan.name || artisan.fullName}
               className="w-full h-full object-cover grayscale contrast-[1.05] hover:grayscale-0 transition-all duration-700 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
             <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex items-center justify-between text-white font-spec-code text-[10px] sm:text-[11px]">
               <span className="bg-black/60 px-2 py-0.5 border border-white/20">
-                REF: {artisan.ref || artisan.code || `ART-${artisan.id}`}
+                REF: {artisan.ref || artisan.code || artisan.refCode || `ART-${artisan.id}`}
               </span>
               <span className="bg-accent-terracotta px-2 py-0.5">
                 {artisan.years_of_experience || artisan.yearsOfExperience || 40} Năm Nghề
@@ -125,13 +103,13 @@ export default function ArtisanDetailPage() {
           <div className="w-full md:w-7/12 flex flex-col justify-between space-y-4 sm:space-y-5">
             <div>
               <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-widest text-accent-terracotta font-semibold">
-                HỒ SƠ BẬC THẦY DI SẢN • {artisan.village || artisan.regionName || 'Làng Nghề Truyền Thống'}
+                HỒ SƠ BẬC THẦY DI SẢN • {artisan.village || artisan.villageName || artisan.regionName || 'Làng Nghề Truyền Thống'}
               </span>
               <h1 className="font-headline-title text-2xl sm:text-3xl md:text-4xl text-text-primary font-bold mt-1">
-                {artisan.name}
+                {artisan.name || artisan.fullName}
               </h1>
               <p className="font-spec-code text-[12px] sm:text-[13px] text-text-secondary mt-1">
-                {artisan.title || 'Nghệ Nhân Ưu Tú'} • {artisan.age || 70} Tuổi • {artisan.craft_category || artisan.specialty || 'Di Sản'}
+                {artisan.title || 'Nghệ Nhân Ưu Tú'} • {artisan.age || 68} Tuổi • {artisan.craft_category || artisan.specialty || 'Di Sản'}
               </p>
 
               <blockquote className="border-l-2 border-accent-terracotta pl-3 sm:pl-4 py-2 sm:py-2.5 my-3 sm:my-4 bg-surface-subtle/50 font-label-signature italic text-[13px] sm:text-[14px] text-text-primary leading-relaxed">
@@ -139,7 +117,7 @@ export default function ArtisanDetailPage() {
               </blockquote>
 
               <p className="font-body-default text-[12.5px] sm:text-[13px] text-text-secondary leading-relaxed">
-                {artisan.biography || 'Nghệ nhân dành trọn đời cống hiến cho công cuộc bảo tồn và phục chế các tinh hoa thủ công truyền thống.'}
+                {artisan.biography || artisan.bio || 'Nghệ nhân dành trọn đời cống hiến cho công cuộc bảo tồn và phục chế các tinh hoa thủ công truyền thống.'}
               </p>
             </div>
 
@@ -179,7 +157,7 @@ export default function ArtisanDetailPage() {
                   {m.year}
                 </span>
                 <p className="font-body-default text-[13px] text-text-secondary mt-0.5">
-                  {m.event}
+                  {m.event || m.title || m.description}
                 </p>
               </div>
             ))}
@@ -196,26 +174,88 @@ export default function ArtisanDetailPage() {
           </div>
 
           <div className="border border-border-neutral divide-y divide-border-neutral font-body-spec text-[13px]">
-            <div className="grid grid-cols-1 sm:grid-cols-3 p-3 bg-surface-subtle/40">
-              <span className="font-spec-code text-text-secondary uppercase">Cốt liệu chính</span>
-              <span className="sm:col-span-2 font-medium text-text-primary">
-                {artisan.material || 'Đất sét cao lanh Trúc Thôn, tro trấu lọc nếp'}
-              </span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 p-3">
-              <span className="font-spec-code text-text-secondary uppercase">Nhiệt độ &amp; Lò nung</span>
-              <span className="sm:col-span-2 font-medium text-text-primary">
-                {artisan.firing_technique || 'Lò bầu nung củi nhiệt 1280°C liên tục 72 giờ'}
-              </span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 p-3 bg-surface-subtle/40">
-              <span className="font-spec-code text-text-secondary uppercase">Dấu ấn độc bản</span>
-              <span className="sm:col-span-2 font-medium text-text-primary">
-                {artisan.signature_style || 'Men rạn tam thái vẽ chỉ lam chàm thủy mặc'}
-              </span>
-            </div>
+            {specs.length > 0 ? (
+              specs.map((s, idx) => (
+                <div
+                  key={idx}
+                  className={`grid grid-cols-1 sm:grid-cols-3 p-3 ${
+                    idx % 2 === 0 ? 'bg-surface-subtle/40' : ''
+                  }`}
+                >
+                  <span className="font-spec-code text-text-secondary uppercase">{s.label}</span>
+                  <span className="sm:col-span-2 font-medium text-text-primary">{s.value}</span>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-3 p-3 bg-surface-subtle/40">
+                  <span className="font-spec-code text-text-secondary uppercase">Kỹ pháp chủ đạo</span>
+                  <span className="sm:col-span-2 font-medium text-text-primary">
+                    {artisan.techniqueSummary || artisan.specialty || 'Chế tác thủ công bí truyền qua nhiều thế hệ'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 p-3">
+                  <span className="font-spec-code text-text-secondary uppercase">Tác phẩm tiêu biểu</span>
+                  <span className="sm:col-span-2 font-medium text-text-primary">
+                    {artisan.signatureWork || artisan.masterwork_name || 'Bản ghi di sản tiêu biểu'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 p-3 bg-surface-subtle/40">
+                  <span className="font-spec-code text-text-secondary uppercase">Chứng nhận di sản</span>
+                  <span className="sm:col-span-2 font-medium text-text-primary">
+                    {artisan.verificationLabel || 'Di sản văn hóa phi vật thể quốc gia'}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
         </div>
+
+        {/* Section 4: Tác phẩm liên kết */}
+        {artisan.crafts && artisan.crafts.length > 0 && (
+          <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-8 shadow-sm">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-accent-terracotta"></span>
+                <h3 className="font-headline-title text-xl text-text-primary font-semibold uppercase">
+                  Tác Phẩm Chế Tác Tiêu Biểu ({artisan.crafts.length})
+                </h3>
+              </div>
+              <Link
+                to="/crafts"
+                className="font-spec-code text-[11px] text-accent-terracotta uppercase tracking-wider hover:underline"
+              >
+                Xem tất cả kho lưu trữ →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {artisan.crafts.map((craft) => (
+                <Link
+                  key={craft.id}
+                  to={`/crafts/${craft.id}`}
+                  className="group border border-border-neutral bg-canvas-linen p-3 hover:border-accent-terracotta transition-all flex flex-col justify-between"
+                >
+                  <div className="aspect-square w-full overflow-hidden bg-surface-subtle mb-3">
+                    <img
+                      src={craft.thumbnailUrl || craft.image || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=80'}
+                      alt={craft.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div>
+                    <span className="font-spec-code text-[10px] text-accent-terracotta uppercase block mb-1">
+                      {craft.region || craft.category || 'Di sản'}
+                    </span>
+                    <h4 className="font-title-card text-[14px] font-medium text-text-primary group-hover:text-accent-terracotta transition-colors line-clamp-2">
+                      {craft.name}
+                    </h4>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* POPUP CHI TIẾT */}

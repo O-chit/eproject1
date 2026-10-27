@@ -9,7 +9,7 @@ const { craftSummarySelect, craftSummaryFrom } = require('../utils/craftHelper')
 const getRegions = async (req, res, next) => {
   try {
     const result = await db.query(
-      'SELECT id, name, code, description, image_url FROM regions ORDER BY id ASC'
+      'SELECT id, name, code, description, image_url, registered_village_count, craft_summary, national_heritage_count FROM regions ORDER BY sort_order ASC, id ASC'
     );
     const data = result.rows.map((row) => ({
       id: row.id,
@@ -17,6 +17,9 @@ const getRegions = async (req, res, next) => {
       code: row.code,
       description: row.description,
       imageUrl: row.image_url,
+      registeredVillageCount: row.registered_village_count,
+      craftSummary: row.craft_summary,
+      nationalHeritageCount: row.national_heritage_count,
     }));
     return success(res, data);
   } catch (err) {

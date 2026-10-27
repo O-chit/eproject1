@@ -18,20 +18,34 @@ export default function DirectoryPage() {
   const [selectedTab, setSelectedTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [crafts, setCrafts] = useState([]);
+  const [totalCraftCount, setTotalCraftCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // Nạp danh mục từ DB
+  // Nạp danh mục và thống kê từ DB
   useEffect(() => {
-    async function loadCategories() {
+    async function loadCategoriesAndStats() {
       try {
-        const catData = await api.getCategories();
+        const [catData, statsData] = await Promise.all([
+          api.getCategories(),
+          api.getStats().catch(() => null),
+        ]);
+
+        const totalFromStats = statsData?.crafts || 0;
+        if (totalFromStats) {
+          setTotalCraftCount(totalFromStats);
+        }
+
         if (Array.isArray(catData) && catData.length > 0) {
           const dynamicTabs = [
-            { id: 'all', label: 'TẤT CẢ (ALL)' },
+            {
+              id: 'all',
+              label: `TẤT CẢ (ALL) (${totalFromStats || catData.reduce((sum, c) => sum + (c.craftCount || 0), 0)})`,
+            },
             ...catData.map((c) => ({
               id: String(c.id),
               slug: c.slug,
-              label: c.name.toUpperCase(),
+              count: c.craftCount || 0,
+              label: `${c.name.toUpperCase()} (${c.craftCount || 0})`,
             })),
           ];
           setTabs(dynamicTabs);
@@ -40,7 +54,7 @@ export default function DirectoryPage() {
         console.warn('Lỗi tải danh mục từ DB:', err.message);
       }
     }
-    loadCategories();
+    loadCategoriesAndStats();
   }, []);
 
   // Nạp danh sách sản phẩm từ DB theo bộ lọc
@@ -88,9 +102,11 @@ export default function DirectoryPage() {
     categoryLabel: item.category || 'THỦ CÔNG VIỆT NAM',
     origin: `${item.region || 'Làng Nghề Truyền Thống'} — Di sản sống`,
     description: item.shortDescription || item.description || 'Chế tác thủ công từ các nghệ nhân lành nghề.',
-    refCode: `CR-${item.id < 10 ? '0' : ''}${item.id}`,
-    edition: item.isFeatured ? 'ĐẶC SẮC TUYỂN CHỌN' : `Bản ghi di sản #${item.id}`,
-    price: item.price || 'Liên hệ giám tuyển',
+    refCode: item.sku || `CR-${item.id < 10 ? '0' : ''}${item.id}`,
+    edition: item.tag || (item.isFeatured ? 'ĐẶC SẮC TUYỂN CHỌN' : `Bản ghi di sản #${item.id}`),
+    price: item.priceVnd || item.price_vnd
+      ? `${Number(item.priceVnd || item.price_vnd).toLocaleString('vi-VN')} đ`
+      : item.price || 'Liên hệ giám tuyển',
     image: item.thumbnailUrl || item.image || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80',
   }));
 
@@ -119,7 +135,7 @@ export default function DirectoryPage() {
             DANH MỤC DI SẢN THỦ CÔNG
           </h1>
           <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary max-w-3xl leading-relaxed">
-            Kho lưu trữ hơn 240 tác phẩm thủ công nguyên bản từ các làng nghề truyền thống Việt Nam. Mỗi hiện vật được định danh độc bản cùng chứng thư nguồn gốc địa dư và kỹ pháp chế tác nguyên bản.
+            Kho lưu trữ {totalCraftCount || displayItems.length} tác phẩm thủ công nguyên bản từ các làng nghề truyền thống Việt Nam. Mỗi hiện vật được định danh độc bản cùng chứng thư nguồn gốc địa dư và kỹ pháp chế tác nguyên bản.
           </p>
 
           {/* Search & Quantitative Filters Bar */}
@@ -168,11 +184,10 @@ export default function DirectoryPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedTab(tab.id)}
-                  className={`py-1 transition-colors cursor-pointer ${
-                    selectedTab === tab.id
-                      ? 'text-text-primary font-semibold relative border-b-2 border-accent-terracotta'
-                      : 'text-text-secondary hover:text-accent-terracotta'
-                  }`}
+                  className={`py-1 transition-colors cursor-pointer ${selectedTab === tab.id
+                    ? 'text-text-primary font-semibold relative border-b-2 border-accent-terracotta'
+                    : 'text-text-secondary hover:text-accent-terracotta'
+                    }`}
                 >
                   {tab.label}
                 </button>

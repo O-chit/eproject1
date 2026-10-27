@@ -7,14 +7,28 @@ const { success } = require('../utils/response');
  */
 const getCategories = async (req, res, next) => {
   try {
-    const result = await db.query(
-      'SELECT id, name, slug, icon_url FROM craft_categories ORDER BY id ASC'
-    );
+    const result = await db.query(`
+      SELECT 
+        cc.id, 
+        cc.name, 
+        cc.slug, 
+        cc.icon_url,
+        COUNT(DISTINCT c.id)::int AS craft_count,
+        COUNT(DISTINCT a.id)::int AS artisan_count
+      FROM craft_categories cc
+      LEFT JOIN crafts c ON c.category_id = cc.id
+      LEFT JOIN craft_villages cv ON cv.category_id = cc.id
+      LEFT JOIN artisans a ON a.village_id = cv.id
+      GROUP BY cc.id
+      ORDER BY cc.id ASC
+    `);
     const data = result.rows.map((row) => ({
       id: row.id,
       name: row.name,
       slug: row.slug,
       iconUrl: row.icon_url,
+      craftCount: row.craft_count,
+      artisanCount: row.artisan_count,
     }));
     return success(res, data);
   } catch (err) {

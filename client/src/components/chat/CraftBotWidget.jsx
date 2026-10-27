@@ -233,11 +233,10 @@ export default function CraftBotWidget() {
                   className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-full`}
                 >
                   <div
-                    className={`p-3.5 rounded-2xl max-w-[88%] text-[13.5px] leading-relaxed shadow-sm ${
-                      isUser
+                    className={`p-3.5 rounded-2xl max-w-[88%] text-[13.5px] leading-relaxed shadow-sm ${isUser
                         ? 'bg-accent-terracotta text-white rounded-tr-none'
                         : 'bg-surface-crisp text-text-primary border border-border-neutral rounded-tl-none'
-                    }`}
+                      }`}
                   >
                     {/* Nội dung tin nhắn (hỗ trợ hiển thị Markdown cơ bản) */}
                     <div className="whitespace-pre-wrap break-words">

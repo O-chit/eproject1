@@ -50,6 +50,7 @@ const HIGHLIGHT_CRAFTS = [
 
 export default function HomePage() {
   const [crafts, setCrafts] = useState(HIGHLIGHT_CRAFTS);
+  const [regionsList, setRegionsList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [siteStats, setSiteStats] = useState({ crafts: 0, artisans: 0, regions: 0 });
 
@@ -59,11 +60,12 @@ export default function HomePage() {
     async function fetchData() {
       try {
         setLoading(true);
-        const [craftsData, statsData] = await Promise.all([
+        const [craftsData, statsData, regionsData] = await Promise.all([
           api.getCrafts({ is_featured: true, limit: 3 }),
           api.getStats(),
+          api.getRegions().catch(() => []),
         ]);
-        const items = Array.isArray(craftsData) ? craftsData : craftsData.data;
+        const items = Array.isArray(craftsData) ? craftsData : craftsData?.data || [];
         if (isMounted && Array.isArray(items) && items.length > 0) {
           setCrafts(items);
         }
@@ -73,6 +75,10 @@ export default function HomePage() {
             artisans: statsData.artisans,
             regions: statsData.regions,
           });
+        }
+        const regionsArr = Array.isArray(regionsData) ? regionsData : regionsData?.data || [];
+        if (isMounted && regionsArr.length > 0) {
+          setRegionsList(regionsArr);
         }
       } catch (err) {
         console.warn('Không thể nạp dữ liệu từ API DB, sử dụng dữ liệu dự phòng:', err.message);
@@ -124,7 +130,7 @@ export default function HomePage() {
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
               <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.1em] sm:tracking-[0.15em] text-text-secondary">
-                BẢN GHI: 2.840 TÁC PHẨM
+                BẢN GHI: {siteStats.crafts || crafts.length || 8} TÁC PHẨM
               </span>
             </div>
           </div>
@@ -440,70 +446,39 @@ export default function HomePage() {
               BẢN ĐỒ LÀNG NGHỀ THEO VÙNG ĐỊA LÝ
             </h3>
             <span className="font-spec-code text-spec-code text-text-secondary mt-2 sm:mt-0">
-              HỆ THỐNG 54 VÙNG VĂN HÓA TRUYỀN THỐNG
+              HỆ THỐNG {siteStats.regions || regionsList.length || 6} VÙNG VĂN HÓA TRUYỀN THỐNG
             </span>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link
-              to="/regions"
-              className="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group cursor-pointer"
-            >
-              <span className="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">
-                VÙNG BẮC BỘ
-              </span>
-              <span className="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">
-                Đồng Bằng Sông Hồng
-              </span>
-              <span className="font-spec-code text-[11px] text-text-secondary mt-2 block">
-                18 Làng Nghề • Gốm &amp; Khảm Trai
-              </span>
-            </Link>
+            {(regionsList.length > 0 ? regionsList.slice(0, 4) : [
+              { id: 1, name: 'Đồng Bằng Sông Hồng', villageCount: 18, craftSummary: 'Gốm Bát Tràng & Khảm Trai' },
+              { id: 4, name: 'Xứ Thanh - Nghệ - Tĩnh', villageCount: 14, craftSummary: 'Lụa Sa & Mộc Mỹ Nghệ' },
+              { id: 5, name: 'Đất Thổ Cẩm & Trầm Hương', villageCount: 16, craftSummary: 'Dệt Chăm & Gốm Bàu Trúc' },
+              { id: 6, name: 'Vùng Đất Cửu Long', villageCount: 12, craftSummary: 'Đan Đát & Đóng Xuồng' },
+            ]).map((reg, idx) => {
+              const villageNum = reg.registeredVillageCount || reg.villageCount || 0;
+              const craftDesc = reg.craftSummary || reg.craft_summary || 'Di sản làng nghề';
+              const regionTitle = reg.name;
 
-            <Link
-              to="/regions"
-              className="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group cursor-pointer"
-            >
-              <span className="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">
-                VÙNG BẮC TRUNG BỘ
-              </span>
-              <span className="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">
-                Xứ Thanh - Nghệ - Tĩnh
-              </span>
-              <span className="font-spec-code text-[11px] text-text-secondary mt-2 block">
-                12 Làng Nghề • Dệt Chiếu &amp; Mộc
-              </span>
-            </Link>
-
-            <Link
-              to="/regions"
-              className="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group cursor-pointer"
-            >
-              <span className="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">
-                VÙNG DUYÊN HẢI NAM TRUNG BỘ
-              </span>
-              <span className="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">
-                Đất Thổ Cẩm &amp; Trầm Hương
-              </span>
-              <span className="font-spec-code text-[11px] text-text-secondary mt-2 block">
-                14 Làng Nghề • Dệt Chăm &amp; Gốm Bàu Trúc
-              </span>
-            </Link>
-
-            <Link
-              to="/regions"
-              className="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group cursor-pointer"
-            >
-              <span className="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">
-                VÙNG NAM BỘ
-              </span>
-              <span className="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">
-                Vùng Đất Cửu Long
-              </span>
-              <span className="font-spec-code text-[11px] text-text-secondary mt-2 block">
-                10 Làng Nghề • Đan Đát &amp; Đóng Xuồng
-              </span>
-            </Link>
+              return (
+                <Link
+                  key={reg.id || idx}
+                  to="/regions"
+                  className="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group cursor-pointer"
+                >
+                  <span className="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">
+                    VÙNG 0{idx + 1}
+                  </span>
+                  <span className="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">
+                    {regionTitle}
+                  </span>
+                  <span className="font-spec-code text-[11px] text-text-secondary mt-2 block">
+                    {villageNum} Làng Nghề • {craftDesc}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
