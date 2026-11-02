@@ -53,18 +53,11 @@ export default function LoginPage() {
         await login(email, password);
         navigate(from, { replace: true });
       } catch (err) {
-        setErrorMsg(err.message || 'Email hoặc mật khẩu không chính xác. Bạn có thể sử dụng tài khoản kiểm thử bên dưới.');
+        setErrorMsg(err.message || 'Email hoặc mật khẩu không chính xác.');
       } finally {
         setSubmitting(false);
       }
     }
-  };
-
-  const fillTestCredentials = () => {
-    setIsRegister(false);
-    setEmail('user@craftroots.test');
-    setPassword('Craft@1234');
-    setErrorMsg('');
   };
 
   return (
@@ -256,19 +249,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Nút Điền Nhanh Tài Khoản Thử Nghiệm */}
-        <div className="mt-6 pt-5 border-t border-border-neutral text-center bg-surface-subtle/40 p-3">
-          <p className="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1.5">
-            Dành cho kiểm thử nhanh:
-          </p>
-          <button
-            type="button"
-            onClick={fillTestCredentials}
-            className="text-[11px] font-spec-code uppercase tracking-wider text-accent-terracotta hover:underline font-semibold cursor-pointer"
-          >
-            ⚡ Điền sẵn: user@craftroots.test / Craft@1234
-          </button>
-        </div>
+
       </div>
 
       {/* 3. Footer Bản Quyền */}

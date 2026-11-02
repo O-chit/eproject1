@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useFavourites } from '../context/FavouritesContext';
+import { useAgentLiveSync } from '../services/liveAgentSync';
 
 const DEFAULT_GALLERY_PHOTOS = [
   {
@@ -14,11 +15,13 @@ const DEFAULT_GALLERY_PHOTOS = [
 export default function CraftDetailPage() {
   const { id } = useParams();
   const craftId = id || 1;
+  const navigate = useNavigate();
   const { isFav, toggleFav } = useFavourites();
   const [craft, setCraft] = useState(null);
   const [relatedList, setRelatedList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+  const [agentUpdated, setAgentUpdated] = useState(false);
   const isSaved = isFav(craftId);
 
   useEffect(() => {
@@ -45,6 +48,35 @@ export default function CraftDetailPage() {
     setActivePhotoIndex(0);
     return () => { isMounted = false; };
   }, [craftId]);
+
+  // Lắng nghe sự kiện CRUD từ AI Agent để cập nhật State trực tiếp không cần load lại trang
+  useAgentLiveSync(({ tool, data }) => {
+    if (tool === 'update_craft') {
+      const isTarget = String(data?.id) === String(craftId) || String(data?.slug) === String(craftId) || (craft && craft.name === data?.name);
+      if (isTarget) {
+        setCraft((prev) => ({
+          ...prev,
+          ...data,
+          priceVnd: data.priceVnd !== undefined ? data.priceVnd : prev?.priceVnd,
+          shortDescription: data.shortDescription || prev?.shortDescription,
+          name: data.name || prev?.name,
+        }));
+        setAgentUpdated(true);
+        setTimeout(() => setAgentUpdated(false), 5000);
+      }
+    } else if (tool === 'delete_craft') {
+      const isTarget = String(data?.id) === String(craftId) || (craft && craft.name === data?.name);
+      if (isTarget) {
+        alert(`Tác phẩm "${data?.name || craft?.name}" vừa được AI Agent xóa khỏi CSDL.`);
+        navigate('/directory');
+      }
+    } else if (tool === 'add_favourite') {
+      const isTarget = String(data?.id) === String(craftId) || (craft && craft.name === data?.name);
+      if (isTarget && !isSaved) {
+        toggleSave();
+      }
+    }
+  }, [craftId, craft, isSaved, navigate]);
 
   const toggleSave = () => {
     toggleFav(craftId);
@@ -231,8 +263,18 @@ export default function CraftDetailPage() {
                     Định mức chuyển nhượng di sản
                   </span>
                   <div className="flex flex-wrap items-baseline gap-2 sm:gap-space-sm">
-                    <span className="font-headline-title text-[22px] sm:text-[28px] md:text-[32px] text-text-primary font-bold tracking-tight">Giá giám tuyển</span>
-                    <span className="font-spec-code text-[11px] sm:text-spec-code text-accent-terracotta tracking-[0.05em] uppercase font-medium">Chế tác theo mẻ</span>
+                    <span className={`font-headline-title text-[22px] sm:text-[28px] md:text-[32px] text-text-primary font-bold tracking-tight transition-all duration-300 ${agentUpdated ? 'text-accent-terracotta scale-105' : ''}`}>
+                      {craft?.priceVnd ? `${Number(craft.priceVnd).toLocaleString('vi-VN')} ₫` : 'Giá giám tuyển'}
+                    </span>
+                    {agentUpdated && (
+                      <span className="font-spec-code text-[11px] text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full animate-bounce flex items-center gap-1 shadow-2xs">
+                        <span className="material-symbols-outlined text-[13px]">bolt</span>
+                        AI Cập nhật trực tiếp!
+                      </span>
+                    )}
+                    <span className="font-spec-code text-[11px] sm:text-spec-code text-accent-terracotta tracking-[0.05em] uppercase font-medium">
+                      Chế tác theo mẻ
+                    </span>
                   </div>
                   <p className="font-body-spec text-[12px] text-text-secondary mt-1">
                     * Mỗi mẻ chỉ nung thành công 12 bộ đạt chuẩn tỷ lệ vết rạn tự nhiên cấp độ A+.

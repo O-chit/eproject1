@@ -2,6 +2,7 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const { Ollama } = require('ollama');
 const db = require('../config/db');
+const { searchWeb } = require('./webSearch.service');
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const LOCAL_MODEL = process.env.LOCAL_AI_MODEL || 'qwen2.5:1.5b';
@@ -37,13 +38,15 @@ async function searchDatabaseContext(query) {
     const stopWords = new Set(['cho', 'tôi', 'các', 'và', 'những', 'sản', 'phẩm', 'với', 'là', 'gì', 'nào', 'ở', 'trong', 'giá', 'cả', 'hãy', 'gợi', 'ý', 'tìm', 'kiếm', 'bằng', 'làm', 'muốn', 'mua', 'xem']);
     const rawTokens = normalizedQuery.split(/[\s,?.!]+/).filter(w => w.length >= 2 && !stopWords.has(w));
     
-    // Nếu có cụm từ "bát tràng", "vạn phúc", "hạ thái"... giữ nguyên cụm
+    // Nếu có cụm từ làng nghề, chất liệu đặc trưng giữ nguyên cụm
     const phrases = [];
     if (normalizedQuery.includes('bát tràng')) phrases.push('%bát tràng%');
     if (normalizedQuery.includes('vạn phúc')) phrases.push('%vạn phúc%');
     if (normalizedQuery.includes('hạ thái')) phrases.push('%hạ thái%');
     if (normalizedQuery.includes('chuôn ngọ')) phrases.push('%chuôn ngọ%');
     if (normalizedQuery.includes('phú vinh')) phrases.push('%phú vinh%');
+    if (normalizedQuery.includes('chu đậu')) phrases.push('%chu đậu%');
+    if (normalizedQuery.includes('đông hồ')) phrases.push('%đông hồ%');
     if (normalizedQuery.includes('gốm')) phrases.push('%gốm%');
     if (normalizedQuery.includes('lụa')) phrases.push('%lụa%');
     if (normalizedQuery.includes('sơn mài')) phrases.push('%sơn mài%');
@@ -107,10 +110,24 @@ async function searchDatabaseContext(query) {
   return results;
 }
 
+const { toolsList, executeTool, detectCrudIntent } = require('./aiTools.service');
+
 /**
- * Xử lý cuộc hội thoại với Ollama AI (hoặc Intelligent Local Fallback)
+ * Xử lý cuộc hội thoại với Ollama AI kết hợp Route Context, Web Search và CRUD Tools
  */
-async function processChatMessage({ sessionId, userId, message, pageContext }) {
+async function processChatMessage({ sessionId, userId, userRole = 'guest', userEmail = null, userName = null, message, pageContext = {} }) {
+  const {
+    currentPath = '',
+    pageTitle = '',
+    heading = '',
+    entityType = '',
+    entityName = '',
+    summary: pageSummary = '',
+    enableWebSearch = false
+  } = pageContext;
+
+  const userContext = { userId, userRole, userEmail, userName };
+
   // 1. Đảm bảo phiên hội thoại tồn tại
   const sessionCheck = await db.query('SELECT id FROM chat_sessions WHERE id = $1', [sessionId]);
   if (sessionCheck.rows.length === 0) {
@@ -126,11 +143,50 @@ async function processChatMessage({ sessionId, userId, message, pageContext }) {
     [sessionId, 'user', message]
   );
 
-  // 3. Tra cứu dữ liệu từ 22 bảng CSDL CraftRoots
-  const dbContext = await searchDatabaseContext(message);
+  // 3. Kiểm tra ý định CRUD từ trước (Pre-detection)
+  const preDetectedTool = detectCrudIntent(message, pageContext, userContext);
 
-  // Chuẩn bị rich cards trả về cho giao diện
+  // 4. Bổ sung từ khóa từ đối tượng trên trang hiện tại nếu câu hỏi có tính tham chiếu
+  const contextSubject = heading || entityName || '';
+  const isReferencingCurrentPage = /(cái này|tác phẩm này|sản phẩm này|nghệ nhân này|ở đây|trang này|chỗ này|món này|bình này|bức này)/i.test(message);
+  
+  const dbSearchQuery = (contextSubject && isReferencingCurrentPage)
+    ? `${message} ${contextSubject}`
+    : (contextSubject && !message.toLowerCase().includes(contextSubject.toLowerCase()) ? `${message} ${contextSubject}` : message);
+
+  // Tra cứu dữ liệu từ CSDL CraftRoots
+  const dbContext = await searchDatabaseContext(dbSearchQuery);
+
+  // 5. Kiểm tra yêu cầu tra cứu trên mạng (Web Search)
+  const isWebSearchKeyword = /(mạng|internet|google|tra cứu|tìm trên mạng|báo chí|tin tức|bài báo|wikipedia|thực tế|thế giới|ngoài đời|ngoài thị trường)/i.test(message);
+  const shouldSearchWeb = Boolean(enableWebSearch || isWebSearchKeyword);
+
+  let webResults = [];
+  if (shouldSearchWeb && !preDetectedTool) {
+    let webQuery = '';
+    const cleanUserQuery = message.replace(/(tra cứu|tìm kiếm|trên mạng|internet|google|tin tức|bài báo|về|hãy|cho tôi|biết|xem)/gi, '').trim();
+
+    if (contextSubject) {
+      if (cleanUserQuery.length > 2 && !cleanUserQuery.toLowerCase().includes(contextSubject.toLowerCase())) {
+        webQuery = `${contextSubject} ${cleanUserQuery}`;
+      } else {
+        webQuery = contextSubject;
+      }
+    } else {
+      webQuery = cleanUserQuery || message;
+    }
+
+    try {
+      webResults = await searchWeb(webQuery);
+    } catch (searchErr) {
+      console.warn('Lỗi tra cứu web trong AI Chat:', searchErr.message);
+    }
+  }
+
+  // 6. Chuẩn bị Rich Cards trả về cho giao diện (Kiệt tác, Nghệ nhân, Web Citations)
   const richCards = [];
+
+  // Thẻ kiệt tác CSDL
   dbContext.crafts.forEach(c => {
     richCards.push({
       type: 'craft',
@@ -144,6 +200,7 @@ async function processChatMessage({ sessionId, userId, message, pageContext }) {
     });
   });
 
+  // Thẻ nghệ nhân CSDL
   dbContext.artisans.forEach(a => {
     richCards.push({
       type: 'artisan',
@@ -157,12 +214,24 @@ async function processChatMessage({ sessionId, userId, message, pageContext }) {
     });
   });
 
-  // 4. Kiểm tra xem Ollama có đang chạy không
+  // Thẻ kết quả tra cứu Internet (Wikipedia / Báo chí)
+  webResults.forEach((w, wIdx) => {
+    richCards.push({
+      type: 'web_source',
+      id: `web_${Date.now()}_${wIdx}`,
+      title: w.title,
+      snippet: w.snippet,
+      source: w.source,
+      url: w.url
+    });
+  });
+
+  // 7. Thực thi hoặc kiểm tra Ollama AI
   const health = await checkOllamaHealth();
   let replyText = '';
+  const toolExecutions = [];
 
   if (health.available) {
-    // Ollama đang online -> Gọi mô hình Local LLM
     try {
       // Đọc 4 tin nhắn gần nhất để duy trì ngữ cảnh
       const historyRes = await db.query(
@@ -174,19 +243,66 @@ async function processChatMessage({ sessionId, userId, message, pageContext }) {
         content: m.content
       }));
 
-      // Tạo System Prompt chứa tri thức thực tế
-      const systemPrompt = `Bạn là "Trợ Lý Di Sản CraftRoots" – Chuyên gia tư vấn về nghề thủ công truyền thống Việt Nam.
-Phong cách trả lời: Lịch thiệp, trang nhã, giàu niềm tự hào văn hóa, súc tích (dưới 150 từ).
-Luôn ưu tiên dựa vào dữ liệu thực tế từ CSDL CraftRoots dưới đây:
+      // Bối cảnh trang hiện tại
+      let pageContextPrompt = '';
+      if (currentPath || contextSubject) {
+        pageContextPrompt = `
+[NGỮ CẢNH TRANG NGƯỜI DÙNG ĐANG XEM]:
+- Đường dẫn Route: ${currentPath || 'N/A'}
+- Tiêu đề trang: ${pageTitle || 'N/A'}
+- Đối tượng chính trên trang: ${contextSubject || 'Tổng quan di sản'}
+- Tóm tắt nội dung hiển thị: ${pageSummary || 'Thông tin trang chung'}
+`;
+      }
 
-[DỮ LIỆU CSDL CRAFTROOTS THỰC TẾ]:
-- Sản phẩm gợi ý: ${JSON.stringify(dbContext.crafts, null, 2)}
+      // Bối cảnh kết quả tra cứu trên mạng
+      let webSearchPrompt = '';
+      if (webResults.length > 0) {
+        webSearchPrompt = `
+[KẾT QUẢ TRA CỨU TRÊN MẠNG (INTERNET / WIKIPEDIA & BÁO CHÍ THỰC TẾ)]:
+${webResults.map((r, i) => `${i + 1}. [Nguồn: ${r.source}] Tiêu đề: ${r.title}\n   Nội dung: ${r.snippet}\n   Link tham khảo: ${r.url}`).join('\n')}
+`;
+      }
+
+      // Hướng dẫn công cụ CRUD
+      const crudPrompt = `
+[HỆ THỐNG CÔNG CỤ THAO TÁC CSDL THỰC TẾ (CRUD API TOOLS)]:
+Bạn có quyền hạn thực thi các thao tác CSDL qua các API tools sau:
+- create_booking: Đăng ký lịch hẹn đàm đạo trà & thăm xưởng nghệ nhân
+- get_bookings: Tra cứu danh sách lịch hẹn của khách
+- cancel_booking: Hủy lịch hẹn thăm xưởng
+- create_craft: Thêm mới kiệt tác thủ công (Tên, giá, xuất xứ...)
+- update_craft: Cập nhật giá bán, mô tả, thông tin tác phẩm
+- delete_craft: Xóa tác phẩm
+- create_artisan: Thêm hồ sơ nghệ nhân mới
+- update_artisan: Cập nhật thông tin nghệ nhân
+- delete_artisan: Xóa hồ sơ nghệ nhân
+- add_favourite: Lưu kiệt tác vào danh sách yêu thích
+
+Quy tắc:
+1. Khi người dùng yêu cầu hành động CRUD (đặt lịch, sửa giá, thêm, xóa...), hãy gọi công cụ bằng cách xuất ra khối JSON:
+\`\`\`json
+{
+  "tool": "<tên_công_cụ>",
+  "arguments": { ... }
+}
+\`\`\`
+2. Nếu câu hỏi chỉ cần giải đáp thông thường, hãy trả lời nhã nhặn, tôn vinh di sản (dưới 160 từ).
+`;
+
+      const systemPrompt = `Bạn là "Trợ Lý Di Sản CraftRoots" – Chuyên gia am tường về văn hóa và nghề thủ công truyền thống Việt Nam.
+Phong cách trả lời: Lịch thiệp, trang nhã, giàu niềm tự hào văn hóa.
+Bạn có quyền nhận biết trang người dùng đang xem, tra cứu internet và thực thi trực tiếp các thao tác CSDL (CRUD API).
+
+${pageContextPrompt}
+[DỮ LIỆU CSDL CRAFTROOTS NỘI BỘ]:
+- Sản phẩm liên quan: ${JSON.stringify(dbContext.crafts, null, 2)}
 - Nghệ nhân liên quan: ${JSON.stringify(dbContext.artisans, null, 2)}
 - Làng nghề liên quan: ${JSON.stringify(dbContext.villages, null, 2)}
 
-Hãy chào hỏi nhã nhặn, giải đáp câu hỏi của người dùng và hướng dẫn họ xem chi tiết tác phẩm hoặc nghệ nhân nếu phù hợp.`;
+${webSearchPrompt}
+${crudPrompt}`;
 
-      // Chọn model có sẵn thực tế trong Ollama
       const matched = health.models.find(m => m.name.includes(LOCAL_MODEL));
       const activeModel = matched ? matched.name : (health.models[0]?.name || LOCAL_MODEL);
 
@@ -196,69 +312,263 @@ Hãy chào hỏi nhã nhặn, giải đáp câu hỏi của người dùng và h
           { role: 'system', content: systemPrompt },
           ...pastMessages
         ],
+        tools: toolsList
       });
 
-      replyText = response.message.content;
+      // Kiểm tra xem LLM có gọi tool không (Ollama native tool_calls hoặc JSON block)
+      let toolToExecute = null;
+      if (response.message?.tool_calls && response.message.tool_calls.length > 0) {
+        const tc = response.message.tool_calls[0];
+        toolToExecute = {
+          toolName: tc.function.name,
+          args: tc.function.arguments || {}
+        };
+      } else {
+        const intentFromLLM = detectCrudIntent(response.message.content, pageContext, userContext);
+        toolToExecute = intentFromLLM || preDetectedTool;
+      }
+
+      if (toolToExecute) {
+        const executionResult = await executeTool(toolToExecute.toolName, toolToExecute.args, { ...userContext, pageContext });
+        toolExecutions.push({
+          tool: toolToExecute.toolName,
+          arguments: toolToExecute.args,
+          result: executionResult
+        });
+
+        // Thêm thẻ CRUD Action lên đầu danh sách rich cards
+        richCards.unshift({
+          type: 'crud_action',
+          tool: toolToExecute.toolName,
+          success: executionResult.success,
+          message: executionResult.message,
+          data: executionResult.data
+        });
+
+        // Tạo câu trả lời xác nhận lịch thiệp từ trợ lý
+        replyText = formatToolSuccessResponse(toolToExecute.toolName, executionResult, response.message.content);
+      } else {
+        replyText = response.message.content;
+      }
+
     } catch (ollamaErr) {
       console.warn('Ollama chat error, chuyển sang chế độ phản hồi di sản thông minh:', ollamaErr.message);
-      replyText = generateHeritageResponse(message, dbContext);
+      
+      // Nếu có lệnh CRUD khi Ollama lỗi, vẫn thực thi CSDL trực tiếp
+      if (preDetectedTool) {
+        const executionResult = await executeTool(preDetectedTool.toolName, preDetectedTool.args, { ...userContext, pageContext });
+        toolExecutions.push({
+          tool: preDetectedTool.toolName,
+          arguments: preDetectedTool.args,
+          result: executionResult
+        });
+        richCards.unshift({
+          type: 'crud_action',
+          tool: preDetectedTool.toolName,
+          success: executionResult.success,
+          message: executionResult.message,
+          data: executionResult.data
+        });
+        replyText = formatToolSuccessResponse(preDetectedTool.toolName, executionResult);
+      } else {
+        replyText = generateHeritageResponse(message, dbContext, false, pageContext, webResults);
+      }
     }
   } else {
-    // Ollama chưa bật -> Trả về câu trả lời thông minh dựa trên dữ liệu thật + thông báo trạng thái
-    replyText = generateHeritageResponse(message, dbContext, true);
+    // Ollama chưa bật -> Nếu có lệnh CRUD, thực thi trực tiếp bằng Engine CSDL
+    if (preDetectedTool) {
+      const executionResult = await executeTool(preDetectedTool.toolName, preDetectedTool.args, { ...userContext, pageContext });
+      toolExecutions.push({
+        tool: preDetectedTool.toolName,
+        arguments: preDetectedTool.args,
+        result: executionResult
+      });
+      richCards.unshift({
+        type: 'crud_action',
+        tool: preDetectedTool.toolName,
+        success: executionResult.success,
+        message: executionResult.message,
+        data: executionResult.data
+      });
+      replyText = formatToolSuccessResponse(preDetectedTool.toolName, executionResult);
+    } else {
+      replyText = generateHeritageResponse(message, dbContext, true, pageContext, webResults);
+    }
   }
 
-  // 5. Câu hỏi gợi ý tiếp theo
-  const suggestedQuestions = [
-    "Khám phá các kiệt tác gốm sứ Bát Tràng",
-    "Tìm hiểu nghệ nhân ưu tú làm tranh sơn mài",
-    "Hướng dẫn đặt lịch thăm xưởng thủ công",
-    "Bản đồ 6 vùng di sản văn hóa Việt Nam"
-  ];
+  // 8. Tạo danh sách câu hỏi gợi ý phù hợp với ngữ cảnh trang
+  const suggestedQuestions = generateSuggestedQuestions(pageContext);
 
-  // 6. Lưu tin nhắn của Assistant vào PostgreSQL
+  // 9. Lưu tin nhắn của Assistant vào PostgreSQL (kèm tool_calls)
   await db.query(
-    'INSERT INTO chat_messages (session_id, sender_role, content, rich_cards) VALUES ($1, $2, $3, $4)',
-    [sessionId, 'assistant', replyText, JSON.stringify(richCards)]
+    'INSERT INTO chat_messages (session_id, sender_role, content, rich_cards, tool_calls) VALUES ($1, $2, $3, $4, $5)',
+    [sessionId, 'assistant', replyText, JSON.stringify(richCards), JSON.stringify(toolExecutions)]
   );
 
   return {
     sessionId,
     reply: replyText,
     richCards,
+    toolExecutions,
     suggestedQuestions,
-    aiProvider: health.available ? `Ollama Local (${LOCAL_MODEL})` : 'CraftRoots Heritage Engine (CSDL Direct)',
+    webSources: webResults,
+    pageContextUsed: {
+      route: currentPath,
+      heading: contextSubject,
+      hasWebSearch: webResults.length > 0
+    },
+    aiProvider: health.available ? `Ollama Local (${LOCAL_MODEL}) + CRUD APIs` : 'CraftRoots Heritage Engine (CSDL Direct CRUD)',
     isLocalOllama: health.available
   };
 }
 
 /**
- * Trình sinh câu trả lời di sản thông minh dựa trên dữ liệu CSDL thực tế
+ * Định dạng câu trả lời nhã nhặn sau khi thực thi thành công một hành động CRUD
  */
-function generateHeritageResponse(message, dbContext, showOllamaNotice = false) {
+function formatToolSuccessResponse(toolName, result, originalContent = '') {
+  if (!result.success) {
+    return `Dạ, thao tác chưa thể hoàn thành: ${result.message || result.error || 'Có lỗi xảy ra'}. Quý khách vui lòng kiểm tra lại thông tin.`;
+  }
+
+  const { data = {} } = result;
+
+  switch (toolName) {
+    case 'create_booking': {
+      const dateStr = data.visitDate ? new Date(data.visitDate).toLocaleDateString('vi-VN', { year: 'numeric', month: '2-digit', day: '2-digit' }) : 'Sắp xếp theo lịch';
+      return `Kính thưa quý khách, tôi đã hoàn tất đăng ký **Phiếu hẹn thăm xưởng #${data.bookingId}** thành công!\n\n` +
+             `📋 **Thông tin chi tiết:**\n` +
+             `- Nghệ nhân tiếp đón: **${data.artisanName || 'Bậc thầy di sản'}**\n` +
+             `- Người liên hệ: **${data.fullName}** (${data.phone})\n` +
+             `- Ngày hẹn: **${dateStr}** (${data.timeSlot})\n` +
+             `- Trạng thái: **${data.status}**\n\n` +
+             `Nghệ nhân rất vinh hạnh được đàm đạo trà và tiếp đón quý khách tại xưởng thủ công!`;
+    }
+
+    case 'get_bookings':
+      return `Dạ, tôi đã tra cứu được **${result.count || (data ? data.length : 0)}** phiếu hẹn trong hệ thống. Quý khách có thể xem thông tin chi tiết qua danh sách đính kèm.`;
+
+    case 'cancel_booking':
+      return `Dạ, tôi đã xác nhận hủy **Phiếu hẹn #${data.id}** theo yêu cầu của quý khách. Nếu cần đặt lại lịch vào dịp khác, tôi luôn sẵn sàng hỗ trợ!`;
+
+    case 'create_craft':
+      return `Dạ, kiệt tác **"${data.name}"** (Mã: \`${data.code}\`) đã được thêm mới thành công vào kho tàng di sản với mức giá tham chiếu **${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.priceVnd)}**!`;
+
+    case 'update_craft':
+      return `Dạ, tôi đã cập nhật thành công thông tin kiệt tác **"${data.name}"** (Giá mới: **${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.priceVnd)}**) vào CSDL!`;
+
+    case 'delete_craft':
+      return `Dạ, tác phẩm **"${data.name}"** đã được xóa khỏi hệ thống CSDL theo yêu cầu của quý khách.`;
+
+    case 'create_artisan':
+      return `Dạ, hồ sơ tôn vinh nghệ nhân **"${data.name}"** (${data.title || 'Nghệ nhân di sản'}, ${data.experience || 0} năm nghề) đã được khởi tạo thành công!`;
+
+    case 'update_artisan':
+      return `Dạ, hồ sơ nghệ nhân **"${data.name}"** đã được cập nhật thành công trong hệ thống.`;
+
+    case 'delete_artisan':
+      return `Dạ, hồ sơ nghệ nhân **"${data.name}"** đã được xóa khỏi hệ thống.`;
+
+    case 'add_favourite':
+      return `Dạ, tôi đã lưu kiệt tác **"${data.name || 'tác phẩm'}"** vào danh mục yêu thích của quý khách! Quý khách có thể xem lại trong mục Yêu thích bất kỳ lúc nào.`;
+
+    default:
+      return result.message || 'Thao tác đã được thực thi thành công vào hệ thống CSDL!';
+  }
+}
+
+
+/**
+ * Trình sinh câu trả lời di sản thông minh (kết hợp PageContext & Web Results)
+ */
+function generateHeritageResponse(message, dbContext, showOllamaNotice = false, pageContext = {}, webResults = []) {
+  const { heading = '', currentPath = '' } = pageContext;
   let response = `Kính chào quý khách! Tôi là **Trợ Lý Di Sản CraftRoots**.\n\n`;
 
+  if (heading) {
+    response += `Quý khách hiện đang khám phá thông tin về **${heading}** (tại trang \`${currentPath || 'chi tiết'}\`).\n\n`;
+  }
+
+  // Nếu có kết quả tra cứu trên mạng
+  if (webResults && webResults.length > 0) {
+    const top = webResults[0];
+    response += `🌐 **Tra cứu trực tuyến (${top.source}):**\n"${top.snippet}"\n\n`;
+    if (webResults.length > 1) {
+      response += `Quý khách có thể xem thêm các bài viết báo chí và tư liệu bách khoa ở phần **Dữ liệu tra cứu trên mạng** đính kèm bên dưới.\n\n`;
+    }
+  }
+
+  // Kết hợp CSDL nội bộ
   if (dbContext.crafts.length > 0) {
     const c = dbContext.crafts[0];
     const priceStr = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(c.priceVnd);
-    response += `Theo dữ liệu di sản của CraftRoots, tôi xin gợi ý kiệt tác **${c.name}** (${c.originLine || c.region}).\n`;
-    response += `Tác phẩm có mức giá tham chiếu là **${priceStr}**, thuộc danh mục **${c.category}** với quy trình chế tác thủ công cầu kỳ.\n\n`;
-    response += `Quý khách có thể bấm vào thẻ bên dưới để xem thông số kích thước, kỹ pháp và 4 giai đoạn hoàn thiện chi tiết.`;
+    response += `Về kiệt tác trong CSDL CraftRoots: **${c.name}** (${c.originLine || c.region}).\n`;
+    response += `Mức giá tham chiếu là **${priceStr}**, thuộc danh mục **${c.category}** với quy trình chế tác thủ công độc bản.\n`;
   } else if (dbContext.artisans.length > 0) {
     const a = dbContext.artisans[0];
-    response += `Về nghệ nhân, CraftRoots vinh danh **${a.name}** (${a.title}).\n`;
-    response += `Bậc thầy có **${a.experience} năm kinh nghiệm**, thuộc đời thứ **${a.generation || 'truyền đời'}** tại **${a.village || a.region}**.\n\n`;
-    response += `Quý khách có thể xem hồ sơ hoặc đặt lịch hẹn đến thăm xưởng của nghệ nhân qua thẻ thông tin đính kèm.`;
-  } else {
-    response += `Cảm ơn quý khách đã quan tâm đến kho tàng thủ công truyền thống Việt Nam.\n\n`;
-    response += `Quý khách có thể tra cứu các kiệt tác gốm men rạn Bát Tràng, sơn mài Hạ Thái, lụa Vạn Phúc, khảm trai Chuôn Ngọ hoặc tìm hiểu về 6 vùng di sản văn hóa trải dài khắp đất nước.`;
+    response += `Về nghệ nhân lưu trữ: Bậc thầy **${a.name}** (${a.title}).\n`;
+    response += `Nghệ nhân có **${a.experience} năm kinh nghiệm**, thuộc đời thứ **${a.generation || 'truyền đời'}** tại làng nghề **${a.village || a.region}**.\n`;
+  } else if (!webResults || webResults.length === 0) {
+    response += `Cảm ơn quý khách đã quan tâm đến kho tàng thủ công truyền thống Việt Nam.\n`;
+    response += `Quý khách có thể hỏi chi tiết về chất liệu, lịch sử làng nghề, nghệ nhân bậc thầy hoặc bật tính năng tra cứu mạng để cập nhật bài báo mới nhất.`;
   }
 
   if (showOllamaNotice) {
-    response += `\n\n> 💡 *Ghi chú môi trường:* Để kích hoạt trí tuệ nhân tạo toàn diện bằng Ollama cục bộ, bạn hãy mở terminal và khởi chạy: \`ollama run qwen2.5:3b\`.`;
+    response += `\n\n> 💡 *Ghi chú môi trường:* Để kích hoạt trí tuệ nhân tạo toàn diện bằng Ollama cục bộ, bạn hãy mở terminal và khởi chạy: \`ollama serve\` và \`ollama run qwen2.5:1.5b\`.`;
   }
 
   return response;
+}
+
+/**
+ * Tạo câu hỏi gợi ý thông minh dựa trên Route và nội dung trang hiện tại
+ */
+function generateSuggestedQuestions(pageContext = {}) {
+  const { currentPath = '', heading = '' } = pageContext;
+
+  if (currentPath.startsWith('/crafts/')) {
+    const item = heading || 'tác phẩm này';
+    return [
+      `Tra cứu trên mạng lịch sử và xuất xứ của ${item}`,
+      `Quy trình 4 giai đoạn chế tác tác phẩm này`,
+      `Nghệ nhân tạo tác nên kiệt tác này là ai?`,
+      `Gợi ý các tác phẩm cùng chất liệu độc bản`
+    ];
+  }
+
+  if (currentPath.startsWith('/artisans/')) {
+    const artisanName = heading || 'nghệ nhân này';
+    return [
+      `Tra cứu trên mạng các phóng sự, bài báo về ${artisanName}`,
+      `Số năm kinh nghiệm và đời truyền nghề của nghệ nhân`,
+      `Hướng dẫn đặt lịch hẹn thăm xưởng thủ công`,
+      `Các kiệt tác tiêu biểu do nghệ nhân chế tác`
+    ];
+  }
+
+  if (currentPath === '/directory') {
+    return [
+      'Gợi ý bình gốm Bát Tràng độc bản',
+      'Tra cứu trên mạng kỹ thuật khảm trai Chuôn Ngọ',
+      'Sơn mài Hạ Thái có những loại nào?',
+      'Tìm kiếm kiệt tác lụa tơ tằm Vạn Phúc'
+    ];
+  }
+
+  if (currentPath === '/regions') {
+    return [
+      'Đặc trưng thủ công vùng Đồng Bằng Bắc Bộ',
+      'Tra cứu trên mạng các làng nghề di sản miền Trung',
+      'Nghề đan lát mây tre vùng Nam Bộ',
+      'Làng nghề cổ xưa nhất Việt Nam'
+    ];
+  }
+
+  return [
+    'Tra cứu trên mạng lịch sử gốm Bát Tràng',
+    'Nghệ nhân gốm nào có trên 40 năm kinh nghiệm?',
+    'Tìm hiểu quy trình chế tác tranh sơn mài',
+    'Hướng dẫn đặt lịch thăm xưởng thủ công'
+  ];
 }
 
 module.exports = {
@@ -266,3 +576,4 @@ module.exports = {
   processChatMessage,
   searchDatabaseContext
 };
+

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useFavourites } from '../context/FavouritesContext';
+import { useAgentLiveSync } from '../services/liveAgentSync';
 
 const DEFAULT_TABS = [
   { id: 'all', label: 'TẤT CẢ (ALL)' },
@@ -93,7 +94,36 @@ export default function DirectoryPage() {
     };
   }, [selectedTab, searchQuery]);
 
-
+  // Lắng nghe sự kiện CRUD từ AI Agent để cập nhật danh sách trực tiếp không cần load lại trang
+  useAgentLiveSync(({ tool, data }) => {
+    if (tool === 'update_craft') {
+      setCrafts((prev) =>
+        prev.map((c) => {
+          if (c.id === data?.id || String(c.id) === String(data?.id) || c.name === data?.name) {
+            return {
+              ...c,
+              ...data,
+              priceVnd: data.priceVnd !== undefined ? data.priceVnd : c.priceVnd,
+              price_vnd: data.priceVnd !== undefined ? data.priceVnd : c.price_vnd,
+              shortDescription: data.shortDescription || c.shortDescription,
+              name: data.name || c.name,
+            };
+          }
+          return c;
+        })
+      );
+    } else if (tool === 'create_craft') {
+      if (data) {
+        setCrafts((prev) => [data, ...prev]);
+        setTotalCraftCount((prev) => prev + 1);
+      }
+    } else if (tool === 'delete_craft') {
+      if (data?.id) {
+        setCrafts((prev) => prev.filter((c) => c.id !== data.id && String(c.id) !== String(data.id) && c.name !== data.name));
+        setTotalCraftCount((prev) => Math.max(0, prev - 1));
+      }
+    }
+  });
 
   const displayItems = crafts.map((item) => ({
     id: item.id,

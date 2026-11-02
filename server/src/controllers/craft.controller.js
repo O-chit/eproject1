@@ -312,10 +312,24 @@ const getCraftById = async (req, res, next) => {
     const isNumeric = /^\d+$/.test(id);
 
     // Tìm craft id
-    const craftRow = await db.query(
+    let craftRow = await db.query(
       `SELECT id FROM crafts WHERE ${isNumeric ? 'id = $1' : '(slug = $1 OR code = $1)'}`,
       [id]
     );
+
+    // Fallback: Tìm kiếm thông minh nếu định danh dạng chuỗi không khớp trực tiếp slug
+    if (craftRow.rowCount === 0 && !isNumeric) {
+      const keyword = id.replace(/[-_]/g, ' ').trim();
+      const fallbackResult = await db.query(
+        `SELECT id FROM crafts 
+         WHERE name ILIKE $1 OR slug ILIKE $2 OR cultural_context ILIKE $1 OR origin_line ILIKE $1
+         ORDER BY id ASC LIMIT 1`,
+        [`%${keyword}%`, `%${id}%`]
+      );
+      if (fallbackResult.rowCount > 0) {
+        craftRow = fallbackResult;
+      }
+    }
 
     if (craftRow.rowCount === 0) {
       return error(res, 404, 'CRAFT_NOT_FOUND', `Không tìm thấy sản phẩm với định danh "${id}"`);

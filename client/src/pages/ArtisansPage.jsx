@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import api from '../services/api';
 import ArtisanDetailPopup from '../components/modals/ArtisanDetailPopup';
 import VisitBookingModal from '../components/modals/VisitBookingModal';
+import { useAgentLiveSync } from '../services/liveAgentSync';
 
 export default function ArtisansPage() {
   const location = useLocation();
@@ -96,6 +97,19 @@ export default function ArtisansPage() {
       isMounted = false;
     };
   }, []);
+
+  // Lắng nghe sự kiện CRUD từ AI Agent để cập nhật danh bạ nghệ nhân trực tiếp không cần load lại
+  useAgentLiveSync(({ tool, data }) => {
+    if (tool === 'update_artisan') {
+      setArtisans((prev) =>
+        prev.map((a) => (a.id === data?.id ? { ...a, ...data, name: data.name || a.name } : a))
+      );
+    } else if (tool === 'delete_artisan') {
+      if (data?.id) {
+        setArtisans((prev) => prev.filter((a) => a.id !== data.id));
+      }
+    }
+  });
 
   // 1. Đồng bộ mở Modal khi truy cập đường link có hash #nghe-nhan/{ref}
   useEffect(() => {

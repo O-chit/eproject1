@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import ArtisanDetailPopup from '../components/modals/ArtisanDetailPopup';
 import VisitBookingModal from '../components/modals/VisitBookingModal';
+import { useAgentLiveSync } from '../services/liveAgentSync';
 
 export default function ArtisanDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [artisan, setArtisan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -33,6 +35,29 @@ export default function ArtisanDetailPage() {
       isMounted = false;
     };
   }, [id]);
+
+  // Lắng nghe sự kiện CRUD từ AI Agent để cập nhật State nghệ nhân trực tiếp không cần load lại
+  useAgentLiveSync(({ tool, data }) => {
+    if (tool === 'update_artisan') {
+      const isTarget = String(data?.id) === String(id) || (artisan && artisan.name === data?.name);
+      if (isTarget) {
+        setArtisan((prev) => ({
+          ...prev,
+          ...data,
+          years_of_experience: data.yearsOfExperience !== undefined ? data.yearsOfExperience : prev?.years_of_experience,
+          title: data.title || prev?.title,
+          biography: data.biography || prev?.biography,
+          name: data.name || prev?.name,
+        }));
+      }
+    } else if (tool === 'delete_artisan') {
+      const isTarget = String(data?.id) === String(id) || (artisan && artisan.name === data?.name);
+      if (isTarget) {
+        alert(`Hồ sơ nghệ nhân "${data?.name || artisan?.name}" vừa được xóa bởi AI Agent.`);
+        navigate('/artisans');
+      }
+    }
+  }, [id, artisan, navigate]);
 
   if (loading) {
     return (

@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../services/api';
+import { emitAgentCrudAction } from '../../services/liveAgentSync';
 
 export default function CraftBotWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,11 +11,86 @@ export default function CraftBotWidget() {
   const [sessionId, setSessionId] = useState('');
   const [aiStatus, setAiStatus] = useState(null);
   const [hasUnread, setHasUnread] = useState(false);
+  const [enableWebSearch, setEnableWebSearch] = useState(true);
+  const [currentPageName, setCurrentPageName] = useState('');
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Nhận diện tên trang và tiêu đề đối tượng trên trang hiện tại
+  const updateCurrentPageInfo = useCallback(() => {
+    const path = location.pathname;
+    const h1 = document.querySelector('h1')?.innerText?.trim();
+    if (h1) {
+      setCurrentPageName(h1);
+    } else if (path === '/') {
+      setCurrentPageName('Trang chủ');
+    } else if (path === '/directory') {
+      setCurrentPageName('Danh mục Kiệt tác');
+    } else if (path === '/artisans') {
+      setCurrentPageName('Danh bạ Nghệ nhân');
+    } else if (path === '/regions') {
+      setCurrentPageName('Bản đồ Vùng di sản');
+    } else if (path === '/seasonal') {
+      setCurrentPageName('Bộ sưu tập Theo mùa');
+    } else if (path === '/contact') {
+      setCurrentPageName('Liên hệ & Đặt hẹn');
+    } else {
+      setCurrentPageName(path);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const timer = setTimeout(updateCurrentPageInfo, 150);
+    return () => clearTimeout(timer);
+  }, [location.pathname, location.search, updateCurrentPageInfo]);
+
+  // Trích xuất ngữ cảnh chi tiết của trang hiện tại để gửi cho AI Agent
+  const getPageContext = () => {
+    const path = location.pathname;
+    const title = document.title || 'CraftRoots';
+    const h1 = document.querySelector('h1')?.innerText?.trim() || '';
+    const mainEl = document.querySelector('main');
+    
+    let entityType = 'general';
+    let entityName = h1;
+    let summary = '';
+
+    if (path.startsWith('/crafts/')) {
+      entityType = 'craft';
+      summary = `Kiệt tác: ${h1}. ${mainEl?.innerText?.slice(0, 350) || ''}`;
+    } else if (path.startsWith('/artisans/')) {
+      entityType = 'artisan';
+      summary = `Hồ sơ nghệ nhân: ${h1}. ${mainEl?.innerText?.slice(0, 350) || ''}`;
+    } else if (path === '/directory') {
+      entityType = 'directory';
+      summary = 'Danh mục khám phá kiệt tác di sản thủ công mỹ nghệ Việt Nam.';
+    } else if (path === '/artisans') {
+      entityType = 'artisans_list';
+      summary = 'Danh bạ các nghệ nhân ưu tú, nghệ nhân nhân dân Việt Nam.';
+    } else if (path === '/regions') {
+      entityType = 'regions';
+      summary = 'Bản đồ 6 vùng di sản văn hóa truyền thống Việt Nam.';
+    } else if (path === '/seasonal') {
+      entityType = 'seasonal';
+      summary = 'Bộ sưu tập di sản theo mùa và thời tiết 4 mùa.';
+    } else {
+      summary = mainEl?.innerText?.slice(0, 250) || title;
+    }
+
+    return {
+      currentPath: path,
+      search: location.search,
+      pageTitle: title,
+      heading: h1 || title,
+      entityType,
+      entityName: entityName || h1,
+      summary: summary.replace(/\s+/g, ' ').trim(),
+      enableWebSearch
+    };
+  };
 
   // Khởi tạo sessionId duy nhất lưu trong localStorage
   useEffect(() => {
@@ -34,13 +110,13 @@ export default function CraftBotWidget() {
     const initialGreeting = {
       id: 'welcome',
       role: 'assistant',
-      content: `Kính chào quý khách! Tôi là **Trợ Lý Di Sản CraftRoots**, được vận hành trực tiếp bằng **Ollama AI (Local)**.\n\nTôi có thể hỗ trợ quý khách:\n- Tìm kiếm kiệt tác theo chất liệu, mức giá & vùng miền\n- Tra cứu hồ sơ các nghệ nhân bậc thầy\n- Tìm hiểu lịch sử làng nghề & quy trình 4 giai đoạn chế tác\n- Hướng dẫn đặt lịch hẹn thăm xưởng thủ công`,
+      content: `Kính chào quý khách! Tôi là **Trợ Lý Di Sản CraftRoots** (vận hành bởi **Local AI Agent + CRUD APIs**).\n\nTôi có thể:\n- 🧭 **Nhận biết trang quý khách đang xem** để tư vấn đúng tác phẩm/nghệ nhân\n- 🌐 **Tra cứu trực tuyến trên mạng (Wikipedia & Báo chí)** tư liệu mới nhất\n- ⚡ **Thực thi trực tiếp thao tác CSDL (CRUD API)**: Đặt lịch hẹn thăm xưởng nghệ nhân, tra cứu phiếu hẹn, cập nhật giá, thêm kiệt tác hoặc lưu yêu thích!`,
       richCards: [],
       suggestedQuestions: [
-        'Gợi ý bình gốm Bát Tràng độc bản',
-        'Nghệ nhân gốm nào có trên 40 năm kinh nghiệm?',
-        'Có những làng nghề nào ở Đồng Bằng Bắc Bộ?',
-        'Hướng dẫn đặt lịch thăm xưởng thủ công'
+        'Đặt lịch hẹn thăm xưởng (Nguyễn Văn An, SĐT 0912345678, ngày 20/11)',
+        'Tra cứu các phiếu hẹn của tôi (SĐT 0912345678)',
+        'Tra cứu trên mạng lịch sử gốm Bát Tràng',
+        'Lưu tác phẩm này vào danh mục yêu thích'
       ],
       createdAt: new Date().toISOString()
     };
@@ -84,11 +160,26 @@ export default function CraftBotWidget() {
     setIsLoading(true);
 
     try {
+      const pageContext = getPageContext();
       const response = await api.chatAi({
         sessionId,
         message: textToSend,
-        pageContext: { currentPath: location.pathname }
+        pageContext
       });
+
+      // Phát sự kiện Live State Sync đến toàn ứng dụng để cập nhật giao diện trực tiếp không cần F5/load lại
+      if (response.toolExecutions && Array.isArray(response.toolExecutions)) {
+        response.toolExecutions.forEach((exec) => {
+          if (exec.result && exec.result.success) {
+            emitAgentCrudAction({
+              tool: exec.tool,
+              data: exec.result.data,
+              arguments: exec.arguments,
+              message: exec.result.message
+            });
+          }
+        });
+      }
 
       const aiReply = {
         id: `ai_${Date.now()}`,
@@ -97,6 +188,8 @@ export default function CraftBotWidget() {
         richCards: response.richCards || [],
         suggestedQuestions: response.suggestedQuestions || [],
         aiProvider: response.aiProvider,
+        webSources: response.webSources || [],
+        pageContextUsed: response.pageContextUsed,
         createdAt: new Date().toISOString()
       };
 
@@ -134,11 +227,11 @@ export default function CraftBotWidget() {
           {
             id: 'welcome_new',
             role: 'assistant',
-            content: 'Cuộc trò chuyện đã được làm mới. Tôi có thể hỗ trợ gì cho quý khách về kho tàng di sản thủ công Việt Nam?',
+            content: `Cuộc trò chuyện đã được làm mới. Tôi đang ở cùng quý khách tại trang **${currentPageName || 'CraftRoots'}**. Quý khách cần tra cứu thông tin gì về di sản hay tra cứu thêm trên internet?`,
             richCards: [],
             suggestedQuestions: [
-              'Tác phẩm gốm sứ men rạn cổ',
-              'Danh bạ nghệ nhân bậc thầy',
+              `Tra cứu trên mạng thông tin về ${currentPageName || 'làng nghề Bát Tràng'}`,
+              'Danh bạ nghệ nhân bậc thầy di sản',
               'Khám phá lụa tơ tằm Vạn Phúc'
             ],
             createdAt: new Date().toISOString()
@@ -163,7 +256,7 @@ export default function CraftBotWidget() {
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-accent-terracotta hover:bg-[#a84719] text-white shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-105 active:scale-95 focus:outline-none cursor-pointer border-2 border-surface-crisp"
         aria-label="Mở Trợ lý AI Di sản"
-        title="Trợ Lý Di Sản CraftRoots AI"
+        title="Trợ Lý Di Sản CraftRoots AI (Có nhận biết Trang & Tra cứu Web)"
       >
         {isOpen ? (
           <span className="material-symbols-outlined text-[26px]">close</span>
@@ -179,7 +272,7 @@ export default function CraftBotWidget() {
 
       {/* 2. Cửa sổ hộp thoại Chatbot */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-6 z-50 w-[92vw] sm:w-[420px] h-[580px] max-h-[80vh] bg-surface-crisp border border-border-neutral rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fadeIn font-body-default">
+        <div className="fixed bottom-24 right-4 sm:right-6 z-50 w-[92vw] sm:w-[440px] h-[600px] max-h-[82vh] bg-surface-crisp border border-border-neutral rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fadeIn font-body-default">
           {/* Header */}
           <div className="bg-canvas-linen border-b border-border-neutral px-4 py-3 flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -223,34 +316,123 @@ export default function CraftBotWidget() {
             </div>
           </div>
 
+          {/* Sub-header: Thanh hiển thị Route hiện tại + Toggle Tra cứu Web */}
+          <div className="bg-canvas-linen/95 border-b border-border-neutral px-3.5 py-1.5 flex items-center justify-between text-[11px] select-none">
+            <div className="flex items-center gap-1.5 text-text-secondary truncate max-w-[65%]" title={`Đang ở: ${currentPageName}`}>
+              <span className="material-symbols-outlined text-[14px] text-accent-terracotta flex-shrink-0 animate-pulse">
+                location_searching
+              </span>
+              <span className="truncate">
+                Trang: <span className="font-semibold text-text-primary">{currentPageName || 'CraftRoots'}</span>
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setEnableWebSearch(!enableWebSearch)}
+              className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10.5px] font-medium transition-all cursor-pointer border shadow-2xs ${
+                enableWebSearch
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100'
+                  : 'bg-gray-100 text-gray-500 border-gray-300 hover:bg-gray-200'
+              }`}
+              title={enableWebSearch ? 'Đang bật tra cứu Internet (Wikipedia + Báo chí thực tế)' : 'Bật tra cứu Internet'}
+            >
+              <span className="material-symbols-outlined text-[13px]">
+                {enableWebSearch ? 'public' : 'public_off'}
+              </span>
+              <span>{enableWebSearch ? 'Tra mạng: Bật' : 'Tra mạng: Tắt'}</span>
+            </button>
+          </div>
+
           {/* Danh sách tin nhắn */}
           <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-canvas-linen/40">
             {messages.map((msg, index) => {
               const isUser = msg.role === 'user';
+              const crudCards = (msg.richCards || []).filter(c => c.type === 'crud_action');
+              const heritageCards = (msg.richCards || []).filter(c => c.type === 'craft' || c.type === 'artisan');
+              const webCards = (msg.richCards || []).filter(c => c.type === 'web_source');
+
               return (
                 <div
                   key={msg.id || index}
                   className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-full`}
                 >
                   <div
-                    className={`p-3.5 rounded-2xl max-w-[88%] text-[13.5px] leading-relaxed shadow-sm ${isUser
+                    className={`p-3.5 rounded-2xl max-w-[88%] text-[13.5px] leading-relaxed shadow-sm ${
+                      isUser
                         ? 'bg-accent-terracotta text-white rounded-tr-none'
                         : 'bg-surface-crisp text-text-primary border border-border-neutral rounded-tl-none'
-                      }`}
+                    }`}
                   >
-                    {/* Nội dung tin nhắn (hỗ trợ hiển thị Markdown cơ bản) */}
+                    {/* Nội dung tin nhắn */}
                     <div className="whitespace-pre-wrap break-words">
                       {msg.content}
                     </div>
 
-                    {/* Rich Cards (Thẻ kiệt tác hoặc nghệ nhân gợi ý) */}
-                    {msg.richCards && msg.richCards.length > 0 && (
+                    {/* Thẻ hành động CSDL / CRUD Action Tool */}
+                    {crudCards.length > 0 && (
+                      <div className="mt-3 pt-2.5 border-t border-border-neutral/60 space-y-2">
+                        <div className="text-[10.5px] font-bold tracking-wider uppercase text-accent-terracotta flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[15px]">database</span>
+                          Thao tác CSDL đã thực thi:
+                        </div>
+                        {crudCards.map((crud, crIdx) => (
+                          <div
+                            key={crIdx}
+                            className={`p-2.5 rounded-xl border text-xs shadow-2xs ${
+                              crud.success
+                                ? 'bg-amber-50/90 border-amber-200/90 text-amber-950'
+                                : 'bg-red-50/90 border-red-200 text-red-900'
+                            }`}
+                          >
+                            <div className="flex items-center gap-1.5 font-bold">
+                              <span className="material-symbols-outlined text-[17px] text-accent-terracotta flex-shrink-0">
+                                {crud.tool === 'create_booking' ? 'event_available'
+                                  : crud.tool === 'cancel_booking' ? 'event_busy'
+                                  : crud.tool === 'update_craft' ? 'price_change'
+                                  : crud.tool === 'create_craft' ? 'add_circle'
+                                  : crud.tool === 'delete_craft' ? 'delete_forever'
+                                  : crud.tool === 'add_favourite' ? 'favorite'
+                                  : 'task_alt'}
+                              </span>
+                              <span className="leading-snug">{crud.message}</span>
+                            </div>
+
+                            {/* Chi tiết phiếu hẹn nếu có */}
+                            {crud.data && crud.tool === 'create_booking' && (
+                              <div className="text-[11px] space-y-0.5 text-text-secondary mt-1.5 pt-1.5 border-t border-amber-200/70 font-mono">
+                                <div>Mã phiếu: <strong>#{crud.data.bookingId}</strong> ({crud.data.status})</div>
+                                <div>Nghệ nhân: {crud.data.artisanName}</div>
+                                <div>Thời gian: {crud.data.timeSlot} • {new Date(crud.data.visitDate).toLocaleDateString('vi-VN')}</div>
+                              </div>
+                            )}
+
+                            {/* Chi tiết cập nhật giá tác phẩm */}
+                            {crud.data && crud.tool === 'update_craft' && (
+                              <div className="text-[11px] text-text-secondary mt-1 font-mono">
+                                Tác phẩm: <strong>{crud.data.name}</strong> • Giá mới: {formatPrice(crud.data.priceVnd)}
+                              </div>
+                            )}
+
+                            {/* Chi tiết tạo tác phẩm mới */}
+                            {crud.data && crud.tool === 'create_craft' && (
+                              <div className="text-[11px] text-text-secondary mt-1 font-mono">
+                                Mã: <code>{crud.data.code}</code> • Giá: {formatPrice(crud.data.priceVnd)}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Rich Cards: Tác phẩm & Nghệ nhân CSDL */}
+                    {heritageCards.length > 0 && (
                       <div className="mt-3 pt-3 border-t border-border-neutral/60 space-y-2">
                         <div className="text-[11px] font-semibold tracking-wider uppercase text-text-secondary">
                           Tác phẩm & Nghệ nhân liên quan:
                         </div>
                         <div className="grid grid-cols-1 gap-2">
-                          {msg.richCards.map((card, cIdx) => (
+                          {heritageCards.map((card, cIdx) => (
                             <div
                               key={cIdx}
                               onClick={() => {
@@ -292,11 +474,44 @@ export default function CraftBotWidget() {
                         </div>
                       </div>
                     )}
+
+                    {/* Rich Cards: Dữ liệu tra cứu Internet & Báo chí */}
+                    {webCards.length > 0 && (
+                      <div className="mt-3 pt-2.5 border-t border-border-neutral/60 space-y-1.5">
+                        <div className="text-[10.5px] font-bold tracking-wider uppercase text-emerald-800 flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[14px] text-emerald-600">travel_explore</span>
+                          Dữ liệu tra cứu trên mạng:
+                        </div>
+                        <div className="space-y-1.5">
+                          {webCards.map((wCard, wIdx) => (
+                            <a
+                              key={wIdx}
+                              href={wCard.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block p-2 bg-emerald-50/70 hover:bg-emerald-100/70 border border-emerald-200 rounded-lg transition-colors group cursor-pointer text-left"
+                            >
+                              <div className="flex items-center justify-between text-xs font-semibold text-emerald-900 group-hover:underline">
+                                <span className="truncate pr-1">{wCard.title}</span>
+                                <span className="text-[9.5px] font-normal text-emerald-700 bg-white px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">
+                                  {wCard.source}
+                                </span>
+                              </div>
+                              {wCard.snippet && (
+                                <p className="text-[11px] text-text-secondary line-clamp-2 mt-1 leading-snug">
+                                  {wCard.snippet}
+                                </p>
+                              )}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Câu hỏi gợi ý nhanh (chỉ hiển thị dưới tin nhắn cuối cùng của Assistant) */}
+                  {/* Câu hỏi gợi ý nhanh */}
                   {!isUser && msg.suggestedQuestions && index === messages.length - 1 && (
-                    <div className="mt-2.5 flex flex-wrap gap-1.5 max-w-[90%]">
+                    <div className="mt-2.5 flex flex-wrap gap-1.5 max-w-[92%]">
                       {msg.suggestedQuestions.map((q, qIdx) => (
                         <button
                           key={qIdx}
@@ -313,12 +528,15 @@ export default function CraftBotWidget() {
               );
             })}
 
-            {/* Hiệu ứng gõ phím khi đang chờ AI phản hồi */}
+            {/* Hiệu ứng chờ phản hồi */}
             {isLoading && (
-              <div className="flex items-center space-x-1.5 p-3 bg-surface-crisp border border-border-neutral rounded-2xl rounded-tl-none w-20 shadow-sm">
+              <div className="flex items-center space-x-1.5 p-3 bg-surface-crisp border border-border-neutral rounded-2xl rounded-tl-none w-24 shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-accent-terracotta animate-bounce" />
                 <span className="w-2 h-2 rounded-full bg-accent-terracotta animate-bounce [animation-delay:0.2s]" />
                 <span className="w-2 h-2 rounded-full bg-accent-terracotta animate-bounce [animation-delay:0.4s]" />
+                <span className="text-[10px] text-text-secondary ml-1 animate-pulse">
+                  {enableWebSearch ? 'Tra cứu...' : 'Xử lý...'}
+                </span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -339,7 +557,11 @@ export default function CraftBotWidget() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Hỏi về gốm sứ, lụa, nghệ nhân, giá cả..."
+                placeholder={
+                  currentPageName
+                    ? `Hỏi về "${currentPageName}" hoặc tra cứu mạng...`
+                    : "Hỏi về kiệt tác, nghệ nhân, tra cứu mạng..."
+                }
                 disabled={isLoading}
                 className="flex-1 bg-canvas-linen border border-border-neutral focus:border-accent-terracotta focus:ring-1 focus:ring-accent-terracotta rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] text-text-primary placeholder:text-text-secondary/70 focus:outline-none transition-colors"
               />
@@ -354,7 +576,7 @@ export default function CraftBotWidget() {
             </form>
             <div className="flex items-center justify-between text-[10px] text-text-secondary mt-1.5 px-1">
               <span>Nhấn Enter để gửi</span>
-              <span>CraftRoots AI Concierge • 100% Local</span>
+              <span>CraftRoots AI Concierge • Context & Web Aware</span>
             </div>
           </div>
         </div>

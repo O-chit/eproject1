@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { useAgentLiveSync } from '../../services/liveAgentSync';
 
 export default function AdminCraftsPage() {
   const { user } = useAuth();
@@ -67,6 +68,14 @@ export default function AdminCraftsPage() {
   useEffect(() => {
     fetchAllData();
   }, []);
+
+  // Tự động làm mới bảng quản trị trực tiếp khi AI Agent thực thi hành động CRUD
+  useAgentLiveSync(({ tool, message }) => {
+    if (tool === 'update_craft' || tool === 'create_craft' || tool === 'delete_craft') {
+      fetchAllData();
+      showToast(message || 'AI Agent vừa cập nhật CSDL tác phẩm!');
+    }
+  });
 
   // Lọc dữ liệu client-side nhanh chóng
   const filteredCrafts = useMemo(() => {

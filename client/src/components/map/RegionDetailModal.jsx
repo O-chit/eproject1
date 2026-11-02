@@ -14,6 +14,74 @@ import { Link } from 'react-router-dom';
  * - Màu chữ thứ cấp: #5A5854
  * - Màu điểm nhấn thương hiệu Terracotta Đất Nung: #B86B35
  */
+// Bảng ánh xạ ảnh sản phẩm chuẩn hóa theo ID và định danh
+const CRAFT_THUMBNAILS = {
+  1: '/demo/craft/antique_vietnamese_bronze_incense_burner_with_dragon_handles_and_foo_dog_finial/screen.png',
+  2: '/demo/craft/artisan_handwoven_bamboo_fruit_basket_and_lidded_box_from_phu_vinh_craft/screen.png',
+  3: '/demo/craft/artisan_handwoven_natural_sedge_and_seagrass_storage_basket_from_kim_son/screen.png',
+  4: '/demo/craft/artisan_hand_turned_rustic_terracotta_water_jar_and_tea_bowl_from_bau_truc_cham/screen.png',
+  5: '/demo/craft/artisan_hand_turned_rustic_vietnamese_stoneware_celadon_tea_bowl_with_natural/screen.png',
+  6: '/demo/craft/authentic_vietnamese_lotus_silk_scarf_woven_from_natural_lotus_stem_fibers_in/screen.png',
+  7: '/demo/craft/exquisite_traditional_vietnamese_lacquer_tea_tray_from_ha_thai_village_deep/screen.png',
+  8: '/demo/craft/exquisite_traditional_vietnamese_non_la_conical_hat_with_subtle_poem/screen.png',
+  9: '/demo/craft/exquisite_vietnamese_traditional_lacquer_vase_with_inlaid_natural_eggshell_and/screen.png',
+  10: '/demo/craft/exquisite_vietnamese_traditional_silk_lantern_from_hoi_an_teardrop_shape_with/screen.png',
+  11: '/demo/craft/hand_carved_vietnamese_ironwood_sculpture_of_mythical_dragon_turtle_from_la/screen.png',
+  12: '/demo/craft/masterpiece_vietnamese_hand_carved_mahogany_wood_tea_box_with_mother_of_pearl/screen.png',
+  13: '/demo/craft/masterpiece_vietnamese_hand_chased_solid_silver_tea_canister_from_dong_xam/screen.png',
+  14: '/demo/craft/masterpiece_vietnamese_lacquer_bowl_coated_in_multi_layered_gold_leaf_and_deep/screen.png',
+  15: '/demo/craft/museum_quality_product_photography_of_an_authentic_vietnamese_blue_and_white/screen.png',
+  16: '/demo/craft/original_dong_ho_vietnamese_folk_woodcut_print_of_a_rooster_and_hen_on_textured/screen.png',
+  17: '/demo/craft/product_photography_of_an_authentic_vietnamese_crackle_glaze_ceramic_teapot_set/screen.png',
+  18: '/demo/craft/traditional_cham_ethnic_handwoven_brocade_textile_scarf_with_intricate/screen.png',
+  19: '/demo/craft/traditional_hand_forged_vietnamese_carbon_steel_kitchen_knife_and_iron_scissors/screen.png',
+  20: '/demo/craft/traditional_vietnamese_bamboo_transverse_flute_sao_truc_and_bamboo_birdcage/screen.png',
+  21: '/demo/craft/traditional_vietnamese_carved_horn_comb_and_spoon_crafted_from_natural_water/screen.png',
+  22: '/demo/craft/traditional_vietnamese_conical_hat_non_quai_thao_kinh_bac_flat_hat_with/screen.png',
+  23: '/demo/craft/traditional_vietnamese_handwoven_natural_hemp_fabric_runner_from_hmong_ethnic/screen.png',
+  24: '/demo/craft/traditional_vietnamese_mother_of_pearl_inlaid_rosewood_jewelry_box_from_chuyen/screen.png',
+  25: '/demo/craft/traditional_vietnamese_woodblock_print_of_bat_tien_eight_immortals_on_handmade/screen.png',
+  26: '/demo/craft/vietnamese_folk_art_woodblock_print_of_to_nu_four_beauties_playing_instruments/screen.png',
+  27: '/demo/craft/vietnamese_hand_chased_solid_silver_hairpin_and_filigree_flower_brooch_from/screen.png',
+  28: '/demo/craft/vietnamese_traditional_hand_cast_bronze_bell_with_archaic_dong_son_bird_and_sun/screen.png'
+};
+
+const CRAFT_SLUG_THUMBNAILS = {
+  'bat-trang': '/demo/craft/product_photography_of_an_authentic_vietnamese_crackle_glaze_ceramic_teapot_set/screen.png',
+  'van-phuc': '/demo/craft/authentic_vietnamese_lotus_silk_scarf_woven_from_natural_lotus_stem_fibers_in/screen.png',
+  'dong-ho': '/demo/craft/original_dong_ho_vietnamese_folk_woodcut_print_of_a_rooster_and_hen_on_textured/screen.png',
+  'y-yen': '/demo/craft/antique_vietnamese_bronze_incense_burner_with_dragon_handles_and_foo_dog_finial/screen.png',
+  'chu-dau': '/demo/craft/artisan_hand_turned_rustic_vietnamese_stoneware_celadon_tea_bowl_with_natural/screen.png',
+  'lung-tam': '/demo/craft/traditional_vietnamese_handwoven_natural_hemp_fabric_runner_from_hmong_ethnic/screen.png',
+  'phuc-sen': '/demo/craft/traditional_hand_forged_vietnamese_carbon_steel_kitchen_knife_and_iron_scissors/screen.png',
+  'mai-chau': '/demo/craft/traditional_cham_ethnic_handwoven_brocade_textile_scarf_with_intricate/screen.png',
+  'cham-bac-dao': '/demo/craft/vietnamese_hand_chased_solid_silver_hairpin_and_filigree_flower_brooch_from/screen.png',
+  'thanh-tien': '/demo/craft/vietnamese_folk_art_woodblock_print_of_to_nu_four_beauties_playing_instruments/screen.png',
+  'non-bai-tho': '/demo/craft/exquisite_traditional_vietnamese_non_la_conical_hat_with_subtle_poem/screen.png',
+  'nga-son': '/demo/craft/artisan_handwoven_natural_sedge_and_seagrass_storage_basket_from_kim_son/screen.png',
+  'thai-yen': '/demo/craft/hand_carved_vietnamese_ironwood_sculpture_of_mythical_dragon_turtle_from_la/screen.png',
+  'thanh-ha': '/demo/craft/artisan_hand_turned_rustic_terracotta_water_jar_and_tea_bowl_from_bau_truc_cham/screen.png',
+  'non-nuoc': '/demo/craft/hand_carved_vietnamese_ironwood_sculpture_of_mythical_dragon_turtle_from_la/screen.png',
+  'bau-truc': '/demo/craft/artisan_hand_turned_rustic_terracotta_water_jar_and_tea_bowl_from_bau_truc_cham/screen.png',
+  'my-nghiep': '/demo/craft/traditional_cham_ethnic_handwoven_brocade_textile_scarf_with_intricate/screen.png',
+  'phu-gia': '/demo/craft/exquisite_vietnamese_traditional_silk_lantern_from_hoi_an_teardrop_shape_with/screen.png',
+  'tho-cam-e-de': '/demo/craft/traditional_cham_ethnic_handwoven_brocade_textile_scarf_with_intricate/screen.png',
+  'nhac-cu-trung': '/demo/craft/traditional_vietnamese_bamboo_transverse_flute_sao_truc_and_bamboo_birdcage/screen.png',
+  'dan-gui-tay-nguyen': '/demo/craft/artisan_handwoven_bamboo_fruit_basket_and_lidded_box_from_phu_vinh_craft/screen.png',
+  'tuong-go-nha-mo': '/demo/craft/traditional_vietnamese_mother_of_pearl_inlaid_rosewood_jewelry_box_from_chuyen/screen.png',
+  'lai-thieu': '/demo/craft/museum_quality_product_photography_of_an_authentic_vietnamese_blue_and_white/screen.png',
+  'tuong-binh-hiep': '/demo/craft/exquisite_traditional_vietnamese_lacquer_tea_tray_from_ha_thai_village_deep/screen.png',
+  'gom-bien-hoa': '/demo/craft/product_photography_of_an_authentic_vietnamese_crackle_glaze_ceramic_teapot_set/screen.png',
+  'banh-trang-trang-bang': '/demo/craft/traditional_vietnamese_carved_horn_comb_and_spoon_crafted_from_natural_water/screen.png',
+  'dinh-yen': '/demo/craft/artisan_handwoven_natural_sedge_and_seagrass_storage_basket_from_kim_son/screen.png',
+  'mang-thit': '/demo/craft/artisan_hand_turned_rustic_terracotta_water_jar_and_tea_bowl_from_bau_truc_cham/screen.png',
+  'lanh-my-a': '/demo/craft/authentic_vietnamese_lotus_silk_scarf_woven_from_natural_lotus_stem_fibers_in/screen.png',
+  'dua-ben-tre': '/demo/craft/artisan_handwoven_bamboo_fruit_basket_and_lidded_box_from_phu_vinh_craft/screen.png'
+};
+
+const DEFAULT_CRAFT_FALLBACK_IMG =
+  'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=400&q=80';
+
 export default function RegionDetailModal({ region, isOpen, onClose }) {
   // Lắng nghe phím Escape để đóng popup
   useEffect(() => {
@@ -96,9 +164,9 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
             </span>
           </div>
           <div className="py-2.5 px-3">
-            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Làng nghề tiêu biểu</span>
+            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Sản phẩm đặc trưng</span>
             <span className="text-base sm:text-lg font-bold text-accent-terracotta font-headline-title font-serif">
-              {region.crafts ? region.crafts.length : 0} Làng nghề
+              {region.crafts ? region.crafts.length : 0} Sản phẩm
             </span>
           </div>
           <div className="py-2.5 px-3 col-span-2 sm:col-span-1 border-t sm:border-t-0 border-border-neutral">
@@ -124,55 +192,84 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
             </p>
           </div>
 
-          {/* 2. Danh sách làng nghề tiêu biểu */}
+          {/* 2. Một số sản phẩm đặc trưng */}
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-4" style={{ backgroundColor: region.color }} />
                 <h3 className="font-label-action text-xs uppercase tracking-wider text-text-primary font-bold">
-                  Làng Nghề Truyền Thống Tiêu Biểu ({region.crafts ? region.crafts.length : 0})
+                  Một Số Sản Phẩm Đặc Trưng ({region.crafts ? region.crafts.length : 0})
                 </h3>
               </div>
               <span className="text-[11px] font-spec-code text-text-secondary">
-                Gìn giữ kỹ pháp cổ truyền
+                Tinh hoa chế tác thủ công
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
               {region.crafts &&
-                region.crafts.map((craft) => (
-                  <div
-                    key={craft.id}
-                    className="p-4 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-all flex flex-col justify-between group shadow-xs"
-                  >
-                    <div>
-                      <div className="flex items-start justify-between gap-2 mb-1.5">
-                        <h4 className="font-bold text-sm sm:text-base text-text-primary font-title-card font-serif group-hover:text-accent-terracotta transition-colors">
-                          {craft.name}
-                        </h4>
-                        <span
-                          className="text-[10px] font-spec-code px-2 py-0.5 shrink-0 border border-border-neutral bg-canvas-linen text-text-secondary"
-                        >
-                          {craft.province}
+                region.crafts.map((craft) => {
+                  const targetDetailUrl = `/crafts/${craft.craftId || craft.slug || craft.id}`;
+                  const craftImage =
+                    craft.imageUrl ||
+                    (craft.craftId && CRAFT_THUMBNAILS[craft.craftId]) ||
+                    CRAFT_SLUG_THUMBNAILS[craft.id] ||
+                    DEFAULT_CRAFT_FALLBACK_IMG;
+
+                  return (
+                    <Link
+                      key={craft.id}
+                      to={targetDetailUrl}
+                      onClick={onClose}
+                      className="p-3 sm:p-3.5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta hover:shadow-md transition-all flex flex-col justify-between group shadow-xs cursor-pointer block no-underline text-inherit"
+                      title={`Xem chi tiết sản phẩm: ${craft.name}`}
+                    >
+                      <div className="flex gap-3 sm:gap-3.5 items-start">
+                        {/* Ô ẢNH SẢN PHẨM Ở BÊN TRÁI */}
+                        <div className="w-24 h-24 sm:w-28 sm:h-28 shrink-0 overflow-hidden border border-border-neutral bg-canvas-linen relative group/img">
+                          <img
+                            src={craftImage}
+                            alt={craft.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = DEFAULT_CRAFT_FALLBACK_IMG;
+                            }}
+                          />
+                        </div>
+
+                        {/* THÔNG TIN CHI TIẾT BÊN PHẢI */}
+                        <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+                          <div>
+                            <div className="flex items-start justify-between gap-1.5 mb-1">
+                              <h4 className="font-bold text-sm sm:text-[15px] text-text-primary font-title-card font-serif group-hover:text-accent-terracotta transition-colors line-clamp-2 leading-snug">
+                                {craft.name}
+                              </h4>
+                            </div>
+                            <span
+                              className="inline-block text-[10px] font-spec-code px-2 py-0.5 border border-border-neutral bg-canvas-linen text-text-secondary mb-1.5"
+                            >
+                              {craft.province}
+                            </span>
+                            <p className="text-xs font-body-spec text-text-secondary leading-relaxed line-clamp-2">
+                              {craft.description}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* CHÂN THẺ */}
+                      <div className="mt-3 pt-2.5 border-t border-border-neutral/60 flex items-center justify-between text-[11px] font-spec-code">
+                        <span className="text-text-secondary">Sản phẩm thủ công</span>
+                        <span className="text-accent-terracotta group-hover:text-primary font-bold font-label-action flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                          <span>Xem chi tiết sản phẩm</span>
+                          <span>→</span>
                         </span>
                       </div>
-                      <p className="text-xs font-body-spec text-text-secondary leading-relaxed mb-3 line-clamp-3">
-                        {craft.description}
-                      </p>
-                    </div>
-
-                    <div className="pt-2.5 border-t border-border-neutral/60 flex items-center justify-between text-[11px] font-spec-code">
-                      <span className="text-text-secondary">Kỹ nghệ thủ công</span>
-                      <Link
-                        to={`/crafts?q=${encodeURIComponent(craft.name)}`}
-                        className="text-accent-terracotta hover:text-primary font-bold font-label-action flex items-center gap-1 group-hover:translate-x-1 transition-transform"
-                      >
-                        <span>Xem tác phẩm</span>
-                        <span>→</span>
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+                    </Link>
+                  );
+                })}
             </div>
           </div>
 

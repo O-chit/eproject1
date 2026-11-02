@@ -48,24 +48,28 @@ export const CULTURAL_REGIONS = {
     crafts: [
       {
         id: 'lung-tam',
+        craftId: 23,
         name: 'Dệt lanh thổ cẩm Lùng Tám',
         province: 'Hà Giang',
         description: 'Quy trình bẻ sợi lanh, se chỉ, dệt thủ công và vẽ sáp ong chàm cổ tích của người Mông hoa.'
       },
       {
         id: 'phuc-sen',
+        craftId: 19,
         name: 'Rèn đúc thủ công Phúc Sen',
         province: 'Cao Bằng',
         description: 'Nghề rèn thép nhíp ô tô bằng lò than củi bí truyền của người Nùng An, sắc bén ngàn năm.'
       },
       {
         id: 'mai-chau',
+        craftId: 18,
         name: 'Thổ cẩm thung lũng Mai Châu',
         province: 'Hòa Bình',
         description: 'Họa tiết hoa văn dệt tay hoa sen, quả trám đặc trưng trên khung cửi của người Thái trắng.'
       },
       {
         id: 'cham-bac-dao',
+        craftId: 27,
         name: 'Chạm khắc bạc người Dao & Mông',
         province: 'Lào Cai / Lai Châu',
         description: 'Kỹ nghệ đúc rèn bạc trắng thành vòng cổ, xà tích và trâm cài xua đuổi tà khí linh thiêng.'
@@ -99,30 +103,35 @@ export const CULTURAL_REGIONS = {
     crafts: [
       {
         id: 'bat-trang',
+        craftId: 17,
         name: 'Gốm sứ Bát Tràng',
         province: 'Hà Nội',
         description: 'Cái nôi men rạn và men lam cổ truyền, nổi tiếng với kỹ thuật vuốt tay và nung củi nhiệt cao.'
       },
       {
         id: 'van-phuc',
+        craftId: 6,
         name: 'Lụa tơ tằm Vạn Phúc',
         province: 'Hà Nội',
         description: 'Đệ nhất gấm vóc xứ Kinh Kỳ, lụa Vân hoa chìm tinh xảo từng được cung tiến triều đình Nguyễn.'
       },
       {
         id: 'dong-ho',
+        craftId: 16,
         name: 'Tranh dân gian Đông Hồ',
         province: 'Bắc Ninh',
         description: 'Kỹ thuật in mộc bản thủ công trên giấy điệp giã từ vỏ sò tự nhiên, màu chế từ tro than và hoa hòe.'
       },
       {
         id: 'y-yen',
+        craftId: 1,
         name: 'Đúc đồng Ý Yên',
         province: 'Nam Định',
         description: 'Kỹ nghệ đúc chuông khánh, đỉnh đồng, tượng Phật và đồ tế khí đồ sộ lưu truyền ngàn năm.'
       },
       {
         id: 'chu-dau',
+        craftId: 5,
         name: 'Gốm men tro Chu Đậu',
         province: 'Hải Dương',
         description: 'Dòng gốm đạo cao quý thời Lý - Trần với men tro trấu tự nhiên và họa tiết thư họa tuyệt mỹ.'
@@ -151,24 +160,28 @@ export const CULTURAL_REGIONS = {
     crafts: [
       {
         id: 'thanh-tien',
+        craftId: 26,
         name: 'Hoa giấy Thanh Tiên',
         province: 'Thừa Thiên Huế',
         description: 'Nghệ thuật nhuộm giấy ngũ sắc tạo hình hoa sen và hoa cúc phục vụ tín ngưỡng thờ tự xứ Huế.'
       },
       {
         id: 'non-bai-tho',
+        craftId: 8,
         name: 'Nón lá bài thơ xứ Huế',
         province: 'Thừa Thiên Huế',
         description: 'Kỹ thuật chằm nón lá sen lá cọ mỏng manh, chêm câu thơ và hình phong cảnh ẩn hiện dưới ánh nắng.'
       },
       {
         id: 'nga-son',
+        craftId: 3,
         name: 'Chiếu cói Nga Sơn',
         province: 'Thanh Hóa',
         description: 'Sợi cói mặn dẻo dai nhuộm màu tươi sáng, dệt hoa văn chữ Thọ và hoa văn tứ linh thanh mát lưng.'
       },
       {
         id: 'thai-yen',
+        craftId: 11,
         name: 'Mộc mỹ nghệ Thái Yên',
         province: 'Hà Tĩnh',
         description: 'Nghệ thuật đục mộng gỗ mộc tinh xảo không dùng đinh thép, nổi tiếng bền chắc hàng trăm năm.'
@@ -199,30 +212,35 @@ export const CULTURAL_REGIONS = {
     crafts: [
       {
         id: 'thanh-ha',
+        craftId: 4,
         name: 'Gốm đất nung Thanh Hà',
         province: 'Quảng Nam',
         description: 'Gốm mộc không tráng men tạo hình bằng đất sét sông Thu Bồn, nung củi cúc rực rỡ bên phố cổ Hội An.'
       },
       {
         id: 'non-nuoc',
+        craftId: 11,
         name: 'Đá mỹ nghệ Non Nước',
         province: 'Đà Nẵng',
         description: 'Nghệ thuật đục đẽo đá cẩm thạch Ngũ Hành Sơn thành tượng Phật, hoa văn phù điêu sống động.'
       },
       {
         id: 'bau-truc',
+        craftId: 4,
         name: 'Gốm Chăm Bàu Trúc (UNESCO)',
         province: 'Ninh Thuận',
         description: 'Kỹ thuật làm gốm bằng tay đi giật lùi quanh bàn xoay và nung lộ thiên bằng rơm rạ nguyên sơ.'
       },
       {
         id: 'my-nghiep',
+        craftId: 18,
         name: 'Dệt thổ cẩm Chăm Mỹ Nghiệp',
         province: 'Ninh Thuận',
         description: 'Kỹ thuật dệt sợi nổi hoa văn quả trám, văn mây và chim phượng cổ truyền của đồng bào Chăm.'
       },
       {
         id: 'phu-gia',
+        craftId: 10,
         name: 'Nón ngựa Phú Gia',
         province: 'Bình Định',
         description: 'Chiếc nón bền chắc của đội kỵ binh Tây Sơn xưa, chạm trổ bạc hoặc đồng ở đỉnh chóp tôn nghiêm.'
@@ -250,24 +268,28 @@ export const CULTURAL_REGIONS = {
     crafts: [
       {
         id: 'tho-cam-e-de',
+        craftId: 18,
         name: 'Dệt thổ cẩm Ê-đê & Ba-na',
         province: 'Đắk Lắk / Gia Lai',
         description: 'Họa tiết rồng lửa, hoa văn hình học đa diện dệt trên khung cửi luồn tay nguyên sơ của đồng bào.'
       },
       {
         id: 'nhac-cu-trung',
+        craftId: 20,
         name: 'Chế tác nhạc cụ tre nứa & Đàn T\'rưng',
         province: 'Kon Tum',
         description: 'Biến thân tre nứa đại ngàn thành nhạc khí âm vang tiếng suối reo và linh hồn cồng chiêng.'
       },
       {
         id: 'dan-gui-tay-nguyen',
+        craftId: 2,
         name: 'Đan gùi hoa văn mây tre',
         province: 'Đắk Nông',
         description: 'Gùi vận chuyển nông sản đan cài nan tre nan mây chắc khỏe, hoa văn tượng hình dẻo dai qua năm tháng.'
       },
       {
         id: 'tuong-go-nha-mo',
+        craftId: 24,
         name: 'Điêu khắc tượng gỗ dân gian',
         province: 'Gia Lai',
         description: 'Nghệ thuật tạc tượng gỗ rừng bằng rìu mộc, biểu đạt triết lý sinh tử và vũ trụ quan bản địa kỳ bí.'
@@ -296,24 +318,28 @@ export const CULTURAL_REGIONS = {
     crafts: [
       {
         id: 'lai-thieu',
+        craftId: 15,
         name: 'Gốm sứ Lái Thiêu',
         province: 'Bình Dương',
         description: 'Dòng gốm gia dụng tráng men da lươn, vẽ hoa lam mộc mạc phục vụ đời sống trăm năm người Nam Bộ.'
       },
       {
         id: 'tuong-binh-hiep',
+        craftId: 7,
         name: 'Sơn mài Tương Bình Hiệp',
         province: 'Bình Dương',
         description: 'Kỹ nghệ mài nước cẩn ốc xà cừ và rắc vàng bạc qua 25 công đoạn phủ sơn ta óng ánh như gương.'
       },
       {
         id: 'gom-bien-hoa',
+        craftId: 17,
         name: 'Gốm Biên Hòa & Đá Bửu Long',
         province: 'Đồng Nai',
         description: 'Sự giao thoa tinh diệu giữa kỹ thuật gốm men nung phương Tây và hoa văn rồng phượng Á Đông.'
       },
       {
         id: 'banh-trang-trang-bang',
+        craftId: 21,
         name: 'Bánh tráng phơi sương Trảng Bàng',
         province: 'Tây Ninh',
         description: 'Di sản phi vật thể quốc gia, bánh tráng 2 lớp nướng phồng rồi đem phơi hứng sương đêm dẻo dai.'
@@ -349,24 +375,28 @@ export const CULTURAL_REGIONS = {
     crafts: [
       {
         id: 'dinh-yen',
+        craftId: 3,
         name: 'Chiếu hoa Định Yên',
         province: 'Đồng Tháp',
         description: 'Chợ chiếu ma đêm độc nhất vô nhị miền Tây, sợi cói nhuộm ngũ sắc đan dệt hoa văn bền đẹp.'
       },
       {
         id: 'mang-thit',
+        craftId: 4,
         name: 'Gạch gốm đỏ Mang Thít',
         province: 'Vĩnh Long',
         description: 'Vương quốc lò gạch nung đỏ rực bên dòng sông Cổ Chiên, kiến trúc gốm phù sa độc bản Đông Nam Á.'
       },
       {
         id: 'lanh-my-a',
+        craftId: 6,
         name: 'Lụa lãnh Mỹ A Tân Châu',
         province: 'An Giang',
         description: 'Loại lụa tơ tằm nhuộm mủ trái mặc nưa đen huyền, mềm mát như da em bé, càng giặt càng bền bóng.'
       },
       {
         id: 'dua-ben-tre',
+        craftId: 2,
         name: 'Thủ công mỹ nghệ dừa Bến Tre',
         province: 'Bến Tre',
         description: 'Tận dụng thân dừa, gáo dừa và xơ dừa biến hóa thành các vật phẩm mỹ nghệ trang nhã.'

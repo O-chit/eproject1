@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import api from '../services/api';
+import { useAgentLiveSync } from '../services/liveAgentSync';
 
 const FavouritesContext = createContext(null);
 const GUEST_FAVS_KEY = 'craftroots_guest_favs';
@@ -78,6 +79,17 @@ export function FavouritesProvider({ children }) {
       window.removeEventListener('storage', handleSync);
       window.removeEventListener('craftroots_favs_updated', handleSync);
     };
+  }, [refreshFavourites]);
+
+  // Tự động cập nhật State yêu thích tức thời khi AI Agent thực thi add_favourite
+  useAgentLiveSync(({ tool, data }) => {
+    if (tool === 'add_favourite') {
+      const targetId = Number(data?.id || data?.craftId);
+      if (targetId) {
+        setFavourites((prev) => [...new Set([...prev, targetId])]);
+      }
+      refreshFavourites();
+    }
   }, [refreshFavourites]);
 
   // Kiểm tra một tác phẩm có trong danh sách yêu thích không

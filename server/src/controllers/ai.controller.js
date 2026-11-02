@@ -16,10 +16,16 @@ const chat = async (req, res, next) => {
 
     const currentSessionId = sessionId || `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     const userId = req.user ? req.user.id : null;
+    const userRole = req.user ? req.user.role : 'guest';
+    const userEmail = req.user ? req.user.email : null;
+    const userName = req.user ? req.user.fullName : null;
 
     const result = await processChatMessage({
       sessionId: currentSessionId,
       userId,
+      userRole,
+      userEmail,
+      userName,
       message: message.trim(),
       pageContext: pageContext || {}
     });
