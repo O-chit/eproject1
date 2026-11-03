@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Map, Marker, setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-// Cấu hình web worker nội bộ từ public folder để Vite & browser luôn load mượt mà 100%
+// Configure internal worker
 if (typeof window !== 'undefined' && typeof setWorkerUrl === 'function') {
   setWorkerUrl('/maplibre-gl-worker.mjs');
 }
@@ -16,8 +16,7 @@ import {
 } from './regionsConfig';
 import RegionDetailModal from './RegionDetailModal';
 
-// CẤU HÌNH BẢN ĐỒ DI SẢN CRAFTROOTS
-// Nền biển mang sắc men ngọc nhạt (#EAF2F4), dịu mát, đồng điệu 100% với gam màu Linen #F9F8F6 của trang web
+// CRAFTROOTS HERITAGE MAP STYLE
 const HERITAGE_MAP_STYLE = {
   version: 8,
   sources: {},
@@ -27,16 +26,16 @@ const HERITAGE_MAP_STYLE = {
       id: 'heritage-ocean-background',
       type: 'background',
       paint: {
-        'background-color': '#EAF2F4' // Biển men ngọc nhạt thanh khiết
+        'background-color': '#EAF2F4'
       }
     }
   ]
 };
 
-// Khung nhìn bao trọn toàn vẹn đất liền và biển đảo Việt Nam
+// Full Vietnam Bounds
 const VIETNAM_BOUNDS = [
-  [102.0, 6.8],  // Tây Nam: Cực Tây Điện Biên đến cực Nam Trường Sa
-  [117.5, 23.5]  // Đông Bắc: Cực Đông Trường Sa đến Lũng Cú Hà Giang
+  [102.0, 6.8],  // SW
+  [117.5, 23.5]  // NE
 ];
 
 export default function VietnamCulturalMap({
@@ -55,13 +54,13 @@ export default function VietnamCulturalMap({
   const [loadingData, setLoadingData] = useState(true);
   const [currentZoom, setCurrentZoom] = useState(4.8);
 
-  // Quản lý trạng thái mở/đóng Popup Trang Chi Tiết Vùng Văn Hóa
+  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalRegion, setModalRegion] = useState(
     initialRegionId ? CULTURAL_REGIONS[initialRegionId] : null
   );
 
-  // 1. Tải dữ liệu GeoJSON 7 VÙNG VĂN HÓA (Đã hợp nhất, chỉ giữ lại ranh giới giữa 7 vùng, bỏ ranh giới tỉnh)
+  // 1. Load GeoJSON
   useEffect(() => {
     let isMounted = true;
     async function loadCulturalRegionsGeoJson() {
@@ -73,7 +72,7 @@ export default function VietnamCulturalMap({
           setRegionsGeoJson(data);
         }
       } catch (err) {
-        console.error('[VietnamCulturalMap] Lỗi tải dữ liệu 7 vùng văn hóa:', err);
+        console.error('[VietnamCulturalMap] Error loading regions data:', err);
       } finally {
         if (isMounted) setLoadingData(false);
       }
@@ -84,7 +83,6 @@ export default function VietnamCulturalMap({
     };
   }, []);
 
-  // Tính toán vùng đệm (padding) tự động, an toàn tuyệt đối, bản đồ luôn nằm giữa màn hình
   const getDynamicPadding = useCallback(
     (isDetailedRegion = false) => {
       if (isDetailedRegion) {
@@ -106,7 +104,7 @@ export default function VietnamCulturalMap({
     []
   );
 
-  // 2. Căn vừa vặn toàn bộ dải đất và biển đảo Việt Nam trong một màn hình
+  // 2. Fit to Vietnam Overview
   const fitToVietnamOverview = useCallback(
     (animate = true) => {
       const map = mapInstanceRef.current;
@@ -128,7 +126,7 @@ export default function VietnamCulturalMap({
     [getDynamicPadding]
   );
 
-  // 3. Phóng to cận cảnh vào vùng được chọn
+  // 3. Zoom into selected region
   const zoomToRegion = useCallback(
     (regionId) => {
       const map = mapInstanceRef.current;
@@ -153,7 +151,6 @@ export default function VietnamCulturalMap({
     [regionsGeoJson, fitToVietnamOverview, getDynamicPadding]
   );
 
-  // Xử lý chọn vùng
   const handleSelectRegion = useCallback(
     (regionId) => {
       setSelectedRegionId(regionId);
@@ -165,7 +162,7 @@ export default function VietnamCulturalMap({
     [zoomToRegion, onRegionSelect]
   );
 
-  // 4. Khởi tạo bản đồ 2D nghiêm ngặt MapLibre GL
+  // 4. Initialize MapLibre GL
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
@@ -190,7 +187,7 @@ export default function VietnamCulturalMap({
         attributionControl: false
       });
     } catch (err) {
-      console.error('[VietnamCulturalMap] Khởi tạo map thất bại:', err);
+      console.error('[VietnamCulturalMap] Map init error:', err);
       return;
     }
 
@@ -201,7 +198,6 @@ export default function VietnamCulturalMap({
     };
     window.addEventListener('resize', handleResize);
 
-    // Dùng ResizeObserver để bảo đảm canvas luôn có kích thước chuẩn xác
     let resizeObserver = null;
     if (window.ResizeObserver && mapContainerRef.current) {
       resizeObserver = new ResizeObserver(() => {
@@ -246,7 +242,7 @@ export default function VietnamCulturalMap({
     };
   }, [fitToVietnamOverview]);
 
-  // 5. Nạp Layers GeoJSON 7 VÙNG VĂN HÓA (Đã loại bỏ hoàn toàn ranh giới tỉnh)
+  // 5. Add GeoJSON layers
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !mapLoaded || !regionsGeoJson) return;
@@ -262,7 +258,6 @@ export default function VietnamCulturalMap({
 
     function setupLayers() {
       try {
-        // --- A. SOURCE & LAYERS 7 VÙNG VĂN HÓA ---
         if (map.getSource('vn-regions-source')) {
           map.getSource('vn-regions-source').setData(regionsGeoJson);
         } else {
@@ -271,7 +266,6 @@ export default function VietnamCulturalMap({
             data: regionsGeoJson
           });
 
-          // 1. Layer Fill tô màu 7 vùng văn hóa di sản (Ý tưởng 2: Ngũ Sắc Tranh Dân Gian & Men Tro Củi)
           map.addLayer({
             id: 'regions-fill',
             type: 'fill',
@@ -280,13 +274,13 @@ export default function VietnamCulturalMap({
               'fill-color': [
                 'match',
                 ['get', 'regionId'],
-                'TAY_BAC_VIET_BAC', '#D49A24',      // Vàng Hoa Hòe (Tranh dân gian & Dệt thổ cẩm)
-                'DONG_BANG_SONG_HONG', '#A83827',   // Đỏ Vang Gỗ Vang (Son tranh Đông Hồ & Gốm Bát Tràng)
-                'BAC_TRUNG_BO', '#5E4B7A',          // Tím Men Tro Lam Huế (Cố Đô & Men tro cổ)
-                'NAM_TRUNG_BO', '#266B88',          // Lam Chàm Men Chu Đậu (Hải dương & Men lam cổ)
-                'TAY_NGUYEN', '#CE5C23',            // Cam Lửa Nung Củi (Bazan nung củi & Lửa cồng chiêng)
-                'DONG_NAM_BO', '#8A5232',           // Nâu Hổ Phách Nam Bộ (Gỗ mật, sơn mài & Gốm sành)
-                'TAY_NAM_BO', '#327555',            // Xanh Gỉ Đồng Cổ Mộc (Phù sa miệt vườn Cửu Long)
+                'TAY_BAC_VIET_BAC', '#D49A24',
+                'DONG_BANG_SONG_HONG', '#A83827',
+                'BAC_TRUNG_BO', '#5E4B7A',
+                'NAM_TRUNG_BO', '#266B88',
+                'TAY_NGUYEN', '#CE5C23',
+                'DONG_NAM_BO', '#8A5232',
+                'TAY_NAM_BO', '#327555',
                 ['coalesce', ['get', 'regionColor'], '#B86B35']
               ],
               'fill-opacity': 0.92,
@@ -294,7 +288,6 @@ export default function VietnamCulturalMap({
             }
           });
 
-          // 2a. Lớp rãnh viền trắng bọc ngoài (Outer Casing) - bảo đảm ranh giới 7 vùng luôn sắc nét nổi bật
           map.addLayer({
             id: 'regions-boundary-casing',
             type: 'line',
@@ -313,7 +306,6 @@ export default function VietnamCulturalMap({
             }
           });
 
-          // 2b. Lớp chỉ ranh giới chính màu mực đen (Inner Sharp Linework)
           map.addLayer({
             id: 'regions-boundary',
             type: 'line',
@@ -332,7 +324,6 @@ export default function VietnamCulturalMap({
             }
           });
 
-          // 3. Layer viền Terracotta khi hover vào vùng
           map.addLayer({
             id: 'region-hover-stroke',
             type: 'line',
@@ -344,7 +335,6 @@ export default function VietnamCulturalMap({
             }
           });
 
-          // 4. Layer viền mực đen nổi bật cho vùng đang được chọn
           map.addLayer({
             id: 'region-highlight-line',
             type: 'line',
@@ -357,7 +347,7 @@ export default function VietnamCulturalMap({
           });
         }
 
-        // --- B. SOURCE & LAYERS CHỦ QUYỀN BIỂN ĐẢO (HOÀNG SA & TRƯỜNG SA) ---
+        // Sovereignty sources
         if (map.getSource('vn-sovereignty-source')) {
           map.getSource('vn-sovereignty-source').setData(SOVEREIGNTY_DATA);
         } else {
@@ -366,7 +356,6 @@ export default function VietnamCulturalMap({
             data: SOVEREIGNTY_DATA
           });
 
-          // Chấm sáng đại diện các thực thể đảo
           map.addLayer({
             id: 'islands-glow',
             type: 'circle',
@@ -393,14 +382,12 @@ export default function VietnamCulturalMap({
           });
         }
 
-        // Marker HTML chủ quyền cho Hoàng Sa & Trường Sa
         addSovereigntyHtmlBadges(map);
       } catch (err) {
-        console.error('[VietnamCulturalMap] Lỗi khi tạo layers:', err);
+        console.error('[VietnamCulturalMap] Layer setup error:', err);
       }
     }
 
-    // --- C. SỰ KIỆN TƯƠNG TÁC CHUỘT TRÊN 7 VÙNG ---
     const onMouseMove = (e) => {
       const features = map.queryRenderedFeatures(e.point, { layers: ['regions-fill'] });
       if (features.length > 0) {
@@ -464,7 +451,7 @@ export default function VietnamCulturalMap({
     };
   }, [mapLoaded, regionsGeoJson, handleSelectRegion]);
 
-  // 6. Cập nhật độ trong suốt (opacity) và viền highlight khi thay đổi selectedRegionId
+  // 6. Update highlight styles
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !mapLoaded || !map.getLayer('regions-fill')) return;
@@ -494,23 +481,23 @@ export default function VietnamCulturalMap({
     }
   }, [selectedRegionId, mapLoaded]);
 
-  // Marker HTML cho Hoàng Sa & Trường Sa
+  // Sovereignty Badges
   const addSovereigntyHtmlBadges = (map) => {
     sovereigntyMarkersRef.current.forEach((m) => m.remove());
     sovereigntyMarkersRef.current = [];
 
-    // Hoàng Sa
+    // Paracel
     const hsEl = document.createElement('div');
     hsEl.className = 'group flex flex-col items-center pointer-events-auto cursor-pointer select-none';
     hsEl.innerHTML = `
       <div class="flex items-center gap-1.5 px-3 py-1 bg-[#FFFFFF] border-2 border-[#B86B35] shadow-lg shadow-[#B86B35]/20 transition-transform group-hover:scale-105">
         <span class="w-2.5 h-2.5 rounded-full bg-[#B86B35] animate-ping"></span>
         <span class="font-['Montserrat',sans-serif] text-[10px] font-bold text-[#1C1B1A] tracking-[0.16em] uppercase whitespace-nowrap">
-          QUẦN ĐẢO HOÀNG SA
+          PARACEL ISLANDS
         </span>
       </div>
       <span class="font-['Inter',sans-serif] text-[9px] text-[#B86B35] tracking-widest uppercase font-bold mt-0.5 bg-[#FFFFFF] border border-[#E6E2DA] px-1.5 py-0.5 shadow-xs">
-        (TP. ĐÀ NẴNG – VIỆT NAM)
+        (DA NANG CITY – VIETNAM)
       </span>
     `;
     const hsMarker = new Marker({ element: hsEl, anchor: 'center' })
@@ -518,18 +505,18 @@ export default function VietnamCulturalMap({
       .addTo(map);
     sovereigntyMarkersRef.current.push(hsMarker);
 
-    // Trường Sa
+    // Spratly
     const tsEl = document.createElement('div');
     tsEl.className = 'group flex flex-col items-center pointer-events-auto cursor-pointer select-none';
     tsEl.innerHTML = `
       <div class="flex items-center gap-1.5 px-3 py-1 bg-[#FFFFFF] border-2 border-[#B86B35] shadow-lg shadow-[#B86B35]/20 transition-transform group-hover:scale-105">
         <span class="w-2.5 h-2.5 rounded-full bg-[#B86B35] animate-ping"></span>
         <span class="font-['Montserrat',sans-serif] text-[10px] font-bold text-[#1C1B1A] tracking-[0.16em] uppercase whitespace-nowrap">
-          QUẦN ĐẢO TRƯỜNG SA
+          SPRATLY ISLANDS
         </span>
       </div>
       <span class="font-['Inter',sans-serif] text-[9px] text-[#B86B35] tracking-widest uppercase font-bold mt-0.5 bg-[#FFFFFF] border border-[#E6E2DA] px-1.5 py-0.5 shadow-xs">
-        (TỈNH KHÁNH HÒA – VIỆT NAM)
+        (KHANH HOA PROVINCE – VIETNAM)
       </span>
     `;
     const tsMarker = new Marker({ element: tsEl, anchor: 'center' })
@@ -538,7 +525,6 @@ export default function VietnamCulturalMap({
     sovereigntyMarkersRef.current.push(tsMarker);
   };
 
-  // Điều khiển phóng to / thu nhỏ
   const handleZoomIn = () => {
     if (mapInstanceRef.current) {
       mapInstanceRef.current.zoomIn({ duration: 300 });
@@ -553,7 +539,7 @@ export default function VietnamCulturalMap({
 
   return (
     <div className={`relative w-full h-full flex flex-col overflow-hidden bg-[#F9F8F6] ${className}`}>
-      {/* THANH ĐIỀU HƯỚNG VÙNG NHANH Ở TRÊN (Quick Region Pills Bar) */}
+      {/* QUICK REGION PILLS BAR */}
       <div className="absolute top-3 left-4 right-4 z-20 flex items-center justify-between gap-2 pointer-events-none">
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pointer-events-auto bg-[#FFFFFF]/95 backdrop-blur-md p-1.5 border border-[#E6E2DA] shadow-md max-w-full">
           <button
@@ -569,7 +555,7 @@ export default function VietnamCulturalMap({
                 : 'text-[#5A5854] hover:text-[#1C1B1A] hover:bg-[#F4F2EE]'
             }`}
           >
-            Toàn Cảnh Việt Nam
+            Vietnam Overview
           </button>
           <span className="text-[#E6E2DA] select-none">|</span>
           {Object.values(CULTURAL_REGIONS).map((reg) => {
@@ -601,7 +587,7 @@ export default function VietnamCulturalMap({
         </div>
       </div>
 
-      {/* KHUNG BẢN ĐỒ 2D MAPLIBRE CANVAS (FULL WIDTH & FULL HEIGHT) */}
+      {/* MAP CANVAS */}
       <div className="relative flex-1 w-full h-full min-h-[450px]">
         <div
           ref={mapContainerRef}
@@ -614,12 +600,12 @@ export default function VietnamCulturalMap({
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#F9F8F6]/85 backdrop-blur-sm">
             <div className="w-10 h-10 border-3 border-[#B86B35] border-t-transparent rounded-full animate-spin mb-3"></div>
             <span className="font-spec-code text-[12px] uppercase tracking-widest text-[#5A5854]">
-              Đang tải bản đồ 7 vùng văn hóa làng nghề...
+              Loading 7 cultural craft regions map...
             </span>
           </div>
         )}
 
-        {/* Tooltip di chuột theo Vùng Văn Hóa */}
+        {/* Hover Tooltip */}
         {hoveredInfo && (
           <div
             className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full pb-3 font-body-spec"
@@ -639,22 +625,21 @@ export default function VietnamCulturalMap({
                 {hoveredInfo.subName}
               </span>
               <div className="flex items-center justify-between text-[11px] text-[#5A5854] border-t border-[#E6E2DA] pt-1.5 mt-0.5 font-spec-code">
-                <span>{hoveredInfo.provinces ? hoveredInfo.provinces.length : 0} tỉnh thành</span>
-                <span className="text-[#B86B35] font-semibold">Xem chi tiết di sản →</span>
+                <span>{hoveredInfo.provinces ? hoveredInfo.provinces.length : 0} provinces</span>
+                <span className="text-[#B86B35] font-semibold">View heritage details →</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* BỘ NÚT ĐIỀU KHIỂN BẢN ĐỒ TIỆN ÍCH (Góc dưới bên trái) */}
+        {/* MAP CONTROLS */}
         <div className="absolute bottom-5 left-5 z-20 flex flex-col gap-2 pointer-events-auto">
-          {/* Nút Phóng to / Thu nhỏ / Căn vừa màn hình */}
           <div className="flex flex-col bg-[#FFFFFF]/95 backdrop-blur-md border border-[#E6E2DA] shadow-lg overflow-hidden font-spec-code text-[12px]">
             <button
               type="button"
               onClick={handleZoomIn}
               className="w-9 h-9 flex items-center justify-center text-[#1C1B1A] hover:text-[#B86B35] hover:bg-[#F4F2EE] transition-colors border-b border-[#E6E2DA] cursor-pointer font-bold text-base"
-              title="Phóng to bản đồ"
+              title="Zoom in"
             >
               +
             </button>
@@ -662,7 +647,7 @@ export default function VietnamCulturalMap({
               type="button"
               onClick={handleZoomOut}
               className="w-9 h-9 flex items-center justify-center text-[#1C1B1A] hover:text-[#B86B35] hover:bg-[#F4F2EE] transition-colors border-b border-[#E6E2DA] cursor-pointer font-bold text-base"
-              title="Thu nhỏ bản đồ (Xem toàn cảnh)"
+              title="Zoom out"
             >
               −
             </button>
@@ -674,13 +659,13 @@ export default function VietnamCulturalMap({
                 fitToVietnamOverview(true);
               }}
               className="w-9 h-9 flex items-center justify-center text-[#B86B35] hover:bg-[#F4F2EE] transition-colors cursor-pointer text-sm"
-              title="Toàn cảnh Việt Nam vừa vặn màn hình"
+              title="Fit Vietnam overview to screen"
             >
               ⛶
             </button>
           </div>
 
-          {/* Cụm nút khi đang chọn một vùng văn hóa */}
+          {/* Region selected controls */}
           {selectedRegionId && CULTURAL_REGIONS[selectedRegionId] && (
             <div className="flex items-center gap-2">
               <button
@@ -690,9 +675,9 @@ export default function VietnamCulturalMap({
                   setIsModalOpen(true);
                 }}
                 className="flex items-center gap-1.5 px-3 py-2 bg-[#B86B35] hover:bg-[#8E4A16] text-white font-bold border border-[#B86B35] shadow-lg backdrop-blur-md font-label-action text-[11px] uppercase tracking-wider transition-all cursor-pointer"
-                title="Mở popup chi tiết vùng văn hóa"
+                title="Open cultural region detail popup"
               >
-                <span>📖 Chi Tiết Vùng</span>
+                <span>📖 Region Details</span>
               </button>
               <button
                 type="button"
@@ -702,22 +687,22 @@ export default function VietnamCulturalMap({
                   fitToVietnamOverview(true);
                 }}
                 className="flex items-center gap-1.5 px-3 py-2 bg-[#FFFFFF]/95 hover:bg-[#F4F2EE] text-[#1C1B1A] border border-[#E6E2DA] shadow-lg backdrop-blur-md font-label-action text-[11px] uppercase tracking-wider transition-all cursor-pointer group"
-                title="Xem lại toàn cảnh dải đất Việt Nam"
+                title="View entire Vietnam territory overview"
               >
                 <span className="text-[#B86B35] group-hover:-translate-x-0.5 transition-transform">←</span>
-                <span>Toàn Cảnh</span>
+                <span>Overview</span>
               </button>
             </div>
           )}
 
-          {/* Badge hiển thị tỉ lệ zoom nhỏ tiện dụng */}
+          {/* Zoom badge */}
           <div className="px-2 py-1 bg-[#FFFFFF]/90 border border-[#E6E2DA] text-[10px] font-spec-code text-[#5A5854] select-none shadow-xs">
-            Mức zoom: {currentZoom.toFixed(1)}x
+            Zoom level: {currentZoom.toFixed(1)}x
           </div>
         </div>
       </div>
 
-      {/* POPUP TRANG CHI TIẾT VÙNG VĂN HÓA LÀNG NGHỀ (MODAL) */}
+      {/* REGION DETAIL MODAL */}
       <RegionDetailModal
         isOpen={isModalOpen}
         region={modalRegion}

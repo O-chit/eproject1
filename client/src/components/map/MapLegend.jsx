@@ -5,7 +5,7 @@ export default function MapLegend({
   selectedCategory,
   onSelectCategory,
   totalVillages = 18,
-  activeRegionLabel = 'Toàn Quốc'
+  activeRegionLabel = 'All Regions'
 }) {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
@@ -15,10 +15,10 @@ export default function MapLegend({
         type="button"
         onClick={() => setIsCollapsed(false)}
         className="bg-canvas-linen/95 backdrop-blur-md border border-border-neutral px-3 py-2 shadow-xl flex items-center gap-2 font-spec-code text-[11px] text-text-primary hover:text-accent-terracotta transition-colors cursor-pointer"
-        title="Mở bảng chú giải & bộ lọc ngành nghề"
+        title="Open legend & craft filter"
       >
         <span className="material-symbols-outlined text-[16px] text-accent-terracotta">tune</span>
-        <span className="uppercase tracking-wider font-semibold">Chú Giải & Lọc Nghề</span>
+        <span className="uppercase tracking-wider font-semibold">Legend &amp; Craft Filter</span>
         <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta animate-pulse"></span>
       </button>
     );
@@ -32,10 +32,10 @@ export default function MapLegend({
           <span className="w-2 h-2 rounded-full bg-accent-terracotta shrink-0 animate-pulse"></span>
           <div className="flex flex-col">
             <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-accent-terracotta">
-              Chủ Quyền Lãnh Thổ
+              Territorial Sovereignty
             </span>
             <span className="text-[9px] text-text-secondary leading-tight mt-0.5">
-              Hoàng Sa & Trường Sa (Việt Nam)
+              Paracel &amp; Spratly Islands (Vietnam)
             </span>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function MapLegend({
           type="button"
           onClick={() => setIsCollapsed(true)}
           className="text-text-secondary hover:text-accent-terracotta p-1 cursor-pointer"
-          title="Thu gọn bảng chú giải"
+          title="Collapse legend"
         >
           <span className="material-symbols-outlined text-[16px]">expand_more</span>
         </button>
@@ -51,21 +51,21 @@ export default function MapLegend({
 
       {/* Region Status */}
       <div className="flex items-center justify-between text-text-secondary text-[10px] tracking-wider uppercase">
-        <span>Vùng khảo cứu:</span>
+        <span>Study Region:</span>
         <span className="text-text-primary font-semibold">{activeRegionLabel}</span>
       </div>
 
       {/* Category Toggles */}
       <div className="flex flex-col gap-1.5 pt-1">
         <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-text-secondary font-medium">
-          <span>Ngành Nghề ({totalVillages} điểm)</span>
+          <span>Craft Categories ({totalVillages} sites)</span>
           {selectedCategory !== 'all' && (
             <button
               type="button"
               onClick={() => onSelectCategory('all')}
               className="text-accent-terracotta hover:underline cursor-pointer lowercase text-[10px]"
             >
-              xem tất cả
+              view all
             </button>
           )}
         </div>
@@ -106,9 +106,9 @@ export default function MapLegend({
           <div className="w-4 h-4 rounded-full border border-accent-terracotta bg-accent-terracotta/20 flex items-center justify-center text-[9px] font-bold text-accent-terracotta">
             N
           </div>
-          <span>Cụm gom điểm</span>
+          <span>Site cluster</span>
         </div>
-        <span className="opacity-60 text-[9px]">Click phóng to</span>
+        <span className="opacity-60 text-[9px]">Click to zoom</span>
       </div>
     </div>
   );

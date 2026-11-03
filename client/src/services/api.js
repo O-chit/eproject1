@@ -24,7 +24,7 @@ async function request(endpoint, options = {}) {
   const data = await res.json().catch(() => ({}));
   
   if (!res.ok) {
-    const errorMsg = data.message || `Lỗi máy chủ (${res.status})`;
+    const errorMsg = data.message || `Server error (${res.status})`;
     const err = new Error(errorMsg);
     err.status = res.status;
     err.details = data.details;

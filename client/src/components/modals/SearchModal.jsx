@@ -29,11 +29,11 @@ export default function SearchModal({ isOpen, onClose }) {
   }
 
   const QUICK_SUGGESTIONS = [
-    { label: 'Gốm Bát Tràng', query: 'Bát Tràng' },
-    { label: 'Lụa Vạn Phúc', query: 'Vạn Phúc' },
-    { label: 'Tranh Đông Hồ', query: 'Đông Hồ' },
-    { label: 'Gốm Chăm Bàu Trúc', query: 'Bàu Trúc' },
-    { label: 'Thổ cẩm Lùng Tám', query: 'Lùng Tám' },
+    { label: 'Bat Trang Ceramics', query: 'Bat Trang' },
+    { label: 'Van Phuc Silk', query: 'Van Phuc' },
+    { label: 'Dong Ho Folk Prints', query: 'Dong Ho' },
+    { label: 'Bau Truc Cham Pottery', query: 'Bau Truc' },
+    { label: 'Lung Tam Brocade', query: 'Lung Tam' },
   ];
 
   return (
@@ -49,14 +49,14 @@ export default function SearchModal({ isOpen, onClose }) {
       >
         <div className="flex items-center justify-between pb-3 border-b border-border-neutral">
           <span className="font-spec-code text-[11px] uppercase tracking-widest text-accent-terracotta font-semibold">
-            TRA CỨU DI SẢN LÀNG NGHỀ
+            SEARCH CRAFT HERITAGE VILLAGES
           </span>
           <button
             type="button"
             onClick={onClose}
-            className="text-text-secondary hover:text-text-primary text-[11px] font-spec-code uppercase"
+            className="text-text-secondary hover:text-text-primary text-[11px] font-spec-code uppercase cursor-pointer"
           >
-            [ESC ĐÓNG]
+            [ESC TO CLOSE]
           </button>
         </div>
 
@@ -69,7 +69,7 @@ export default function SearchModal({ isOpen, onClose }) {
               type="text"
               autoFocus
               className="w-full h-12 pl-11 pr-24 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[14px] focus:outline-none focus:border-accent-terracotta"
-              placeholder="Nhập tên làng nghề, nghệ nhân, chất liệu (gốm, lụa, đồng...)"
+              placeholder="Enter craft village, artisan, or material (ceramics, silk, bronze...)"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -77,14 +77,14 @@ export default function SearchModal({ isOpen, onClose }) {
               type="submit"
               className="absolute right-1.5 px-4 h-9 bg-accent-terracotta text-white font-spec-code text-[11px] uppercase tracking-wider hover:bg-[#8E4A16] transition-colors cursor-pointer"
             >
-              Tìm kiếm
+              Search
             </button>
           </div>
         </form>
 
         <div className="mt-5">
           <span className="font-spec-code text-[10px] uppercase tracking-wider text-text-secondary">
-            GỢI Ý TRA CỨU NHANH:
+            QUICK SUGGESTIONS:
           </span>
           <div className="flex flex-wrap gap-2 mt-2">
             {QUICK_SUGGESTIONS.map((sug) => (

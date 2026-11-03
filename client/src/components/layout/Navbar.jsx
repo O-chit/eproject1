@@ -7,38 +7,38 @@ import api from '../../services/api';
 const SEASON_OPTIONS = [
   {
     key: 'spring',
-    name: 'Mùa Xuân',
+    name: 'Spring',
     icon: '🌸',
-    title: 'Khởi Sắc Đất Trời',
-    subtitle: 'Lụa sa tơ tằm & gốm men rạn khai xuân',
-    tag: 'Xuân Khởi',
+    title: 'Verdant Awakening',
+    subtitle: 'Mulberry silk & crackle-glaze ceramics for spring',
+    tag: 'Spring Bloom',
     color: '#059669',
   },
   {
     key: 'summer',
-    name: 'Mùa Hạ',
+    name: 'Summer',
     icon: '☀️',
-    title: 'Sợi Tự Nhiên & Đất Nung',
-    subtitle: 'Gốm men tro dịu mát & mây tre đan',
-    tag: 'Hạ Mát',
+    title: 'Natural Fibers & Terracotta',
+    subtitle: 'Cool ash-glazed stoneware & bamboo rattan weaving',
+    tag: 'Summer Cool',
     color: '#0284c7',
   },
   {
     key: 'autumn',
-    name: 'Mùa Thu',
+    name: 'Autumn',
     icon: '🍂',
-    title: 'Thu Trầm & Gốm Mộc',
-    subtitle: 'Đất nung sa thạch & trà ướp hoa sen',
-    tag: 'Thu Trầm',
+    title: 'Mellow Earth & Rustic Stoneware',
+    subtitle: 'Sandstone pottery & lotus-scented tea',
+    tag: 'Autumn Calm',
     color: '#d97706',
   },
   {
     key: 'winter',
-    name: 'Mùa Đông',
+    name: 'Winter',
     icon: '❄️',
-    title: 'Hơi Ấm Men Hỏa',
-    subtitle: 'Đỉnh đồng hun lửa & điêu khắc đá trầm',
-    tag: 'Đông Ấm',
+    title: 'Warmth of Kiln Fires',
+    subtitle: 'Flame-treated bronze & deep stone carving',
+    tag: 'Winter Warm',
     color: '#6366f1',
   },
 ];
@@ -57,14 +57,14 @@ export default function Navbar() {
   const isSeasonalActive = location.pathname === '/seasonal';
   const [seasonalDropdownOpen, setSeasonalDropdownOpen] = useState(isSeasonalActive);
 
-  // Mở dropdown khi người dùng đang ở trang tuyển tập theo mùa
+  // Open dropdown if currently on seasonal page
   useEffect(() => {
     if (location.pathname === '/seasonal') {
       setSeasonalDropdownOpen(true);
     }
   }, [location.pathname]);
 
-  // Nạp thống kê số lượng thực tế từ backend
+  // Load stats from backend
   useEffect(() => {
     api.getStats()
       .then((data) => {
@@ -77,12 +77,10 @@ export default function Navbar() {
           });
         }
       })
-      .catch(() => { }); // Giữ nguyên giá trị mặc định nếu backend chưa sẵn sàng
+      .catch(() => { });
   }, []);
 
-
-
-  // Đóng Drawer khi nhấn phím Escape
+  // Close drawer on Escape
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -93,7 +91,7 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Khóa cuộn trang khi mở thanh điều hướng dọc
+  // Lock body scroll when drawer open
   useEffect(() => {
     if (drawerOpen) {
       document.body.style.overflow = 'hidden';
@@ -119,19 +117,19 @@ export default function Navbar() {
 
   return (
     <>
-      {/* HEADER CỐ ĐỊNH PHÍA TRÊN */}
+      {/* FIXED TOP HEADER */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-canvas-linen/95 backdrop-blur-md border-b border-border-neutral">
         <div className="h-20 max-w-7xl mx-auto px-4 sm:px-6 md:px-margin flex items-center justify-between gap-4 sm:gap-6 relative">
 
-          {/* Cụm Trái: Nút Menu 3 gạch & Logo Thương hiệu */}
+          {/* Left Cluster: Menu Toggle & Brand Logo */}
           <div className="flex items-center gap-4 shrink-0">
             <button
               id="craft-menu-toggle"
               type="button"
               onClick={() => setDrawerOpen(true)}
               className="w-10 h-10 flex items-center justify-center text-text-primary hover:text-accent-terracotta transition-colors rounded-none focus:outline-none bg-transparent cursor-pointer"
-              aria-label="Mở thanh điều hướng dọc"
-              title="Mở menu điều hướng"
+              aria-label="Open navigation menu"
+              title="Open navigation menu"
             >
               <span className="material-symbols-outlined text-[24px]">menu</span>
             </button>
@@ -145,13 +143,13 @@ export default function Navbar() {
                   CraftRoots
                 </span>
                 <span className="font-['Inter'] text-[9px] uppercase tracking-[0.18em] text-[#5A5854] leading-none mt-0.5">
-                  Di Sản Sống
+                  Living Heritage
                 </span>
               </div>
             </Link>
           </div>
 
-          {/* Cụm Giữa: Thanh tìm kiếm (Desktop) */}
+          {/* Center Cluster: Desktop Search Bar */}
           <div className="flex-1 max-w-xl mx-4 hidden md:block">
             <form onSubmit={handleSearchSubmit} className="relative flex items-center">
               <span className="material-symbols-outlined absolute left-3 text-text-secondary text-[18px]">
@@ -161,16 +159,16 @@ export default function Navbar() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Tìm kiếm di sản, nghệ nhân, làng nghề, kỹ thuật..."
+                placeholder="Search heritage, artisans, craft villages, techniques..."
                 className="w-full h-[40px] pl-10 pr-12 bg-surface-crisp border border-border-neutral rounded-none text-body-spec font-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-accent-terracotta transition-colors text-[13px]"
               />
               {searchQuery ? (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 font-spec-code text-[10px] uppercase tracking-wider text-text-secondary/60 hover:text-accent-terracotta select-none"
+                  className="absolute right-3 font-spec-code text-[10px] uppercase tracking-wider text-text-secondary/60 hover:text-accent-terracotta select-none cursor-pointer"
                 >
-                  XÓA
+                  CLEAR
                 </button>
               ) : (
                 <span className="absolute right-3 font-spec-code text-[10px] uppercase tracking-wider text-text-secondary/60 select-none">
@@ -180,7 +178,7 @@ export default function Navbar() {
             </form>
           </div>
 
-          {/* Cụm Phải: Đã Lưu & Hồ Sơ Người Dùng */}
+          {/* Right Cluster: Saved & User Profile */}
           <div className="flex items-center gap-4 shrink-0">
             <Link
               to="/favourites"
@@ -190,7 +188,7 @@ export default function Navbar() {
               <span className="material-symbols-outlined text-[16px] text-accent-terracotta">
                 bookmark
               </span>
-              <span className="hidden sm:inline">Đã Lưu ({totalFavourites})</span>
+              <span className="hidden sm:inline">Saved ({totalFavourites})</span>
             </Link>
 
             <span className="text-border-neutral opacity-60 font-light select-none hidden sm:inline">
@@ -204,30 +202,30 @@ export default function Navbar() {
                     to="/admin/crafts"
                     id="navbar-admin-cms-btn"
                     className="h-9 px-2.5 border border-accent-terracotta bg-surface-crisp hover:bg-accent-terracotta hover:text-white text-accent-terracotta transition-all flex items-center gap-1.5 text-[11px] font-spec-code uppercase tracking-wider font-semibold cursor-pointer shadow-xs"
-                    title="Truy cập Hệ thống Quản trị & Biên tập Di sản (CMS)"
+                    title="Access Heritage Management & Editorial CMS"
                   >
                     <span className="material-symbols-outlined text-[17px]">admin_panel_settings</span>
-                    <span className="hidden md:inline">{user?.role === 'admin' ? 'Quản Trị CMS' : 'Biên Tập CMS'}</span>
+                    <span className="hidden md:inline">{user?.role === 'admin' ? 'CMS Admin' : 'CMS Editor'}</span>
                   </Link>
                 )}
                 <Link
                   to="/profile"
                   id="navbar-user-profile-btn"
                   className="h-9 px-3 border border-border-neutral bg-surface-crisp hover:border-accent-terracotta hover:bg-surface-subtle transition-all flex items-center gap-2 text-[12px] text-accent-terracotta font-medium group cursor-pointer shadow-xs"
-                  title={`Xem hồ sơ cá nhân: ${user?.fullName || user?.email}`}
+                  title={`User profile: ${user?.fullName || user?.email}`}
                 >
                   <span className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform">
                     account_circle
                   </span>
                   <span className="hidden sm:inline max-w-[120px] truncate text-text-primary group-hover:text-accent-terracotta transition-colors">
-                    {user?.fullName?.split(' ')[0] || user?.fullName || 'Hồ sơ'}
+                    {user?.fullName?.split(' ')[0] || user?.fullName || 'Profile'}
                   </span>
                 </Link>
                 <button
                   type="button"
                   onClick={logout}
                   className="hidden md:flex w-9 h-9 border border-border-neutral bg-surface-crisp items-center justify-center text-text-secondary hover:text-error hover:border-error transition-colors cursor-pointer"
-                  title="Đăng xuất"
+                  title="Log out"
                 >
                   <span className="material-symbols-outlined text-[18px]">logout</span>
                 </button>
@@ -236,7 +234,7 @@ export default function Navbar() {
               <Link
                 to="/login"
                 className="w-9 h-9 rounded-none border border-border-neutral bg-surface-crisp flex items-center justify-center text-text-primary hover:border-accent-terracotta transition-colors cursor-pointer"
-                title="Đăng nhập tài khoản"
+                title="Sign in"
               >
                 <span className="material-symbols-outlined text-text-primary text-[20px]">
                   person
@@ -246,7 +244,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Thanh tìm kiếm thu nhỏ cho màn hình di động đồng bộ lề 16px (px-4) */}
+        {/* Mobile Search Bar */}
         <div className="md:hidden px-4 pb-3 pt-1 border-t border-border-neutral/60 bg-canvas-linen">
           <form onSubmit={handleSearchSubmit} className="relative flex items-center">
             <span className="material-symbols-outlined absolute left-3 text-text-secondary text-[18px]">
@@ -256,31 +254,31 @@ export default function Navbar() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tìm di sản, nghệ nhân, làng nghề..."
+              placeholder="Search crafts, artisans, villages..."
               className="w-full h-[36px] pl-9 pr-3 bg-surface-crisp border border-border-neutral rounded-none text-body-spec font-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-accent-terracotta text-[12px]"
             />
           </form>
         </div>
       </header>
 
-      {/* Khoảng đệm cho Header cố định (134px trên mobile bao gồm thanh tìm kiếm, 80px trên desktop) */}
+      {/* Header Spacer */}
       <div className="h-[134px] md:h-20"></div>
 
-      {/* THANH NAVBAR DỌC CHỈ HIỂN THỊ KHI BẤM NÚT 3 GẠCH VÀ PHỦ TOÀN BỘ CHIỀU DỌC MÀN HÌNH (100VH) */}
+      {/* FULL HEIGHT VERTICAL DRAWER */}
       <div
         id="craft-vertical-sidebar-drawer"
         className={`fixed inset-0 z-50 transition-opacity duration-300 ${drawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
         style={{ height: '100vh', maxHeight: '100vh', width: '100vw' }}
       >
-        {/* Lớp nền mờ Overlay */}
+        {/* Backdrop Overlay */}
         <div
           onClick={closeMenu}
           className="fixed inset-0 bg-text-primary/40 backdrop-blur-sm transition-opacity cursor-pointer z-40"
-          aria-label="Đóng thanh điều hướng"
+          aria-label="Close navigation"
         ></div>
 
-        {/* Thanh Navbar dọc chiếm trọn 100% chiều dọc màn hình từ trên xuống dưới */}
+        {/* Vertical Drawer Aside */}
         <aside
           className={`relative w-80 md:w-96 max-w-[85vw] h-screen min-h-screen max-h-screen bg-canvas-linen border-r border-border-neutral shadow-2xl z-50 flex flex-col justify-between overflow-y-auto transition-transform duration-300 ease-in-out ${drawerOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
@@ -288,7 +286,7 @@ export default function Navbar() {
         >
           <div className="p-6">
 
-            {/* Tiêu đề thanh dọc với Logo & Nút Đóng */}
+            {/* Drawer Header with Logo & Close Button */}
             <div className="flex items-center justify-between pb-5 border-b border-border-neutral mb-6">
               <Link
                 to="/"
@@ -304,7 +302,7 @@ export default function Navbar() {
                     CraftRoots
                   </span>
                   <span className="font-['Inter'] text-[9px] uppercase tracking-[0.18em] text-text-secondary leading-none mt-0.5">
-                    Di Sản Sống
+                    Living Heritage
                   </span>
                 </div>
               </Link>
@@ -313,20 +311,20 @@ export default function Navbar() {
                 type="button"
                 onClick={closeMenu}
                 className="w-8 h-8 rounded-none border border-border-neutral bg-surface-crisp flex items-center justify-center text-text-secondary hover:text-accent-terracotta hover:border-accent-terracotta transition-colors focus:outline-none cursor-pointer"
-                aria-label="Đóng danh mục"
+                aria-label="Close menu"
               >
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </div>
 
-            {/* Phân hệ Quản trị Di sản nếu là Admin / Editor */}
+            {/* Admin CMS Portal banner if Admin / Editor */}
             {isAuthenticated && (user?.role === 'admin' || user?.role === 'editor') && (
               <div className="mb-6 p-3.5 bg-surface-crisp border border-accent-terracotta flex items-center justify-between shadow-xs">
                 <div className="flex items-center gap-2.5">
                   <span className="material-symbols-outlined text-[20px] text-accent-terracotta">admin_panel_settings</span>
                   <div>
                     <div className="font-['Montserrat'] font-semibold text-[12px] text-text-primary">
-                      {user?.role === 'admin' ? 'Quản Trị Hệ Thống' : 'Biên Tập Di Sản'}
+                      {user?.role === 'admin' ? 'System Administration' : 'Heritage Editorial'}
                     </div>
                     <div className="font-spec-code text-[10px] text-accent-terracotta">SEC 6.3 Admin CMS Portal</div>
                   </div>
@@ -336,12 +334,12 @@ export default function Navbar() {
                   onClick={closeMenu}
                   className="px-2.5 py-1 bg-accent-terracotta text-white font-spec-code text-[10px] uppercase font-semibold hover:bg-[#8E4A16] transition-colors"
                 >
-                  Vào CMS →
+                  Enter CMS →
                 </Link>
               </div>
             )}
 
-            {/* Ô tìm kiếm nhanh trong thanh dọc */}
+            {/* Drawer Quick Search */}
             <div className="mb-8">
               <form onSubmit={handleSearchSubmit} className="relative flex items-center">
                 <span className="material-symbols-outlined absolute left-3.5 text-text-secondary text-[18px] pointer-events-none">
@@ -351,17 +349,17 @@ export default function Navbar() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm kiếm di sản, nghệ nhân..."
+                  placeholder="Search heritage, artisans..."
                   className="w-full bg-surface-crisp border border-border-neutral focus:border-accent-terracotta pl-10 pr-3 py-2.5 font-body-spec text-[13px] text-text-primary placeholder:text-text-secondary/60 rounded-none outline-none transition-colors"
                 />
               </form>
             </div>
 
-            {/* HỆ THỐNG ĐIỀU HƯỚNG DI SẢN */}
+            {/* HERITAGE NAVIGATION */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
                 <span className="font-spec-code text-[11px] uppercase tracking-[0.2em] text-accent-terracotta font-semibold">
-                  HỆ THỐNG ĐIỀU HƯỚNG DI SẢN
+                  HERITAGE NAVIGATION
                 </span>
                 <span className="w-12 h-px bg-border-neutral"></span>
               </div>
@@ -381,7 +379,7 @@ export default function Navbar() {
                     <span className="material-symbols-outlined text-[20px] text-accent-terracotta">
                       cottage
                     </span>
-                    Trang Chủ (Tổng Quan)
+                    Home (Overview)
                   </span>
                   <span className="font-spec-code text-[11px] text-accent-terracotta uppercase font-medium">
                     01
@@ -402,10 +400,10 @@ export default function Navbar() {
                     <span className="material-symbols-outlined text-[20px] text-text-secondary">
                       inventory_2
                     </span>
-                    Danh Mục Di Sản Thủ Công
+                    Craft Heritage Archive
                   </span>
                   <span className="font-spec-code text-[11px] text-text-secondary uppercase">
-                    {stats.crafts} Mục
+                    {stats.crafts} Items
                   </span>
                 </NavLink>
 
@@ -423,10 +421,10 @@ export default function Navbar() {
                     <span className="material-symbols-outlined text-[20px] text-text-secondary">
                       badge
                     </span>
-                    Hồ Sơ Nghệ Nhân Ưu Tú
+                    Master Artisan Profiles
                   </span>
                   <span className="font-spec-code text-[11px] text-accent-terracotta uppercase tracking-wider">
-                    {stats.artisans} Cụ
+                    {stats.artisans} Masters
                   </span>
                 </NavLink>
 
@@ -444,14 +442,14 @@ export default function Navbar() {
                     <span className="material-symbols-outlined text-[20px] text-text-secondary">
                       map
                     </span>
-                    Bản Đồ Văn Hóa Làng Nghề
+                    Cultural Craft Map
                   </span>
                   <span className="font-spec-code text-[11px] text-text-secondary uppercase">
-                    {stats.regions} Vùng
+                    {stats.regions} Regions
                   </span>
                 </NavLink>
 
-                {/* THẺ DROPDOWN BỘ SƯU TẬP THEO MÙA (4 MÙA XUÂN - HẠ - THU - ĐÔNG) */}
+                {/* SEASONAL COLLECTIONS DROPDOWN (SPRING - SUMMER - AUTUMN - WINTER) */}
                 <div
                   className={`border transition-all duration-200 overflow-hidden ${
                     seasonalDropdownOpen
@@ -461,13 +459,12 @@ export default function Navbar() {
                         : 'border-border-neutral/70 bg-surface-subtle/20 hover:border-border-neutral'
                   }`}
                 >
-                  {/* Nút bấm chuyển trạng thái mở / đóng dropdown */}
                   <button
                     type="button"
                     onClick={() => setSeasonalDropdownOpen((prev) => !prev)}
                     className="w-full px-3.5 py-3 text-left flex items-center justify-between group cursor-pointer transition-colors"
                     aria-expanded={seasonalDropdownOpen}
-                    title="Mở / đóng danh sách bộ sưu tập 4 mùa"
+                    title="Toggle 4-season collection list"
                   >
                     <span className="flex items-center gap-3">
                       <span
@@ -480,13 +477,13 @@ export default function Navbar() {
                         filter_vintage
                       </span>
                       <span className="font-title-card text-[15px] text-text-primary group-hover:text-accent-terracotta transition-colors font-medium">
-                        Bộ Sưu Tập Theo Mùa
+                        Seasonal Collections
                       </span>
                     </span>
 
                     <div className="flex items-center gap-2">
                       <span className="font-spec-code text-[10px] uppercase tracking-wider text-accent-terracotta border border-accent-terracotta/60 bg-accent-terracotta/10 px-1.5 py-0.5 font-medium">
-                        4 MÙA
+                        4 SEASONS
                       </span>
                       <span
                         className={`material-symbols-outlined text-[18px] transition-transform duration-200 ${
@@ -500,11 +497,11 @@ export default function Navbar() {
                     </div>
                   </button>
 
-                  {/* Danh sách 4 mùa: Xuân, Hạ, Thu, Đông */}
+                  {/* 4 Seasons: Spring, Summer, Autumn, Winter */}
                   {seasonalDropdownOpen && (
                     <div className="border-t border-border-neutral/60 bg-surface-crisp px-2.5 py-2.5 space-y-1.5">
                       <div className="px-1.5 pt-0.5 pb-1 flex items-center justify-between text-[11px] font-spec-code uppercase tracking-wider text-text-secondary/70">
-                        <span>Chọn Tiết Khí &amp; Mùa:</span>
+                        <span>Select Solar Term &amp; Season:</span>
                         <span className="text-[10px] text-accent-terracotta font-semibold">2026</span>
                       </div>
 
@@ -565,7 +562,7 @@ export default function Navbar() {
                         );
                       })}
 
-                      {/* Nút Xem Tổng Thể */}
+                      {/* Explore All Button */}
                       <button
                         type="button"
                         onClick={() => {
@@ -574,7 +571,7 @@ export default function Navbar() {
                         }}
                         className="w-full text-center py-2 text-[11px] font-spec-code uppercase tracking-[0.15em] text-accent-terracotta hover:text-primary hover:underline transition-colors block border-t border-border-neutral/30 mt-1 cursor-pointer"
                       >
-                        Khám Phá Toàn Bộ Tuyển Tập →
+                        Explore Full Collection →
                       </button>
                     </div>
                   )}
@@ -594,7 +591,7 @@ export default function Navbar() {
                     <span className="material-symbols-outlined text-[20px] text-accent-terracotta">
                       bookmark
                     </span>
-                    Tác Phẩm Đã Lưu &amp; Yêu Thích
+                    Saved Crafts &amp; Favourites
                   </span>
                   <span className="font-spec-code text-[11px] text-accent-terracotta font-semibold">
                     {String(totalFavourites).padStart(2, '0')}
@@ -615,7 +612,7 @@ export default function Navbar() {
                     <span className="material-symbols-outlined text-[20px] text-text-secondary">
                       calendar_month
                     </span>
-                    Liên Hệ &amp; Đặt Lịch Xưởng
+                    Contact &amp; Studio Booking
                   </span>
                   <span className="material-symbols-outlined text-[16px] text-text-secondary">
                     arrow_outward
@@ -625,20 +622,20 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Chân thanh dọc: DỰ ÁN DI SẢN SỐNG 1924 */}
+          {/* Drawer Footer: LIVING HERITAGE 1924 INITIATIVE */}
           <div className="p-6 border-t border-border-neutral bg-surface-subtle">
             <div className="flex items-center gap-2 mb-2">
               <span className="w-2 h-2 bg-accent-terracotta inline-block"></span>
               <span className="font-spec-code text-[11px] uppercase tracking-[0.15em] text-text-primary font-semibold">
-                DỰ ÁN DI SẢN SỐNG 1924
+                LIVING HERITAGE 1924 INITIATIVE
               </span>
             </div>
             <p className="font-body-spec text-[12px] text-text-secondary leading-relaxed mb-4">
-              Lưu trữ {stats.regions > 0 ? stats.regions : '—'} vùng văn hóa bản địa và các phương thức chế tác thủ công Việt Nam.
+              Documenting and preserving {stats.regions > 0 ? stats.regions : '—'} indigenous cultural regions and traditional Vietnamese crafting techniques.
             </p>
             <div className="pt-3 border-t border-border-neutral space-y-1.5 font-spec-code text-[11px] text-text-secondary">
               <div className="flex items-center justify-between">
-                <span>Hotline điều phối:</span>
+                <span>Inquiry Hotline:</span>
                 <a
                   href="tel:0988246810"
                   className="text-text-primary font-medium hover:text-accent-terracotta transition-colors"
@@ -647,7 +644,7 @@ export default function Navbar() {
                 </a>
               </div>
               <div className="flex items-center justify-between">
-                <span>Hòm thư điện tử:</span>
+                <span>Direct Email:</span>
                 <a
                   href="mailto:lienhe@craftroots.vn"
                   className="text-accent-terracotta hover:underline"

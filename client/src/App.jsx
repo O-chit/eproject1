@@ -20,7 +20,7 @@ import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 
-// Phân hệ Quản trị & Biên tập Di sản (SEC 6.3 RBAC)
+// Admin CMS Portal (SEC 6.3 RBAC)
 import AdminRoute from './components/common/AdminRoute';
 import AdminLayout from './components/layout/AdminLayout';
 import AdminCraftsPage from './pages/admin/AdminCraftsPage';
@@ -34,7 +34,7 @@ export default function App() {
       <FavouritesProvider>
         <BrowserRouter>
           <Routes>
-            {/* 1. Tuyến đường công khai: Đăng Nhập & Đăng Ký (Chỉ dành cho người chưa đăng nhập) */}
+            {/* 1. Public Routes: Login & Register (Guest only) */}
             <Route
               path="/login"
               element={
@@ -52,7 +52,7 @@ export default function App() {
               }
             />
 
-            {/* 2. Toàn bộ Tuyến đường Trang Chính & Thông tin: YÊU CẦU ĐĂNG NHẬP / ĐĂNG KÝ TRƯỚC */}
+            {/* 2. Main Portal: Protected Routes */}
             <Route
               path="/"
               element={
@@ -74,7 +74,7 @@ export default function App() {
               <Route path="*" element={<NotFoundPage />} />
             </Route>
 
-            {/* 3. Phân hệ Quản trị Di sản (Admin & Editor CMS Portal - SEC 6.3 RBAC) */}
+            {/* 3. Heritage Admin CMS (SEC 6.3 RBAC) */}
             <Route
               path="/admin"
               element={
@@ -100,4 +100,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-

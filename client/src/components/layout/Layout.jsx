@@ -11,12 +11,12 @@ export default function Layout() {
   const location = useLocation();
   const isMapPage = location.pathname === '/regions';
 
-  // Tự động cuộn lên đầu trang khi chuyển Route
+  // Automatically scroll to top on route change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname]);
 
-  // Lắng nghe vị trí cuộn để hiện nút BackToTop khi scrollY > 300px
+  // Show BackToTop button when scrollY > 300px
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 300);
@@ -49,14 +49,14 @@ export default function Layout() {
 
       {!isMapPage && <Footer />}
 
-      {/* Nút Back to Top chuẩn Linework (nằm trên nút chat) */}
+      {/* Back to Top Button */}
       {!isMapPage && showBackToTop && (
         <button
           type="button"
           onClick={scrollToTop}
           className="fixed bottom-24 right-7 z-30 w-11 h-11 border border-border-neutral hover:border-accent-terracotta bg-surface-crisp shadow-md hover:shadow-lg flex items-center justify-center text-text-primary hover:text-accent-terracotta transition-all transform hover:-translate-y-1 focus:outline-none cursor-pointer"
-          aria-label="Cuộn lên đầu trang"
-          title="Lên đầu trang"
+          aria-label="Scroll to top"
+          title="Scroll to top"
         >
           <span className="material-symbols-outlined text-[20px]">
             arrow_upward
@@ -64,7 +64,7 @@ export default function Layout() {
         </button>
       )}
 
-      {/* Phân hệ Trợ Lý Di Sản AI Chatbot (Ollama Local) */}
+      {/* CraftBot AI Heritage Assistant */}
       <CraftBotWidget />
     </div>
   );

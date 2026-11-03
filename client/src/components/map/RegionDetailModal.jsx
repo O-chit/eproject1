@@ -5,16 +5,8 @@ import { Link } from 'react-router-dom';
 
 /**
  * RegionDetailModal
- * Component Popup Trang Chi Tiết Vùng Văn Hóa Làng Nghề
- * Được thiết kế chuẩn theo Hệ thống Thiết kế "Human-Crafted Sharp Linework" của CraftRoots:
- * - Nền Canvas Linen mộc: #F9F8F6
- * - Bề mặt thẻ tinh khiết: #FFFFFF / #F4F2EE
- * - Đường viền Linework sắc nét: #E6E2DA
- * - Mực đen truyền thống: #1C1B1A
- * - Màu chữ thứ cấp: #5A5854
- * - Màu điểm nhấn thương hiệu Terracotta Đất Nung: #B86B35
+ * Cultural Region Detail Modal Component
  */
-// Bảng ánh xạ ảnh sản phẩm chuẩn hóa theo ID và định danh
 const CRAFT_THUMBNAILS = {
   1: '/demo/craft/antique_vietnamese_bronze_incense_burner_with_dragon_handles_and_foo_dog_finial/screen.png',
   2: '/demo/craft/artisan_handwoven_bamboo_fruit_basket_and_lidded_box_from_phu_vinh_craft/screen.png',
@@ -83,7 +75,6 @@ const DEFAULT_CRAFT_FALLBACK_IMG =
   'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=400&q=80';
 
 export default function RegionDetailModal({ region, isOpen, onClose }) {
-  // Lắng nghe phím Escape để đóng popup
   useEffect(() => {
     if (!isOpen) return;
 
@@ -107,15 +98,14 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
       aria-modal="true"
       aria-labelledby="region-modal-title"
     >
-      {/* Khung nội dung trang popup - Phong cách Linen & Sharp Linework */}
       <div
         className="relative w-full max-w-4xl max-h-[90vh] bg-[#F9F8F6] border border-[#E6E2DA] shadow-2xl overflow-hidden flex flex-col animate-scaleUp"
-        onClick={(e) => e.stopPropagation()} // Ngăn nổi bọt sự kiện để không đóng khi click trong modal
+        onClick={(e) => e.stopPropagation()}
         style={{
           boxShadow: `0 25px 50px -12px rgba(28, 27, 26, 0.25), 0 0 0 1px #E6E2DA`
         }}
       >
-        {/* Đường line màu đặc trưng của vùng văn hóa ở trên cùng */}
+        {/* Cultural Region Color Stripe */}
         <div className="h-1.5 w-full shrink-0" style={{ backgroundColor: region.color }} />
 
         {/* HEADER POPUP */}
@@ -129,7 +119,7 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
                 {region.id}
               </span>
               <span className="font-spec-code text-[11px] font-semibold text-accent-terracotta uppercase tracking-widest">
-                DI SẢN LÀNG NGHỀ TRUYỀN THỐNG
+                TRADITIONAL CRAFT VILLAGE HERITAGE
               </span>
             </div>
             <h2
@@ -143,48 +133,47 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
             </span>
           </div>
 
-          {/* Nút đóng X sắc nét */}
           <button
             type="button"
             onClick={onClose}
             className="w-9 h-9 flex items-center justify-center bg-surface-subtle hover:bg-text-primary text-text-secondary hover:text-white border border-border-neutral transition-colors cursor-pointer text-base shrink-0"
-            title="Đóng trang chi tiết (Esc)"
-            aria-label="Đóng"
+            title="Close detail page (Esc)"
+            aria-label="Close"
           >
             ✕
           </button>
         </div>
 
-        {/* THANH CHỈ SỐ DI SẢN (HERITAGE STATS BAR) */}
+        {/* HERITAGE STATS BAR */}
         <div className="grid grid-cols-2 sm:grid-cols-3 divide-x divide-border-neutral border-b border-border-neutral bg-surface-subtle text-center shrink-0">
           <div className="py-2.5 px-3">
-            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Tỉnh thành</span>
+            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Provinces</span>
             <span className="text-base sm:text-lg font-bold text-text-primary font-headline-title font-serif">
-              {region.provinces ? region.provinces.length : 0} Địa phương
+              {region.provinces ? region.provinces.length : 0} Localities
             </span>
           </div>
           <div className="py-2.5 px-3">
-            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Sản phẩm đặc trưng</span>
+            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Featured Crafts</span>
             <span className="text-base sm:text-lg font-bold text-accent-terracotta font-headline-title font-serif">
-              {region.crafts ? region.crafts.length : 0} Sản phẩm
+              {region.crafts ? region.crafts.length : 0} Crafts
             </span>
           </div>
           <div className="py-2.5 px-3 col-span-2 sm:col-span-1 border-t sm:border-t-0 border-border-neutral">
-            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Bản sắc</span>
+            <span className="text-[10px] uppercase text-text-secondary block font-spec-code tracking-wider">Identity</span>
             <span className="text-xs sm:text-sm font-semibold text-text-primary truncate block font-title-card font-serif">
-              Thủ công tinh hoa
+              Master Craftsmanship
             </span>
           </div>
         </div>
 
-        {/* NỘI DUNG CUỘN (SCROLLABLE CONTENT) */}
+        {/* SCROLLABLE CONTENT */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6 scrollbar-thin scrollbar-thumb-border-neutral scrollbar-track-transparent">
-          {/* 1. Đặc trưng văn hóa nghề */}
+          {/* 1. Cultural Heritage Character */}
           <div>
             <div className="flex items-center gap-2 mb-2.5">
               <span className="w-1.5 h-4" style={{ backgroundColor: region.color }} />
               <h3 className="font-label-action text-xs uppercase tracking-wider text-text-primary font-bold">
-                Đặc Trưng Văn Hóa Nghề &amp; Không Gian Di Sản
+                Cultural Craft Identity &amp; Heritage Space
               </h3>
             </div>
             <p className="text-sm sm:text-[14px] text-text-secondary font-body-spec leading-relaxed bg-surface-crisp p-4 sm:p-5 border border-border-neutral shadow-xs">
@@ -192,17 +181,17 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
             </p>
           </div>
 
-          {/* 2. Một số sản phẩm đặc trưng */}
+          {/* 2. Featured Crafts */}
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-4" style={{ backgroundColor: region.color }} />
                 <h3 className="font-label-action text-xs uppercase tracking-wider text-text-primary font-bold">
-                  Một Số Sản Phẩm Đặc Trưng ({region.crafts ? region.crafts.length : 0})
+                  Representative Craft Works ({region.crafts ? region.crafts.length : 0})
                 </h3>
               </div>
               <span className="text-[11px] font-spec-code text-text-secondary">
-                Tinh hoa chế tác thủ công
+                Exquisite Handcrafted Essence
               </span>
             </div>
 
@@ -222,10 +211,10 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
                       to={targetDetailUrl}
                       onClick={onClose}
                       className="p-3 sm:p-3.5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta hover:shadow-md transition-all flex flex-col justify-between group shadow-xs cursor-pointer block no-underline text-inherit"
-                      title={`Xem chi tiết sản phẩm: ${craft.name}`}
+                      title={`View craft details: ${craft.name}`}
                     >
                       <div className="flex gap-3 sm:gap-3.5 items-start">
-                        {/* Ô ẢNH SẢN PHẨM Ở BÊN TRÁI */}
+                        {/* Craft Image */}
                         <div className="w-24 h-24 sm:w-28 sm:h-28 shrink-0 overflow-hidden border border-border-neutral bg-canvas-linen relative group/img">
                           <img
                             src={craftImage}
@@ -239,7 +228,7 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
                           />
                         </div>
 
-                        {/* THÔNG TIN CHI TIẾT BÊN PHẢI */}
+                        {/* Craft Details */}
                         <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
                           <div>
                             <div className="flex items-start justify-between gap-1.5 mb-1">
@@ -259,11 +248,11 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
                         </div>
                       </div>
 
-                      {/* CHÂN THẺ */}
+                      {/* Card Footer */}
                       <div className="mt-3 pt-2.5 border-t border-border-neutral/60 flex items-center justify-between text-[11px] font-spec-code">
-                        <span className="text-text-secondary">Sản phẩm thủ công</span>
+                        <span className="text-text-secondary">Handcrafted work</span>
                         <span className="text-accent-terracotta group-hover:text-primary font-bold font-label-action flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                          <span>Xem chi tiết sản phẩm</span>
+                          <span>View craft details</span>
                           <span>→</span>
                         </span>
                       </div>
@@ -273,12 +262,12 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
             </div>
           </div>
 
-          {/* 3. Tỉnh thành trực thuộc */}
+          {/* 3. Constituent Provinces */}
           <div>
             <div className="flex items-center gap-2 mb-2.5">
               <span className="w-1.5 h-4" style={{ backgroundColor: region.color }} />
               <h3 className="font-label-action text-xs uppercase tracking-wider text-text-primary font-bold">
-                Địa Giới {region.provinces ? region.provinces.length : 0} Tỉnh Thành Trực Thuộc
+                Territorial Boundary: {region.provinces ? region.provinces.length : 0} Administrative Provinces
               </h3>
             </div>
             <div className="flex flex-wrap gap-1.5 bg-surface-crisp p-3.5 border border-border-neutral shadow-xs">
@@ -295,10 +284,10 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
           </div>
         </div>
 
-        {/* FOOTER HÀNH ĐỘNG */}
+        {/* FOOTER ACTIONS */}
         <div className="p-4 sm:p-5 border-t border-border-neutral bg-surface-crisp flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
           <div className="text-xs text-text-secondary font-spec-code text-center sm:text-left">
-            <span>Đang xem chi tiết di sản: </span>
+            <span>Currently viewing heritage region: </span>
             <span className="text-text-primary font-bold">{region.name}</span>
           </div>
 
@@ -307,14 +296,14 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
               to={`/crafts?q=${encodeURIComponent(region.name)}`}
               className="flex-1 sm:flex-none py-2.5 px-5 bg-accent-terracotta hover:bg-primary text-white font-label-action text-xs uppercase tracking-wider font-semibold transition-colors text-center shadow-xs"
             >
-              Khám Phá Toàn Bộ Di Sản Vùng
+              Explore All Regional Crafts
             </Link>
             <button
               type="button"
               onClick={onClose}
               className="py-2.5 px-4 bg-surface-subtle hover:bg-border-neutral text-text-primary border border-border-neutral font-label-action text-xs uppercase tracking-wider transition-colors text-center cursor-pointer"
             >
-              Quay Lại Bản Đồ
+              Return to Map
             </button>
           </div>
         </div>

@@ -23,15 +23,15 @@ export default function RegisterPage() {
     setErrorMsg('');
 
     if (!fullName.trim()) {
-      setErrorMsg('Vui lòng nhập họ và tên của quý khách.');
+      setErrorMsg('Please enter your full name.');
       return;
     }
     if (password.length < 8) {
-      setErrorMsg('Mật khẩu phải có tối thiểu 8 ký tự.');
+      setErrorMsg('Password must be at least 8 characters.');
       return;
     }
     if (password !== confirmPassword) {
-      setErrorMsg('Mật khẩu xác nhận không trùng khớp.');
+      setErrorMsg('Passwords do not match.');
       return;
     }
 
@@ -40,7 +40,7 @@ export default function RegisterPage() {
       await register(fullName, email, password);
       navigate(from, { replace: true });
     } catch (err) {
-      setErrorMsg(err.message || 'Đăng ký tài khoản thất bại, vui lòng thử lại.');
+      setErrorMsg(err.message || 'Registration failed. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -59,23 +59,23 @@ export default function RegisterPage() {
               CraftRoots
             </span>
             <span className="font-['Inter'] text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.2em] text-text-secondary leading-none mt-1">
-              Di Sản &amp; Làng Nghề Thủ Công
+              Heritage &amp; Craft Villages
             </span>
           </div>
         </Link>
       </div>
 
-      {/* Container Đăng Ký */}
+      {/* Register Container */}
       <div className="max-w-md w-full mx-auto my-4 sm:my-6 bg-surface-crisp border border-border-neutral shadow-lg p-5 sm:p-9">
         <div className="text-center mb-5 sm:mb-6">
           <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-widest text-accent-terracotta font-semibold">
-            GIA NHẬP CỘNG ĐỒNG DI SẢN
+            JOIN THE HERITAGE COMMUNITY
           </span>
           <h2 className="font-headline-title text-[20px] sm:text-[24px] font-semibold text-text-primary mt-1">
-            Đăng Ký Tài Khoản
+            Register Account
           </h2>
           <p className="font-body-spec text-[12px] text-text-secondary mt-1">
-            Tạo tài khoản để lưu trữ các bộ sưu tập và truy cập toàn bộ hệ thống làng nghề.
+            Create an account to save curated collections and access the full craft village network.
           </p>
         </div>
 
@@ -89,13 +89,13 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-              Họ và tên *
+              Full Name *
             </label>
             <input
               type="text"
               required
               className="w-full h-11 px-3.5 bg-surface-subtle/50 border border-border-neutral font-body-spec text-[13px] text-text-primary focus:outline-none focus:border-accent-terracotta"
-              placeholder="Nguyễn Hoàng Nam"
+              placeholder="Hoang Nam Nguyen"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
@@ -103,7 +103,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-              Địa chỉ Email *
+              Email Address *
             </label>
             <input
               type="email"
@@ -117,7 +117,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-              Mật khẩu (Tối thiểu 8 ký tự) *
+              Password (At least 8 characters) *
             </label>
             <div className="relative">
               <input
@@ -135,8 +135,8 @@ export default function RegisterPage() {
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
-                aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                title={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                title={showPassword ? 'Hide password' : 'Show password'}
               >
                 <span className="material-symbols-outlined text-[20px] select-none">
                   {showPassword ? 'visibility_off' : 'visibility'}
@@ -147,7 +147,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-              Xác nhận mật khẩu *
+              Confirm Password *
             </label>
             <div className="relative">
               <input
@@ -165,8 +165,8 @@ export default function RegisterPage() {
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
                 className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
-                aria-label={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                title={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                title={showConfirmPassword ? 'Hide password' : 'Show password'}
               >
                 <span className="material-symbols-outlined text-[20px] select-none">
                   {showConfirmPassword ? 'visibility_off' : 'visibility'}
@@ -180,20 +180,20 @@ export default function RegisterPage() {
             disabled={submitting}
             className="w-full mt-5 py-3.5 bg-accent-terracotta hover:bg-[#8E4A16] text-white font-label-action text-[11px] uppercase tracking-[0.2em] font-semibold transition-colors disabled:opacity-50 cursor-pointer shadow-sm flex items-center justify-center gap-2"
           >
-            {submitting ? 'ĐANG TẠO HỒ SƠ...' : 'HOÀN TẤT ĐĂNG KÝ & VÀO TRANG CHÍNH →'}
+            {submitting ? 'CREATING ACCOUNT...' : 'COMPLETE REGISTRATION & CONTINUE →'}
           </button>
         </form>
 
         <div className="mt-6 pt-5 border-t border-border-neutral text-center font-body-spec text-[13px] text-text-secondary">
-          Đã có tài khoản thành viên?{' '}
+          Already have an account?{' '}
           <Link to="/login" className="text-accent-terracotta hover:underline font-semibold">
-            Đăng nhập ngay
+            Sign in now
           </Link>
         </div>
       </div>
 
       <div className="text-center pb-2 font-spec-code text-[11px] text-text-secondary">
-        <span>© 2024 CraftRoots. Giữ toàn quyền bảo tồn di sản phi vật thể Việt Nam.</span>
+        <span>© 2026 CraftRoots. All rights reserved. Safeguarding Vietnamese Intangible Heritage.</span>
       </div>
     </div>
   );

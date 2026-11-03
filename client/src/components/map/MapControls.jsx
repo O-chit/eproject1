@@ -26,8 +26,8 @@ export default function MapControls({ onResetView, onZoomIn, onZoomOut, onToggle
       <button
         type="button"
         onClick={onZoomIn}
-        aria-label="Phóng to"
-        title="Phóng to"
+        aria-label="Zoom in"
+        title="Zoom in"
         className="w-9 h-9 bg-surface-crisp/95 hover:bg-surface-crisp text-text-primary hover:text-accent-terracotta border border-border-neutral flex items-center justify-center transition-colors cursor-pointer"
       >
         <span className="material-symbols-outlined text-[18px]">add</span>
@@ -36,8 +36,8 @@ export default function MapControls({ onResetView, onZoomIn, onZoomOut, onToggle
       <button
         type="button"
         onClick={onZoomOut}
-        aria-label="Thu nhỏ"
-        title="Thu nhỏ"
+        aria-label="Zoom out"
+        title="Zoom out"
         className="w-9 h-9 bg-surface-crisp/95 hover:bg-surface-crisp text-text-primary hover:text-accent-terracotta border border-border-neutral flex items-center justify-center transition-colors cursor-pointer"
       >
         <span className="material-symbols-outlined text-[18px]">remove</span>
@@ -46,8 +46,8 @@ export default function MapControls({ onResetView, onZoomIn, onZoomOut, onToggle
       <button
         type="button"
         onClick={onResetView}
-        aria-label="Toàn cảnh Việt Nam"
-        title="Toàn cảnh Việt Nam & Biển Đảo"
+        aria-label="Vietnam Overview"
+        title="Vietnam Overview & Maritime Islands"
         className="w-9 h-9 bg-surface-crisp/95 hover:bg-surface-crisp text-text-primary hover:text-accent-terracotta border border-border-neutral flex items-center justify-center transition-colors cursor-pointer font-spec-code text-[11px] font-bold"
       >
         <span className="material-symbols-outlined text-[18px]">crop_free</span>
@@ -56,8 +56,8 @@ export default function MapControls({ onResetView, onZoomIn, onZoomOut, onToggle
       <button
         type="button"
         onClick={onTogglePitch}
-        aria-label="Góc nghiêng 3D"
-        title={is3D ? 'Góc nhìn 2D' : 'Góc nghiêng Sa bàn 3D'}
+        aria-label="3D Tilt View"
+        title={is3D ? '2D View' : '3D Terrain Tilt'}
         className={`w-9 h-9 border border-border-neutral flex items-center justify-center transition-colors cursor-pointer font-spec-code text-[10px] font-bold uppercase ${
           is3D
             ? 'bg-accent-terracotta text-surface-crisp border-accent-terracotta'
@@ -70,8 +70,8 @@ export default function MapControls({ onResetView, onZoomIn, onZoomOut, onToggle
       <button
         type="button"
         onClick={handleToggleFullscreen}
-        aria-label="Toàn màn hình trình duyệt"
-        title={isFullscreen ? 'Thu nhỏ cửa sổ' : 'Toàn màn hình trình duyệt'}
+        aria-label="Toggle Fullscreen"
+        title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Browser'}
         className="w-9 h-9 bg-surface-crisp/95 hover:bg-surface-crisp text-text-primary hover:text-accent-terracotta border border-border-neutral flex items-center justify-center transition-colors cursor-pointer"
       >
         <span className="material-symbols-outlined text-[18px]">

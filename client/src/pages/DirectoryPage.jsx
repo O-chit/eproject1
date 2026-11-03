@@ -5,12 +5,12 @@ import { useFavourites } from '../context/FavouritesContext';
 import { useAgentLiveSync } from '../services/liveAgentSync';
 
 const DEFAULT_TABS = [
-  { id: 'all', label: 'TẤT CẢ (ALL)' },
-  { id: '1', label: 'GỐM SỨ' },
-  { id: '2', label: 'ĐÚC ĐỒNG' },
-  { id: '3', label: 'DỆT MAY' },
-  { id: '4', label: 'MÂY TRE ĐAN' },
-  { id: '5', label: 'SƠN MÀI' },
+  { id: 'all', label: 'ALL' },
+  { id: '1', label: 'CERAMICS' },
+  { id: '2', label: 'BRONZE CASTING' },
+  { id: '3', label: 'TEXTILES & WEAVING' },
+  { id: '4', label: 'BAMBOO & RATTAN' },
+  { id: '5', label: 'LACQUERWARE' },
 ];
 
 export default function DirectoryPage() {
@@ -22,7 +22,7 @@ export default function DirectoryPage() {
   const [totalCraftCount, setTotalCraftCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // Nạp danh mục và thống kê từ DB
+  // Load categories and stats from DB
   useEffect(() => {
     async function loadCategoriesAndStats() {
       try {
@@ -40,7 +40,7 @@ export default function DirectoryPage() {
           const dynamicTabs = [
             {
               id: 'all',
-              label: `TẤT CẢ (ALL) (${totalFromStats || catData.reduce((sum, c) => sum + (c.craftCount || 0), 0)})`,
+              label: `ALL (${totalFromStats || catData.reduce((sum, c) => sum + (c.craftCount || 0), 0)})`,
             },
             ...catData.map((c) => ({
               id: String(c.id),
@@ -52,13 +52,13 @@ export default function DirectoryPage() {
           setTabs(dynamicTabs);
         }
       } catch (err) {
-        console.warn('Lỗi tải danh mục từ DB:', err.message);
+        console.warn('Error loading categories from DB:', err.message);
       }
     }
     loadCategoriesAndStats();
   }, []);
 
-  // Nạp danh sách sản phẩm từ DB theo bộ lọc
+  // Load crafts from DB based on filters
   useEffect(() => {
     let isMounted = true;
     async function loadCrafts() {
@@ -78,7 +78,7 @@ export default function DirectoryPage() {
           setCrafts(items);
         }
       } catch (err) {
-        console.warn('Lỗi tải sản phẩm từ DB:', err.message);
+        console.warn('Error loading crafts from DB:', err.message);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -94,7 +94,7 @@ export default function DirectoryPage() {
     };
   }, [selectedTab, searchQuery]);
 
-  // Lắng nghe sự kiện CRUD từ AI Agent để cập nhật danh sách trực tiếp không cần load lại trang
+  // Live Agent Sync
   useAgentLiveSync(({ tool, data }) => {
     if (tool === 'update_craft') {
       setCrafts((prev) =>
@@ -129,14 +129,14 @@ export default function DirectoryPage() {
     id: item.id,
     name: item.name,
     category: item.categorySlug || item.category,
-    categoryLabel: item.category || 'THỦ CÔNG VIỆT NAM',
-    origin: `${item.region || 'Làng Nghề Truyền Thống'} — Di sản sống`,
-    description: item.shortDescription || item.description || 'Chế tác thủ công từ các nghệ nhân lành nghề.',
+    categoryLabel: item.category || 'VIETNAMESE CRAFT',
+    origin: `${item.region || 'Traditional Craft Village'} — Living Heritage`,
+    description: item.shortDescription || item.description || 'Handcrafted by skilled master artisans.',
     refCode: item.sku || `CR-${item.id < 10 ? '0' : ''}${item.id}`,
-    edition: item.tag || (item.isFeatured ? 'ĐẶC SẮC TUYỂN CHỌN' : `Bản ghi di sản #${item.id}`),
+    edition: item.tag || (item.isFeatured ? 'CURATED HIGHLIGHT' : `Heritage record #${item.id}`),
     price: item.priceVnd || item.price_vnd
-      ? `${Number(item.priceVnd || item.price_vnd).toLocaleString('vi-VN')} đ`
-      : item.price || 'Liên hệ giám tuyển',
+      ? `${Number(item.priceVnd || item.price_vnd).toLocaleString('en-US')} VND`
+      : item.price || 'Contact curator',
     image: item.thumbnailUrl || item.image || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80',
   }));
 
@@ -148,29 +148,29 @@ export default function DirectoryPage() {
           {/* Metadata tracker */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-space-sm mb-2 sm:mb-space-sm font-spec-code text-[10px] sm:text-spec-code">
             <span className="uppercase tracking-[0.15em] sm:tracking-[0.2em] text-accent-terracotta font-medium">
-              Hồ sơ tư liệu hóa
+              Documentation Record
             </span>
             <span className="text-border-neutral opacity-60">|</span>
             <span className="text-text-secondary tracking-[0.06em] sm:tracking-[0.08em]">
-              Mã: CAT-VN-2024
+              Ref: CAT-VN-2024
             </span>
             <span className="text-border-neutral opacity-60 hidden sm:inline">|</span>
             <span className="text-text-secondary hidden sm:inline">
-              Cập nhật: Quý IV/2024
+              Updated: Q4/2024
             </span>
           </div>
 
           {/* Main Headline */}
           <h1 className="font-display-hero text-[20px] sm:text-[28px] md:text-[38px] lg:text-display-hero text-text-primary uppercase tracking-[0.1em] sm:tracking-[0.18em] md:tracking-[0.3em] font-light leading-tight mb-2 sm:mb-space-sm">
-            DANH MỤC DI SẢN THỦ CÔNG
+            CRAFT HERITAGE DIRECTORY
           </h1>
           <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary max-w-3xl leading-relaxed">
-            Kho lưu trữ {totalCraftCount || displayItems.length} tác phẩm thủ công nguyên bản từ các làng nghề truyền thống Việt Nam. Mỗi hiện vật được định danh độc bản cùng chứng thư nguồn gốc địa dư và kỹ pháp chế tác nguyên bản.
+            An archive of {totalCraftCount || displayItems.length} authentic handcrafted works from traditional Vietnamese craft villages. Each piece is individually catalogued with geographical origin certification and artisanal technique dossiers.
           </p>
 
           {/* Search & Quantitative Filters Bar */}
           <div className="mt-4 sm:mt-space-lg flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-space-md">
-            {/* Pill Search */}
+            {/* Search */}
             <div className="relative flex-1 max-w-xl">
               <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-[18px] sm:text-[20px]">
                 search
@@ -179,7 +179,7 @@ export default function DirectoryPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Tìm kiếm tác phẩm, làng nghề, chất liệu..."
+                placeholder="Search works, craft villages, materials..."
                 className="w-full h-10 sm:h-12 pl-11 sm:pl-12 pr-4 sm:pr-6 rounded-[50px] bg-surface-crisp border border-border-neutral text-[12.5px] sm:text-body-spec font-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-accent-terracotta transition-colors shadow-sm"
               />
             </div>
@@ -187,24 +187,24 @@ export default function DirectoryPage() {
             {/* Density Counter & Quick View Mode */}
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-space-md self-start md:self-center font-spec-code text-[10px] sm:text-spec-code text-text-secondary">
               <span className="text-text-primary font-semibold">
-                {displayItems.length} HIỆN VẬT
+                {displayItems.length} ARTIFACTS
               </span>
               <span className="text-border-neutral opacity-60">|</span>
               <span className="flex items-center gap-1 cursor-pointer hover:text-accent-terracotta transition-colors">
                 <span className="material-symbols-outlined text-[15px]">tune</span>
-                LỌC KỸ PHÁP
+                TECHNIQUE FILTER
               </span>
               <span className="text-border-neutral opacity-60">|</span>
               <span className="flex items-center gap-1 cursor-pointer hover:text-accent-terracotta transition-colors">
                 <span className="material-symbols-outlined text-[15px]">swap_vert</span>
-                THỨ HẠNG
+                RANKING
               </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Pipe-delimited Categorical Tab Navigation */}
+      {/* Categorical Tab Navigation */}
       <section className="w-full bg-surface-crisp border-b border-border-neutral sticky top-[134px] md:top-20 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 md:px-margin overflow-x-auto no-scrollbar">
           <div className="flex items-center py-2.5 sm:py-4 font-label-action text-[10.5px] sm:text-label-action tracking-[0.12em] sm:tracking-[0.15em] uppercase whitespace-nowrap">
@@ -227,31 +227,31 @@ export default function DirectoryPage() {
         </div>
       </section>
 
-      {/* 3-Column / 2-Column Mobile Grid: Artisanal Catalog */}
+      {/* Catalog Grid */}
       <section className="w-full bg-canvas-linen py-8 sm:py-12 md:py-space-xl">
         <div className="max-w-7xl mx-auto px-4 md:px-margin">
           {loading ? (
             <div className="py-24 text-center">
               <div className="w-10 h-10 border-2 border-[#B86B35] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="font-spec-code text-[12px] text-text-secondary uppercase tracking-[0.15em]">
-                Đang nạp kho lưu trữ hiện vật từ CSDL...
+                Loading archival artifacts from database...
               </p>
             </div>
           ) : displayItems.length === 0 ? (
             <div className="p-16 border border-border-neutral bg-surface-crisp text-center">
               <span className="material-symbols-outlined text-5xl text-accent-terracotta mb-3">inventory_2</span>
               <h3 className="font-headline-title text-xl font-medium text-text-primary mb-2">
-                Không tìm thấy tác phẩm phù hợp
+                No matching craft works found
               </h3>
               <p className="font-body-default text-text-secondary mb-6">
-                Vui lòng thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc chuyên đề.
+                Please try searching with another keyword or clear current thematic filters.
               </p>
               <button
                 type="button"
                 onClick={() => { setSearchQuery(''); setSelectedTab('all'); }}
                 className="px-6 py-2.5 bg-text-primary text-surface-crisp font-label-action text-label-action uppercase tracking-wider font-semibold hover:bg-accent-terracotta transition-colors cursor-pointer"
               >
-                XÓA BỘ LỌC
+                CLEAR FILTERS
               </button>
             </div>
           ) : (
@@ -277,7 +277,7 @@ export default function DirectoryPage() {
                     <button
                       type="button"
                       onClick={() => toggleFav(item.id)}
-                      aria-label="Lưu tác phẩm"
+                      aria-label="Save craft"
                       className="absolute top-2 right-2 md:top-3 md:right-3 w-7 h-7 md:w-8 md:h-8 rounded-none bg-surface-crisp/90 backdrop-blur-sm border border-border-neutral flex items-center justify-center text-text-secondary hover:text-accent-terracotta hover:bg-surface-crisp transition-colors cursor-pointer"
                     >
                       <span className={`material-symbols-outlined text-[16px] md:text-[18px] ${isFav(item.id) ? 'text-accent-terracotta filled' : ''}`}>
@@ -296,7 +296,6 @@ export default function DirectoryPage() {
                       <h3 className="font-headline-title text-[15px] sm:text-[16px] md:text-headline-title text-text-primary tracking-tight mb-1 md:mb-space-xs group-hover:text-accent-terracotta transition-colors line-clamp-2 leading-snug">
                         <Link to={`/crafts/${item.id}`}>{item.name}</Link>
                       </h3>
-                      {/* Ẩn đoạn mô tả dài trên màn hình di động */}
                       <p className="hidden md:block font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">
                         {item.description}
                       </p>
@@ -315,7 +314,7 @@ export default function DirectoryPage() {
                         to={`/crafts/${item.id}`}
                         className="font-label-action text-[10px] md:text-label-action tracking-[0.1em] md:tracking-[0.15em] uppercase text-text-primary border-b border-text-primary pb-0.5 hover:text-accent-terracotta hover:border-accent-terracotta transition-colors shrink-0"
                       >
-                        Chi tiết →
+                        Details →
                       </Link>
                     </div>
                   </div>

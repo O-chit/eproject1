@@ -7,12 +7,12 @@ const HIGHLIGHT_CRAFTS = [
   {
     id: 1,
     code: 'BT-MR01',
-    badge: 'NUNG CỦI 1300°C',
-    village: 'Làng Gốm Bát Tràng',
-    province: 'Hà Nội',
-    name: 'Ấm Trà Men Rạn Cổ Điển',
-    description: 'Chế tác từ đất sét phù sa sông Hồng nung men tro cổ truyền. Mỗi đường rạn nứt tự nhiên theo biến thiên nhiệt độ lò bầu, không trùng lặp.',
-    material: 'Cao lanh men tro gỗ',
+    badge: 'WOOD-FIRED 1300°C',
+    village: 'Bat Trang Ceramics Village',
+    province: 'Hanoi',
+    name: 'Classic Crackle Glaze Teapot',
+    description: 'Handcrafted from Red River alluvial silt fired with traditional wood ash glaze. Each natural web-like fracture forms according to kiln temperature fluctuations, uniquely one-of-a-kind.',
+    material: 'Kaolin & wood ash glaze',
     dimension: '180ml | Ø 9.5cm',
     price: '1.850.000 ₫',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaUrvFnVxj2lsHDRkr-yaTRJCRIumrtcbAoBO8T7gJK22rF-l8LFMNoASMdtx_N8hQkmINE6HE7xtmJmzGpxqvbiG5mzG2TvxNKGDuu4MZjKV7e4q6ixIFOJ1PSNsl56IqQagawz_SCLeDfMjYY1bGxxdBh3e-6wBJ15RkSXBTpEZHEoWqpB_uzbwmdJy82jUtSMpkv6zROQGRW5W2GKqEOL2DxfhNLSsVd1T7ujM',
@@ -21,12 +21,12 @@ const HIGHLIGHT_CRAFTS = [
   {
     id: 2,
     code: 'MN-TC04',
-    badge: 'DỆT KHUNG GỖ CỔ',
-    village: 'Làng Dệt Mỹ Nghiệp',
-    province: 'Ninh Thuận',
-    name: 'Khăn Choàng Thổ Cẩm Hoa Văn Thần Sư',
-    description: 'Sợi bông trồng tự nhiên ven đồi cát, nhuộm bằng vỏ cây rừng và lá chàm ngâm ủ 20 ngày. Họa tiết cổ xưa mang tính bảo hộ tâm linh.',
-    material: 'Bông thô nhuộm thực vật',
+    badge: 'ANTIQUE WOODEN LOOM',
+    village: 'My Nghiep Weaving Village',
+    province: 'Ninh Thuan',
+    name: 'Sacred Lion Brocade Shawl',
+    description: 'Natural cotton grown along sand dunes, dyed with wild bark and indigo steeped for 20 days. Ancient motifs embodying spiritual guardianship.',
+    material: 'Raw plant-dyed cotton',
     dimension: '65 × 200 cm',
     price: '1.420.000 ₫',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBay0c69D5JK7FMaxyn9PSRxcsgUqgVBC4moSSxlmkFLgKHiKIqdRgYLDbsNkoDNTWbn3aE3tjfmDVjmU7b0uCCCWly4AJRKvMbcSnFUrimhvpDJ528ysIaEbq7Vk675AvADO51B7vRlzladV4zbFP22E6K0TREwBbPB2PY6e9MzBG80dTaXhPHGxL-GcbgknPoVSiq1dmnBko_BQVJIGRkPk_Vx46iUTqabaRYxTU',
@@ -35,12 +35,12 @@ const HIGHLIGHT_CRAFTS = [
   {
     id: 3,
     code: 'PV-MT09',
-    badge: 'CHUỐT NAN TƠ',
-    village: 'Làng Mây Tre Phú Vinh',
-    province: 'Chương Mỹ',
-    name: 'Khay Trà Mây Nếp Vót Chuốt',
-    description: 'Sử dụng mây nếp rừng già phơi khô 6 tháng, nan được vót mỏng như sợi cước bằng dao rèn thủ công. Đan kín không một vết nối thừa.',
-    material: 'Mây nếp rừng & nan tre già',
+    badge: 'HAND-PARING RATTAN',
+    village: 'Phu Vinh Bamboo Village',
+    province: 'Chuong My',
+    name: 'Fine Hand-Shaved Rattan Tea Tray',
+    description: 'Crafted from aged forest rattan sun-dried for 6 months, shaved into hair-thin strands using hand-forged blades. Tight weave without superfluous joints.',
+    material: 'Forest rattan & aged bamboo',
     dimension: '36 × 26 × 3.5 cm',
     price: '980.000 ₫',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqtjQ5mo5cRimsDw-0a1cXtEfhsOYh5Em5ML9l64b0Hc7BtO4oQu0rQCKeojkVUo26ovuW7WQJi9O9HWREIBgFJQ54jYdAVaqFw_qoJKFU5nDAJnK3m_SuzktfK4177Hs6U0AZ6NjMS-0nZHrlaberLVVzTzO0pAj5wvYnyap_2yX0pGsWUYWItuudPhk86mrePax74Ug2wRYKiBJ1_4Y22e-lHlXxzgQsUnUvcqw',
@@ -81,7 +81,7 @@ export default function HomePage() {
           setRegionsList(regionsArr);
         }
       } catch (err) {
-        console.warn('Không thể nạp dữ liệu từ API DB, sử dụng dữ liệu dự phòng:', err.message);
+        console.warn('Unable to load from API DB, using fallback data:', err.message);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -93,7 +93,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col w-full">
-      {/* 1. HERO SECTION CHUẨN DEMO */}
+      {/* 1. HERO SECTION */}
       <section className="relative w-full min-h-[440px] sm:min-h-[520px] lg:min-h-[720px] flex items-center justify-center lg:justify-end overflow-hidden -mt-[134px] pt-[134px] md:-mt-20 md:pt-20">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -109,16 +109,16 @@ export default function HomePage() {
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent-terracotta inline-block"></span>
               <span className="font-display-hero text-[10px] sm:text-[12px] md:text-[13px] tracking-[0.18em] sm:tracking-[0.3em] md:tracking-[0.35em] text-accent-terracotta uppercase font-light">
-                LƯU TRỮ VÀ BẢO TỒN THỦ CÔNG VIỆT NAM
+                VIETNAMESE CRAFT ARCHIVE &amp; CONSERVATION
               </span>
             </div>
 
             <h1 className="font-headline-title text-[20px] sm:text-[28px] md:text-[38px] leading-[1.25] tracking-[0.04em] sm:tracking-[0.1em] md:tracking-[0.15em] text-text-primary uppercase font-light mb-4 sm:mb-6">
-              DI SẢN SỐNG TRONG TỪNG ĐƯỜNG NÉT
+              LIVING HERITAGE IN EVERY LINE
             </h1>
 
             <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary leading-relaxed mb-6 sm:mb-8">
-              Không gian số vinh danh tinh hoa làng nghề truyền thống từ Bắc chí Nam. Từng thớ đất, sợi tơ, nan tre đều chứa đựng ký ức bàn tay người Việt qua hàng thế kỷ.
+              A digital sanctuary honoring the master craftsmanship of traditional villages across Vietnam. Every vein of clay, thread of silk, and bamboo strand carries the ancestral memory of Vietnamese hands over centuries.
             </p>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 pt-4 sm:pt-6 border-t border-border-neutral">
@@ -126,18 +126,18 @@ export default function HomePage() {
                 to="/crafts"
                 className="group inline-flex items-center gap-2 sm:gap-3 font-label-action text-[11px] sm:text-label-action uppercase tracking-[0.18em] sm:tracking-[0.25em] text-text-primary border-b border-text-primary pb-1 hover:text-accent-terracotta hover:border-accent-terracotta transition-colors"
               >
-                <span>KHÁM PHÁ DANH MỤC DI SẢN</span>
+                <span>EXPLORE HERITAGE DIRECTORY</span>
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
               <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.1em] sm:tracking-[0.15em] text-text-secondary">
-                BẢN GHI: {siteStats.crafts || crafts.length || 8} TÁC PHẨM
+                ARCHIVED: {siteStats.crafts || crafts.length || 8} WORKS
               </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. SECTION DIVIDER WITH PIPE ALIGNMENT & COORD PINS */}
+      {/* 2. SECTION DIVIDER */}
       <div className="w-full bg-surface-subtle border-y border-border-neutral">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3 font-spec-code text-[10.5px] sm:text-spec-code text-text-secondary">
           <div className="flex items-center gap-2 sm:gap-3">
@@ -145,38 +145,38 @@ export default function HomePage() {
               history_edu
             </span>
             <span className="uppercase tracking-[0.08em] sm:tracking-[0.12em] text-text-primary">
-              TẬP HỒ SƠ 01 // KHẢO TẢ LÀNG NGHỀ
+              DOSSIER 01 // VILLAGE TOPOGRAPHY
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-4 text-[11px] tracking-[0.08em]">
-            <span>KINH ĐỘ: 105°55' E</span>
+            <span>LONGITUDE: 105°55' E</span>
             <span className="text-border-neutral opacity-60">|</span>
-            <span>VĨ ĐỘ: 21°02' N</span>
+            <span>LATITUDE: 21°02' N</span>
             <span className="text-border-neutral opacity-60">|</span>
-            <span className="text-accent-terracotta font-medium">XÁC THỰC HIỆN TRƯỜNG: 2024</span>
+            <span className="text-accent-terracotta font-medium">FIELD VALIDATION: 2024</span>
           </div>
         </div>
       </div>
 
-      {/* 3. 3-COLUMN / 2-COLUMN MOBILE CRAFT HIGHLIGHTS GRID */}
+      {/* 3. CRAFT HIGHLIGHTS GRID */}
       <section className="w-full py-8 sm:py-12 md:py-space-xl bg-canvas-linen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
-          {/* Header nhóm tác phẩm */}
+          {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 md:mb-12 pb-3 md:pb-6 border-b border-border-neutral gap-3">
             <div>
               <span className="font-display-hero text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] uppercase text-accent-terracotta font-medium block mb-1.5 sm:mb-2">
-                TUYỂN CHỌN ĐỊNH KỲ
+                CURATED COLLECTION
               </span>
               <h2 className="font-display-hero text-[16px] sm:text-[22px] tracking-[0.15em] sm:tracking-[0.25em] text-text-primary uppercase font-light">
-                TÁC PHẨM ĐẶC SẮC <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span> NGUYÊN BẢN TỪ LÀNG NGHỀ
+                FEATURED MASTERWORKS <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span> AUTHENTIC FROM VILLAGES
               </h2>
             </div>
             <div className="font-spec-code text-[11px] sm:text-spec-code text-text-secondary flex items-center gap-2">
-              <span>HIỂN THỊ: {Math.min(3, siteStats.crafts) || '03'} TRÊN {siteStats.crafts || '—'} VẬT PHẨM LƯU CHIỂU</span>
+              <span>SHOWING: {Math.min(3, siteStats.crafts) || '03'} OF {siteStats.crafts || '—'} ARCHIVED PIECES</span>
             </div>
           </div>
 
-          {/* Lưới sản phẩm: 2 cột trên mobile (gap: 12px), 3 cột trên desktop */}
+          {/* Product Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-gutter">
             {loading ? (
               <CraftCardSkeleton count={3} />
@@ -186,7 +186,6 @@ export default function HomePage() {
                   key={item.id}
                   className="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col justify-between"
                 >
-                  {/* Khung ảnh tỷ lệ vuông 1:1, object-cover */}
                   <div className="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-surface-subtle">
                     <img
                       src={item.image || item.thumbnailUrl || item.thumbnail_url}
@@ -195,51 +194,45 @@ export default function HomePage() {
                       className="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
-                    {/* Đã ẩn hoàn toàn nhãn MÃ: KHAN-SA-LUA... đè lên ảnh theo yêu cầu */}
 
-                    {/* Thu nhỏ nhãn ĐẶC SẮC TUYỂN CHỌN (font-size: 10px, padding: 4px 6px) */}
                     <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-text-primary text-surface-crisp px-[6px] py-[4px] leading-none shadow-xs">
                       <span className="font-spec-code text-[10px] uppercase tracking-[0.08em] md:tracking-[0.15em] block">
-                        {item.badge || (item.isFeatured ? 'ĐẶC SẮC TUYỂN CHỌN' : 'THỦ CÔNG TRUYỀN ĐỜI')}
+                        {item.badge || (item.isFeatured ? 'CURATED HIGHLIGHT' : 'HERITAGE CRAFT')}
                       </span>
                     </div>
                   </div>
 
                   <div className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col justify-between">
                     <div>
-                      {/* Chỉ giữ lại 1 nhãn vùng miền duy nhất, loại bỏ nhãn bị lặp thứ 2 */}
                       <div className="flex items-center text-accent-terracotta font-spec-code text-[10px] md:text-[11px] uppercase tracking-wider mb-1 md:mb-2 truncate">
                         <span className="truncate">
-                          {item.region?.name || (typeof item.region === 'string' ? item.region : '') || item.village?.name || item.village || 'ĐỒNG BẰNG BẮC BỘ'}
+                          {item.region?.name || (typeof item.region === 'string' ? item.region : '') || item.village?.name || item.village || 'RED RIVER DELTA'}
                         </span>
                       </div>
 
-                      {/* Tiêu đề sản phẩm giảm cỡ chữ xuống 15px - 16px, giới hạn tối đa 2 dòng */}
                       <h3 className="font-title-card text-[15px] sm:text-[16px] md:text-title-card text-text-primary font-medium mb-1.5 md:mb-3 line-clamp-2 leading-snug">
                         <Link to={`/crafts/${item.id}`} className="hover:text-accent-terracotta transition-colors">
                           {item.name}
                         </Link>
                       </h3>
 
-                      {/* Ẩn đoạn mô tả dài trên thẻ danh sách để giao diện gọn gàng */}
                       <p className="hidden md:block font-body-spec text-body-spec text-text-secondary leading-relaxed mb-4">
                         {item.description || item.shortDescription || item.short_description}
                       </p>
                     </div>
 
                     <div className="pt-2 md:pt-4 border-t border-border-neutral">
-                      {/* Ẩn bảng thông số chất liệu và kích thước trên thẻ danh sách */}
                       <div className="hidden md:block space-y-2 mb-3">
                         <div className="flex items-center justify-between font-spec-code text-[11px]">
-                          <span className="text-text-secondary">Chất liệu:</span>
+                          <span className="text-text-secondary">Material:</span>
                           <span className="text-text-primary font-medium truncate max-w-[140px]">
-                            {Array.isArray(item.materials) ? item.materials.map(m => m.name || m).join(', ') : (item.material || 'Nguyên liệu tự nhiên')}
+                            {Array.isArray(item.materials) ? item.materials.map(m => m.name || m).join(', ') : (item.material || 'Natural raw material')}
                           </span>
                         </div>
                         <div className="flex items-center justify-between font-spec-code text-[11px]">
-                          <span className="text-text-secondary">Kích thước:</span>
+                          <span className="text-text-secondary">Dimensions:</span>
                           <span className="text-text-primary font-medium">
-                            {item.dimension || 'Quy chuẩn truyền thống'}
+                            {item.dimension || 'Traditional standard'}
                           </span>
                         </div>
                       </div>
@@ -252,7 +245,7 @@ export default function HomePage() {
                           to={`/crafts/${item.id}`}
                           className="font-label-action text-[9px] sm:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.18em] text-accent-terracotta hover:underline inline-flex items-center gap-0.5 shrink-0 cursor-pointer"
                         >
-                          <span className="hidden sm:inline">XEM </span>CHI TIẾT →
+                          <span className="hidden sm:inline">VIEW </span>DETAILS →
                         </Link>
                       </div>
                     </div>
@@ -262,85 +255,84 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Nút hành động đáy kho lưu trữ */}
+          {/* Action Button */}
           <div className="mt-12 text-center">
             <Link
               to="/crafts"
               className="inline-block px-10 py-3.5 bg-text-primary text-surface-crisp font-label-action text-label-action uppercase tracking-[0.2em] rounded-none hover:bg-accent-terracotta transition-colors shadow-sm cursor-pointer"
             >
-              XEM TOÀN BỘ KHO LƯU TRỮ DI SẢN
+              VIEW ENTIRE HERITAGE ARCHIVE
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 4. 3-COLUMN TRUST STRIP (BẢN SẮC & CAM KẾT) */}
+      {/* 4. TRUST STRIP */}
       <section className="w-full bg-surface-subtle border-y border-border-neutral py-8 sm:py-12 md:py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border-neutral">
-            {/* Cột 1 */}
+            {/* Column 1 */}
             <div className="py-4 md:py-0 md:px-8 first:pl-0 flex flex-col justify-start">
               <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                 <span className="font-spec-code text-[11px] sm:text-spec-code text-accent-terracotta font-semibold">
-                  01 / NGUỒN GỐC
+                  01 / ORIGIN
                 </span>
                 <span className="w-6 sm:w-8 h-px bg-border-neutral"></span>
               </div>
               <h4 className="font-label-action text-[11px] sm:text-[13px] uppercase tracking-[0.14em] sm:tracking-[0.18em] text-text-primary font-semibold mb-1.5 sm:mb-2">
-                NGUỒN GỐC TẬN LÀNG NGHỀ
+                DIRECT FROM VILLAGES
               </h4>
               <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
-                Kết nối trực tiếp không qua trung gian với các nghệ nhân ưu tú, tổ nghề và xưởng chế tác cổ truyền tại địa phương.
+                Direct connection without middlemen to master artisans, guild lineages, and ancestral craft studios.
               </p>
             </div>
 
-            {/* Cột 2 */}
+            {/* Column 2 */}
             <div className="py-4 md:py-0 md:px-8 flex flex-col justify-start">
               <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                 <span className="font-spec-code text-[11px] sm:text-spec-code text-accent-terracotta font-semibold">
-                  02 / TÁC CHẾ
+                  02 / CRAFTSMANSHIP
                 </span>
                 <span className="w-6 sm:w-8 h-px bg-border-neutral"></span>
               </div>
               <h4 className="font-label-action text-[11px] sm:text-[13px] uppercase tracking-[0.14em] sm:tracking-[0.18em] text-text-primary font-semibold mb-1.5 sm:mb-2">
-                CHẾ TÁC THỦ CÔNG 100%
+                100% HANDCRAFTED
               </h4>
               <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
-                Thuần đôi bàn tay khéo léo và bí quyết gia truyền ngàn đời. Kiên định khước từ các quy trình sản xuất dập khuôn công nghiệp.
+                Purely skilled hands and generational secrets. Steadfastly rejecting mass-produced industrial molds.
               </p>
             </div>
 
-            {/* Cột 3 */}
+            {/* Column 3 */}
             <div className="py-4 md:py-0 md:px-8 last:pr-0 flex flex-col justify-start">
               <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                 <span className="font-spec-code text-[11px] sm:text-spec-code text-accent-terracotta font-semibold">
-                  03 / TRUYỀN THỪA
+                  03 / LINEAGE
                 </span>
                 <span className="w-6 sm:w-8 h-px bg-border-neutral"></span>
               </div>
               <h4 className="font-label-action text-[11px] sm:text-[13px] uppercase tracking-[0.14em] sm:tracking-[0.18em] text-text-primary font-semibold mb-1.5 sm:mb-2">
-                BẢO TỒN VÀ TRUY XUẤT
+                PRESERVATION &amp; TRACEABILITY
               </h4>
               <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
-                Mỗi tác phẩm đi kèm chứng thư lưu trữ số, lưu giữ hồ sơ di sản, công thức men quý và phương thức dệt cho thế hệ mai sau.
+                Each work accompanied by a digital archival certificate, preserving heritage records, precious glaze recipes, and weaving methods for future generations.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. 50/50 DUAL EDITORIAL SPLIT (GÓC NHÌN CHẾ TÁC) */}
+      {/* 5. 50/50 DUAL EDITORIAL SPLIT */}
       <section className="w-full bg-canvas-linen py-8 sm:py-12 md:py-space-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
-          {/* Nhãn thẻ mục */}
           <div className="flex items-center justify-between mb-6 md:mb-8 pb-3 md:pb-4 border-b border-border-neutral">
             <div className="flex items-center gap-2">
               <span className="font-display-hero text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] uppercase text-text-primary font-light">
-                GÓC NHÌN ĐIỀN DÃ &amp; PHỤC DỰNG
+                FIELDWORK &amp; RESTORATION PERSPECTIVES
               </span>
               <span className="text-border-neutral opacity-60">|</span>
               <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.1em] sm:tracking-[0.12em] text-accent-terracotta">
-                HỒ SƠ THỰC ĐỊA #42
+                EXPEDITION RECORD #42
               </span>
             </div>
             <span className="font-spec-code text-spec-code text-text-secondary hidden sm:inline-block">
@@ -348,9 +340,8 @@ export default function HomePage() {
             </span>
           </div>
 
-          {/* Bố cục 2 cột cân xứng */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-stretch">
-            {/* Panel Trái: Kỹ Thuật Men Rạn */}
+            {/* Left Panel: Crackle Glaze */}
             <div className="bg-surface-crisp border border-border-neutral p-4 sm:p-8 md:p-10 flex flex-col justify-between">
               <div>
                 <div className="relative w-full aspect-video sm:aspect-[16/10] overflow-hidden bg-surface-subtle border border-border-neutral mb-4 sm:mb-6">
@@ -358,41 +349,41 @@ export default function HomePage() {
                     className="w-full h-full object-cover"
                     data-alt="Extreme macro shot of antique celadon crackle glaze pottery, fine fissure network in ceramic surface, subtle iron oxide rim, natural light grazing the uneven glaze texture, muted earthy ivory and soft moss hues, serene contemplative museum mood."
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFC4Tg8NvBiTcsIssdqzY7hYtEO9NC_6TnsfZiJ4heO_hm4zJ4ks7zYx1avpYgp1A1T_d0-qp23LS9tNRYRXuoEnHq6QSE9vJzo2gjoOvehuAoeNPKCWrr0AgG2FR6rmMmWVLLL2JsEHrSquDplNaqYv1wyp-AwvQ8jRlVvVW_7igR3cLB_HYIOCjoy875H9cUIuxUUjtIUVRSMAEvmsBdrm4wP7Pb7AxrD-mXwVg"
-                    alt="Phóng đại kỹ thuật men rạn"
+                    alt="Crackle glaze technique magnification"
                   />
                   <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 bg-canvas-linen/90 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] font-spec-code tracking-[0.1em] sm:tracking-[0.12em] uppercase text-text-primary border border-border-neutral">
-                    PHÓNG ĐẠI: ×12 // KỸ THUẬT MEN RẠN
+                    MAGNIFIED: ×12 // CRACKLE GLAZE TECHNIQUE
                   </div>
                 </div>
                 <div className="flex items-center gap-2 mb-2 sm:mb-3">
                   <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.12em] sm:tracking-[0.15em] text-accent-terracotta">
-                    GỐM SỨ BÁT TRÀNG
+                    BAT TRANG CERAMICS
                   </span>
                   <span className="text-border-neutral opacity-60">|</span>
                   <span className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary">
-                    NIÊN ĐẠI THẾ KỶ XVI
+                    16TH CENTURY ERA
                   </span>
                 </div>
                 <h3 className="font-headline-title text-[18px] sm:text-[22px] md:text-headline-title text-text-primary font-medium mb-3 sm:mb-4">
-                  Biến Biến Của Lửa &amp; Vết Nứt Của Đất
+                  Fluctuations of Kiln Fire &amp; Earth Fractures
                 </h3>
                 <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary leading-relaxed mb-4 sm:mb-6">
-                  Men rạn hình thành do sự chênh lệch hệ số giãn nở giữa cốt gốm và lớp men phủ khi hạ nhiệt độ lò bầu đột ngột. Người thợ gốm lão thành điều khiển ngọn lửa bằng mắt thường và kinh nghiệm tích lũy qua bốn thế hệ nung củi gỗ nghiến.
+                  Crackle glaze forms through differing thermal expansion coefficients between clay body and glaze during rapid kiln cooling. Master potters control flame temp by eye and generational intuition over four lineages of wood firing.
                 </p>
               </div>
               <div className="pt-4 sm:pt-6 border-t border-border-neutral grid grid-cols-2 gap-3 sm:gap-4 font-spec-code text-[10.5px] sm:text-[11px]">
                 <div>
-                  <span className="text-text-secondary block">Nhiệt độ nung:</span>
-                  <span className="text-text-primary font-semibold">1.280°C - 1.300°C</span>
+                  <span className="text-text-secondary block">Firing temperature:</span>
+                  <span className="text-text-primary font-semibold">1,280°C - 1,300°C</span>
                 </div>
                 <div>
-                  <span className="text-text-secondary block">Nguyên liệu tạo rạn:</span>
-                  <span className="text-text-primary font-semibold">Đá vôi nghiền &amp; tro trấu</span>
+                  <span className="text-text-secondary block">Crackle raw elements:</span>
+                  <span className="text-text-primary font-semibold">Crushed limestone &amp; rice husk ash</span>
                 </div>
               </div>
             </div>
 
-            {/* Panel Phải: Nghệ Nhân Dệt Khung Gỗ Cổ */}
+            {/* Right Panel: Loom Weaver */}
             <div className="bg-surface-crisp border border-border-neutral p-4 sm:p-8 md:p-10 flex flex-col justify-between">
               <div>
                 <div className="relative w-full aspect-video sm:aspect-[16/10] overflow-hidden bg-surface-subtle border border-border-neutral mb-4 sm:mb-6">
@@ -400,37 +391,37 @@ export default function HomePage() {
                     className="w-full h-full object-cover"
                     data-alt="Weathered, wrinkled hands of an elderly artisan weaver maneuvering an ancient dark hardwood loom, threading vibrant indigo cotton yarns with absolute precision, shaft of warm morning light slicing through the wooden workshop, poignant heritage portrait."
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf6RA2pFPyDJFRrTLXYYj_dcvpnGFB9d276fdvUy7b5m6sAFL-Jy0HOXz_Jy6zgxf8595QvlECHxVVWrcLpliDTVEpYJVJ7CiYg_-cCRj3m9n3QHqEJia5Wkh0zNohHdoWnngG6ms-Ac3UV4IdAUra24MY4HTSzXs8t2xG2OwSRNnNz5aXBkXDAr7g2SUsFsVd47aka7LVKNiwJyVIkwJo_jic3hqZf9PWOzFmk9s"
-                    alt="Nghệ nhân dệt Chăm"
+                    alt="Cham master weaver"
                   />
                   <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 bg-canvas-linen/90 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] font-spec-code tracking-[0.1em] sm:tracking-[0.12em] uppercase text-text-primary border border-border-neutral">
-                    NGHỆ NHÂN: THỊ HỒNG // 68 TUỔI NGHỀ
+                    ARTISAN: THI HONG // 68 YRS CRAFT
                   </div>
                 </div>
                 <div className="flex items-center gap-2 mb-2 sm:mb-3">
                   <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.12em] sm:tracking-[0.15em] text-accent-terracotta">
-                    LÀNG DỆT CHĂM
+                    CHAM WEAVING VILLAGE
                   </span>
                   <span className="text-border-neutral opacity-60">|</span>
                   <span className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary">
-                    DI SẢN PHI VẬT THỂ
+                    INTANGIBLE HERITAGE
                   </span>
                 </div>
                 <h3 className="font-headline-title text-[18px] sm:text-[22px] md:text-headline-title text-text-primary font-medium mb-3 sm:mb-4">
-                  Nhịp Thoi Gỗ Cổ &amp; Tâm Thức Hoa Văn
+                  Rhythm of the Loom &amp; Sacred Patterns
                 </h3>
                 <blockquote className="font-label-signature text-[13px] sm:text-label-signature italic text-text-primary mb-4 sm:mb-6 pl-3 sm:pl-4 border-l-2 border-accent-terracotta leading-relaxed">
-                  "Khung cửi không biết nói dối. Tay giật thoi lệch một li, hoa văn thần sư sẽ gãy khúc. Ta ngồi đây không phải để dệt vải bán, mà để giữ lại tiếng lách cách của tổ tiên."
+                  "The loom never lies. Shift the shuttle by a millimeter, and the sacred lion emblem fractures. We sit here not merely to weave fabric for commerce, but to safeguard the cadence of our ancestors."
                 </blockquote>
               </div>
               <div className="pt-4 sm:pt-6 border-t border-border-neutral flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary">
-                  GHI CHÉP: XÃ PHƯỚC DÂN, NINH THUẬN
+                  FIELD NOTES: PHUOC DAN, NINH THUAN
                 </div>
                 <Link
                   to="/artisans"
                   className="font-label-action text-[10px] sm:text-[11px] uppercase tracking-[0.12em] sm:tracking-[0.15em] text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold cursor-pointer"
                 >
-                  ĐỌC KÝ SỰ ĐIỀN DÃ →
+                  READ EXPEDITION ESSAY →
                 </Link>
               </div>
             </div>
@@ -438,27 +429,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. INTERACTIVE REGIONAL INDEX TEASER */}
+      {/* 6. REGIONAL INDEX TEASER */}
       <section className="w-full bg-surface-subtle border-t border-border-neutral py-8 sm:py-12 md:py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
           <div className="flex flex-col sm:flex-row items-baseline justify-between mb-6 md:mb-8 pb-3 md:pb-4 border-b border-border-neutral">
             <h3 className="font-display-hero text-[13px] sm:text-[16px] md:text-[18px] tracking-[0.15em] sm:tracking-[0.25em] text-text-primary uppercase font-light">
-              BẢN ĐỒ LÀNG NGHỀ THEO VÙNG ĐỊA LÝ
+              GEOGRAPHIC CRAFT VILLAGE MAP
             </h3>
             <span className="font-spec-code text-spec-code text-text-secondary mt-2 sm:mt-0">
-              HỆ THỐNG {siteStats.regions || regionsList.length || 6} VÙNG VĂN HÓA TRUYỀN THỐNG
+              NETWORK OF {siteStats.regions || regionsList.length || 6} CULTURAL TRADITION REGIONS
             </span>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {(regionsList.length > 0 ? regionsList.slice(0, 4) : [
-              { id: 1, name: 'Đồng Bằng Sông Hồng', villageCount: 18, craftSummary: 'Gốm Bát Tràng & Khảm Trai' },
-              { id: 4, name: 'Xứ Thanh - Nghệ - Tĩnh', villageCount: 14, craftSummary: 'Lụa Sa & Mộc Mỹ Nghệ' },
-              { id: 5, name: 'Đất Thổ Cẩm & Trầm Hương', villageCount: 16, craftSummary: 'Dệt Chăm & Gốm Bàu Trúc' },
-              { id: 6, name: 'Vùng Đất Cửu Long', villageCount: 12, craftSummary: 'Đan Đát & Đóng Xuồng' },
+              { id: 1, name: 'Red River Delta', villageCount: 18, craftSummary: 'Bat Trang Ceramics & Pearl Inlay' },
+              { id: 4, name: 'Thanh - Nghe - Tinh Lands', villageCount: 14, craftSummary: 'Sa Silk & Fine Woodworking' },
+              { id: 5, name: 'Brocade & Agarwood Highlands', villageCount: 16, craftSummary: 'Cham Weaving & Bau Truc Pottery' },
+              { id: 6, name: 'Mekong River Basin', villageCount: 12, craftSummary: 'Rattan Weaving & Boatbuilding' },
             ]).map((reg, idx) => {
               const villageNum = reg.registeredVillageCount || reg.villageCount || 0;
-              const craftDesc = reg.craftSummary || reg.craft_summary || 'Di sản làng nghề';
+              const craftDesc = reg.craftSummary || reg.craft_summary || 'Craft village heritage';
               const regionTitle = reg.name;
 
               return (
@@ -468,13 +459,13 @@ export default function HomePage() {
                   className="p-5 bg-surface-crisp border border-border-neutral hover:border-accent-terracotta transition-colors group cursor-pointer"
                 >
                   <span className="font-spec-code text-[10px] uppercase tracking-[0.15em] text-accent-terracotta block mb-1">
-                    VÙNG 0{idx + 1}
+                    REGION 0{idx + 1}
                   </span>
                   <span className="font-title-card text-[15px] text-text-primary font-medium block group-hover:text-accent-terracotta transition-colors">
                     {regionTitle}
                   </span>
                   <span className="font-spec-code text-[11px] text-text-secondary mt-2 block">
-                    {villageNum} Làng Nghề • {craftDesc}
+                    {villageNum} Craft Villages • {craftDesc}
                   </span>
                 </Link>
               );

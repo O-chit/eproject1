@@ -21,7 +21,7 @@ export default function Toast({ message, type = 'info', onClose, duration = 3000
   return (
     <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 border shadow-xl animate-in slide-in-from-bottom duration-200 ${typeStyles[type] || typeStyles.info}`}>
       <span className="font-spec-code text-[11px] uppercase tracking-wider font-semibold">
-        [DI SẢN]
+        [HERITAGE]
       </span>
       <span className="font-body-spec text-[13px]">{message}</span>
       {onClose && (
@@ -29,7 +29,7 @@ export default function Toast({ message, type = 'info', onClose, duration = 3000
           type="button"
           onClick={onClose}
           className="ml-2 text-text-secondary hover:text-text-primary cursor-pointer"
-          aria-label="Đóng thông báo"
+          aria-label="Close notification"
         >
           <span className="material-symbols-outlined text-[18px]">close</span>
         </button>

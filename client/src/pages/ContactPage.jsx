@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 
 const TOPICS = [
-  'Đặt Tác Phẩm Thửa Riêng',
-  'Hẹn Ghé Thăm Làng Nghề',
-  'Hợp Tác Văn Hóa & Triển Lãm',
-  'Thẩm Định Cổ Vật',
-  'Khác'
+  'Bespoke Commission',
+  'Village & Studio Visit',
+  'Cultural Collaboration & Exhibition',
+  'Antique Appraisal',
+  'Other'
 ];
 
 export default function ContactPage() {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [topic, setTopic] = useState('Hẹn Ghé Thăm Làng Nghề');
+  const [topic, setTopic] = useState('Village & Studio Visit');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function ContactPage() {
       setEmail('');
       setMessage('');
     } catch (err) {
-      setErrorMsg(err.message || 'Không thể gửi tin nhắn đến hệ thống. Vui lòng thử lại.');
+      setErrorMsg(err.message || 'Unable to submit your message. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -53,20 +53,20 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin py-3 flex flex-col md:flex-row md:items-center justify-between gap-3 text-spec-code font-spec-code">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center flex-wrap uppercase tracking-[0.14em] text-[11px] text-text-secondary">
-            <Link to="/" className="hover:text-accent-terracotta transition-colors">Trang Chủ</Link>
+            <Link to="/" className="hover:text-accent-terracotta transition-colors">Home</Link>
             <span className="mx-3 text-border-neutral select-none">|</span>
-            <span>Kết Nối &amp; Điều Phối Di Sản</span>
+            <span>Heritage Liaison &amp; Network</span>
             <span className="mx-3 text-border-neutral select-none">|</span>
-            <span className="text-text-primary font-semibold">Gặp Gỡ Xưởng Thủ Công</span>
+            <span className="text-text-primary font-semibold">Connect with Workshops</span>
           </nav>
           {/* Operation Telemetry Metadata */}
           <div className="flex items-center flex-wrap uppercase tracking-[0.12em] text-[11px] text-text-secondary">
             <span className="flex items-center gap-1.5 text-accent-terracotta font-medium">
               <span className="inline-block w-1.5 h-1.5 bg-accent-terracotta rounded-none"></span>
-              Thời Gian Phản Hồi: Trong vòng 24h
+              Response Time: Within 24h
             </span>
             <span className="mx-3 text-border-neutral select-none">|</span>
-            <span>Giờ Làm Việc: 09:00 — 18:00 (Thứ Ba – Chủ Nhật)</span>
+            <span>Operating Hours: 09:00 — 18:00 (Tuesday – Sunday)</span>
           </div>
         </div>
       </div>
@@ -76,18 +76,18 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start">
             
-            {/* LEFT COLUMN: Studio & Artisan Workshop Directory (5 cols lg) */}
+            {/* LEFT COLUMN: Studio & Artisan Workshop Directory */}
             <div className="lg:col-span-5 flex flex-col space-y-6 sm:space-y-8">
               {/* Editorial Title Block */}
               <div>
                 <span className="font-spec-code text-[10px] sm:text-spec-code uppercase tracking-[0.15em] sm:tracking-[0.25em] text-accent-terracotta block mb-1.5 sm:mb-2 font-medium">
-                  Điểm Hẹn Trực Tiếp // Bảo Tồn Nguyên Bản
+                  Direct Appointments // Authentic Preservation
                 </span>
                 <h1 className="font-display-hero text-[22px] sm:text-[30px] md:text-[40px] leading-[30px] sm:leading-[40px] md:leading-[50px] font-light text-text-primary tracking-[0.08em] sm:tracking-[0.14em] md:tracking-[0.18em] uppercase">
-                  Gặp Gỡ &amp; Kết Nối
+                  CONNECT &amp; ENGAGE
                 </h1>
                 <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary mt-2 sm:mt-3 leading-relaxed">
-                  Mọi lời nhắn đều được gửi trực tiếp đến đội ngũ giám tuyển bảo tồn và các nghệ nhân xưởng bản địa.
+                  Every inquiry is directed to our curatorial preservation team and master artisans across craft villages.
                 </p>
               </div>
 
@@ -98,13 +98,13 @@ export default function ContactPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="material-symbols-outlined text-[18px] text-accent-terracotta">storefront</span>
                     <span className="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary font-semibold">
-                      1. Không Gian Trưng Bày &amp; Tiếp Khách
+                      1. Gallery &amp; Visitor Space
                     </span>
                   </div>
                   <div className="pl-6 space-y-1.5 font-body-spec text-body-spec text-text-secondary">
-                    <p className="text-text-primary font-medium">Số 12 Ngõ Tràng Tiền, Hoàn Kiếm, Hà Nội</p>
-                    <p>Thời gian mở cửa: <span className="text-text-primary">09:00 – 18:00</span> (Thứ Ba – Chủ Nhật, nghỉ Thứ Hai dưỡng lò)</p>
-                    <p className="text-[12px] italic text-text-secondary/80">Chỉ dẫn định vị: Cách Nhà Hát Lớn 150m, có chỗ đỗ xe ô tô thuận tiện.</p>
+                    <p className="text-text-primary font-medium">12 Trang Tien Alley, Hoan Kiem, Hanoi</p>
+                    <p>Opening Hours: <span className="text-text-primary">09:00 – 18:00</span> (Tuesday – Sunday, closed Monday for kiln maintenance)</p>
+                    <p className="text-[12px] italic text-text-secondary/80">Location Note: 150m from Hanoi Opera House, convenient parking available.</p>
                   </div>
                 </div>
 
@@ -113,17 +113,17 @@ export default function ContactPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="material-symbols-outlined text-[18px] text-accent-terracotta">call</span>
                     <span className="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary font-semibold">
-                      2. Đường Dây Trực Tiếp
+                      2. Direct Hotline
                     </span>
                   </div>
                   <div className="pl-6 space-y-1.5 font-body-spec text-body-spec text-text-secondary">
                     <p className="text-text-primary font-medium tracking-wide">
                       Hotline: (+84) 988.246.810{' '}
                       <span className="text-xs font-normal text-text-secondary block md:inline md:ml-1">
-                        (Ban điều phối làng nghề &amp; Giám tuyển di sản)
+                        (Craft Village Coordination &amp; Curatorial Desk)
                       </span>
                     </p>
-                    <p>Giờ trực thoại tiếp nhận: <span className="text-text-primary">08:30 – 20:00</span> hàng ngày</p>
+                    <p>Phone Reception: <span className="text-text-primary">08:30 – 20:00</span> Daily</p>
                   </div>
                 </div>
 
@@ -132,12 +132,12 @@ export default function ContactPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="material-symbols-outlined text-[18px] text-accent-terracotta">mail</span>
                     <span className="font-label-action text-label-action uppercase tracking-[0.18em] text-text-primary font-semibold">
-                      3. Thư Điện Tử &amp; Hồ Sơ Điền Dã
+                      3. Digital Inquiries &amp; Fieldwork Records
                     </span>
                   </div>
                   <div className="pl-6 space-y-1.5 font-body-spec text-body-spec text-text-secondary">
-                    <p>Hòm thư chính thức: <a className="text-text-primary hover:text-accent-terracotta font-medium underline underline-offset-4" href="mailto:lienhe@craftroots.vn">lienhe@craftroots.vn</a></p>
-                    <p>Hồ sơ phục dựng &amp; giám tuyển: <a className="text-text-primary hover:text-accent-terracotta font-medium underline underline-offset-4" href="mailto:curating@craftroots.vn">curating@craftroots.vn</a></p>
+                    <p>Official Inquiries: <a className="text-text-primary hover:text-accent-terracotta font-medium underline underline-offset-4" href="mailto:lienhe@craftroots.vn">lienhe@craftroots.vn</a></p>
+                    <p>Restoration &amp; Curatorial Dossiers: <a className="text-text-primary hover:text-accent-terracotta font-medium underline underline-offset-4" href="mailto:curating@craftroots.vn">curating@craftroots.vn</a></p>
                   </div>
                 </div>
               </div>
@@ -146,10 +146,10 @@ export default function ContactPage() {
               <div className="bg-surface-subtle border-l-2 border-accent-terracotta p-5 rounded-none">
                 <span className="font-spec-code text-[11px] uppercase tracking-[0.2em] text-accent-terracotta block mb-2 font-semibold flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[15px]">info</span>
-                  Lưu Ý Dành Cho Khách Ghé Thăm Xưởng Bản Địa:
+                  Notes for Craft Village &amp; Studio Visitors:
                 </span>
                 <p className="font-body-spec text-body-spec text-text-secondary leading-relaxed">
-                  Quý khách muốn ghé thăm trực tiếp các lò gốm Bát Tràng, xưởng dệt lụa Vạn Phúc hoặc xưởng mây tre Phú Vinh vui lòng gửi lịch hẹn trước <span className="text-text-primary font-medium">48 giờ</span> để chúng tôi chuẩn bị trà ấm và điều phối đón tiếp chu đáo cùng nghệ nhân đại diện.
+                  Guests wishing to visit Bat Trang kilns, Van Phuc silk weaving ateliers, or Phu Vinh rattan workshops in person are kindly requested to book at least <span className="text-text-primary font-medium">48 hours</span> in advance so our master artisans can prepare welcoming teas and coordinate your guided tour.
                 </p>
               </div>
 
@@ -158,26 +158,26 @@ export default function ContactPage() {
                 <div className="w-24 h-24 shrink-0 bg-surface-container overflow-hidden border border-border-neutral">
                   <img
                     className="w-full h-full object-cover filter grayscale contrast-125 hover:scale-105 transition-transform duration-500"
-                    alt="Xưởng Giám Tuyển Tràng Tiền"
+                    alt="Trang Tien Curatorial Studio"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJfc2caUNtz08IfnmfEak2irrLmuSyYLYZDnFNzLZ5KuhGWk4Xk9KOd_CrmDrEn_r_7ns4WIsA4oVXf2MDMB6G6G-tdL2ZP_XDCnskDcPAWUoZPgFWkjz2IY5j623QtEI-vLn4RLCm5L9tkjDUEWbeVjS6N45w5mGcyFyCjyhND3SQ8wvQUwEazxGoGxAEZLRiLEzJyB52hQv0DW-Oy9OeCdb7BIsx7GC1W-5UdiYx7d4sVALsSIJI"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="font-spec-code text-[10px] uppercase tracking-[0.16em] text-accent-terracotta block font-medium">
-                    Định vị Không gian Lưu Trữ
+                    Archival Space Location
                   </span>
                   <p className="font-title-card text-[15px] text-text-primary font-medium truncate mt-0.5">
-                    Xưởng Giám Tuyển Tràng Tiền
+                    Trang Tien Curatorial Studio
                   </p>
                   <div className="mt-2 pt-2 border-t border-border-neutral font-spec-code text-[11px] text-text-secondary leading-tight space-y-0.5">
-                    <div>Tọa độ: <span className="text-text-primary">21.0252° N, 105.8566° E</span></div>
-                    <div>Mã định danh liên lạc: <span className="text-text-primary">CR-HQ-HN</span></div>
+                    <div>Coordinates: <span className="text-text-primary">21.0252° N, 105.8566° E</span></div>
+                    <div>Liaison Code: <span className="text-text-primary">CR-HQ-HN</span></div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Minimalist Inquiry Form (7 cols lg) */}
+            {/* RIGHT COLUMN: Inquiry Form */}
             <div className="lg:col-span-7">
               <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-8 md:p-10 shadow-sm rounded-none">
                 
@@ -185,17 +185,17 @@ export default function ContactPage() {
                 <div className="border-b border-border-neutral pb-6 mb-8">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-spec-code text-spec-code uppercase tracking-[0.2em] text-accent-terracotta">
-                      Hồ Sơ Yêu Cầu // Mẫu 04-CR
+                      Inquiry Dossier // Form 04-CR
                     </span>
                     <span className="font-spec-code text-[11px] text-text-secondary tracking-widest uppercase">
-                      Mã: RQ-2024
+                      Ref: RQ-2026
                     </span>
                   </div>
                   <h2 className="font-headline-title text-headline-title text-text-primary tracking-wide">
-                    Phiếu Liên Hệ &amp; Đặt Lịch Hẹn Trực Tiếp
+                    Inquiry &amp; Studio Appointment Request
                   </h2>
                   <p className="font-body-spec text-body-spec text-text-secondary mt-1.5">
-                    Vui lòng cung cấp chi tiết nhu cầu để chúng tôi chuyển đến đúng ban đại diện nghệ nhân phụ trách lĩnh vực.
+                    Please provide your specific requirements so we can forward them to the appropriate artisan guild or master curator.
                   </p>
                 </div>
 
@@ -212,7 +212,7 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                       <label className="block font-label-action text-label-action uppercase tracking-[0.16em] text-text-primary font-medium mb-2" htmlFor="fullName">
-                        Họ và Tên <span className="text-accent-terracotta">*</span>
+                        Full Name <span className="text-accent-terracotta">*</span>
                       </label>
                       <input
                         id="fullName"
@@ -220,13 +220,13 @@ export default function ContactPage() {
                         required
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        placeholder="Nguyễn An Bình"
+                        placeholder="An Binh Nguyen"
                         className="w-full bg-[#FDFBF7] border border-border-neutral focus:border-accent-terracotta outline-none px-4 py-3 rounded-none font-body-spec text-body-spec text-text-primary placeholder:text-text-secondary/50 transition-colors"
                       />
                     </div>
                     <div>
                       <label className="block font-label-action text-label-action uppercase tracking-[0.16em] text-text-primary font-medium mb-2" htmlFor="phone">
-                        Số Điện Thoại Liên Hệ
+                        Contact Phone Number
                       </label>
                       <input
                         id="phone"
@@ -242,7 +242,7 @@ export default function ContactPage() {
                   {/* Field 3: Email */}
                   <div>
                     <label className="block font-label-action text-label-action uppercase tracking-[0.16em] text-text-primary font-medium mb-2" htmlFor="email">
-                      Địa Chỉ Email <span className="text-accent-terracotta">*</span>
+                      Email Address <span className="text-accent-terracotta">*</span>
                     </label>
                     <input
                       id="email"
@@ -250,7 +250,7 @@ export default function ContactPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="anbinh.nguyen@domain.com"
+                      placeholder="anbinh.nguyen@example.com"
                       className="w-full bg-[#FDFBF7] border border-border-neutral focus:border-accent-terracotta outline-none px-4 py-3 rounded-none font-body-spec text-body-spec text-text-primary placeholder:text-text-secondary/50 transition-colors"
                     />
                   </div>
@@ -259,9 +259,9 @@ export default function ContactPage() {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <label className="block font-label-action text-label-action uppercase tracking-[0.16em] text-text-primary font-medium">
-                        Chủ Đề Quan Tâm <span className="text-accent-terracotta">*</span>
+                        Subject of Inquiry <span className="text-accent-terracotta">*</span>
                       </label>
-                      <span className="font-spec-code text-[11px] text-text-secondary">Chọn phân loại thảo luận</span>
+                      <span className="font-spec-code text-[11px] text-text-secondary">Select discussion topic</span>
                     </div>
                     
                     <div className="p-3 border border-border-neutral bg-[#FDFBF7] flex flex-wrap items-center gap-y-2 text-spec-code font-spec-code text-[11px] tracking-wider uppercase">
@@ -290,7 +290,7 @@ export default function ContactPage() {
                   {/* Field 5: Message Details */}
                   <div>
                     <label className="block font-label-action text-label-action uppercase tracking-[0.16em] text-text-primary font-medium mb-2" htmlFor="message">
-                      Lời Nhắn Hoặc Yêu Cầu Chi Tiết <span className="text-accent-terracotta">*</span>
+                      Detailed Message or Request <span className="text-accent-terracotta">*</span>
                     </label>
                     <textarea
                       id="message"
@@ -298,7 +298,7 @@ export default function ContactPage() {
                       rows={5}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Chia sẻ mong muốn của bạn về tác phẩm thủ công, thời gian dự kiến ghé thăm xưởng hoặc nội dung hợp tác bảo tồn di sản..."
+                      placeholder="Share details about your desired bespoke piece, scheduled workshop visit dates, or cultural preservation project..."
                       className="w-full bg-[#FDFBF7] border border-border-neutral focus:border-accent-terracotta outline-none p-4 rounded-none font-body-spec text-body-spec text-text-primary placeholder:text-text-secondary/50 transition-colors resize-y leading-relaxed"
                     ></textarea>
                   </div>
@@ -310,7 +310,7 @@ export default function ContactPage() {
                       disabled={loading}
                       className="w-full bg-text-primary hover:bg-accent-terracotta text-surface-crisp py-4 px-8 rounded-none transition-all duration-200 uppercase font-label-action text-label-action tracking-[0.2em] font-semibold text-center flex items-center justify-center gap-3 cursor-pointer shadow-sm hover:-translate-y-0.5 disabled:opacity-50"
                     >
-                      <span>{loading ? 'Đang Gửi Lời Nhắn...' : 'Gửi Lời Nhắn Đến Xưởng'}</span>
+                      <span>{loading ? 'Submitting Message...' : 'Send Message to Studio'}</span>
                       <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                     </button>
                   </div>
@@ -322,10 +322,10 @@ export default function ContactPage() {
                         <span className="material-symbols-outlined text-accent-terracotta text-[20px] shrink-0 mt-0.5">check_circle</span>
                         <div className="flex-1">
                           <p className="font-spec-code text-[12px] uppercase tracking-wider text-text-primary font-semibold">
-                            Lời Nhắn Đã Được Ghi Nhận Thành Công
+                            Your Inquiry Has Been Successfully Submitted
                           </p>
                           <p className="font-body-spec text-[13px] text-text-secondary mt-1">
-                            Ban điều phối và các nghệ nhân phụ trách xưởng sẽ nghiên cứu yêu cầu và phản hồi qua email hoặc số điện thoại trong vòng 24 giờ làm việc.
+                            Our coordination council and workshop artisans will review your request and respond via email or telephone within 24 business hours.
                           </p>
                         </div>
                       </div>
@@ -351,10 +351,10 @@ export default function ContactPage() {
               </div>
               <div>
                 <span className="font-label-action text-label-action uppercase tracking-[0.14em] text-text-primary font-semibold block mb-1">
-                  Bảo Mật Dữ Liệu
+                  Data Privacy
                 </span>
                 <p className="font-body-spec text-body-spec text-text-secondary leading-snug">
-                  Thông tin cá nhân chỉ phục vụ trao đổi văn hóa, điều phối lịch hẹn và kết nối xưởng thủ công nguyên bản.
+                  Personal information is strictly used for cultural liaisons, visit scheduling, and authentic craft workshops.
                 </p>
               </div>
             </div>
@@ -366,10 +366,10 @@ export default function ContactPage() {
               </div>
               <div>
                 <span className="font-label-action text-label-action uppercase tracking-[0.14em] text-text-primary font-semibold block mb-1">
-                  Kết Nối Trực Tiếp
+                  Direct Engagement
                 </span>
                 <p className="font-body-spec text-body-spec text-text-secondary leading-snug">
-                  Làm việc trực tiếp cùng nghệ nhân lão thành và tổ nghề bản địa, tuyệt đối không qua trung gian thương mại.
+                  Engage directly with veteran master artisans and village guilds, completely free from commercial intermediaries.
                 </p>
               </div>
             </div>
@@ -381,10 +381,10 @@ export default function ContactPage() {
               </div>
               <div>
                 <span className="font-label-action text-label-action uppercase tracking-[0.14em] text-text-primary font-semibold block mb-1">
-                  Thẩm Định Di Sản
+                  Heritage Appraisal
                 </span>
                 <p className="font-body-spec text-body-spec text-text-secondary leading-snug">
-                  Tất cả các cuộc gặp gỡ và tác phẩm đặt riêng đều có hồ sơ lưu trữ niên biểu và chứng chỉ bảo trợ văn hóa bản địa.
+                  All workshop consultations and bespoke commissions receive documented archival records and indigenous cultural provenance certificates.
                 </p>
               </div>
             </div>

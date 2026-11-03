@@ -28,7 +28,7 @@ export default function LightboxModal({ imageSrc, title, caption, isOpen, onClos
         type="button"
         onClick={onClose}
         className="absolute top-6 right-6 text-white/80 hover:text-white p-2 cursor-pointer z-10"
-        aria-label="Đóng xem ảnh"
+        aria-label="Close image viewer"
       >
         <span className="material-symbols-outlined text-[32px]">close</span>
       </button>
@@ -36,7 +36,7 @@ export default function LightboxModal({ imageSrc, title, caption, isOpen, onClos
       <div className="max-w-4xl max-h-[90vh] flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
         <img
           src={imageSrc}
-          alt={title || 'Tác phẩm di sản'}
+          alt={title || 'Heritage craft'}
           className="max-h-[78vh] w-auto object-contain border border-white/10 shadow-2xl"
         />
         {(title || caption) && (

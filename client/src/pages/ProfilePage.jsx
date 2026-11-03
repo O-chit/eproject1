@@ -19,7 +19,7 @@ export default function ProfilePage() {
     setPasswordError('');
 
     if (newPassword.length < 8) {
-      setPasswordError('Mật khẩu mới phải có tối thiểu 8 ký tự');
+      setPasswordError('New password must be at least 8 characters.');
       return;
     }
 
@@ -28,11 +28,11 @@ export default function ProfilePage() {
       if (changePassword) {
         await changePassword(currentPassword, newPassword);
       }
-      setPasswordMsg('Đã cập nhật mật khẩu mới thành công trên hệ thống CSDL!');
+      setPasswordMsg('Password updated successfully on database!');
       setCurrentPassword('');
       setNewPassword('');
     } catch (err) {
-      setPasswordError(err.message || 'Mật khẩu hiện tại không chính xác');
+      setPasswordError(err.message || 'Current password is incorrect.');
     } finally {
       setSubmittingPassword(false);
     }
@@ -49,10 +49,10 @@ export default function ProfilePage() {
             </div>
             <div>
               <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-wider text-accent-terracotta font-semibold">
-                THÀNH VIÊN CRAFTROOTS
+                CRAFTROOTS MEMBER
               </span>
               <h2 className="font-headline-title text-lg sm:text-2xl text-text-primary">
-                {user?.fullName || 'Người Yêu Di Sản'}
+                {user?.fullName || 'Heritage Enthusiast'}
               </h2>
               <p className="font-body-spec text-[12px] sm:text-[13px] text-text-secondary">{user?.email}</p>
             </div>
@@ -62,11 +62,11 @@ export default function ProfilePage() {
             onClick={logout}
             className="px-4 py-2 border border-border-neutral hover:border-red-600 text-red-600 font-spec-code text-[11px] uppercase tracking-wider transition-colors cursor-pointer"
           >
-            Đăng xuất
+            Sign Out
           </button>
         </div>
 
-        {/* Tab & Nội dung */}
+        {/* Tabs & Content */}
         <div className="bg-surface-crisp border border-border-neutral shadow-sm">
           <div className="flex border-b border-border-neutral divide-x divide-border-neutral font-spec-code text-[12px] uppercase tracking-wider">
             <button
@@ -78,7 +78,7 @@ export default function ProfilePage() {
                   : 'text-text-secondary hover:text-text-primary bg-surface-subtle/30'
               }`}
             >
-              Thông Tin Tài Khoản
+              Account Information
             </button>
             <button
               type="button"
@@ -89,13 +89,13 @@ export default function ProfilePage() {
                   : 'text-text-secondary hover:text-text-primary bg-surface-subtle/30'
               }`}
             >
-              Đổi Mật Khẩu
+              Change Password
             </button>
             <Link
               to="/favourites"
               className="px-6 py-3.5 text-text-secondary hover:text-accent-terracotta bg-surface-subtle/30 transition-colors"
             >
-              Bộ Sưu Tập Yêu Thích →
+              Saved Collection →
             </Link>
           </div>
 
@@ -105,18 +105,18 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-                      Họ và tên
+                      Full Name
                     </label>
                     <input
                       type="text"
                       disabled
-                      value={user?.fullName || 'Khách vãng lai'}
+                      value={user?.fullName || 'Guest User'}
                       className="w-full h-11 px-3 bg-surface-subtle border border-border-neutral font-body-spec text-sm text-text-primary"
                     />
                   </div>
                   <div>
                     <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-                      Email đăng ký
+                      Registered Email
                     </label>
                     <input
                       type="email"
@@ -128,7 +128,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="p-4 bg-surface-subtle/50 border border-border-neutral text-text-secondary font-body-spec text-[13px] leading-relaxed">
-                  Tài khoản của bạn đã được kích hoạt chức năng lưu trữ &amp; đồng bộ bộ sưu tập di sản yêu thích trên máy chủ CraftRoots Cloud.
+                  Your account is enabled for archiving and synchronizing your favorite heritage collections across the CraftRoots Cloud.
                 </div>
               </div>
             )}
@@ -147,7 +147,7 @@ export default function ProfilePage() {
                 )}
                 <div>
                   <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-                    Mật khẩu hiện tại *
+                    Current Password *
                   </label>
                   <div className="relative">
                     <input
@@ -164,8 +164,8 @@ export default function ProfilePage() {
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setShowCurrentPassword((prev) => !prev)}
                       className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
-                      aria-label={showCurrentPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                      title={showCurrentPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                      aria-label={showCurrentPassword ? 'Hide password' : 'Show password'}
+                      title={showCurrentPassword ? 'Hide password' : 'Show password'}
                     >
                       <span className="material-symbols-outlined text-[20px] select-none">
                         {showCurrentPassword ? 'visibility_off' : 'visibility'}
@@ -175,7 +175,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <label className="block font-spec-code text-[11px] uppercase tracking-wider text-text-secondary mb-1">
-                    Mật khẩu mới (Tối thiểu 8 ký tự) *
+                    New Password (At least 8 characters) *
                   </label>
                   <div className="relative">
                     <input
@@ -192,8 +192,8 @@ export default function ProfilePage() {
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => setShowNewPassword((prev) => !prev)}
                       className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-accent-terracotta transition-colors cursor-pointer"
-                      aria-label={showNewPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                      title={showNewPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                      aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                      title={showNewPassword ? 'Hide password' : 'Show password'}
                     >
                       <span className="material-symbols-outlined text-[20px] select-none">
                         {showNewPassword ? 'visibility_off' : 'visibility'}
@@ -206,7 +206,7 @@ export default function ProfilePage() {
                   disabled={submittingPassword}
                   className="px-6 py-3 bg-accent-terracotta hover:bg-[#8E4A16] text-white font-spec-code text-[11px] uppercase tracking-wider transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  {submittingPassword ? 'ĐANG CẬP NHẬT...' : 'CẬP NHẬT MẬT KHẨU'}
+                  {submittingPassword ? 'UPDATING...' : 'UPDATE PASSWORD'}
                 </button>
               </form>
             )}

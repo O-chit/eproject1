@@ -11,7 +11,7 @@ export default function FavouritesPage() {
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState('');
 
-  // Tải danh sách yêu thích thực tế (từ Database nếu đã đăng nhập hoặc từ IDs trong context/localStorage)
+  // Load saved crafts (from Database if logged in, or from localStorage IDs)
   useEffect(() => {
     let isMounted = true;
 
@@ -25,21 +25,20 @@ export default function FavouritesPage() {
           const mapped = list.map((c) => ({
             id: c.id,
             craftId: c.id,
-            tag: c.tag || c.category || 'DI SẢN TRUYỀN THỐNG',
-            village: c.village || c.region || 'Làng Nghề',
-            category: c.category || 'Thủ Công',
+            tag: c.tag || c.category || 'TRADITIONAL HERITAGE',
+            village: c.village || c.region || 'Craft Village',
+            category: c.category || 'Handicraft',
             title: c.name,
             recordCode: c.code || `CR-0${c.id}`,
-            artisan: c.artisan || 'Nghệ Nhân Làng Nghề',
-            technique: c.technique || 'Chế tác thủ công bản địa',
+            artisan: c.artisan || 'Village Artisan',
+            technique: c.technique || 'Indigenous Handcrafted',
             price: c.price_vnd || c.priceVnd
-              ? `${Number(c.price_vnd || c.priceVnd).toLocaleString('vi-VN')} đ`
-              : 'Ước lượng giám tuyển',
+              ? `${Number(c.price_vnd || c.priceVnd).toLocaleString('en-US')} VND`
+              : 'Curatorial Estimate',
             image: c.image || c.thumbnailUrl || c.thumbnail_url || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=80',
           }));
           setItems(mapped);
         } else {
-          // Khách chưa đăng nhập: Nếu có danh sách ID trong favourites, nạp chi tiết các tác phẩm đó
           if (!favourites || favourites.length === 0) {
             if (isMounted) setItems([]);
             return;
@@ -54,22 +53,22 @@ export default function FavouritesPage() {
           const mapped = matching.map((c) => ({
             id: c.id,
             craftId: c.id,
-            tag: c.tag || c.category || 'DI SẢN TRUYỀN THỐNG',
-            village: c.village || c.region || 'Làng Nghề',
-            category: c.category || 'Thủ Công',
+            tag: c.tag || c.category || 'TRADITIONAL HERITAGE',
+            village: c.village || c.region || 'Craft Village',
+            category: c.category || 'Handicraft',
             title: c.name,
             recordCode: c.code || `CR-0${c.id}`,
-            artisan: c.artisan || 'Nghệ Nhân Làng Nghề',
-            technique: c.technique || 'Chế tác thủ công bản địa',
+            artisan: c.artisan || 'Village Artisan',
+            technique: c.technique || 'Indigenous Handcrafted',
             price: c.price_vnd || c.priceVnd
-              ? `${Number(c.price_vnd || c.priceVnd).toLocaleString('vi-VN')} đ`
-              : 'Ước lượng giám tuyển',
+              ? `${Number(c.price_vnd || c.priceVnd).toLocaleString('en-US')} VND`
+              : 'Curatorial Estimate',
             image: c.image || c.thumbnailUrl || c.thumbnail_url || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=80',
           }));
           setItems(mapped);
         }
       } catch (err) {
-        console.warn('Lỗi nạp danh sách yêu thích:', err);
+        console.warn('Error loading saved crafts:', err);
         if (isMounted) setItems([]);
       } finally {
         if (isMounted) setLoading(false);
@@ -85,15 +84,15 @@ export default function FavouritesPage() {
   const handleRemove = async (craftId, title) => {
     await toggleFav(craftId);
     setItems((prev) => prev.filter((item) => Number(item.craftId) !== Number(craftId)));
-    setNotification(`Đã gỡ "${title}" khỏi danh sách lưu trữ.`);
+    setNotification(`Removed "${title}" from personal collection.`);
     setTimeout(() => setNotification(''), 4000);
   };
 
   const handleClearAll = async () => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa toàn bộ tác phẩm đã lưu trong bộ sưu tập?')) {
+    if (window.confirm('Are you sure you want to remove all saved crafts from your collection?')) {
       await clearAll();
       setItems([]);
-      setNotification('Đã xóa toàn bộ tác phẩm khỏi mục lưu trữ.');
+      setNotification('Cleared all crafts from personal collection.');
       setTimeout(() => setNotification(''), 4000);
     }
   };
@@ -101,10 +100,10 @@ export default function FavouritesPage() {
   const handleShare = () => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
-      setNotification('Đã sao chép liên kết bộ sưu tập vào bộ nhớ tạm.');
+      setNotification('Collection link copied to clipboard.');
       setTimeout(() => setNotification(''), 4000);
     } else {
-      alert('Đã tạo liên kết chia sẻ bộ sưu tập.');
+      alert('Collection share link generated.');
     }
   };
 
@@ -115,17 +114,17 @@ export default function FavouritesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
           <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-border-neutral">
             {/* Structural Breadcrumb with delimiter styling */}
-            <nav aria-label="Đường dẫn lưu trữ" className="flex items-center text-text-secondary font-label-action text-[10px] sm:text-label-action uppercase tracking-[0.14em] sm:tracking-[0.2em]">
-              <Link to="/" className="hover:text-accent-terracotta transition-colors">TRANG CHỦ</Link>
+            <nav aria-label="Archive breadcrumb" className="flex items-center text-text-secondary font-label-action text-[10px] sm:text-label-action uppercase tracking-[0.14em] sm:tracking-[0.2em]">
+              <Link to="/" className="hover:text-accent-terracotta transition-colors">HOME</Link>
               <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
-              <span className="text-text-secondary">HỒ SƠ CÁ NHÂN</span>
+              <span className="text-text-secondary">USER PROFILE</span>
               <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
-              <span className="text-text-primary font-semibold">TÁC PHẨM ĐÃ LƯU</span>
+              <span className="text-text-primary font-semibold">SAVED CRAFTS</span>
             </nav>
             {/* Live Archive Coordinate Stamp */}
             <div className="flex items-center gap-2 font-spec-code text-[10px] sm:text-spec-code text-text-secondary uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta inline-block animate-pulse"></span>
-              <span>{isAuthenticated ? 'BẢN GHI ĐỒNG BỘ CSDL' : 'LƯU TRỮ TRÌNH DUYỆT'}: {items.length.toString().padStart(2, '0')} DI SẢN</span>
+              <span>{isAuthenticated ? 'DB SYNCHRONIZED ARCHIVE' : 'LOCAL BROWSER ARCHIVE'}: {items.length.toString().padStart(2, '0')} CRAFTS</span>
             </div>
           </div>
         </div>
@@ -138,19 +137,19 @@ export default function FavouritesPage() {
             <div className="flex flex-col space-y-2 sm:space-y-3 max-w-2xl">
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-surface-crisp border border-border-neutral font-spec-code text-[10px] sm:text-spec-code uppercase tracking-[0.1em] sm:tracking-[0.15em] text-accent-terracotta shadow-sm">
-                  {items.length} TÁC PHẨM ĐÃ LƯU
+                  {items.length} SAVED CRAFTS
                 </span>
                 <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.1em] text-text-secondary">
-                  MÃ ĐỊNH DANH: CR-ARCHIVE-VN
+                  ARCHIVE ID: CR-ARCHIVE-VN
                 </span>
               </div>
               <h1 className="font-headline-statement text-[20px] sm:text-[28px] md:text-[36px] lg:text-[42px] leading-[1.2] uppercase tracking-[1.5px] sm:tracking-[3px] md:tracking-[6px] font-extralight text-text-primary">
-                LƯU TRỮ CÁ NHÂN
+                PERSONAL ARCHIVE
               </h1>
               <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
                 {isAuthenticated
-                  ? 'Danh sách tác phẩm di sản đã được đồng bộ trực tiếp với tài khoản máy chủ và lưu trữ an toàn trong cơ sở dữ liệu.'
-                  : 'Danh sách được lưu trữ an toàn trên thiết bị của bạn. Hãy đăng nhập để đồng bộ vĩnh viễn trên toàn hệ thống.'}
+                  ? 'Your curated collection of heritage artifacts is synchronized with your server account and securely stored in the database.'
+                  : 'This collection is saved locally on your current device. Sign in to synchronize permanently across all devices.'}
               </p>
             </div>
 
@@ -162,7 +161,7 @@ export default function FavouritesPage() {
                 className="hover:text-accent-terracotta transition-colors flex items-center gap-1.5 py-1 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[16px] text-accent-terracotta">share</span>
-                <span>CHIA SẺ BỘ SƯU TẬP</span>
+                <span>SHARE COLLECTION</span>
               </button>
               <span className="mx-4 text-border-neutral opacity-60 font-light select-none">|</span>
               <button
@@ -171,7 +170,7 @@ export default function FavouritesPage() {
                 className="hover:text-accent-terracotta transition-colors flex items-center gap-1.5 py-1 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[16px] text-accent-terracotta">print</span>
-                <span>IN BẢN KIỂM KÊ DI SẢN</span>
+                <span>PRINT INVENTORY SHEET</span>
               </button>
               {items.length > 0 && (
                 <>
@@ -182,7 +181,7 @@ export default function FavouritesPage() {
                     className="text-text-secondary hover:text-error transition-colors flex items-center gap-1.5 py-1 cursor-pointer"
                   >
                     <span className="material-symbols-outlined text-[16px]">delete_sweep</span>
-                    <span>XÓA TẤT CẢ</span>
+                    <span>CLEAR ALL</span>
                   </button>
                 </>
               )}
@@ -206,7 +205,7 @@ export default function FavouritesPage() {
                 onClick={() => setNotification('')}
                 className="font-spec-code text-[11px] uppercase tracking-wider text-text-secondary hover:text-text-primary cursor-pointer"
               >
-                Đóng
+                Close
               </button>
             </div>
           )}
@@ -215,24 +214,24 @@ export default function FavouritesPage() {
             <div className="py-24 text-center">
               <div className="w-10 h-10 border-2 border-accent-terracotta border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="font-spec-code text-[12px] text-text-secondary uppercase tracking-[0.15em]">
-                Đang nạp danh mục tác phẩm lưu trữ...
+                Loading saved heritage collection...
               </p>
             </div>
           ) : items.length === 0 ? (
             <div className="bg-surface-crisp border border-dashed border-border-neutral p-12 text-center my-8 shadow-sm">
               <span className="material-symbols-outlined text-5xl text-accent-terracotta mb-3">bookmark_border</span>
               <h3 className="font-headline-title text-xl text-text-primary font-semibold mb-2">
-                Chưa Có Tác Phẩm Nào Được Lưu Trữ
+                No Saved Crafts Yet
               </h3>
               <p className="font-body-spec text-[14px] text-text-secondary max-w-md mx-auto mb-6">
-                Bạn chưa thêm tác phẩm nào vào tủ lưu trữ cá nhân. Hãy duyệt qua danh mục di sản và bấm lưu các kiệt tác bạn yêu thích.
+                You have not saved any heritage crafts to your personal collection. Explore the catalog and bookmark your favorite masterpieces.
               </p>
               <div className="flex justify-center gap-4">
                 <Link
                   to="/crafts"
                   className="bg-text-primary hover:bg-accent-terracotta text-surface-crisp px-6 py-3 font-label-action text-label-action uppercase tracking-[0.18em] transition-colors"
                 >
-                  Khám Phá Di Sản
+                  Explore Heritage
                 </Link>
               </div>
             </div>
@@ -256,10 +255,10 @@ export default function FavouritesPage() {
                         type="button"
                         onClick={() => handleRemove(item.craftId, item.title)}
                         className="btn-remove-item px-2 py-1 md:px-3 md:py-1.5 bg-surface-crisp/95 text-text-primary hover:text-accent-terracotta hover:bg-surface-crisp font-label-action text-[9px] md:text-[10px] tracking-[0.1em] md:tracking-[0.18em] uppercase shadow-sm transition-colors flex items-center gap-1 cursor-pointer"
-                        title="Gỡ khỏi danh sách lưu trữ"
+                        title="Remove from saved collection"
                       >
                         <span>✕</span>
-                        <span className="hidden sm:inline">GỠ LƯU</span>
+                        <span className="hidden sm:inline">REMOVE</span>
                       </button>
                     </div>
                     <div className="absolute bottom-2 left-2 md:bottom-3 md:left-3">
@@ -273,25 +272,25 @@ export default function FavouritesPage() {
                   <div className="p-3 sm:p-4 md:p-space-lg flex flex-col flex-1 justify-between bg-surface-crisp">
                     <div>
                       <div className="flex items-center text-accent-terracotta font-spec-code text-[10px] md:text-spec-code uppercase tracking-wider mb-1 truncate">
-                        <span className="truncate">{item.village || item.category || 'Di sản làng nghề'}</span>
+                        <span className="truncate">{item.village || item.category || 'Heritage Village'}</span>
                       </div>
                       <h2 className="font-title-card text-[15px] sm:text-[16px] md:text-title-card text-text-primary leading-snug line-clamp-2 mb-2">
                         <Link to={`/crafts/${item.craftId}`} className="hover:text-accent-terracotta transition-colors">
                           {item.title}
                         </Link>
                       </h2>
-                      {/* Specs Detail Grid - Ẩn trên mobile để tối ưu diện tích */}
+                      {/* Specs Detail Grid */}
                       <div className="hidden md:block bg-surface-subtle p-3 space-y-1.5 font-spec-code text-[12px] text-text-secondary mb-3">
                         <div className="flex justify-between items-center">
-                          <span className="uppercase tracking-wider">Mã Hồ Sơ:</span>
+                          <span className="uppercase tracking-wider">Record Code:</span>
                           <span className="text-text-primary font-medium">{item.recordCode}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="uppercase tracking-wider">Nghệ nhân:</span>
+                          <span className="uppercase tracking-wider">Artisan:</span>
                           <span className="text-text-primary">{item.artisan}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="uppercase tracking-wider">Kỹ thuật:</span>
+                          <span className="uppercase tracking-wider">Technique:</span>
                           <span className="text-text-primary">{item.technique}</span>
                         </div>
                       </div>
@@ -301,7 +300,7 @@ export default function FavouritesPage() {
                     <div className="mt-3 md:mt-6 pt-2 md:pt-4 flex items-center justify-between bg-canvas-linen/40 -mx-3 -mb-3 px-3 py-2.5 md:-mx-space-lg md:-mb-space-lg md:px-space-lg md:py-4 border-t border-border-neutral/60 gap-1">
                       <div className="min-w-0">
                         <span className="hidden sm:block font-spec-code text-[9px] md:text-[10px] uppercase tracking-wider text-text-secondary truncate">
-                          Ước lượng định giá
+                          Estimated Valuation
                         </span>
                         <span className="font-headline-title text-[13px] sm:text-[14px] md:text-[18px] text-text-primary font-semibold tracking-tight truncate block">
                           {item.price}
@@ -311,7 +310,7 @@ export default function FavouritesPage() {
                         to={`/crafts/${item.craftId}`}
                         className="font-label-action text-[9px] sm:text-[10px] md:text-label-action uppercase tracking-[0.1em] md:tracking-[0.18em] text-text-primary hover:text-accent-terracotta flex items-center gap-0.5 md:gap-1 font-semibold transition-colors shrink-0"
                       >
-                        <span><span className="hidden sm:inline">XEM </span>CHI TIẾT</span>
+                        <span><span className="hidden sm:inline">VIEW </span>DETAILS</span>
                         <span className="text-[12px] md:text-[14px]">→</span>
                       </Link>
                     </div>

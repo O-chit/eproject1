@@ -23,7 +23,7 @@ export default function ArtisanDetailPage() {
           setArtisan(data);
         }
       } catch (err) {
-        console.warn('Lỗi nạp chi tiết nghệ nhân từ DB:', err);
+        console.warn('Error loading artisan details from DB:', err);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -36,7 +36,7 @@ export default function ArtisanDetailPage() {
     };
   }, [id]);
 
-  // Lắng nghe sự kiện CRUD từ AI Agent để cập nhật State nghệ nhân trực tiếp không cần load lại
+  // Live Agent Sync
   useAgentLiveSync(({ tool, data }) => {
     if (tool === 'update_artisan') {
       const isTarget = String(data?.id) === String(id) || (artisan && artisan.name === data?.name);
@@ -53,7 +53,7 @@ export default function ArtisanDetailPage() {
     } else if (tool === 'delete_artisan') {
       const isTarget = String(data?.id) === String(id) || (artisan && artisan.name === data?.name);
       if (isTarget) {
-        alert(`Hồ sơ nghệ nhân "${data?.name || artisan?.name}" vừa được xóa bởi AI Agent.`);
+        alert(`Artisan profile "${data?.name || artisan?.name}" was deleted by AI Agent.`);
         navigate('/artisans');
       }
     }
@@ -63,7 +63,7 @@ export default function ArtisanDetailPage() {
     return (
       <div className="min-h-[500px] flex items-center justify-center bg-canvas-linen">
         <span className="font-spec-code text-[12px] text-text-secondary uppercase tracking-widest animate-pulse">
-          ĐANG NẠP HỒ SƠ DI SẢN NGHỆ NHÂN...
+          LOADING MASTER ARTISAN HERITAGE DOSSIER...
         </span>
       </div>
     );
@@ -72,12 +72,12 @@ export default function ArtisanDetailPage() {
   if (!artisan) {
     return (
       <div className="min-h-[500px] flex flex-col items-center justify-center bg-canvas-linen p-6">
-        <h3 className="font-headline-title text-xl text-text-primary">Không tìm thấy hồ sơ nghệ nhân</h3>
+        <h3 className="font-headline-title text-xl text-text-primary">Artisan Profile Not Found</h3>
         <p className="font-body-default text-text-secondary text-[13px] mt-1">
-          Hồ sơ có thể chưa được lưu trữ hoặc đang trong quá trình số hóa điền dã.
+          The profile may not have been archived yet or is undergoing digitization.
         </p>
         <Link to="/artisans" className="mt-4 px-6 py-2.5 bg-accent-terracotta text-white font-spec-code text-[11px] uppercase tracking-wider">
-          Quay Lại Danh Sách Nghệ Nhân
+          Back to Artisans Directory
         </Link>
       </div>
     );
@@ -86,10 +86,10 @@ export default function ArtisanDetailPage() {
   const milestones = artisan.milestones && artisan.milestones.length > 0
     ? artisan.milestones
     : [
-        { year: '1985', event: 'Tiếp quản xưởng thủ công gia truyền từ thế hệ tiền bối.' },
-        { year: '1998', event: 'Phục dựng thành công kỹ pháp độc bản cổ truyền.' },
-        { year: '2012', event: 'Được phong tặng danh hiệu Nghệ Nhân Di Sản Quốc Gia.' },
-        { year: '2024', event: 'Truyền thụ kỹ nghệ cho thế hệ kế thừa đời tiếp theo.' },
+        { year: '1985', event: 'Took over generational family workshop from senior predecessors.' },
+        { year: '1998', event: 'Successfully resurrected lost ancient signature technique.' },
+        { year: '2012', event: 'Awarded the title of National Heritage Master Artisan.' },
+        { year: '2024', event: 'Passed down master skills to next generational successors.' },
       ];
 
   const specs = artisan.specs && Array.isArray(artisan.specs) ? artisan.specs : [];
@@ -97,11 +97,11 @@ export default function ArtisanDetailPage() {
   return (
     <div className="w-full bg-canvas-linen py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin space-y-10">
-        {/* Breadcrumb có pipe delimiter */}
+        {/* Breadcrumb with pipe delimiter */}
         <div className="font-spec-code text-[11px] uppercase tracking-widest text-text-secondary flex items-center gap-2">
-          <Link to="/" className="hover:text-accent-terracotta">Trang Chủ</Link>
+          <Link to="/" className="hover:text-accent-terracotta">Home</Link>
           <span className="opacity-60">|</span>
-          <Link to="/artisans" className="hover:text-accent-terracotta">Nghệ Nhân</Link>
+          <Link to="/artisans" className="hover:text-accent-terracotta">Artisans</Link>
           <span className="opacity-60">|</span>
           <span className="text-accent-terracotta">{artisan.name || artisan.fullName}</span>
         </div>
@@ -120,7 +120,7 @@ export default function ArtisanDetailPage() {
                 REF: {artisan.ref || artisan.code || artisan.refCode || `ART-${artisan.id}`}
               </span>
               <span className="bg-accent-terracotta px-2 py-0.5">
-                {artisan.years_of_experience || artisan.yearsOfExperience || 40} Năm Nghề
+                {artisan.years_of_experience || artisan.yearsOfExperience || 40} Yrs Craft
               </span>
             </div>
           </div>
@@ -128,21 +128,21 @@ export default function ArtisanDetailPage() {
           <div className="w-full md:w-7/12 flex flex-col justify-between space-y-4 sm:space-y-5">
             <div>
               <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-widest text-accent-terracotta font-semibold">
-                HỒ SƠ BẬC THẦY DI SẢN • {artisan.village || artisan.villageName || artisan.regionName || 'Làng Nghề Truyền Thống'}
+                HERITAGE MASTER DOSSIER • {artisan.village || artisan.villageName || artisan.regionName || 'Traditional Craft Village'}
               </span>
               <h1 className="font-headline-title text-2xl sm:text-3xl md:text-4xl text-text-primary font-bold mt-1">
                 {artisan.name || artisan.fullName}
               </h1>
               <p className="font-spec-code text-[12px] sm:text-[13px] text-text-secondary mt-1">
-                {artisan.title || 'Nghệ Nhân Ưu Tú'} • {artisan.age || 68} Tuổi • {artisan.craft_category || artisan.specialty || 'Di Sản'}
+                {artisan.title || 'Master Artisan'} • {artisan.age || 68} Yrs Old • {artisan.craft_category || artisan.specialty || 'Heritage'}
               </p>
 
               <blockquote className="border-l-2 border-accent-terracotta pl-3 sm:pl-4 py-2 sm:py-2.5 my-3 sm:my-4 bg-surface-subtle/50 font-label-signature italic text-[13px] sm:text-[14px] text-text-primary leading-relaxed">
-                "{artisan.quote || 'Đất có linh hồn, lửa có tính khí. Người thợ chỉ là chiếc cầu nối giữa tinh hoa trời đất và dáng hình thế gian.'}"
+                "{artisan.quote || 'Earth possesses a soul, fire possesses a temperament. The craftsman is merely the bridge connecting the essence of heaven and earth with worldly form.'}"
               </blockquote>
 
               <p className="font-body-default text-[12.5px] sm:text-[13px] text-text-secondary leading-relaxed">
-                {artisan.biography || artisan.bio || 'Nghệ nhân dành trọn đời cống hiến cho công cuộc bảo tồn và phục chế các tinh hoa thủ công truyền thống.'}
+                {artisan.biography || artisan.bio || 'Artisan dedicating a lifetime to preserving and restoring traditional handcrafted heritage.'}
               </p>
             </div>
 
@@ -152,25 +152,25 @@ export default function ArtisanDetailPage() {
                 onClick={() => setIsBookingOpen(true)}
                 className="px-6 py-3.5 bg-accent-terracotta hover:bg-[#8E4A16] text-white font-label-action text-[12px] uppercase tracking-[0.18em] transition-colors cursor-pointer shadow-sm"
               >
-                ĐẶT LỊCH THĂM XƯỞNG →
+                BOOK STUDIO VISIT →
               </button>
               <button
                 type="button"
                 onClick={() => setIsPopupOpen(true)}
                 className="px-6 py-3.5 border border-border-neutral hover:border-text-primary font-spec-code text-[12px] uppercase tracking-wider text-text-primary transition-colors cursor-pointer"
               >
-                Mở Popup Tư Liệu Nhanh
+                Quick Dossier View
               </button>
             </div>
           </div>
         </div>
 
-        {/* Section 2: Niên Biểu Mốc Son Sự Nghiệp */}
+        {/* Section 2: Career Milestones */}
         <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-8 shadow-sm">
           <div className="flex items-center gap-2 mb-6">
             <span className="w-2 h-2 bg-accent-terracotta"></span>
             <h3 className="font-headline-title text-xl text-text-primary font-semibold uppercase">
-              Niên Biểu Sự Nghiệp &amp; Cống Hiến Di Sản
+              Career Milestones &amp; Heritage Dedication
             </h3>
           </div>
 
@@ -189,12 +189,12 @@ export default function ArtisanDetailPage() {
           </div>
         </div>
 
-        {/* Section 3: Bảng Thông Số Kỹ Pháp Đặc Trưng */}
+        {/* Section 3: Signature Craftsmanship Specifications */}
         <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-8 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <span className="w-2 h-2 bg-accent-terracotta"></span>
             <h3 className="font-headline-title text-xl text-text-primary font-semibold uppercase">
-              Kỹ Pháp Chế Tác Độc Bản
+              Signature Craftsmanship Techniques
             </h3>
           </div>
 
@@ -214,21 +214,21 @@ export default function ArtisanDetailPage() {
             ) : (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-3 p-3 bg-surface-subtle/40">
-                  <span className="font-spec-code text-text-secondary uppercase">Kỹ pháp chủ đạo</span>
+                  <span className="font-spec-code text-text-secondary uppercase">Core technique</span>
                   <span className="sm:col-span-2 font-medium text-text-primary">
-                    {artisan.techniqueSummary || artisan.specialty || 'Chế tác thủ công bí truyền qua nhiều thế hệ'}
+                    {artisan.techniqueSummary || artisan.specialty || 'Generational secret craftsmanship passed down across eras'}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 p-3">
-                  <span className="font-spec-code text-text-secondary uppercase">Tác phẩm tiêu biểu</span>
+                  <span className="font-spec-code text-text-secondary uppercase">Signature work</span>
                   <span className="sm:col-span-2 font-medium text-text-primary">
-                    {artisan.signatureWork || artisan.masterwork_name || 'Bản ghi di sản tiêu biểu'}
+                    {artisan.signatureWork || artisan.masterwork_name || 'Representative heritage artifact'}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 p-3 bg-surface-subtle/40">
-                  <span className="font-spec-code text-text-secondary uppercase">Chứng nhận di sản</span>
+                  <span className="font-spec-code text-text-secondary uppercase">Heritage certification</span>
                   <span className="sm:col-span-2 font-medium text-text-primary">
-                    {artisan.verificationLabel || 'Di sản văn hóa phi vật thể quốc gia'}
+                    {artisan.verificationLabel || 'National intangible cultural heritage'}
                   </span>
                 </div>
               </>
@@ -236,21 +236,21 @@ export default function ArtisanDetailPage() {
           </div>
         </div>
 
-        {/* Section 4: Tác phẩm liên kết */}
+        {/* Section 4: Associated Works */}
         {artisan.crafts && artisan.crafts.length > 0 && (
           <div className="bg-surface-crisp border border-border-neutral p-6 sm:p-8 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-accent-terracotta"></span>
                 <h3 className="font-headline-title text-xl text-text-primary font-semibold uppercase">
-                  Tác Phẩm Chế Tác Tiêu Biểu ({artisan.crafts.length})
+                  Representative Crafted Works ({artisan.crafts.length})
                 </h3>
               </div>
               <Link
                 to="/crafts"
                 className="font-spec-code text-[11px] text-accent-terracotta uppercase tracking-wider hover:underline"
               >
-                Xem tất cả kho lưu trữ →
+                View full archive →
               </Link>
             </div>
 
@@ -270,7 +270,7 @@ export default function ArtisanDetailPage() {
                   </div>
                   <div>
                     <span className="font-spec-code text-[10px] text-accent-terracotta uppercase block mb-1">
-                      {craft.region || craft.category || 'Di sản'}
+                      {craft.region || craft.category || 'Heritage'}
                     </span>
                     <h4 className="font-title-card text-[14px] font-medium text-text-primary group-hover:text-accent-terracotta transition-colors line-clamp-2">
                       {craft.name}
@@ -283,7 +283,7 @@ export default function ArtisanDetailPage() {
         )}
       </div>
 
-      {/* POPUP CHI TIẾT */}
+      {/* POPUP MODAL */}
       <ArtisanDetailPopup
         artisan={artisan}
         isOpen={isPopupOpen}
@@ -294,7 +294,7 @@ export default function ArtisanDetailPage() {
         }}
       />
 
-      {/* MODAL ĐẶT LỊCH */}
+      {/* BOOKING MODAL */}
       <VisitBookingModal
         artisan={artisan}
         isOpen={isBookingOpen}

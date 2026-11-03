@@ -11,12 +11,12 @@ export function FavouritesProvider({ children }) {
   const [favourites, setFavourites] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Đọc danh sách yêu thích ban đầu hoặc làm mới
+  // Initial read or refresh saved crafts
   const refreshFavourites = useCallback(async () => {
     setLoading(true);
     try {
       if (isAuthenticated) {
-        // 1. Nếu đã đăng nhập: Kiểm tra xem có yêu thích của khách cần sync không
+        // 1. If logged in: Check if there are guest saved items that need syncing
         const rawGuestFavs = localStorage.getItem(GUEST_FAVS_KEY) || localStorage.getItem('craftroots_favourites');
         if (rawGuestFavs) {
           try {
@@ -30,11 +30,11 @@ export function FavouritesProvider({ children }) {
               localStorage.removeItem('craftroots_favourites');
             }
           } catch (err) {
-            console.warn('[FavouritesContext] Lỗi đồng bộ yêu thích khách:', err);
+            console.warn('[FavouritesContext] Error syncing guest saved items:', err);
           }
         }
 
-        // 2. Tải danh sách yêu thích từ máy chủ
+        // 2. Load saved items from server
         try {
           const res = await api.getFavourites();
           const serverFavs = (Array.isArray(res) ? res : res.data || []).map(
@@ -42,10 +42,10 @@ export function FavouritesProvider({ children }) {
           );
           setFavourites(serverFavs);
         } catch (err) {
-          console.warn('[FavouritesContext] Máy chủ chưa sẵn sàng, giữ state hiện tại');
+          console.warn('[FavouritesContext] Server not ready, keeping current state');
         }
       } else {
-        // Chưa đăng nhập: Đọc từ localStorage khách
+        // Not logged in: Read from guest localStorage
         const raw = localStorage.getItem(GUEST_FAVS_KEY) || localStorage.getItem('craftroots_favourites');
         if (raw) {
           const parsed = JSON.parse(raw);
@@ -59,7 +59,7 @@ export function FavouritesProvider({ children }) {
         }
       }
     } catch (err) {
-      console.error('[FavouritesContext] Lỗi nạp yêu thích:', err);
+      console.error('[FavouritesContext] Error loading saved items:', err);
     } finally {
       setLoading(false);
     }
@@ -81,7 +81,7 @@ export function FavouritesProvider({ children }) {
     };
   }, [refreshFavourites]);
 
-  // Tự động cập nhật State yêu thích tức thời khi AI Agent thực thi add_favourite
+  // Update saved state automatically when AI Agent runs add_favourite
   useAgentLiveSync(({ tool, data }) => {
     if (tool === 'add_favourite') {
       const targetId = Number(data?.id || data?.craftId);
@@ -92,7 +92,7 @@ export function FavouritesProvider({ children }) {
     }
   }, [refreshFavourites]);
 
-  // Kiểm tra một tác phẩm có trong danh sách yêu thích không
+  // Check if a craft is in saved list
   const isFav = useCallback(
     (craftId) => {
       const idNum = Number(craftId);
@@ -101,13 +101,13 @@ export function FavouritesProvider({ children }) {
     [favourites]
   );
 
-  // Bật/tắt trạng thái yêu thích
+  // Toggle favorite status
   const toggleFav = useCallback(
     async (craftId) => {
       const idNum = Number(craftId);
       const isCurrentlyFav = isFav(idNum);
 
-      // Cập nhật Optimistic UI trước
+      // Optimistic UI update
       let nextFavs;
       if (isCurrentlyFav) {
         nextFavs = favourites.filter((id) => Number(id) !== idNum);
@@ -116,7 +116,7 @@ export function FavouritesProvider({ children }) {
       }
       setFavourites(nextFavs);
 
-      // Đồng bộ theo trạng thái đăng nhập
+      // Synchronize with server if logged in
       if (isAuthenticated) {
         try {
           if (isCurrentlyFav) {
@@ -125,15 +125,14 @@ export function FavouritesProvider({ children }) {
             await api.addFavourite(idNum);
           }
         } catch (err) {
-          console.warn('[FavouritesContext] Không thể lưu yêu thích lên server:', err);
+          console.warn('[FavouritesContext] Unable to save favourite on server:', err);
         }
       } else {
-        // Lưu vào localStorage của khách
         try {
           localStorage.setItem(GUEST_FAVS_KEY, JSON.stringify(nextFavs));
           localStorage.setItem('craftroots_favourites', JSON.stringify(nextFavs));
         } catch (err) {
-          console.warn('Không thể lưu yêu thích vào localStorage:', err);
+          console.warn('Unable to save favourite to localStorage:', err);
         }
       }
       window.dispatchEvent(new Event('craftroots_favs_updated'));
@@ -147,7 +146,7 @@ export function FavouritesProvider({ children }) {
       try {
         await api.clearFavourites();
       } catch (err) {
-        console.warn('[FavouritesContext] Không thể xóa tất cả yêu thích trên server:', err);
+        console.warn('[FavouritesContext] Unable to clear all favourites on server:', err);
       }
     }
     try {
@@ -160,7 +159,7 @@ export function FavouritesProvider({ children }) {
     }
   }, [isAuthenticated]);
 
-  // Hỗ trợ yêu thích nghệ nhân (dành cho ArtisanDetailPopup)
+  // Artisan favorite state
   const [artisanFavs, setArtisanFavs] = useState(() => {
     try {
       const stored = localStorage.getItem('craftroots_artisan_favs');
@@ -206,7 +205,7 @@ export function FavouritesProvider({ children }) {
 export function useFavourites() {
   const context = useContext(FavouritesContext);
   if (!context) {
-    throw new Error('useFavourites phải được sử dụng bên trong FavouritesProvider');
+    throw new Error('useFavourites must be used within a FavouritesProvider');
   }
   return context;
 }

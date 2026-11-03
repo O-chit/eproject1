@@ -2,14 +2,14 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const routeNameMap = {
-  '': 'Trang Chủ',
-  'crafts': 'Kho Lưu Trữ Di Sản',
-  'artisans': 'Hồ Sơ Nghệ Nhân',
-  'regions': 'Bản Đồ Văn Hóa Làng Nghề',
-  'seasonal': 'Bộ Sưu Tập Theo Mùa',
-  'favourites': 'Tác Phẩm Đã Lưu',
-  'contact': 'Liên Hệ & Đặt Lịch Xưởng',
-  'login': 'Tài Khoản',
+  '': 'Home',
+  'crafts': 'Heritage Archive',
+  'artisans': 'Artisan Profiles',
+  'regions': 'Cultural Craft Map',
+  'seasonal': 'Seasonal Collections',
+  'favourites': 'Saved Crafts',
+  'contact': 'Contact & Studio Booking',
+  'login': 'Account',
 };
 
 export default function Breadcrumbs({ customCrumbs }) {
@@ -23,7 +23,7 @@ export default function Breadcrumbs({ customCrumbs }) {
     crumbs = customCrumbs;
   } else {
     const pathnames = location.pathname.split('/').filter(Boolean);
-    crumbs.push({ label: 'Trang Chủ', path: '/' });
+    crumbs.push({ label: 'Home', path: '/' });
 
     let currentPath = '';
     pathnames.forEach((segment, index) => {

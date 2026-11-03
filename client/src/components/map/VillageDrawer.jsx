@@ -6,7 +6,7 @@ export default function VillageDrawer({ village, onClose }) {
   if (!village) return null;
 
   const categoryMeta = CRAFT_CATEGORIES[village.category] || {
-    label: village.categoryLabel || 'Thủ Công Truyền Thống',
+    label: village.categoryLabel || 'Traditional Craft',
     color: '#B86B35',
     icon: 'category'
   };
@@ -27,7 +27,7 @@ export default function VillageDrawer({ village, onClose }) {
         <button
           type="button"
           onClick={onClose}
-          aria-label="Đóng chi tiết"
+          aria-label="Close details"
           className="w-8 h-8 rounded-none border border-border-neutral bg-surface-crisp flex items-center justify-center text-text-secondary hover:text-accent-terracotta hover:border-accent-terracotta transition-colors cursor-pointer"
         >
           <span className="material-symbols-outlined text-[18px]">close</span>
@@ -51,7 +51,7 @@ export default function VillageDrawer({ village, onClose }) {
               </span>
               <span className="flex items-center gap-1 text-[10px] tracking-widest uppercase">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                Di Tích Sống
+                Living Heritage Site
               </span>
             </div>
           </div>
@@ -74,7 +74,7 @@ export default function VillageDrawer({ village, onClose }) {
         <div className="grid grid-cols-2 gap-3 py-3 border-y border-border-neutral/70 font-spec-code">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase text-text-secondary tracking-wider">
-              Dòng nghề chính
+              Main Craft Line
             </span>
             <span className="text-[12px] font-semibold text-text-primary mt-0.5">
               {categoryMeta.label}
@@ -82,10 +82,10 @@ export default function VillageDrawer({ village, onClose }) {
           </div>
           <div className="flex flex-col border-l border-border-neutral/70 pl-3">
             <span className="text-[10px] uppercase text-text-secondary tracking-wider">
-              Hồ sơ lưu trữ
+              Archived Records
             </span>
             <span className="text-[12px] font-semibold text-accent-terracotta mt-0.5">
-              {village.craftsCount || 12} Tác phẩm
+              {village.craftsCount || 12} Works
             </span>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function VillageDrawer({ village, onClose }) {
         {/* Narrative Description */}
         <div>
           <div className="font-spec-code text-[10px] uppercase tracking-[0.2em] text-accent-terracotta font-semibold mb-2">
-            Mộc bản địa chí
+            Fieldwork Topography
           </div>
           <p className="text-[13px] text-text-secondary leading-relaxed">
             {village.description}
@@ -109,7 +109,7 @@ export default function VillageDrawer({ village, onClose }) {
               </div>
               <div className="flex flex-col">
                 <span className="font-spec-code text-[9px] uppercase tracking-wider text-text-secondary">
-                  Nghệ nhân tiêu biểu
+                  Representative Artisan
                 </span>
                 <span className="text-[13px] font-semibold text-text-primary">
                   {village.representativeArtisan}
@@ -120,14 +120,14 @@ export default function VillageDrawer({ village, onClose }) {
               to="/artisans"
               className="font-spec-code text-[10px] uppercase text-accent-terracotta hover:underline tracking-wider"
             >
-              Hồ sơ →
+              Profile →
             </Link>
           </div>
         )}
 
         {/* Coordinate Stamp */}
         <div className="font-spec-code text-[10px] text-text-secondary/80 flex items-center justify-between pt-1">
-          <span>TỌA ĐỘ VỆ TINH:</span>
+          <span>SATELLITE COORDINATES:</span>
           <span className="text-text-primary font-spec-code font-semibold">
             {village.coordinates ? `${village.coordinates[1]}° N, ${village.coordinates[0]}° E` : ''}
           </span>
@@ -140,14 +140,14 @@ export default function VillageDrawer({ village, onClose }) {
           to={village.craftId ? `/crafts/${village.craftId}` : '/crafts'}
           className="flex-1 py-2.5 px-4 bg-text-primary hover:bg-accent-terracotta text-surface-crisp font-label-action text-[11px] uppercase tracking-[0.15em] text-center transition-colors font-semibold"
         >
-          Khám Phá Kỹ Pháp
+          Explore Techniques
         </Link>
         <Link
           to="/contact"
           className="py-2.5 px-3 border border-border-neutral hover:border-accent-terracotta text-text-primary hover:text-accent-terracotta font-spec-code text-[11px] uppercase tracking-wider transition-colors"
-          title="Đặt lịch thăm xưởng"
+          title="Book studio visit"
         >
-          Thăm Xưởng
+          Visit Studio
         </Link>
       </div>
     </div>

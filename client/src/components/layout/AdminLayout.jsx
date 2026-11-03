@@ -9,23 +9,22 @@ export default function AdminLayout() {
   const location = useLocation();
 
   const isAdmin = user?.role === 'admin';
-  const roleLabel = isAdmin ? 'Administrator' : 'Editor (Biên Tập)';
+  const roleLabel = isAdmin ? 'Administrator' : 'Editor';
 
-  // Hàm sinh breadcrumb đơn giản dựa theo pathname
   const getBreadcrumb = () => {
     const path = location.pathname;
-    if (path.includes('/crafts/new')) return 'Thêm Mới Tác Phẩm';
-    if (path.includes('/crafts/') && path.includes('/edit')) return 'Chỉnh Sửa Tác Phẩm';
-    if (path.includes('/crafts')) return 'Quản Lý Sản Phẩm Di Sản';
-    if (path.includes('/artisans/new')) return 'Thêm Mới Bậc Thầy';
-    if (path.includes('/artisans/') && path.includes('/edit')) return 'Chỉnh Sửa Hồ Sơ Nghệ Nhân';
-    if (path.includes('/artisans')) return 'Quản Lý Hồ Sơ Nghệ Nhân';
-    return 'Bảng Điều Khiển Quản Trị';
+    if (path.includes('/crafts/new')) return 'Add New Craft';
+    if (path.includes('/crafts/') && path.includes('/edit')) return 'Edit Craft';
+    if (path.includes('/crafts')) return 'Heritage Crafts Management';
+    if (path.includes('/artisans/new')) return 'Add New Master Artisan';
+    if (path.includes('/artisans/') && path.includes('/edit')) return 'Edit Artisan Profile';
+    if (path.includes('/artisans')) return 'Master Artisans Management';
+    return 'Admin Dashboard';
   };
 
   return (
     <div className="min-h-screen bg-canvas-linen flex flex-col antialiased">
-      {/* 1. TOP BANNER NHẬN DIỆN PHIÊN BẢN ADMIN */}
+      {/* 1. TOP BANNER FOR ADMIN IDENTITY */}
       <div className="bg-[#1C1B1A] text-white py-1.5 px-4 sm:px-6 flex items-center justify-between text-[11px] font-spec-code tracking-wider border-b border-[#2C2B29]">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent-terracotta text-white font-semibold uppercase text-[10px]">
@@ -33,26 +32,26 @@ export default function AdminLayout() {
             CMS PORTAL
           </span>
           <span className="hidden md:inline text-white/80">
-            Hệ thống Quản trị &amp; Biên tập Di sản CraftRoots · SEC 6.3 RBAC
+            CraftRoots Heritage Administration &amp; Editorial System · SEC 6.3 RBAC
           </span>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-white/70 hidden sm:inline">
-            Tài khoản: <strong className="text-accent-terracotta">{user?.email}</strong> ({roleLabel})
+            Account: <strong className="text-accent-terracotta">{user?.email}</strong> ({roleLabel})
           </span>
           <Link
             to="/"
             className="text-accent-terracotta hover:underline font-semibold flex items-center gap-1"
           >
-            <span>← Về Website Chính</span>
+            <span>← Back to Main Site</span>
           </Link>
         </div>
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* 2. SIDEBAR CỐ ĐỊNH TRÊN DESKTOP */}
+        {/* 2. FIXED DESKTOP SIDEBAR */}
         <aside className="w-64 bg-surface-crisp border-r border-border-neutral hidden lg:flex flex-col shrink-0 select-none">
-          {/* Logo Thương Hiệu */}
+          {/* Brand Logo */}
           <div className="p-5 border-b border-border-neutral flex items-center gap-3">
             <Link to="/admin/crafts" className="flex items-center gap-3 group">
               <div className="w-9 h-9 border border-accent-terracotta bg-canvas-linen text-accent-terracotta flex items-center justify-center font-serif font-bold text-base tracking-widest shadow-xs">
@@ -76,7 +75,7 @@ export default function AdminLayout() {
             </div>
             <div className="flex flex-col min-w-0 flex-1">
               <span className="font-['Montserrat'] text-[11px] font-semibold text-text-primary truncate">
-                {user?.fullName || 'Quản Trị Viên'}
+                {user?.fullName || 'Administrator'}
               </span>
               <span className="font-spec-code text-[9px] text-tertiary font-medium uppercase tracking-wider">
                 {roleLabel}
@@ -84,10 +83,10 @@ export default function AdminLayout() {
             </div>
           </div>
 
-          {/* Menu Điều Hướng */}
+          {/* Navigation Menu */}
           <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
             <div className="px-3 pb-2 text-[10px] font-spec-code uppercase tracking-[0.2em] text-text-secondary font-semibold">
-              Quản Trị Di Sản
+              Heritage Management
             </div>
 
             <NavLink
@@ -103,7 +102,7 @@ export default function AdminLayout() {
             >
               <span className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-[19px]">inventory_2</span>
-                <span>Sản Phẩm Di Sản</span>
+                <span>Heritage Crafts</span>
               </span>
             </NavLink>
 
@@ -118,7 +117,7 @@ export default function AdminLayout() {
               }
             >
               <span className="material-symbols-outlined text-[16px]">add_circle</span>
-              <span>+ Thêm Tác Phẩm Mới</span>
+              <span>+ Add New Craft</span>
             </NavLink>
 
             <NavLink
@@ -134,7 +133,7 @@ export default function AdminLayout() {
             >
               <span className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-[19px]">person_celebrate</span>
-                <span>Hồ Sơ Nghệ Nhân</span>
+                <span>Master Artisans</span>
               </span>
             </NavLink>
 
@@ -149,11 +148,11 @@ export default function AdminLayout() {
               }
             >
               <span className="material-symbols-outlined text-[16px]">person_add</span>
-              <span>+ Thêm Bậc Thầy Mới</span>
+              <span>+ Add New Master</span>
             </NavLink>
 
             <div className="pt-4 px-3 pb-2 text-[10px] font-spec-code uppercase tracking-[0.2em] text-text-secondary font-semibold">
-              Lối Tắt Xem Website
+              Public Site Shortcuts
             </div>
 
             <Link
@@ -163,7 +162,7 @@ export default function AdminLayout() {
             >
               <span className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-[18px]">storefront</span>
-                <span>Kho Tác Phẩm Khách Xem</span>
+                <span>Public Crafts Archive</span>
               </span>
               <span className="material-symbols-outlined text-[14px]">open_in_new</span>
             </Link>
@@ -175,7 +174,7 @@ export default function AdminLayout() {
             >
               <span className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-[18px]">group</span>
-                <span>Danh Bạ Nghệ Nhân Ngoài</span>
+                <span>Artisans Directory</span>
               </span>
               <span className="material-symbols-outlined text-[14px]">open_in_new</span>
             </Link>
@@ -187,7 +186,7 @@ export default function AdminLayout() {
             >
               <span className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-[18px]">map</span>
-                <span>Bản Đồ Di Sản 7 Vùng</span>
+                <span>7 Regions Cultural Map</span>
               </span>
               <span className="material-symbols-outlined text-[14px]">open_in_new</span>
             </Link>
@@ -195,7 +194,7 @@ export default function AdminLayout() {
 
           {/* Footer Sidebar */}
           <div className="p-3 border-t border-border-neutral bg-surface-subtle/50 text-[11px] font-spec-code text-text-secondary flex items-center justify-between">
-            <span>Vai trò: <strong className="text-text-primary">{isAdmin ? 'Toàn quyền' : 'Biên tập'}</strong></span>
+            <span>Role: <strong className="text-text-primary">{isAdmin ? 'Full Access' : 'Editor'}</strong></span>
             <button
               type="button"
               onClick={() => {
@@ -203,16 +202,16 @@ export default function AdminLayout() {
                 navigate('/login');
               }}
               className="text-text-secondary hover:text-error cursor-pointer flex items-center gap-1"
-              title="Đăng xuất"
+              title="Log out"
             >
               <span className="material-symbols-outlined text-[16px]">logout</span>
             </button>
           </div>
         </aside>
 
-        {/* 3. KHU VỰC NỘI DUNG CHÍNH (MAIN WORKSPACE) */}
+        {/* 3. MAIN WORKSPACE */}
         <div className="flex-1 flex flex-col overflow-y-auto">
-          {/* Top Bar Trong Trang Admin */}
+          {/* Top Bar inside Admin */}
           <header className="h-14 bg-surface-crisp border-b border-border-neutral px-4 sm:px-6 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
               <button
@@ -237,12 +236,12 @@ export default function AdminLayout() {
                 className="hidden sm:inline-flex items-center gap-1 text-[11px] font-spec-code uppercase tracking-wider text-text-secondary hover:text-accent-terracotta border border-border-neutral px-2.5 py-1 bg-surface-subtle"
               >
                 <span className="material-symbols-outlined text-[15px]">home</span>
-                <span>Trang Chủ</span>
+                <span>Home</span>
               </Link>
             </div>
           </header>
 
-          {/* Menu Drawer Mobile */}
+          {/* Mobile Drawer Menu */}
           {mobileMenuOpen && (
             <div className="lg:hidden bg-surface-crisp border-b border-border-neutral p-4 space-y-2">
               <NavLink
@@ -250,33 +249,33 @@ export default function AdminLayout() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 text-[13px] font-['Montserrat'] text-text-primary hover:bg-surface-subtle"
               >
-                🏺 Quản Lý Sản Phẩm Di Sản
+                🏺 Heritage Crafts Management
               </NavLink>
               <NavLink
                 to="/admin/crafts/new"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 text-[13px] font-['Montserrat'] text-text-primary hover:bg-surface-subtle pl-6"
               >
-                + Thêm Tác Phẩm Mới
+                + Add New Craft
               </NavLink>
               <NavLink
                 to="/admin/artisans"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 text-[13px] font-['Montserrat'] text-text-primary hover:bg-surface-subtle"
               >
-                👥 Quản Lý Hồ Sơ Nghệ Nhân
+                👥 Master Artisans Management
               </NavLink>
               <NavLink
                 to="/admin/artisans/new"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 text-[13px] font-['Montserrat'] text-text-primary hover:bg-surface-subtle pl-6"
               >
-                + Thêm Bậc Thầy Mới
+                + Add New Master
               </NavLink>
             </div>
           )}
 
-          {/* Nội dung trang con qua Outlet */}
+          {/* Page Content */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
             <Outlet />
           </main>

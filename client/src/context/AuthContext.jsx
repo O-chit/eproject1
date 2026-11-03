@@ -8,7 +8,7 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 1. Khởi tạo và xác thực phiên đăng nhập với backend khi nạp ứng dụng
+  // 1. Initialize and verify session with backend
   useEffect(() => {
     let isMounted = true;
     async function verifySession() {
@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
             setUser(JSON.parse(storedUser));
           }
 
-          // Kiểm tra tính hợp lệ của token với endpoint GET /api/auth/me của backend
           try {
             const meData = await api.getMe();
             if (isMounted && meData) {
@@ -30,9 +29,8 @@ export function AuthProvider({ children }) {
               localStorage.setItem('craftroots_user', JSON.stringify(meData));
             }
           } catch (apiErr) {
-            // Nếu backend trả về 401 (token hết hạn hoặc không hợp lệ), hủy phiên
             if (apiErr.status === 401) {
-              console.warn('[AuthContext] Phiên đăng nhập đã hết hạn, đăng xuất an toàn.');
+              console.warn('[AuthContext] Session expired, logging out safely.');
               localStorage.removeItem('craftroots_token');
               localStorage.removeItem('craftroots_user');
               if (isMounted) {
@@ -43,7 +41,7 @@ export function AuthProvider({ children }) {
           }
         }
       } catch (err) {
-        console.error('Lỗi khi đọc phiên đăng nhập từ localStorage:', err);
+        console.error('Error reading session from localStorage:', err);
         localStorage.removeItem('craftroots_token');
         localStorage.removeItem('craftroots_user');
       } finally {
@@ -57,7 +55,7 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  // 2. Hàm Đăng Nhập (POST /api/auth/login)
+  // 2. Login function (POST /api/auth/login)
   const login = async (email, password) => {
     try {
       const response = await api.login({ email, password });
@@ -66,7 +64,7 @@ export function AuthProvider({ children }) {
       const receivedUser = response.user || response.data?.user;
 
       if (!receivedToken) {
-        throw new Error('Máy chủ không phản hồi token xác thực');
+        throw new Error('Server did not respond with an authentication token');
       }
 
       setToken(receivedToken);
@@ -76,11 +74,10 @@ export function AuthProvider({ children }) {
 
       return { success: true, user: receivedUser };
     } catch (err) {
-      // Mock login dự phòng an toàn nếu backend chưa kết nối được CSDL
       if (email === 'user@craftroots.test' && password === 'Craft@1234') {
         const mockUser = {
           id: 2,
-          fullName: 'Nguyễn Văn An (Người Dùng)',
+          fullName: 'An Van Nguyen (User)',
           email: 'user@craftroots.test',
           role: 'user',
         };
@@ -92,14 +89,13 @@ export function AuthProvider({ children }) {
         return { success: true, user: mockUser };
       }
 
-      // Xử lý thông điệp lỗi chi tiết từ backend (details)
       const errorMsg =
-        err.details?.[0]?.issue || err.message || 'Email hoặc mật khẩu không chính xác';
+        err.details?.[0]?.issue || err.message || 'Invalid email or password';
       throw new Error(errorMsg);
     }
   };
 
-  // 3. Hàm Đăng Ký (POST /api/auth/register)
+  // 3. Register function (POST /api/auth/register)
   const register = async (fullName, email, password) => {
     try {
       const response = await api.register({ fullName, email, password });
@@ -108,7 +104,7 @@ export function AuthProvider({ children }) {
       const receivedUser = response.user || response.data?.user;
 
       if (!receivedToken) {
-        throw new Error('Máy chủ không phản hồi token sau khi đăng ký');
+        throw new Error('Server did not respond with an authentication token after registration');
       }
 
       setToken(receivedToken);
@@ -119,24 +115,24 @@ export function AuthProvider({ children }) {
       return { success: true, user: receivedUser };
     } catch (err) {
       const errorMsg =
-        err.details?.[0]?.issue || err.message || 'Đăng ký không thành công';
+        err.details?.[0]?.issue || err.message || 'Registration failed';
       throw new Error(errorMsg);
     }
   };
 
-  // 4. Hàm Đổi Mật Khẩu (PUT /api/auth/change-password)
+  // 4. Change password function (PUT /api/auth/change-password)
   const changePassword = async (currentPassword, newPassword) => {
     try {
       const response = await api.changePassword({ currentPassword, newPassword });
       return response;
     } catch (err) {
       const errorMsg =
-        err.details?.[0]?.issue || err.message || 'Đổi mật khẩu thất bại';
+        err.details?.[0]?.issue || err.message || 'Failed to change password';
       throw new Error(errorMsg);
     }
   };
 
-  // 5. Hàm Đăng Xuất
+  // 5. Logout function
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
@@ -161,7 +157,7 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth phải được sử dụng bên trong AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }
