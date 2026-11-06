@@ -149,57 +149,8 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Direct Navigation Links for Desktop */}
-          <nav className="hidden lg:flex items-center gap-5 xl:gap-7 shrink-0 font-['Montserrat'] text-[12px] uppercase tracking-[0.12em] font-medium">
-            <NavLink
-              to="/crafts"
-              className={({ isActive }) =>
-                `transition-colors hover:text-accent-terracotta ${
-                  isActive ? 'text-accent-terracotta font-semibold' : 'text-text-primary'
-                }`
-              }
-            >
-              Crafts
-            </NavLink>
-            <NavLink
-              to="/artisans"
-              className={({ isActive }) =>
-                `flex items-center gap-1.5 transition-colors hover:text-accent-terracotta ${
-                  isActive ? 'text-accent-terracotta font-semibold' : 'text-text-primary'
-                }`
-              }
-            >
-              <span>Artisans</span>
-              {stats.artisans > 0 && (
-                <span className="text-[10px] font-mono px-1.5 py-0.5 bg-accent-terracotta/10 text-accent-terracotta border border-accent-terracotta/20 leading-none">
-                  {stats.artisans}
-                </span>
-              )}
-            </NavLink>
-            <NavLink
-              to="/regions"
-              className={({ isActive }) =>
-                `transition-colors hover:text-accent-terracotta ${
-                  isActive ? 'text-accent-terracotta font-semibold' : 'text-text-primary'
-                }`
-              }
-            >
-              Cultural Map
-            </NavLink>
-            <NavLink
-              to="/seasonal"
-              className={({ isActive }) =>
-                `transition-colors hover:text-accent-terracotta ${
-                  isActive ? 'text-accent-terracotta font-semibold' : 'text-text-primary'
-                }`
-              }
-            >
-              Seasonal
-            </NavLink>
-          </nav>
-
           {/* Center Cluster: Desktop Search Bar */}
-          <div className="flex-1 max-w-sm xl:max-w-md mx-2 hidden md:block">
+          <div className="flex-1 max-w-xl mx-auto hidden md:block">
             <form onSubmit={handleSearchSubmit} className="relative flex items-center">
               <span className="material-symbols-outlined absolute left-3 text-text-secondary text-[18px]">
                 search
