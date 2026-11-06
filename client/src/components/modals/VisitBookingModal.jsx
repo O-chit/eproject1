@@ -1,23 +1,62 @@
 import React, { useState } from 'react';
+import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+
+// Ngày sớm nhất có thể đặt (YYYY-MM-DD) theo lead time của nghệ nhân — khớp kiểm tra phía server
+function getEarliestDate(leadHours) {
+  const d = new Date();
+  d.setDate(d.getDate() + Math.ceil((leadHours || 24) / 24));
+  return d.toISOString().slice(0, 10);
+}
 
 export default function VisitBookingModal({ artisan, isOpen, onClose, onSuccess }) {
+  const { user } = useAuth();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [date, setDate] = useState('');
   const [slot, setSlot] = useState('Morning: 09:30 - 11:30');
   const [note, setNote] = useState('Tea dialogue & Traditional technique study');
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   if (!isOpen) return null;
 
-  function handleSubmit(e) {
+  const minDate = getEarliestDate(artisan?.visitLeadTimeHours);
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      if (onSuccess) onSuccess({ name, phone, date, slot, note, artisanId: artisan?.id });
-      setSubmitted(false);
-      onClose();
-    }, 1800);
+    if (submitting) return;
+    if (!artisan?.id) {
+      setErrorMsg('Unable to identify the artisan for this booking.');
+      return;
+    }
+    setErrorMsg('');
+    setSubmitting(true);
+    try {
+      const booking = await api.createBooking({
+        artisanId: artisan.id,
+        fullName: name,
+        phone,
+        email: user?.email || undefined,
+        visitDate: date,
+        timeSlot: slot,
+        purpose: note,
+      });
+      setSubmitted(true);
+      if (onSuccess) onSuccess(booking);
+      setTimeout(() => {
+        setSubmitted(false);
+        setName('');
+        setPhone('');
+        setDate('');
+        onClose();
+      }, 1800);
+    } catch (err) {
+      setErrorMsg(err.details?.[0]?.issue || err.message || 'Unable to submit booking. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -91,6 +130,7 @@ export default function VisitBookingModal({ artisan, isOpen, onClose, onSuccess 
                 <input
                   type="date"
                   required
+                  min={minDate}
                   className="w-full h-11 bg-surface-crisp px-3 font-body-spec text-[13px] border border-border-neutral focus:outline-none focus:border-accent-terracotta"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
@@ -127,11 +167,18 @@ export default function VisitBookingModal({ artisan, isOpen, onClose, onSuccess 
               </select>
             </div>
 
+            {errorMsg && (
+              <div className="p-3 bg-[#FDF3F0] border border-[#B23A1E] text-[#8A2A14] font-body-spec text-[12px]" role="alert">
+                {errorMsg}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full bg-accent-terracotta hover:bg-[#8E4A16] text-white font-label-action text-[12px] uppercase tracking-[0.2em] py-3.5 mt-2 transition-colors cursor-pointer"
+              disabled={submitting}
+              className="w-full bg-accent-terracotta hover:bg-[#8E4A16] disabled:opacity-60 disabled:cursor-not-allowed text-white font-label-action text-[12px] uppercase tracking-[0.2em] py-3.5 mt-2 transition-colors cursor-pointer"
             >
-              SUBMIT VISIT REQUEST →
+              {submitting ? 'SUBMITTING…' : 'SUBMIT VISIT REQUEST →'}
             </button>
           </form>
         )}

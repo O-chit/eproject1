@@ -129,8 +129,20 @@ async function processChatMessage({ sessionId, userId, userRole = 'guest', userE
   const userContext = { userId, userRole, userEmail, userName };
 
   // 1. Đảm bảo phiên hội thoại tồn tại
-  const sessionCheck = await db.query('SELECT id FROM chat_sessions WHERE id = $1', [sessionId]);
-  if (sessionCheck.rows.length === 0) {
+  const sessionCheck = await db.query('SELECT id, user_id FROM chat_sessions WHERE id = $1', [sessionId]);
+  if (sessionCheck.rows.length > 0) {
+    const ownerId = sessionCheck.rows[0].user_id;
+    if (ownerId && ownerId !== userId) {
+      const err = new Error('Bạn không có quyền truy cập phiên trò chuyện này.');
+      err.statusCode = 403;
+      err.errorCode = 'FORBIDDEN';
+      throw err;
+    }
+    // Gắn chủ sở hữu cho phiên khách khi người dùng đã đăng nhập
+    if (!ownerId && userId) {
+      await db.query('UPDATE chat_sessions SET user_id = $1 WHERE id = $2', [userId, sessionId]);
+    }
+  } else {
     await db.query(
       'INSERT INTO chat_sessions (id, user_id, title) VALUES ($1, $2, $3)',
       [sessionId, userId || null, message.substring(0, 80)]

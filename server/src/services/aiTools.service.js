@@ -195,8 +195,32 @@ const toolsList = [
 /**
  * Trình thực thi các thao tác CRUD từ Agent Function Calling
  */
+// Phân quyền công cụ AI — khớp với RBAC của REST API (authorize middleware)
+const TOOL_PERMISSIONS = {
+  create_craft: ['editor', 'admin'],
+  update_craft: ['editor', 'admin'],
+  delete_craft: ['admin'],
+  create_artisan: ['editor', 'admin'],
+  update_artisan: ['editor', 'admin'],
+  delete_artisan: ['admin'],
+};
+// Các công cụ yêu cầu đăng nhập (mọi vai trò)
+const LOGIN_REQUIRED_TOOLS = ['get_bookings', 'cancel_booking', 'add_favourite'];
+
 async function executeTool(toolName, args = {}, context = {}) {
   const { userId, userRole = 'guest', pageContext = {} } = context;
+  const isPrivileged = userRole === 'admin' || userRole === 'editor';
+
+  const allowedRoles = TOOL_PERMISSIONS[toolName];
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
+    return {
+      success: false,
+      message: `Bạn không có quyền thực hiện thao tác này. Yêu cầu quyền: [${allowedRoles.join(', ')}].`,
+    };
+  }
+  if (LOGIN_REQUIRED_TOOLS.includes(toolName) && !userId) {
+    return { success: false, message: 'Vui lòng đăng nhập để thực hiện thao tác này.' };
+  }
 
   try {
     switch (toolName) {
@@ -235,6 +259,12 @@ async function executeTool(toolName, args = {}, context = {}) {
         const phone = args.phone || '0900000000';
         const email = args.email || (context.userEmail || null);
         const visitDate = args.visitDate || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0];
+        if (!/^\d{4}-\d{2}-\d{2}/.test(String(visitDate)) || isNaN(new Date(visitDate).getTime())) {
+          return { success: false, message: 'Ngày hẹn không hợp lệ (định dạng YYYY-MM-DD).' };
+        }
+        if (String(visitDate).slice(0, 10) <= new Date().toISOString().slice(0, 10)) {
+          return { success: false, message: 'Ngày hẹn phải từ ngày mai trở đi.' };
+        }
         const timeSlot = args.timeSlot === 'afternoon' ? 'afternoon' : 'morning';
         const purpose = args.purpose || 'Đàm đạo trà & Tìm hiểu kỹ pháp chế tác di sản';
         const note = args.note || 'Đặt qua Trợ Lý Di Sản CraftRoots AI Agent';
@@ -284,21 +314,23 @@ async function executeTool(toolName, args = {}, context = {}) {
         `;
         const params = [];
 
-        if (bookingId) {
-          params.push(bookingId);
-          query += ` AND vb.id = $${params.length}`;
-        } else if (phone) {
-          params.push(`%${phone.trim()}%`);
-          query += ` AND vb.phone ILIKE $${params.length}`;
-        } else if (email) {
-          params.push(`%${email.trim()}%`);
-          query += ` AND vb.email ILIKE $${params.length}`;
-        } else if (userId) {
+        // Người dùng thường chỉ được xem phiếu hẹn của chính mình
+        if (!isPrivileged) {
           params.push(userId);
           query += ` AND vb.user_id = $${params.length}`;
-        } else {
-          query += ` ORDER BY vb.created_at DESC LIMIT 3`;
         }
+
+        if (bookingId) {
+          params.push(parseInt(bookingId, 10) || 0);
+          query += ` AND vb.id = $${params.length}`;
+        } else if (isPrivileged && phone) {
+          params.push(`%${String(phone).trim()}%`);
+          query += ` AND vb.phone ILIKE $${params.length}`;
+        } else if (isPrivileged && email) {
+          params.push(`%${String(email).trim()}%`);
+          query += ` AND vb.email ILIKE $${params.length}`;
+        }
+        query += ` ORDER BY vb.created_at DESC LIMIT 20`;
 
         const res = await db.query(query, params);
         return {
@@ -321,9 +353,14 @@ async function executeTool(toolName, args = {}, context = {}) {
         const updateRes = await db.query(
           `UPDATE visit_bookings 
            SET status = 'cancelled', admin_note = COALESCE(admin_note, '') || $2, updated_at = NOW()
-           WHERE id = $1
+           WHERE id = $1 AND ($3::boolean OR user_id = $4)
            RETURNING id, full_name, status`,
-          [bookingId, reason ? ` | Hủy bởi khách: ${reason}` : ' | Hủy qua AI Agent']
+          [
+            parseInt(bookingId, 10) || 0,
+            reason ? ` | Hủy bởi khách: ${reason}` : ' | Hủy qua AI Agent',
+            isPrivileged,
+            userId,
+          ]
         );
 
         if (updateRes.rowCount === 0) {
@@ -600,10 +637,9 @@ async function executeTool(toolName, args = {}, context = {}) {
           return { success: false, message: 'Không xác định được tác phẩm để lưu yêu thích.' };
         }
 
-        const effectiveUserId = userId || 1; // Fallback user nếu đang xem ở chế độ khách
         await db.query(
           'INSERT INTO favourites (user_id, craft_id, created_at) VALUES ($1, $2, NOW()) ON CONFLICT DO NOTHING',
-          [effectiveUserId, targetId]
+          [userId, targetId]
         );
 
         const craftInfo = await db.query('SELECT id, name, price_vnd AS "priceVnd" FROM crafts WHERE id = $1', [targetId]);

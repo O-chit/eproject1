@@ -74,21 +74,6 @@ export function AuthProvider({ children }) {
 
       return { success: true, user: receivedUser };
     } catch (err) {
-      if (email === 'user@craftroots.test' && password === 'Craft@1234') {
-        const mockUser = {
-          id: 2,
-          fullName: 'An Van Nguyen (User)',
-          email: 'user@craftroots.test',
-          role: 'user',
-        };
-        const mockToken = 'mock_jwt_token_for_offline_dev_' + Date.now();
-        setToken(mockToken);
-        setUser(mockUser);
-        localStorage.setItem('craftroots_token', mockToken);
-        localStorage.setItem('craftroots_user', JSON.stringify(mockUser));
-        return { success: true, user: mockUser };
-      }
-
       const errorMsg =
         err.details?.[0]?.issue || err.message || 'Invalid email or password';
       throw new Error(errorMsg);

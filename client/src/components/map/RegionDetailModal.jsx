@@ -291,9 +291,17 @@ export default function RegionDetailModal({ region, isOpen, onClose }) {
             <span className="text-text-primary font-bold">{region.name}</span>
           </div>
 
-          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+            <Link
+              to="/artisans"
+              onClick={onClose}
+              className="py-2.5 px-4 bg-surface-crisp border border-accent-terracotta text-accent-terracotta hover:bg-accent-terracotta hover:text-white font-label-action text-xs uppercase tracking-wider font-semibold transition-colors text-center shadow-xs"
+            >
+              Master Artisans →
+            </Link>
             <Link
               to={`/crafts?q=${encodeURIComponent(region.name)}`}
+              onClick={onClose}
               className="flex-1 sm:flex-none py-2.5 px-5 bg-accent-terracotta hover:bg-primary text-white font-label-action text-xs uppercase tracking-wider font-semibold transition-colors text-center shadow-xs"
             >
               Explore All Regional Crafts

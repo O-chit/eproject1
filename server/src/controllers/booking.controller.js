@@ -11,11 +11,30 @@ const createBooking = async (req, res, next) => {
 
     const details = [];
     if (!artisanId) details.push({ field: 'artisanId', issue: 'Vui lòng chọn nghệ nhân muốn thăm xưởng' });
-    if (!fullName || fullName.trim() === '') details.push({ field: 'fullName', issue: 'Họ và tên không được để trống' });
-    if (!phone || phone.trim() === '') details.push({ field: 'phone', issue: 'Số điện thoại không được để trống' });
-    if (!visitDate) details.push({ field: 'visitDate', issue: 'Ngày hẹn thăm xưởng không được để trống' });
-    if (!timeSlot) details.push({ field: 'timeSlot', issue: 'Khung giờ hẹn không được để trống' });
-    if (!purpose) details.push({ field: 'purpose', issue: 'Mục đích chuyến thăm không được để trống' });
+    if (typeof fullName !== 'string' || fullName.trim() === '') details.push({ field: 'fullName', issue: 'Họ và tên không được để trống' });
+    if (typeof phone !== 'string' || phone.trim() === '') details.push({ field: 'phone', issue: 'Số điện thoại không được để trống' });
+    if (!visitDate) {
+      details.push({ field: 'visitDate', issue: 'Ngày hẹn thăm xưởng không được để trống' });
+    } else if (typeof visitDate !== 'string' || !/^\d{4}-\d{2}-\d{2}/.test(visitDate) || isNaN(new Date(visitDate).getTime())) {
+      details.push({ field: 'visitDate', issue: 'Ngày hẹn không hợp lệ (định dạng YYYY-MM-DD)' });
+    } else {
+      // So sánh theo ngày (bỏ giờ): không cho phép đặt ngày trong quá khứ
+      const today = new Date().toISOString().slice(0, 10);
+      if (visitDate.slice(0, 10) < today) {
+        details.push({ field: 'visitDate', issue: 'Ngày hẹn không được ở trong quá khứ' });
+      }
+    }
+    if (typeof timeSlot !== 'string' || timeSlot.trim() === '') details.push({ field: 'timeSlot', issue: 'Khung giờ hẹn không được để trống' });
+    if (typeof purpose !== 'string' || purpose.trim() === '') details.push({ field: 'purpose', issue: 'Mục đích chuyến thăm không được để trống' });
+    if (email !== undefined && email !== null && email !== '' && (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))) {
+      details.push({ field: 'email', issue: 'Email không hợp lệ' });
+    }
+    if (note !== undefined && note !== null && typeof note !== 'string') {
+      details.push({ field: 'note', issue: 'Ghi chú phải là chuỗi' });
+    }
+    if (artisanId && !/^\d+$/.test(String(artisanId))) {
+      details.push({ field: 'artisanId', issue: 'Mã nghệ nhân không hợp lệ' });
+    }
 
     if (details.length > 0) {
       return error(res, 400, 'BAD_REQUEST', 'Dữ liệu đặt hẹn không hợp lệ', details);
@@ -33,15 +52,18 @@ const createBooking = async (req, res, next) => {
     }
 
     const artisan = artisanRes.rows[0];
-    const targetDate = new Date(visitDate);
-    const now = new Date();
 
-    // Ràng buộc thời gian đặt trước (lead time)
+    // Ràng buộc thời gian đặt trước (lead time), tính theo ngày:
+    // ví dụ lead time 24h -> sớm nhất là ngày mai, 48h -> ngày kia.
     const minHours = artisan.visit_lead_time_hours || 24;
-    const diffHours = (targetDate.getTime() - now.getTime()) / (1000 * 60 * 60);
-
-    if (diffHours < minHours - 24) {
-      // Cho phép linh hoạt nếu cùng ngày nhưng khuyến cáo đặt trước
+    const leadDays = Math.ceil(minHours / 24);
+    const earliest = new Date();
+    earliest.setDate(earliest.getDate() + leadDays);
+    const earliestStr = earliest.toISOString().slice(0, 10);
+    if (visitDate.slice(0, 10) < earliestStr) {
+      return error(res, 400, 'BAD_REQUEST', `Nghệ nhân ${artisan.name} yêu cầu đặt trước ít nhất ${minHours} giờ. Ngày sớm nhất có thể đặt: ${earliestStr}`, [
+        { field: 'visitDate', issue: `Ngày hẹn phải từ ${earliestStr} trở đi` },
+      ]);
     }
 
     const userId = req.user ? req.user.id : null;

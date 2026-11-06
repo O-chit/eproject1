@@ -9,7 +9,7 @@ const subscribeNewsletter = async (req, res, next) => {
   try {
     const { email } = req.body;
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       return error(res, 400, 'BAD_REQUEST', 'Địa chỉ email không hợp lệ theo định dạng RFC 5322');
     }
 

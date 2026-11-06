@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const db = require('../config/db');
+const env = require('../config/env');
 const { generateToken } = require('../utils/jwt');
 const { success, error } = require('../utils/response');
 
@@ -13,13 +14,13 @@ const register = async (req, res, next) => {
 
     // Kiểm tra dữ liệu đầu vào
     const details = [];
-    if (!fullName || fullName.trim() === '') {
+    if (typeof fullName !== 'string' || fullName.trim() === '') {
       details.push({ field: 'fullName', issue: 'Họ và tên không được để trống' });
     }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       details.push({ field: 'email', issue: 'Email không hợp lệ' });
     }
-    if (!password || password.length < 8) {
+    if (typeof password !== 'string' || password.length < 8) {
       details.push({ field: 'password', issue: 'Mật khẩu phải chứa ít nhất 8 ký tự' });
     }
 
@@ -36,7 +37,7 @@ const register = async (req, res, next) => {
     }
 
     // Băm mật khẩu bằng bcrypt (salt rounds = 10)
-    const saltRounds = 10;
+    const saltRounds = env.bcryptRounds;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
     // Lưu vào CSDL
@@ -81,7 +82,7 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       return error(res, 400, 'BAD_REQUEST', 'Vui lòng cung cấp đầy đủ email và mật khẩu');
     }
 
@@ -149,7 +150,7 @@ const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
 
-    if (!currentPassword || !newPassword) {
+    if (typeof currentPassword !== 'string' || typeof newPassword !== 'string' || !currentPassword || !newPassword) {
       return error(res, 400, 'BAD_REQUEST', 'Vui lòng cung cấp đầy đủ mật khẩu hiện tại và mật khẩu mới');
     }
 
@@ -170,7 +171,7 @@ const changePassword = async (req, res, next) => {
     }
 
     // Băm mật khẩu mới và cập nhật
-    const newHash = await bcrypt.hash(newPassword, 10);
+    const newHash = await bcrypt.hash(newPassword, env.bcryptRounds);
     await db.query('UPDATE users SET password_hash = $1, updated_at = NOW() WHERE id = $2', [
       newHash,
       req.user.id,
@@ -197,7 +198,7 @@ const updateProfile = async (req, res, next) => {
     const values = [];
 
     if (fullName !== undefined) {
-      if (fullName.trim() === '') {
+      if (typeof fullName !== 'string' || fullName.trim() === '') {
         return error(res, 400, 'BAD_REQUEST', 'Họ và tên không được để trống');
       }
       values.push(fullName.trim());
@@ -205,6 +206,9 @@ const updateProfile = async (req, res, next) => {
     }
 
     if (avatarUrl !== undefined) {
+      if (avatarUrl !== null && typeof avatarUrl !== 'string') {
+        return error(res, 400, 'BAD_REQUEST', 'avatarUrl phải là chuỗi URL');
+      }
       values.push(avatarUrl);
       updates.push(`avatar_url = $${values.length}`);
     }

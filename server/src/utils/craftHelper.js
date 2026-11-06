@@ -8,6 +8,7 @@ const craftSummarySelect = `
   c.name,
   c.slug,
   c.code,
+  c.code AS sku,
   c.tag,
   c.price_vnd AS "priceVnd",
   c.price_vnd,
@@ -20,6 +21,7 @@ const craftSummarySelect = `
   c.short_description AS "shortDescription",
   c.short_description AS description,
   c.is_featured AS "isFeatured",
+  c.is_spotlight AS "isSpotlight",
   COALESCE(
     (
       SELECT json_agg(m.name)
@@ -46,8 +48,16 @@ const craftSummarySelect = `
       ORDER BY ca.is_lead DESC
       LIMIT 1
     ),
-    'Nghệ nhân truyền thống'
+    'Village Master Artisan'
   ) AS artisan,
+  (
+    SELECT a.id
+    FROM craft_artisans ca
+    JOIN artisans a ON ca.artisan_id = a.id
+    WHERE ca.craft_id = c.id
+    ORDER BY ca.is_lead DESC
+    LIMIT 1
+  ) AS "artisanId",
   COALESCE(
     (
       SELECT t.name

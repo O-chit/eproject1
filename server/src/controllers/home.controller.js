@@ -168,9 +168,12 @@ const getStats = async (req, res, next) => {
  */
 const search = async (req, res, next) => {
   try {
-    const { q, type = 'all', limit = 6 } = req.query;
+    const pick = (v) => (Array.isArray(v) ? String(v[0]) : typeof v === 'string' ? v : undefined);
+    const q = pick(req.query.q);
+    const type = pick(req.query.type) || 'all';
+    const limit = pick(req.query.limit) || 6;
 
-    if (!q || q.trim() === '') {
+    if (typeof q !== 'string' || q.trim() === '') {
       return error(res, 400, 'BAD_REQUEST', 'Từ khóa tìm kiếm (q) không được để trống');
     }
 

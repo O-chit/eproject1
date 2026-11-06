@@ -369,7 +369,7 @@ const createArtisan = async (req, res, next) => {
       data: fullArtisan,
     });
   } catch (err) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK').catch(() => {});
     next(err);
   } finally {
     client.release();
@@ -531,7 +531,7 @@ const updateArtisan = async (req, res, next) => {
       data: updatedArtisan,
     });
   } catch (err) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK').catch(() => {});
     next(err);
   } finally {
     client.release();

@@ -27,7 +27,7 @@ export default function AdminArtisansPage() {
     setLoading(true);
     setErrorMsg('');
     try {
-      const res = await api.getArtisans();
+      const res = await api.getAllArtisans();
       const list = Array.isArray(res) ? res : res?.artisans || res?.items || [];
       setArtisans(list);
     } catch (err) {

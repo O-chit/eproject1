@@ -29,7 +29,7 @@ export default function ArtisansPage() {
       try {
         setLoading(true);
         const [artisansData, categoriesData, statsData] = await Promise.all([
-          api.getArtisans({ limit: 100 }),
+          api.getAllArtisans(),
           api.getCategories(),
           api.getStats(),
         ]);

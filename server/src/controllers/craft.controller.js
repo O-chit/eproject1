@@ -124,6 +124,10 @@ const fetchCraftDetail = async (craftId) => {
  */
 const getCrafts = async (req, res, next) => {
   try {
+    // Chuẩn hoá query (?q=a&q=b -> lấy giá trị đầu) tránh lỗi .trim() trên mảng
+    const qs = Object.fromEntries(
+      Object.entries(req.query).map(([k, v]) => [k, Array.isArray(v) ? String(v[0]) : typeof v === 'string' ? v : undefined])
+    );
     const {
       q,
       region,
@@ -135,7 +139,7 @@ const getCrafts = async (req, res, next) => {
       sort = 'latest',
       page = 1,
       limit = 12,
-    } = req.query;
+    } = qs;
 
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const limitNum = Math.max(1, Math.min(100, parseInt(limit, 10) || 12));
@@ -201,6 +205,9 @@ const getCrafts = async (req, res, next) => {
 
     // 6. Lọc theo chất liệu
     if (material) {
+      if (!/^\d+$/.test(String(material))) {
+        return error(res, 400, 'BAD_REQUEST', 'Tham số material phải là ID số nguyên');
+      }
       values.push(parseInt(material, 10));
       conditions.push(
         `EXISTS (SELECT 1 FROM craft_materials cm WHERE cm.craft_id = c.id AND cm.material_id = $${values.length})`
@@ -209,6 +216,9 @@ const getCrafts = async (req, res, next) => {
 
     // 7. Lọc theo kỹ thuật
     if (technique) {
+      if (!/^\d+$/.test(String(technique))) {
+        return error(res, 400, 'BAD_REQUEST', 'Tham số technique phải là ID số nguyên');
+      }
       values.push(parseInt(technique, 10));
       conditions.push(
         `EXISTS (SELECT 1 FROM craft_techniques ct WHERE ct.craft_id = c.id AND ct.technique_id = $${values.length})`
@@ -216,8 +226,8 @@ const getCrafts = async (req, res, next) => {
     }
 
     // 8. Lọc sản phẩm nổi bật (is_featured)
-    if (req.query.is_featured !== undefined) {
-      const isFeatured = req.query.is_featured === 'true' || req.query.is_featured === true;
+    if (qs.is_featured !== undefined) {
+      const isFeatured = qs.is_featured === 'true';
       values.push(isFeatured);
       conditions.push(`c.is_featured = $${values.length}`);
     }
@@ -265,30 +275,7 @@ const getCrafts = async (req, res, next) => {
 
     const dataSql = `
       SELECT
-        c.id,
-        c.name,
-        c.slug,
-        c.code AS sku,
-        c.price_vnd AS "priceVnd",
-        c.tag,
-        r.name AS region,
-        cat.name AS category,
-        cat.slug AS "categorySlug",
-        c.thumbnail_url AS "thumbnailUrl",
-        c.thumbnail_url AS image,
-        c.short_description AS "shortDescription",
-        c.short_description AS description,
-        c.is_featured AS "isFeatured",
-        c.is_spotlight AS "isSpotlight",
-        COALESCE(
-          (
-            SELECT json_agg(m.name)
-            FROM craft_materials cm
-            JOIN materials m ON cm.material_id = m.id
-            WHERE cm.craft_id = c.id
-          ),
-          '[]'::json
-        ) AS materials
+        ${craftSummarySelect}
       ${craftSummaryFrom}
       ${whereClause}
       ${orderClause}
@@ -311,25 +298,11 @@ const getCraftById = async (req, res, next) => {
     const { id } = req.params;
     const isNumeric = /^\d+$/.test(id);
 
-    // Tìm craft id
-    let craftRow = await db.query(
+    // Tìm craft id (khớp chính xác ID, slug hoặc mã SKU — không đoán gần đúng)
+    const craftRow = await db.query(
       `SELECT id FROM crafts WHERE ${isNumeric ? 'id = $1' : '(slug = $1 OR code = $1)'}`,
       [id]
     );
-
-    // Fallback: Tìm kiếm thông minh nếu định danh dạng chuỗi không khớp trực tiếp slug
-    if (craftRow.rowCount === 0 && !isNumeric) {
-      const keyword = id.replace(/[-_]/g, ' ').trim();
-      const fallbackResult = await db.query(
-        `SELECT id FROM crafts 
-         WHERE name ILIKE $1 OR slug ILIKE $2 OR cultural_context ILIKE $1 OR origin_line ILIKE $1
-         ORDER BY id ASC LIMIT 1`,
-        [`%${keyword}%`, `%${id}%`]
-      );
-      if (fallbackResult.rowCount > 0) {
-        craftRow = fallbackResult;
-      }
-    }
 
     if (craftRow.rowCount === 0) {
       return error(res, 404, 'CRAFT_NOT_FOUND', `Không tìm thấy sản phẩm với định danh "${id}"`);
@@ -495,7 +468,7 @@ const createCraft = async (req, res, next) => {
       data: fullCraft,
     });
   } catch (err) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK').catch(() => {});
     next(err);
   } finally {
     client.release();
@@ -512,7 +485,7 @@ const updateCraft = async (req, res, next) => {
   try {
     const isNumeric = /^\d+$/.test(id);
     const existing = await client.query(
-      `SELECT id FROM crafts WHERE ${isNumeric ? 'id = $1' : '(slug = $1 OR code = $1)'}`,
+      `SELECT id, is_spotlight FROM crafts WHERE ${isNumeric ? 'id = $1' : '(slug = $1 OR code = $1)'}`,
       [id]
     );
 
@@ -521,6 +494,7 @@ const updateCraft = async (req, res, next) => {
     }
 
     const craftId = existing.rows[0].id;
+    const currentSpotlight = existing.rows[0].is_spotlight;
     const {
       sku,
       name,
@@ -541,6 +515,17 @@ const updateCraft = async (req, res, next) => {
       isSpotlight,
       status,
     } = req.body;
+
+    const typeErrors = [];
+    if (name !== undefined && (typeof name !== 'string' || name.trim() === '')) {
+      typeErrors.push({ field: 'name', issue: 'Tên tác phẩm phải là chuỗi không rỗng' });
+    }
+    if (sku !== undefined && (typeof sku !== 'string' || sku.trim() === '')) {
+      typeErrors.push({ field: 'sku', issue: 'Mã SKU phải là chuỗi không rỗng' });
+    }
+    if (typeErrors.length > 0) {
+      return error(res, 400, 'BAD_REQUEST', 'Dữ liệu cập nhật tác phẩm không hợp lệ', typeErrors);
+    }
 
     await client.query('BEGIN');
 
@@ -606,7 +591,9 @@ const updateCraft = async (req, res, next) => {
       updates.push(`is_featured = $${values.length}`);
     }
     if (status !== undefined) {
-      const tag = status === 'draft' ? 'BẢN THẢO' : (isSpotlight ? 'KIỆT TÁC SPOTLIGHT' : 'TIÊU BIỂU');
+      // Nếu không gửi isSpotlight, giữ trạng thái Spotlight hiện tại của tác phẩm
+      const effectiveSpotlight = isSpotlight !== undefined ? isSpotlight : currentSpotlight;
+      const tag = status === 'draft' ? 'BẢN THẢO' : (effectiveSpotlight ? 'KIỆT TÁC SPOTLIGHT' : 'TIÊU BIỂU');
       values.push(tag);
       updates.push(`tag = $${values.length}`);
     }
@@ -679,7 +666,7 @@ const updateCraft = async (req, res, next) => {
       data: updatedCraft,
     });
   } catch (err) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK').catch(() => {});
     next(err);
   } finally {
     client.release();

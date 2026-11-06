@@ -3,6 +3,26 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../services/api';
 import { emitAgentCrudAction } from '../../services/liveAgentSync';
 
+const SESSION_KEY = 'craftroots_ai_session_id';
+
+// Tạo sessionId ngẫu nhiên khó đoán (dùng như khóa bí mật cho phiên khách)
+function generateSessionId() {
+  const rand = window.crypto?.randomUUID
+    ? window.crypto.randomUUID().replace(/-/g, '')
+    : Array.from(window.crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+  return `session_${rand}`;
+}
+
+function rotateSessionId() {
+  const id = generateSessionId();
+  try {
+    localStorage.setItem(SESSION_KEY, id);
+  } catch {
+    //
+  }
+  return id;
+}
+
 export default function CraftBotWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -96,8 +116,7 @@ export default function CraftBotWidget() {
   useEffect(() => {
     let storedSessionId = localStorage.getItem('craftroots_ai_session_id');
     if (!storedSessionId) {
-      storedSessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-      localStorage.setItem('craftroots_ai_session_id', storedSessionId);
+      storedSessionId = rotateSessionId();
     }
     setSessionId(storedSessionId);
 
@@ -114,7 +133,7 @@ export default function CraftBotWidget() {
       richCards: [],
       suggestedQuestions: [
         'Book an artisan studio visit (Nguyen Van An, Phone 0912345678, Nov 20)',
-        'Look up my booking reservations (Phone 0912345678)',
+        'Look up my booking reservations',
         'Search online history of Bat Trang ceramics',
         'Save this craft to my favorites'
       ],
@@ -130,7 +149,11 @@ export default function CraftBotWidget() {
           setMessages([initialGreeting]);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        // Phiên thuộc tài khoản khác (vd. sau khi đăng xuất) -> tạo phiên mới
+        if (err.status === 403 || err.status === 400) {
+          setSessionId(rotateSessionId());
+        }
         setMessages([initialGreeting]);
       });
   }, []);
@@ -161,11 +184,16 @@ export default function CraftBotWidget() {
 
     try {
       const pageContext = getPageContext();
-      const response = await api.chatAi({
-        sessionId,
-        message: textToSend,
-        pageContext
-      });
+      let response;
+      try {
+        response = await api.chatAi({ sessionId, message: textToSend, pageContext });
+      } catch (sendErr) {
+        if (sendErr.status !== 403) throw sendErr;
+        // Phiên không còn thuộc về người dùng hiện tại -> mở phiên mới và gửi lại
+        const freshId = rotateSessionId();
+        setSessionId(freshId);
+        response = await api.chatAi({ sessionId: freshId, message: textToSend, pageContext });
+      }
 
       // Emit Live State Sync to whole app
       if (response.toolExecutions && Array.isArray(response.toolExecutions)) {
@@ -219,10 +247,8 @@ export default function CraftBotWidget() {
   const handleClearHistory = async () => {
     if (window.confirm('Are you sure you want to reset this conversation?')) {
       try {
-        await api.deleteAiHistory(sessionId);
-        const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-        localStorage.setItem('craftroots_ai_session_id', newSessionId);
-        setSessionId(newSessionId);
+        await api.deleteAiHistory(sessionId).catch(() => {});
+        setSessionId(rotateSessionId());
         setMessages([
           {
             id: 'welcome_new',

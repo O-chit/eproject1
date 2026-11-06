@@ -178,55 +178,57 @@ export default function SeasonalPage() {
       )}
 
       {/* Immersive Editorial Hero */}
-      <section className="relative w-full -mt-[134px] md:-mt-20 overflow-hidden bg-surface-container-high">
-        <div
-          className="w-full min-h-[380px] sm:min-h-[480px] lg:min-h-[640px] bg-cover bg-center flex items-center relative"
-          style={{ backgroundImage: `url('${heroBg}')` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-text-primary/90 via-text-primary/75 to-transparent"></div>
-          <div className="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
-          
-          <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-margin w-full pt-[120px] sm:pt-[130px] md:pt-28 pb-6 sm:pb-space-xl">
-            <div className="max-w-2xl text-surface-crisp flex flex-col items-start">
-              <div className="flex items-center gap-space-xs mb-2 sm:mb-space-sm">
-                <span className="font-spec-code text-[10px] sm:text-spec-code tracking-[0.15em] sm:tracking-[0.25em] uppercase text-primary-fixed-dim">
-                  Limited Anthology
-                </span>
-                <span className="text-surface-variant/40 select-none">|</span>
-                <span className="font-label-signature italic text-[13px] sm:text-label-signature text-secondary-fixed">
-                  {heroSeasonBadge}
-                </span>
-              </div>
+      <section className="relative w-full min-h-[480px] sm:min-h-[540px] md:min-h-[640px] flex items-center overflow-hidden border-b border-border-neutral">
+        <div className="absolute inset-0 z-0">
+          <img
+            src={heroBg}
+            alt="Living Heritage seasonal background"
+            className="w-full h-full object-cover object-center filter brightness-[0.75]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30"></div>
+        </div>
 
-              <h1 className="font-display-hero text-[22px] sm:text-[32px] md:text-[44px] lg:text-[52px] uppercase text-surface-crisp font-light tracking-[1.5px] sm:tracking-[3px] md:tracking-[6px] leading-[1.25] mb-2.5 sm:mb-space-md">
-                {heroTitle}
-              </h1>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-margin py-12 sm:py-16 md:py-space-2xl w-full">
+          <div className="max-w-3xl">
+            {/* Archival metadata breadcrumb */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-space-sm mb-3 sm:mb-space-md font-spec-code text-[10.5px] sm:text-spec-code text-surface-crisp/80 tracking-[0.14em] sm:tracking-[0.2em] uppercase">
+              <span className="text-accent-terracotta font-semibold">Anthology Catalog</span>
+              <span className="opacity-40">|</span>
+              <span>{heroSeasonBadge}</span>
+              <span className="opacity-40 hidden sm:inline">|</span>
+              <span className="hidden sm:inline">24 Solar Terms</span>
+            </div>
 
-              <div className="h-0.5 w-12 sm:w-16 bg-accent-terracotta mb-2.5 sm:mb-space-md"></div>
+            {/* Editorial Title */}
+            <h1 className="font-display-hero text-[26px] sm:text-[38px] md:text-[50px] lg:text-[60px] text-surface-crisp tracking-[0.06em] sm:tracking-[0.12em] uppercase font-light leading-tight sm:leading-tight mb-3 sm:mb-space-md">
+              {heroTitle}
+            </h1>
 
-              <p className="font-body-default text-[13px] sm:text-body-default text-surface-variant font-normal leading-relaxed mb-4 sm:mb-space-lg max-w-xl">
-                {heroConcept}
-              </p>
+            {/* Curatorial thematic concept */}
+            <p className="font-body-default text-[13px] sm:text-[15px] md:text-body-default text-surface-crisp/85 font-light leading-relaxed mb-6 sm:mb-space-xl max-w-2xl">
+              {heroConcept}
+            </p>
 
-              <div className="flex flex-wrap items-center gap-3 sm:gap-space-md">
-                <a
-                  href="#tuyen-tap"
-                  className="inline-flex items-center justify-center bg-accent-terracotta hover:bg-primary text-surface-crisp font-label-action text-[11px] sm:text-label-action uppercase tracking-[0.12em] sm:tracking-[0.18em] px-5 py-2.5 sm:px-7 sm:py-3.5 transition-colors shadow-sm"
-                >
-                  Explore {seasonNameEn} Collection
-                </a>
-                <div className="flex items-center font-spec-code text-[10px] sm:text-spec-code text-surface-variant tracking-[0.08em] sm:tracking-[0.12em] uppercase">
-                  <span>Edition: {collection?.year || '2026'}</span>
-                  <span className="mx-2 sm:mx-3 text-surface-variant/40">|</span>
-                  <span>{collection ? 'Synced from Database' : 'Curated Template'}</span>
-                </div>
-              </div>
+            {/* Quick Actions */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-space-md">
+              <a
+                href="#tuyen-tap"
+                className="bg-accent-terracotta hover:bg-[#8E4A16] text-surface-crisp py-3 px-5 sm:py-3.5 sm:px-7 font-label-action text-[11px] sm:text-label-action uppercase tracking-[0.15em] sm:tracking-[0.2em] font-semibold transition-colors duration-200 shadow-sm"
+              >
+                Explore Collection ({displayedItems.length})
+              </a>
+              <Link
+                to="/crafts"
+                className="bg-surface-crisp/10 hover:bg-surface-crisp/25 backdrop-blur-sm border border-surface-crisp/40 text-surface-crisp py-3 px-5 sm:py-3.5 sm:px-7 font-label-action text-[11px] sm:text-label-action uppercase tracking-[0.15em] sm:tracking-[0.2em] font-semibold transition-colors duration-200"
+              >
+                Craft Directory
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* QUICK 4-SEASON SELECTOR: SPRING - SUMMER - AUTUMN - WINTER */}
+      {/* 4-Season Filter Bar */}
       <nav aria-label="Four seasons collection selector" className="w-full bg-surface-crisp border-y border-border-neutral sticky top-20 z-30 shadow-xs backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 md:px-margin py-3 flex items-center justify-between gap-4 overflow-x-auto no-scrollbar">
           <div className="flex items-center gap-2 shrink-0">
@@ -321,7 +323,15 @@ export default function SeasonalPage() {
               {collection?.title || `Curated Works — ${seasonNameEn}`}
             </h2>
           </div>
-          <div className="flex items-center gap-space-sm mt-space-sm md:mt-0 font-spec-code text-spec-code text-text-secondary">
+          <div className="flex flex-wrap items-center gap-space-sm mt-space-sm md:mt-0 font-spec-code text-spec-code text-text-secondary">
+            <Link
+              to="/artisans"
+              className="inline-flex items-center gap-1 text-accent-terracotta hover:underline font-semibold"
+            >
+              <span className="material-symbols-outlined text-[15px]">badge</span>
+              All Master Artisans →
+            </Link>
+            <span className="text-border-neutral opacity-60">|</span>
             <span className="text-text-primary font-semibold">{displayedItems.length} Representative Works</span>
             <span className="text-border-neutral opacity-60">|</span>
             <span>{collection ? 'Synced from Database' : 'Certified Provenance'}</span>
@@ -353,8 +363,16 @@ export default function SeasonalPage() {
 
                 <div className="p-3 sm:p-4 md:p-space-lg flex flex-col flex-1 justify-between bg-surface-crisp">
                   <div>
-                    <div className="flex items-center font-spec-code text-[10px] md:text-spec-code text-accent-terracotta tracking-[0.1em] uppercase mb-1 truncate">
-                      <span className="truncate">{item.region || item.artisan || 'Vietnam'}</span>
+                    <div className="flex items-center justify-between font-spec-code text-[10px] md:text-spec-code text-accent-terracotta tracking-[0.1em] uppercase mb-1 truncate">
+                      <span className="truncate">{item.region || 'Vietnam'}</span>
+                      <Link
+                        to="/artisans"
+                        className="text-text-secondary hover:text-accent-terracotta transition-colors flex items-center gap-0.5 ml-2 shrink-0 font-medium normal-case"
+                        title="Meet Master Artisans"
+                      >
+                        <span>artisan dossier</span>
+                        <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                      </Link>
                     </div>
                     <Link to={`/crafts/${item.craftId}`}>
                       <h3 className="font-title-card text-[15px] sm:text-[16px] md:text-title-card text-text-primary font-medium tracking-tight mb-1 md:mb-space-xs group-hover:text-accent-terracotta transition-colors line-clamp-2 leading-snug">
@@ -476,11 +494,15 @@ export default function SeasonalPage() {
               </span>
               <span>100% preserved Vietnamese indigenous natural materials</span>
             </div>
-            <div className="flex items-center gap-3 mt-2 md:mt-0 uppercase tracking-[0.12em] font-spec-code text-[11px]">
+            <div className="flex flex-wrap items-center gap-3 mt-2 md:mt-0 uppercase tracking-[0.12em] font-spec-code text-[11px]">
               <span>Archive Code: {collection?.code || collection?.archiveCode || `CR-${collection?.seasonCode?.toUpperCase() || 'AUTUMN'}-26`}</span>
               <span className="text-border-neutral opacity-60">|</span>
               <Link to="/crafts" className="text-accent-terracotta hover:underline font-medium">
-                Explore Craft Directory →
+                Crafts Directory →
+              </Link>
+              <span className="text-border-neutral opacity-60">|</span>
+              <Link to="/artisans" className="text-accent-terracotta hover:underline font-medium">
+                Master Artisans →
               </Link>
             </div>
           </div>

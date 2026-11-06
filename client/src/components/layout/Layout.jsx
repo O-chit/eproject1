@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -44,7 +44,7 @@ export default function Layout() {
           isMapPage ? 'flex-1 h-[calc(100vh-134px)] md:h-[calc(100vh-80px)] overflow-hidden flex flex-col' : 'flex-1'
         }`}
       >
-        <Outlet />
+        <Suspense fallback={<div className="w-full min-h-[50vh] flex items-center justify-center"><div className="w-8 h-8 border-2 border-accent-terracotta border-t-transparent rounded-full animate-spin" /></div>}><Outlet /></Suspense>
       </main>
 
       {!isMapPage && <Footer />}

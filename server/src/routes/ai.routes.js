@@ -9,11 +9,10 @@ router.get('/status', aiController.getStatus);
 // 2. Gửi tin nhắn và nhận phản hồi từ AI (kèm danh tính nếu đã đăng nhập)
 router.post('/chat', optionalAuthenticate, aiController.chat);
 
-// 3. Lịch sử cuộc trò chuyện
-router.get('/sessions/:sessionId/history', aiController.getHistory);
+// 3. Lịch sử cuộc trò chuyện (chỉ chủ sở hữu phiên)
+router.get('/sessions/:sessionId/history', optionalAuthenticate, aiController.getHistory);
 
-// 4. Xóa phiên trò chuyện
-router.delete('/sessions/:sessionId', aiController.deleteHistory);
+// 4. Xóa phiên trò chuyện (chỉ chủ sở hữu phiên)
+router.delete('/sessions/:sessionId', optionalAuthenticate, aiController.deleteHistory);
 
 module.exports = router;
-

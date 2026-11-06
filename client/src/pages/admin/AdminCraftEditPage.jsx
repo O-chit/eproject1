@@ -54,7 +54,7 @@ export default function AdminCraftEditPage() {
         const [catRes, regRes, artRes] = await Promise.all([
           api.getCategories().catch(() => []),
           api.getRegions().catch(() => []),
-          api.getArtisans().catch(() => []),
+          api.getAllArtisans().catch(() => []),
         ]);
         setCategories(Array.isArray(catRes) ? catRes : catRes?.categories || []);
         setRegions(Array.isArray(regRes) ? regRes : regRes?.regions || []);

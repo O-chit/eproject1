@@ -45,7 +45,7 @@ export default function AdminCraftsPage() {
     setErrorMsg('');
     try {
       const [craftsRes, catRes, regRes] = await Promise.all([
-        api.getCrafts({ limit: 100 }),
+        api.getAllCrafts(),
         api.getCategories().catch(() => []),
         api.getRegions().catch(() => []),
       ]);

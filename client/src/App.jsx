@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { FavouritesProvider } from './context/FavouritesContext';
@@ -6,33 +6,43 @@ import Layout from './components/layout/Layout';
 import PrivateRoute from './components/common/PrivateRoute';
 import PublicOnlyRoute from './components/common/PublicOnlyRoute';
 
-import HomePage from './pages/HomePage';
-import DirectoryPage from './pages/DirectoryPage';
-import CraftDetailPage from './pages/CraftDetailPage';
-import ArtisansPage from './pages/ArtisansPage';
-import ArtisanDetailPage from './pages/ArtisanDetailPage';
-import RegionsPage from './pages/RegionsPage';
-import SeasonalPage from './pages/SeasonalPage';
-import FavouritesPage from './pages/FavouritesPage';
-import ContactPage from './pages/ContactPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import ProfilePage from './pages/ProfilePage';
-import NotFoundPage from './pages/NotFoundPage';
+const HomePage = lazy(() => import('./pages/HomePage'));
+const DirectoryPage = lazy(() => import('./pages/DirectoryPage'));
+const CraftDetailPage = lazy(() => import('./pages/CraftDetailPage'));
+const ArtisansPage = lazy(() => import('./pages/ArtisansPage'));
+const ArtisanDetailPage = lazy(() => import('./pages/ArtisanDetailPage'));
+const RegionsPage = lazy(() => import('./pages/RegionsPage'));
+const SeasonalPage = lazy(() => import('./pages/SeasonalPage'));
+const FavouritesPage = lazy(() => import('./pages/FavouritesPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Admin CMS Portal (SEC 6.3 RBAC)
 import AdminRoute from './components/common/AdminRoute';
 import AdminLayout from './components/layout/AdminLayout';
-import AdminCraftsPage from './pages/admin/AdminCraftsPage';
-import AdminCraftEditPage from './pages/admin/AdminCraftEditPage';
-import AdminArtisansPage from './pages/admin/AdminArtisansPage';
-import AdminArtisanEditPage from './pages/admin/AdminArtisanEditPage';
+const AdminCraftsPage = lazy(() => import('./pages/admin/AdminCraftsPage'));
+const AdminCraftEditPage = lazy(() => import('./pages/admin/AdminCraftEditPage'));
+const AdminArtisansPage = lazy(() => import('./pages/admin/AdminArtisansPage'));
+const AdminArtisanEditPage = lazy(() => import('./pages/admin/AdminArtisanEditPage'));
+
+// Code-splitting: mỗi trang được tải riêng khi truy cập (giảm kích thước bundle ban đầu)
+function PageLoader() {
+  return (
+    <div className="w-full min-h-[60vh] flex items-center justify-center">
+      <div className="w-10 h-10 border-2 border-accent-terracotta border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 export default function App() {
   return (
     <AuthProvider>
       <FavouritesProvider>
         <BrowserRouter>
+          <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* 1. Public Routes: Login & Register (Guest only) */}
             <Route
@@ -95,6 +105,7 @@ export default function App() {
             {/* Catch-all fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
       </FavouritesProvider>
     </AuthProvider>

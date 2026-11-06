@@ -31,21 +31,46 @@ async function request(endpoint, options = {}) {
     throw err;
   }
   
-  return data.data !== undefined ? data.data : data;
+  if (data.data === undefined) return data;
+
+  // Giữ thông tin phân trang: gắn `pagination` (không liệt kê) vào mảng kết quả
+  // để code cũ dùng mảng vẫn chạy, code mới đọc được result.pagination.
+  if (Array.isArray(data.data) && data.pagination) {
+    Object.defineProperty(data.data, 'pagination', { value: data.pagination, enumerable: false });
+  }
+  return data.data;
+}
+
+function buildQuery(params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && v !== '') {
+      query.append(k, v);
+    }
+  });
+  const qs = query.toString();
+  return qs ? `?${qs}` : '';
+}
+
+/**
+ * Tải toàn bộ bản ghi của một endpoint phân trang (server giới hạn tối đa 100 bản ghi/trang)
+ */
+async function getAllPages(endpoint, params = {}, maxPages = 20) {
+  const all = [];
+  for (let page = 1; page <= maxPages; page++) {
+    const items = await request(`${endpoint}${buildQuery({ ...params, page, limit: 100 })}`);
+    const list = Array.isArray(items) ? items : [];
+    all.push(...list);
+    const totalPages = items?.pagination?.totalPages || 1;
+    if (page >= totalPages || list.length === 0) break;
+  }
+  return all;
 }
 
 export const api = {
   // Sản phẩm thủ công
-  getCrafts: (params = {}) => {
-    const query = new URLSearchParams();
-    Object.entries(params).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== '') {
-        query.append(k, v);
-      }
-    });
-    const qs = query.toString();
-    return request(`/crafts${qs ? `?${qs}` : ''}`);
-  },
+  getCrafts: (params = {}) => request(`/crafts${buildQuery(params)}`),
+  getAllCrafts: (params = {}) => getAllPages('/crafts', params),
   getCraftById: (id) => request(`/crafts/${id}`),
   getRelatedCrafts: (id) => request(`/crafts/${id}/related`),
   createCraft: (payload) => request('/crafts', { method: 'POST', body: JSON.stringify(payload) }),
@@ -60,16 +85,8 @@ export const api = {
   getTechniques: () => request('/techniques'),
 
   // Nghệ nhân
-  getArtisans: (params = {}) => {
-    const query = new URLSearchParams();
-    Object.entries(params).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== '') {
-        query.append(k, v);
-      }
-    });
-    const qs = query.toString();
-    return request(`/artisans${qs ? `?${qs}` : ''}`);
-  },
+  getArtisans: (params = {}) => request(`/artisans${buildQuery(params)}`),
+  getAllArtisans: (params = {}) => getAllPages('/artisans', params),
   getArtisanById: (id) => request(`/artisans/${id}`),
   createArtisan: (payload) => request('/artisans', { method: 'POST', body: JSON.stringify(payload) }),
   updateArtisan: (id, payload) => request(`/artisans/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
@@ -93,6 +110,9 @@ export const api = {
   removeFavourite: (craftId) => request(`/favourites/${craftId}`, { method: 'DELETE' }),
   clearFavourites: () => request('/favourites', { method: 'DELETE' }),
   syncFavourites: (craftIds) => request('/favourites/sync', { method: 'POST', body: JSON.stringify({ craftIds }) }),
+
+  // Đặt lịch hẹn thăm xưởng
+  createBooking: (payload) => request('/visit-bookings', { method: 'POST', body: JSON.stringify(payload) }),
 
   // Tin nhắn liên hệ
   submitContact: (payload) => request('/contact', { method: 'POST', body: JSON.stringify(payload) }),

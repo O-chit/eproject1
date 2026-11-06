@@ -12,8 +12,9 @@ export function FavouritesProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   // Initial read or refresh saved crafts
-  const refreshFavourites = useCallback(async () => {
-    setLoading(true);
+  // silent: làm mới ngầm (không bật loading) khi đồng bộ do sự kiện
+  const refreshFavourites = useCallback(async ({ silent = false } = {}) => {
+    if (!silent) setLoading(true);
     try {
       if (isAuthenticated) {
         // 1. If logged in: Check if there are guest saved items that need syncing
@@ -61,7 +62,7 @@ export function FavouritesProvider({ children }) {
     } catch (err) {
       console.error('[FavouritesContext] Error loading saved items:', err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, [isAuthenticated]);
 
@@ -71,7 +72,7 @@ export function FavouritesProvider({ children }) {
 
   useEffect(() => {
     const handleSync = () => {
-      refreshFavourites();
+      refreshFavourites({ silent: true });
     };
     window.addEventListener('storage', handleSync);
     window.addEventListener('craftroots_favs_updated', handleSync);
@@ -88,7 +89,7 @@ export function FavouritesProvider({ children }) {
       if (targetId) {
         setFavourites((prev) => [...new Set([...prev, targetId])]);
       }
-      refreshFavourites();
+      refreshFavourites({ silent: true });
     }
   }, [refreshFavourites]);
 
@@ -126,6 +127,9 @@ export function FavouritesProvider({ children }) {
           }
         } catch (err) {
           console.warn('[FavouritesContext] Unable to save favourite on server:', err);
+          // Hoàn tác cập nhật lạc quan khi server từ chối
+          setFavourites(favourites);
+          return;
         }
       } else {
         try {

@@ -90,6 +90,7 @@ export default function CraftDetailPage() {
 
   const currentPhoto = photos[activePhotoIndex] || photos[0];
   const leadArtisan = craft?.artisans?.[0] || {
+    id: 1,
     name: 'Village Master Artisan',
     title: 'Master Artisan',
     roleTitle: 'Lead Craftsman',
@@ -106,6 +107,8 @@ export default function CraftDetailPage() {
             <Link to="/" className="hover:text-accent-terracotta transition-colors">Home</Link>
             <span className="mx-3 opacity-35 select-none text-text-secondary">|</span>
             <Link to="/crafts" className="hover:text-accent-terracotta transition-colors">{craft?.category?.name || 'Heritage Crafts'}</Link>
+            <span className="mx-3 opacity-35 select-none text-text-secondary">|</span>
+            <Link to="/artisans" className="hover:text-accent-terracotta transition-colors">Master Artisans</Link>
             <span className="mx-3 opacity-35 select-none text-text-secondary">|</span>
             <Link to="/regions" className="hover:text-accent-terracotta transition-colors">{craft?.region?.name || 'Traditional Craft Village'}</Link>
             <span className="mx-3 opacity-35 select-none text-text-secondary">|</span>
@@ -196,15 +199,27 @@ export default function CraftDetailPage() {
               {/* Artisan Endorsement Ribbon */}
               <div className="p-3 sm:p-space-md bg-surface-subtle border border-border-neutral mb-4 sm:mb-space-lg flex items-center justify-between shadow-sm">
                 <div className="flex flex-col">
-                  <span className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary uppercase tracking-[0.12em] sm:tracking-[0.14em]">Crafted by master artisan</span>
-                  <Link to={`/artisans/${leadArtisan.id || 1}`} className="font-label-signature text-[18px] sm:text-[22px] leading-tight text-text-primary font-normal hover:text-accent-terracotta transition-colors">
-                    {leadArtisan.name}
+                  <div className="flex items-center gap-2">
+                    <span className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary uppercase tracking-[0.12em] sm:tracking-[0.14em]">Crafted by master artisan</span>
+                    <Link to="/artisans" className="text-[10px] sm:text-[11px] font-spec-code text-accent-terracotta hover:underline uppercase">
+                      (All Artisans →)
+                    </Link>
+                  </div>
+                  <Link
+                    to={`/artisans/${leadArtisan.id || 1}`}
+                    className="font-label-signature text-[18px] sm:text-[22px] leading-tight text-text-primary font-normal hover:text-accent-terracotta transition-colors flex items-center gap-1.5 mt-0.5"
+                  >
+                    <span>{leadArtisan.name}</span>
+                    <span className="material-symbols-outlined text-[16px] text-accent-terracotta">arrow_forward</span>
                   </Link>
                 </div>
                 <div className="text-right">
-                  <span className="inline-block px-2 sm:px-2.5 py-0.5 sm:py-1 bg-surface-crisp text-accent-terracotta font-spec-code text-[9px] sm:text-[10px] tracking-[0.12em] sm:tracking-[0.15em] uppercase font-semibold border border-border-neutral">
-                    {leadArtisan.title || 'Master Artisan'}
-                  </span>
+                  <Link
+                    to={`/artisans/${leadArtisan.id || 1}`}
+                    className="inline-block px-2 sm:px-2.5 py-0.5 sm:py-1 bg-surface-crisp text-accent-terracotta font-spec-code text-[9px] sm:text-[10px] tracking-[0.12em] sm:tracking-[0.15em] uppercase font-semibold border border-border-neutral hover:bg-accent-terracotta hover:text-white transition-colors"
+                  >
+                    {leadArtisan.title || 'Master Artisan'} →
+                  </Link>
                   <p className="font-spec-code text-[10px] sm:text-[11px] text-text-secondary mt-0.5 sm:mt-1">{leadArtisan.roleTitle || 'Lead Craftsman'}</p>
                 </div>
               </div>
@@ -318,25 +333,20 @@ export default function CraftDetailPage() {
                 Continuously fired for 72 hours with aged pine wood to peak at 1300°C. Crackle fractures form naturally during slow 48-hour northeast wind cooling.
               </p>
             </div>
-            <div className="md:col-span-8 bg-surface-crisp border border-border-neutral p-space-lg shadow-sm">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-gutter text-center">
-                <div className="flex flex-col items-center">
-                  <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.1em] mb-1">Stage 1</span>
-                  <span className="font-display-hero text-[24px] text-text-primary font-medium tracking-normal">250°C</span>
-                  <span className="font-body-spec text-[12px] text-text-secondary mt-1">Dehydration &amp; slow drying</span>
+            <div className="md:col-span-8">
+              <div className="grid grid-cols-3 gap-space-sm text-center">
+                <div className="p-space-md bg-surface-crisp border border-border-neutral shadow-sm">
+                  <span className="font-spec-code text-spec-code text-accent-terracotta uppercase tracking-wider block mb-1">Raw Firing Stage</span>
+                  <span className="font-display-hero text-[24px] text-text-primary font-medium tracking-normal">850°C</span>
+                  <span className="font-body-spec text-[12px] text-text-secondary mt-1">Water evaporation &amp; clay body vitrification</span>
                 </div>
-                <div className="flex flex-col items-center">
-                  <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.1em] mb-1">Stage 2</span>
-                  <span className="font-display-hero text-[24px] text-text-primary font-medium tracking-normal">950°C</span>
-                  <span className="font-body-spec text-[12px] text-text-secondary mt-1">Deoxygenation in sealed kiln</span>
+                <div className="p-space-md bg-surface-crisp border border-border-neutral shadow-sm">
+                  <span className="font-spec-code text-spec-code text-accent-terracotta uppercase tracking-wider block mb-1">Peak Transformation</span>
+                  <span className="font-display-hero text-[24px] text-text-primary font-medium tracking-normal">1300°C</span>
+                  <span className="font-body-spec text-[12px] text-text-secondary mt-1">Ash glaze fuses into jade crackle layer</span>
                 </div>
-                <div className="flex flex-col items-center">
-                  <span className="font-spec-code text-spec-code text-accent-terracotta font-semibold uppercase tracking-[0.1em] mb-1">Peak Heat</span>
-                  <span className="font-display-hero text-[24px] text-accent-terracotta font-medium tracking-normal">1300°C</span>
-                  <span className="font-body-spec text-[12px] text-text-secondary mt-1">Vitrification of ash glaze</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="font-spec-code text-spec-code text-text-secondary uppercase tracking-[0.1em] mb-1">Cyclic Cooling</span>
+                <div className="p-space-md bg-surface-crisp border border-border-neutral shadow-sm">
+                  <span className="font-spec-code text-spec-code text-accent-terracotta uppercase tracking-wider block mb-1">Cooling &amp; Fracturing</span>
                   <span className="font-display-hero text-[24px] text-text-primary font-medium tracking-normal">48 Hours</span>
                   <span className="font-body-spec text-[12px] text-text-secondary mt-1">Crackle glaze crackles softly</span>
                 </div>
@@ -361,8 +371,23 @@ export default function CraftDetailPage() {
                 Works by Master {leadArtisan.name} <span className="opacity-35 select-none font-light">|</span> {craft?.region?.name || 'Village Heritage'}
               </h3>
             </div>
-            <div className="mt-space-sm md:mt-0 font-spec-code text-spec-code uppercase tracking-[0.15em] text-text-secondary">
-              Archived records: {relatedList.length} related works
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <Link
+                to={`/artisans/${leadArtisan.id || 1}`}
+                className="inline-flex items-center gap-1.5 text-[11px] font-spec-code uppercase tracking-wider text-accent-terracotta border border-accent-terracotta/40 px-2.5 py-1 hover:bg-accent-terracotta hover:text-white transition-colors"
+              >
+                <span className="material-symbols-outlined text-[14px]">badge</span>
+                View Artisan Profile &rarr;
+              </Link>
+              <Link
+                to="/artisans"
+                className="inline-flex items-center gap-1.5 text-[11px] font-spec-code uppercase tracking-wider text-text-secondary hover:text-accent-terracotta transition-colors"
+              >
+                All Artisans &rarr;
+              </Link>
+              <div className="font-spec-code text-spec-code uppercase tracking-[0.15em] text-text-secondary">
+                Records: {relatedList.length}
+              </div>
             </div>
           </div>
 

@@ -64,7 +64,7 @@ export default function DirectoryPage() {
     async function loadCrafts() {
       try {
         setLoading(true);
-        const params = { limit: 50 };
+        const params = {};
         if (selectedTab !== 'all') {
           params.category = selectedTab;
         }
@@ -72,7 +72,7 @@ export default function DirectoryPage() {
           params.q = searchQuery.trim();
         }
 
-        const data = await api.getCrafts(params);
+        const data = await api.getAllCrafts(params);
         const items = Array.isArray(data) ? data : data.data || [];
         if (isMounted) {
           setCrafts(items);
@@ -138,6 +138,8 @@ export default function DirectoryPage() {
       ? `${Number(item.priceVnd || item.price_vnd).toLocaleString('en-US')} VND`
       : item.price || 'Contact curator',
     image: item.thumbnailUrl || item.image || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80',
+    artisan: item.artisan || 'Master Artisan',
+    artisanId: item.artisanId || null,
   }));
 
   return (
@@ -164,9 +166,18 @@ export default function DirectoryPage() {
           <h1 className="font-display-hero text-[20px] sm:text-[28px] md:text-[38px] lg:text-display-hero text-text-primary uppercase tracking-[0.1em] sm:tracking-[0.18em] md:tracking-[0.3em] font-light leading-tight mb-2 sm:mb-space-sm">
             CRAFT HERITAGE DIRECTORY
           </h1>
-          <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary max-w-3xl leading-relaxed">
-            An archive of {totalCraftCount || displayItems.length} authentic handcrafted works from traditional Vietnamese craft villages. Each piece is individually catalogued with geographical origin certification and artisanal technique dossiers.
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="font-body-default text-[13px] sm:text-body-default text-text-secondary max-w-3xl leading-relaxed">
+              An archive of {totalCraftCount || displayItems.length} authentic handcrafted works from traditional Vietnamese craft villages. Each piece is individually catalogued with geographical origin certification and artisanal technique dossiers.
+            </p>
+            <Link
+              to="/artisans"
+              className="inline-flex items-center gap-2 px-3.5 py-2 bg-surface-crisp border border-accent-terracotta text-accent-terracotta hover:bg-accent-terracotta hover:text-white transition-all text-[11px] font-spec-code uppercase tracking-wider font-semibold shadow-xs shrink-0 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">badge</span>
+              Explore Master Artisans →
+            </Link>
+          </div>
 
           {/* Search & Quantitative Filters Bar */}
           <div className="mt-4 sm:mt-space-lg flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-space-md">
@@ -190,14 +201,17 @@ export default function DirectoryPage() {
                 {displayItems.length} ARTIFACTS
               </span>
               <span className="text-border-neutral opacity-60">|</span>
+              <Link
+                to="/artisans"
+                className="flex items-center gap-1 hover:text-accent-terracotta transition-colors font-medium text-text-primary"
+              >
+                <span className="material-symbols-outlined text-[15px] text-accent-terracotta">person</span>
+                ARTISAN DIRECTORY
+              </Link>
+              <span className="text-border-neutral opacity-60">|</span>
               <span className="flex items-center gap-1 cursor-pointer hover:text-accent-terracotta transition-colors">
                 <span className="material-symbols-outlined text-[15px]">tune</span>
                 TECHNIQUE FILTER
-              </span>
-              <span className="text-border-neutral opacity-60">|</span>
-              <span className="flex items-center gap-1 cursor-pointer hover:text-accent-terracotta transition-colors">
-                <span className="material-symbols-outlined text-[15px]">swap_vert</span>
-                RANKING
               </span>
             </div>
           </div>
@@ -296,6 +310,20 @@ export default function DirectoryPage() {
                       <h3 className="font-headline-title text-[15px] sm:text-[16px] md:text-headline-title text-text-primary tracking-tight mb-1 md:mb-space-xs group-hover:text-accent-terracotta transition-colors line-clamp-2 leading-snug">
                         <Link to={`/crafts/${item.id}`}>{item.name}</Link>
                       </h3>
+
+                      {/* Artisan attribution link */}
+                      <div className="mb-2 flex items-center gap-1.5 text-[11px] font-body-spec">
+                        <span className="text-text-secondary">Artisan:</span>
+                        <Link
+                          to={item.artisanId ? `/artisans/${item.artisanId}` : '/artisans'}
+                          className="text-text-primary hover:text-accent-terracotta font-medium underline decoration-border-neutral hover:decoration-accent-terracotta transition-colors truncate"
+                          title={item.artisan ? `View profile of ${item.artisan}` : 'Explore Master Artisans'}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {item.artisan}
+                        </Link>
+                      </div>
+
                       <p className="hidden md:block font-body-spec text-body-spec text-text-secondary leading-relaxed mb-space-md">
                         {item.description}
                       </p>

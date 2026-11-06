@@ -25,6 +25,7 @@ export default function FavouritesPage() {
           const mapped = list.map((c) => ({
             id: c.id,
             craftId: c.id,
+            artisanId: c.artisanId || c.artisan_id || null,
             tag: c.tag || c.category || 'TRADITIONAL HERITAGE',
             village: c.village || c.region || 'Craft Village',
             category: c.category || 'Handicraft',
@@ -43,7 +44,8 @@ export default function FavouritesPage() {
             if (isMounted) setItems([]);
             return;
           }
-          const allCraftsRes = await api.getCrafts({ limit: 100 });
+          // Chỉ tải đúng các sản phẩm đã lưu (server hỗ trợ ?ids=1,2,3)
+          const allCraftsRes = await api.getAllCrafts({ ids: favourites.join(',') });
           if (!isMounted) return;
           const allCrafts = Array.isArray(allCraftsRes)
             ? allCraftsRes
@@ -53,6 +55,7 @@ export default function FavouritesPage() {
           const mapped = matching.map((c) => ({
             id: c.id,
             craftId: c.id,
+            artisanId: c.artisanId || c.artisan_id || null,
             tag: c.tag || c.category || 'TRADITIONAL HERITAGE',
             village: c.village || c.region || 'Craft Village',
             category: c.category || 'Handicraft',
@@ -98,45 +101,20 @@ export default function FavouritesPage() {
   };
 
   const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      setNotification('Collection link copied to clipboard.');
-      setTimeout(() => setNotification(''), 4000);
-    } else {
-      alert('Collection share link generated.');
-    }
+    navigator.clipboard.writeText(window.location.href);
+    setNotification('Collection link copied to clipboard.');
+    setTimeout(() => setNotification(''), 4000);
   };
 
   return (
     <div className="flex flex-col w-full bg-canvas-linen">
-      {/* Top Breadcrumb & Archive Meta Row */}
-      <section className="w-full bg-canvas-linen pt-4 sm:pt-8 pb-3 sm:pb-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
-          <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-border-neutral">
-            {/* Structural Breadcrumb with delimiter styling */}
-            <nav aria-label="Archive breadcrumb" className="flex items-center text-text-secondary font-label-action text-[10px] sm:text-label-action uppercase tracking-[0.14em] sm:tracking-[0.2em]">
-              <Link to="/" className="hover:text-accent-terracotta transition-colors">HOME</Link>
-              <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
-              <span className="text-text-secondary">USER PROFILE</span>
-              <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span>
-              <span className="text-text-primary font-semibold">SAVED CRAFTS</span>
-            </nav>
-            {/* Live Archive Coordinate Stamp */}
-            <div className="flex items-center gap-2 font-spec-code text-[10px] sm:text-spec-code text-text-secondary uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta inline-block animate-pulse"></span>
-              <span>{isAuthenticated ? 'DB SYNCHRONIZED ARCHIVE' : 'LOCAL BROWSER ARCHIVE'}: {items.length.toString().padStart(2, '0')} CRAFTS</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Title & Action Bar Section */}
-      <section className="w-full bg-canvas-linen pb-4 sm:pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-margin">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 pb-4">
-            <div className="flex flex-col space-y-2 sm:space-y-3 max-w-2xl">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-surface-crisp border border-border-neutral font-spec-code text-[10px] sm:text-spec-code uppercase tracking-[0.1em] sm:tracking-[0.15em] text-accent-terracotta shadow-sm">
+      {/* Editorial Header Section */}
+      <section className="w-full bg-canvas-linen pt-space-xl pb-space-lg border-b border-border-neutral">
+        <div className="max-w-7xl mx-auto px-4 md:px-margin">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+            <div className="max-w-2xl space-y-space-xs">
+              <div className="flex items-center space-x-space-sm">
+                <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-accent-terracotta font-semibold">
                   {items.length} SAVED CRAFTS
                 </span>
                 <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.1em] text-text-secondary">
@@ -155,6 +133,14 @@ export default function FavouritesPage() {
 
             {/* Global Archive Utilities Bar */}
             <div className="flex flex-wrap items-center gap-y-2 text-[11px] sm:text-[13px] font-label-action uppercase tracking-[1px] sm:tracking-[2px] text-text-primary pb-2">
+              <Link
+                to="/artisans"
+                className="hover:text-accent-terracotta transition-colors flex items-center gap-1.5 py-1 text-accent-terracotta font-semibold"
+              >
+                <span className="material-symbols-outlined text-[16px]">badge</span>
+                <span>MASTER ARTISANS</span>
+              </Link>
+              <span className="mx-4 text-border-neutral opacity-60 font-light select-none">|</span>
               <button
                 type="button"
                 onClick={handleShare}
@@ -170,7 +156,7 @@ export default function FavouritesPage() {
                 className="hover:text-accent-terracotta transition-colors flex items-center gap-1.5 py-1 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[16px] text-accent-terracotta">print</span>
-                <span>PRINT INVENTORY SHEET</span>
+                <span>PRINT INVENTORY</span>
               </button>
               {items.length > 0 && (
                 <>
@@ -226,12 +212,18 @@ export default function FavouritesPage() {
               <p className="font-body-spec text-[14px] text-text-secondary max-w-md mx-auto mb-6">
                 You have not saved any heritage crafts to your personal collection. Explore the catalog and bookmark your favorite masterpieces.
               </p>
-              <div className="flex justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-4">
                 <Link
                   to="/crafts"
                   className="bg-text-primary hover:bg-accent-terracotta text-surface-crisp px-6 py-3 font-label-action text-label-action uppercase tracking-[0.18em] transition-colors"
                 >
-                  Explore Heritage
+                  Explore Heritage Crafts
+                </Link>
+                <Link
+                  to="/artisans"
+                  className="bg-surface-crisp border border-accent-terracotta text-accent-terracotta hover:bg-accent-terracotta hover:text-white px-6 py-3 font-label-action text-label-action uppercase tracking-[0.18em] transition-colors"
+                >
+                  Meet Master Artisans →
                 </Link>
               </div>
             </div>
@@ -287,7 +279,13 @@ export default function FavouritesPage() {
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="uppercase tracking-wider">Artisan:</span>
-                          <span className="text-text-primary">{item.artisan}</span>
+                          <Link
+                            to={item.artisanId ? `/artisans/${item.artisanId}` : '/artisans'}
+                            className="text-text-primary hover:text-accent-terracotta underline font-medium truncate max-w-[150px]"
+                            title="View Artisan Dossier"
+                          >
+                            {item.artisan} →
+                          </Link>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="uppercase tracking-wider">Technique:</span>

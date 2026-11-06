@@ -15,6 +15,7 @@ const HIGHLIGHT_CRAFTS = [
     material: 'Kaolin & wood ash glaze',
     dimension: '180ml | Ø 9.5cm',
     price: '1.850.000 ₫',
+    artisanId: 1,
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaUrvFnVxj2lsHDRkr-yaTRJCRIumrtcbAoBO8T7gJK22rF-l8LFMNoASMdtx_N8hQkmINE6HE7xtmJmzGpxqvbiG5mzG2TvxNKGDuu4MZjKV7e4q6ixIFOJ1PSNsl56IqQagawz_SCLeDfMjYY1bGxxdBh3e-6wBJ15RkSXBTpEZHEoWqpB_uzbwmdJy82jUtSMpkv6zROQGRW5W2GKqEOL2DxfhNLSsVd1T7ujM',
     alt: 'Close-up macro of an artisanal Vietnamese cracked-glaze teapot from Bat Trang pottery village, delicate web-like crazing across ivory porcelain surface, brass arched handle, rustic earthen wood-fired aesthetic, natural atmospheric diffused daylight, museum catalog detail.',
   },
@@ -29,6 +30,7 @@ const HIGHLIGHT_CRAFTS = [
     material: 'Raw plant-dyed cotton',
     dimension: '65 × 200 cm',
     price: '1.420.000 ₫',
+    artisanId: 2,
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBay0c69D5JK7FMaxyn9PSRxcsgUqgVBC4moSSxlmkFLgKHiKIqdRgYLDbsNkoDNTWbn3aE3tjfmDVjmU7b0uCCCWly4AJRKvMbcSnFUrimhvpDJ528ysIaEbq7Vk675AvADO51B7vRlzladV4zbFP22E6K0TREwBbPB2PY6e9MzBG80dTaXhPHGxL-GcbgknPoVSiq1dmnBko_BQVJIGRkPk_Vx46iUTqabaRYxTU',
     alt: 'Traditional Cham handwoven brocade scarf laid flat on raw linen, complex geometric diamond patterns in natural indigo and madder root red, fine organic cotton fringe, authentic village craft aesthetic from My Nghiep Ninh Thuan, rich tactile fiber detail.',
   },
@@ -43,6 +45,7 @@ const HIGHLIGHT_CRAFTS = [
     material: 'Forest rattan & aged bamboo',
     dimension: '36 × 26 × 3.5 cm',
     price: '980.000 ₫',
+    artisanId: 3,
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqtjQ5mo5cRimsDw-0a1cXtEfhsOYh5Em5ML9l64b0Hc7BtO4oQu0rQCKeojkVUo26ovuW7WQJi9O9HWREIBgFJQ54jYdAVaqFw_qoJKFU5nDAJnK3m_SuzktfK4177Hs6U0AZ6NjMS-0nZHrlaberLVVzTzO0pAj5wvYnyap_2yX0pGsWUYWItuudPhk86mrePax74Ug2wRYKiBJ1_4Y22e-lHlXxzgQsUnUvcqw',
     alt: 'Intricately woven Vietnamese bamboo and rattan tea tray from Phu Vinh village, extremely tight circular geometric weave, smooth honey-colored aged patina, minimalist architectural craft styling, top-down angled shot on raw stoneware surface, clean studio daylight.',
   },
@@ -122,13 +125,22 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 pt-4 sm:pt-6 border-t border-border-neutral">
-              <Link
-                to="/crafts"
-                className="group inline-flex items-center gap-2 sm:gap-3 font-label-action text-[11px] sm:text-label-action uppercase tracking-[0.18em] sm:tracking-[0.25em] text-text-primary border-b border-text-primary pb-1 hover:text-accent-terracotta hover:border-accent-terracotta transition-colors"
-              >
-                <span>EXPLORE HERITAGE DIRECTORY</span>
-                <span className="transition-transform group-hover:translate-x-1">→</span>
-              </Link>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  to="/crafts"
+                  className="group inline-flex items-center gap-2 font-label-action text-[11px] sm:text-label-action uppercase tracking-[0.18em] sm:tracking-[0.22em] text-text-primary border-b border-text-primary pb-1 hover:text-accent-terracotta hover:border-accent-terracotta transition-colors"
+                >
+                  <span>HERITAGE DIRECTORY</span>
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </Link>
+                <Link
+                  to="/artisans"
+                  className="group inline-flex items-center gap-2 font-label-action text-[11px] sm:text-label-action uppercase tracking-[0.18em] sm:tracking-[0.22em] text-accent-terracotta border-b border-accent-terracotta pb-1 hover:text-text-primary hover:border-text-primary transition-colors"
+                >
+                  <span>MASTER ARTISANS</span>
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </Link>
+              </div>
               <span className="font-spec-code text-[10px] sm:text-[11px] uppercase tracking-[0.1em] sm:tracking-[0.15em] text-text-secondary">
                 ARCHIVED: {siteStats.crafts || crafts.length || 8} WORKS
               </span>
@@ -171,32 +183,44 @@ export default function HomePage() {
                 FEATURED MASTERWORKS <span className="mx-2 sm:mx-3 text-border-neutral opacity-60 font-light select-none">|</span> AUTHENTIC FROM VILLAGES
               </h2>
             </div>
-            <div className="font-spec-code text-[11px] sm:text-spec-code text-text-secondary flex items-center gap-2">
-              <span>SHOWING: {Math.min(3, siteStats.crafts) || '03'} OF {siteStats.crafts || '—'} ARCHIVED PIECES</span>
+            <div className="flex items-center gap-3">
+              <Link
+                to="/artisans"
+                className="font-spec-code text-[11px] uppercase tracking-wider text-accent-terracotta hover:underline font-semibold"
+              >
+                Meet Artisans →
+              </Link>
+              <span className="text-border-neutral opacity-60">|</span>
+              <div className="font-spec-code text-[11px] sm:text-spec-code text-text-secondary">
+                <span>SHOWING: {Math.min(3, siteStats.crafts) || '03'} OF {siteStats.crafts || '—'} PIECES</span>
+              </div>
             </div>
           </div>
 
           {/* Product Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-gutter">
             {loading ? (
-              <CraftCardSkeleton count={3} />
+              <>
+                <CraftCardSkeleton />
+                <CraftCardSkeleton />
+                <CraftCardSkeleton />
+              </>
             ) : (
-              crafts.slice(0, 3).map((item) => (
+              crafts.map((item) => (
                 <article
                   key={item.id}
-                  className="group bg-surface-crisp border border-border-neutral rounded-none transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] flex flex-col justify-between"
+                  className="bg-surface-crisp border border-border-neutral transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-md flex flex-col justify-between group"
                 >
-                  <div className="relative w-full aspect-square md:aspect-[4/5] overflow-hidden bg-surface-subtle">
+                  <div className="relative w-full aspect-square md:aspect-[4/5] bg-surface-subtle overflow-hidden">
                     <img
-                      src={item.image || item.thumbnailUrl || item.thumbnail_url}
-                      alt={item.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       data-alt={item.alt || item.name}
-                      className="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-500"
+                      src={item.image || item.thumbnailUrl || 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=800&q=80'}
+                      alt={item.name}
                       loading="lazy"
                     />
-
-                    <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-text-primary text-surface-crisp px-[6px] py-[4px] leading-none shadow-xs">
-                      <span className="font-spec-code text-[10px] uppercase tracking-[0.08em] md:tracking-[0.15em] block">
+                    <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-canvas-linen/90 backdrop-blur-sm px-2 py-0.5 md:px-2.5 md:py-1 border border-border-neutral">
+                      <span className="font-spec-code text-[9px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-text-primary">
                         {item.badge || (item.isFeatured ? 'CURATED HIGHLIGHT' : 'HERITAGE CRAFT')}
                       </span>
                     </div>
@@ -204,10 +228,17 @@ export default function HomePage() {
 
                   <div className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center text-accent-terracotta font-spec-code text-[10px] md:text-[11px] uppercase tracking-wider mb-1 md:mb-2 truncate">
+                      <div className="flex items-center justify-between text-accent-terracotta font-spec-code text-[10px] md:text-[11px] uppercase tracking-wider mb-1 md:mb-2 truncate">
                         <span className="truncate">
                           {item.region?.name || (typeof item.region === 'string' ? item.region : '') || item.village?.name || item.village || 'RED RIVER DELTA'}
                         </span>
+                        <Link
+                          to={item.artisanId ? `/artisans/${item.artisanId}` : '/artisans'}
+                          className="text-text-secondary hover:text-accent-terracotta transition-colors lowercase first-letter:uppercase font-medium shrink-0 ml-1"
+                          title="Artisan profile"
+                        >
+                          artisan →
+                        </Link>
                       </div>
 
                       <h3 className="font-title-card text-[15px] sm:text-[16px] md:text-title-card text-text-primary font-medium mb-1.5 md:mb-3 line-clamp-2 leading-snug">
@@ -256,12 +287,18 @@ export default function HomePage() {
           </div>
 
           {/* Action Button */}
-          <div className="mt-12 text-center">
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
             <Link
               to="/crafts"
-              className="inline-block px-10 py-3.5 bg-text-primary text-surface-crisp font-label-action text-label-action uppercase tracking-[0.2em] rounded-none hover:bg-accent-terracotta transition-colors shadow-sm cursor-pointer"
+              className="inline-block px-8 py-3.5 bg-text-primary text-surface-crisp font-label-action text-label-action uppercase tracking-[0.2em] rounded-none hover:bg-accent-terracotta transition-colors shadow-sm cursor-pointer"
             >
               VIEW ENTIRE HERITAGE ARCHIVE
+            </Link>
+            <Link
+              to="/artisans"
+              className="inline-block px-8 py-3.5 bg-surface-crisp border border-accent-terracotta text-accent-terracotta font-label-action text-label-action uppercase tracking-[0.2em] rounded-none hover:bg-accent-terracotta hover:text-white transition-colors shadow-sm cursor-pointer"
+            >
+              MEET MASTER ARTISANS →
             </Link>
           </div>
         </div>
@@ -282,9 +319,16 @@ export default function HomePage() {
               <h4 className="font-label-action text-[11px] sm:text-[13px] uppercase tracking-[0.14em] sm:tracking-[0.18em] text-text-primary font-semibold mb-1.5 sm:mb-2">
                 DIRECT FROM VILLAGES
               </h4>
-              <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
+              <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed mb-2">
                 Direct connection without middlemen to master artisans, guild lineages, and ancestral craft studios.
               </p>
+              <Link
+                to="/artisans"
+                className="font-spec-code text-[11px] uppercase tracking-wider text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold"
+              >
+                <span>View Master Artisans</span>
+                <span>→</span>
+              </Link>
             </div>
 
             {/* Column 2 */}
@@ -298,9 +342,16 @@ export default function HomePage() {
               <h4 className="font-label-action text-[11px] sm:text-[13px] uppercase tracking-[0.14em] sm:tracking-[0.18em] text-text-primary font-semibold mb-1.5 sm:mb-2">
                 100% HANDCRAFTED
               </h4>
-              <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
+              <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed mb-2">
                 Purely skilled hands and generational secrets. Steadfastly rejecting mass-produced industrial molds.
               </p>
+              <Link
+                to="/crafts"
+                className="font-spec-code text-[11px] uppercase tracking-wider text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold"
+              >
+                <span>Explore Techniques</span>
+                <span>→</span>
+              </Link>
             </div>
 
             {/* Column 3 */}
@@ -314,9 +365,16 @@ export default function HomePage() {
               <h4 className="font-label-action text-[11px] sm:text-[13px] uppercase tracking-[0.14em] sm:tracking-[0.18em] text-text-primary font-semibold mb-1.5 sm:mb-2">
                 PRESERVATION &amp; TRACEABILITY
               </h4>
-              <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed">
+              <p className="font-body-spec text-[12px] sm:text-body-spec text-text-secondary leading-relaxed mb-2">
                 Each work accompanied by a digital archival certificate, preserving heritage records, precious glaze recipes, and weaving methods for future generations.
               </p>
+              <Link
+                to="/regions"
+                className="font-spec-code text-[11px] uppercase tracking-wider text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold"
+              >
+                <span>Cultural Craft Map</span>
+                <span>→</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -421,7 +479,7 @@ export default function HomePage() {
                   to="/artisans"
                   className="font-label-action text-[10px] sm:text-[11px] uppercase tracking-[0.12em] sm:tracking-[0.15em] text-accent-terracotta hover:underline inline-flex items-center gap-1 font-semibold cursor-pointer"
                 >
-                  READ EXPEDITION ESSAY →
+                  READ ARTISAN ESSAY →
                 </Link>
               </div>
             </div>

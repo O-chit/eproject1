@@ -306,7 +306,7 @@ const createSeasonalCollection = async (req, res, next) => {
       data: fullCollection,
     });
   } catch (err) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK').catch(() => {});
     next(err);
   } finally {
     client.release();
@@ -442,7 +442,7 @@ const updateSeasonalCollection = async (req, res, next) => {
       data: updatedCol,
     });
   } catch (err) {
-    await client.query('ROLLBACK');
+    await client.query('ROLLBACK').catch(() => {});
     next(err);
   } finally {
     client.release();

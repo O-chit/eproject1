@@ -119,10 +119,10 @@ export default function Navbar() {
     <>
       {/* FIXED TOP HEADER */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-canvas-linen/95 backdrop-blur-md border-b border-border-neutral">
-        <div className="h-20 max-w-7xl mx-auto px-4 sm:px-6 md:px-margin flex items-center justify-between gap-4 sm:gap-6 relative">
+        <div className="h-20 max-w-7xl mx-auto px-4 sm:px-6 md:px-margin flex items-center justify-between gap-3 sm:gap-6 relative">
 
           {/* Left Cluster: Menu Toggle & Brand Logo */}
-          <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             <button
               id="craft-menu-toggle"
               type="button"
@@ -134,7 +134,7 @@ export default function Navbar() {
               <span className="material-symbols-outlined text-[24px]">menu</span>
             </button>
 
-            <Link to="/" data-path="craftroots-home" className="flex items-center gap-3 group cursor-pointer">
+            <Link to="/" data-path="craftroots-home" className="flex items-center gap-2.5 sm:gap-3 group cursor-pointer">
               <div className="w-8 h-8 rounded-full border border-[#B86B35] flex items-center justify-center bg-[#F9F8F6] text-[#B86B35] font-serif font-bold text-sm tracking-widest shrink-0">
                 CR
               </div>
@@ -149,8 +149,57 @@ export default function Navbar() {
             </Link>
           </div>
 
+          {/* Direct Navigation Links for Desktop */}
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-7 shrink-0 font-['Montserrat'] text-[12px] uppercase tracking-[0.12em] font-medium">
+            <NavLink
+              to="/crafts"
+              className={({ isActive }) =>
+                `transition-colors hover:text-accent-terracotta ${
+                  isActive ? 'text-accent-terracotta font-semibold' : 'text-text-primary'
+                }`
+              }
+            >
+              Crafts
+            </NavLink>
+            <NavLink
+              to="/artisans"
+              className={({ isActive }) =>
+                `flex items-center gap-1.5 transition-colors hover:text-accent-terracotta ${
+                  isActive ? 'text-accent-terracotta font-semibold' : 'text-text-primary'
+                }`
+              }
+            >
+              <span>Artisans</span>
+              {stats.artisans > 0 && (
+                <span className="text-[10px] font-mono px-1.5 py-0.5 bg-accent-terracotta/10 text-accent-terracotta border border-accent-terracotta/20 leading-none">
+                  {stats.artisans}
+                </span>
+              )}
+            </NavLink>
+            <NavLink
+              to="/regions"
+              className={({ isActive }) =>
+                `transition-colors hover:text-accent-terracotta ${
+                  isActive ? 'text-accent-terracotta font-semibold' : 'text-text-primary'
+                }`
+              }
+            >
+              Cultural Map
+            </NavLink>
+            <NavLink
+              to="/seasonal"
+              className={({ isActive }) =>
+                `transition-colors hover:text-accent-terracotta ${
+                  isActive ? 'text-accent-terracotta font-semibold' : 'text-text-primary'
+                }`
+              }
+            >
+              Seasonal
+            </NavLink>
+          </nav>
+
           {/* Center Cluster: Desktop Search Bar */}
-          <div className="flex-1 max-w-xl mx-4 hidden md:block">
+          <div className="flex-1 max-w-sm xl:max-w-md mx-2 hidden md:block">
             <form onSubmit={handleSearchSubmit} className="relative flex items-center">
               <span className="material-symbols-outlined absolute left-3 text-text-secondary text-[18px]">
                 search
@@ -159,7 +208,7 @@ export default function Navbar() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search heritage, artisans, craft villages, techniques..."
+                placeholder="Search heritage, artisans, villages..."
                 className="w-full h-[40px] pl-10 pr-12 bg-surface-crisp border border-border-neutral rounded-none text-body-spec font-body-spec text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-accent-terracotta transition-colors text-[13px]"
               />
               {searchQuery ? (
@@ -179,11 +228,11 @@ export default function Navbar() {
           </div>
 
           {/* Right Cluster: Saved & User Profile */}
-          <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <Link
               to="/favourites"
               data-path="craftroots-saved"
-              className="text-on-surface-variant hover:text-accent-terracotta transition-colors font-label-action text-label-action tracking-[0.15em] uppercase flex items-center gap-2 px-3 py-2 rounded-none bg-transparent"
+              className="text-on-surface-variant hover:text-accent-terracotta transition-colors font-label-action text-label-action tracking-[0.15em] uppercase flex items-center gap-2 px-2.5 sm:px-3 py-2 rounded-none bg-transparent"
             >
               <span className="material-symbols-outlined text-[16px] text-accent-terracotta">
                 bookmark

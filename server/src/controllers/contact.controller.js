@@ -10,13 +10,13 @@ const submitContact = async (req, res, next) => {
     const { fullName, email, phone, topic = 'other', subject, message } = req.body;
 
     const details = [];
-    if (!fullName || fullName.trim() === '') {
+    if (typeof fullName !== 'string' || fullName.trim() === '') {
       details.push({ field: 'fullName', issue: 'Họ và tên không được để trống' });
     }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       details.push({ field: 'email', issue: 'Email không hợp lệ' });
     }
-    if (!message || message.trim().length < 10) {
+    if (typeof message !== 'string' || message.trim().length < 10) {
       details.push({ field: 'message', issue: 'Nội dung tin nhắn phải có ít nhất 10 ký tự' });
     }
 
